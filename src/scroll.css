@@ -1,0 +1,55 @@
+.scroll {
+    overflow: scroll;
+
+    display: block;
+    background: var(--scrollbar-background, transparent);
+
+    padding-left: calc(var(--scrollbar-width, 8px) * 2);
+    padding-right: var(--scrollbar-width, 8px);
+
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+}
+
+.scroll::-webkit-scrollbar {
+    width: var(--scrollbar-width, 8px);
+    height: var(--scrollbar-width, 8px);
+}
+
+.scroll.scroll-invisible::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.scroll::-webkit-scrollbar-corner {
+    display: none;
+}
+
+.scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+    background: transparent;
+    box-sizing: border-box;
+    border: 1px solid var(--scrollbar-background, transparent);
+    border-radius: var(--scrollbar-radius, calc(var(--scrollbar-width, 8px) / 2 - 1px));
+}
+
+.scroll.scroll-no-hide::-webkit-scrollbar-thumb,
+.scroll:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color, darkgray);
+}
+
+.scroll.scroll-no-padding {
+    padding: 0 !important;
+}
+
+.scroll[hidden-x] {
+    overflow-x: hidden;
+}
+
+.scroll[hidden-y] {
+    overflow-y: hidden;
+}
+
