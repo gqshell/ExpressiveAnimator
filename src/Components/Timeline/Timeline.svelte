@@ -1,17 +1,46 @@
+<script context="module" lang="ts">
+    import type {AnimationList, AnimationManager, GraphicsElement} from "@zindex/canvas-engine";
+
+    function mapAnimations(element: GraphicsElement, list: AnimationList) {
+        const animations = [];
+
+        for (const name in list) {
+            if (!list.hasOwnProperty(name)) {
+                continue;
+            }
+            for (const property in list[name]) {
+                if (!list[name].hasOwnProperty(property)) {
+                    continue;
+                }
+                animations.push({
+                    name,
+                    property,
+                    animation: list[name][property],
+                });
+            }
+        }
+
+        return {element, animations};
+    }
+</script>
 <script lang="ts">
     import TimelineItem from "./TimelineItem.svelte";
-    import type {Animation} from "@zindex/canvas-engine";
+    import type {AnimationManager} from "@zindex/canvas-engine";
     import Keyframe from "./Keyframe.svelte";
     import Easing from "./Easing.svelte";
     import LocalMarker from "./LocalMarker.svelte";
+    import Element from "./Element.svelte";
+    import Property from "./Property.svelte";
+    import SelectionRect from "./SelectionRect.svelte";
+
+    export let animationManager: AnimationManager;
 
     export let playOffset: number;
     export let playOffsetMax: number;
     export let scrollTop: number = 0;
     export let scrollLeft: number = 0;
 
-    export let animations: Animation<any>[] = [];
-    export let selected: Animation<any>[] = [];
+    $: animatedElements = animationManager.map(mapAnimations);
 
     /* Scroll sync Y */
     let leftPane: HTMLElement;
@@ -39,29 +68,83 @@
 </script>
 <div class="timeline">
     <div bind:this={leftPane} on:scroll={onScroll} class="timeline-elements scroll scroll-invisible scroll-no-padding" hidden-x>
-        <TimelineItem selected disabled>
-            {scrollTop} - {scrollLeft}
-        </TimelineItem>
-        <TimelineItem disabled>
-            Position X
-        </TimelineItem>
+        {#each animatedElements as animated}
+            <Element title={animated.element.title} type={animated.element.type} />
+            {#each animated.animations as animationObject}
+                <Property name={animationObject.name} property={animationObject.property} disabled={animationObject.animation.disabled}/>
+            {/each}
+        {/each}
     </div>
     <div bind:this={rightPane} on:scroll={onScroll} class="timeline-keyframes scroll scroll-no-hide scroll-no-padding">
         <div class="timeline-items-wrapper">
-            <TimelineItem>
-<!--                <LocalMarker label="This is a marker" color="celery" offset={0} length={120} lines={3} />-->
-            </TimelineItem>
-            <TimelineItem keyframes={true}>
-                <Keyframe offset={0} />
-                <Keyframe offset={120} />
-                <Keyframe offset={720} />
-
-                <Easing start={0} end={120} />
-                <Easing start={120} end={720} />
-            </TimelineItem>
+            {#each animatedElements as animated}
+                <TimelineItem>
+                    <!--                <LocalMarker label="This is a marker" color="celery" offset={0} length={120} lines={3} />-->
+                </TimelineItem>
+                {#each animated.animations as animationObject}
+                    <TimelineItem keyframes={true} disabled={animationObject.animation.disabled}>
+                        {#each animationObject.animation.keyframes as keyframe, index}
+                            <Keyframe offset={keyframe.offset} />
+                            <Easing start={keyframe.offset} end={animationObject.animation.keyframes[index + 1]?.offset} />
+                        {/each}
+                    </TimelineItem>
+                {/each}
+            {/each}
         </div>
 
+<!--        <SelectionRect />-->
         <div class="timeline-play-line"></div>
-        <div class="timeline-selection-rect" style="top: 100px; left: 400px; width: 200px; height: 150px;"></div>
     </div>
 </div>
+<style global>
+    .timeline {
+        --scrollbar-width: 8px;
+
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        min-height: 0;
+
+        --timeline-item-height: 22px;
+        --timeline-keyframe-size: 12px;
+
+        background: var(--spectrum-global-color-gray-100);
+    }
+
+    .timeline, .timeline * {
+        box-sizing: border-box;
+    }
+
+    .timeline > .timeline-elements {
+        width: 240px;
+        border-right: 1px solid var(--spectrum-global-color-gray-300);
+        border-bottom: var(--scrollbar-width) solid transparent;
+    }
+
+    .timeline > .timeline-keyframes {
+        position: relative;
+        flex: 1;
+    }
+
+    .timeline > .timeline-keyframes > .timeline-items-wrapper {
+        position: relative;
+        min-width: 100%;
+        /* this gives the width */
+        width: calc(var(--timeline-max-offset) * var(--timeline-ms-unit));
+    }
+
+    .timeline > .timeline-keyframes > .timeline-play-line {
+        z-index: 5;
+        --timeline-play-line-size: 1px;
+        width: var(--timeline-play-line-size);
+        user-select: none;
+        pointer-events: none;
+        position: absolute;
+        top: var(--timeline-scroll-top);
+        bottom: calc(0px - var(--timeline-scroll-top));
+        left: calc((var(--timeline-keyframe-size) - var(--timeline-play-line-size)) / 2);
+        transform: translateX(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)));
+        background: var(--spectrum-global-color-red-400);
+        will-change: top, bottom, transform;
+    }
+</style>

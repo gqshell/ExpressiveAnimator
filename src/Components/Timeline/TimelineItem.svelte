@@ -4,8 +4,46 @@
     export let keyframes: boolean = false;
 </script>
 <div class="timeline-item"
-     class:timeline-middle-line={keyframes}
+     class:has-keyframes={keyframes}
      class:is-disabled={disabled}
      class:is-selected={selected}>
+    {#if keyframes}
+        <div class="timeline-keyframes-line"></div>
+    {/if}
     <slot/>
 </div>
+<style global>
+    .timeline-item {
+        height: var(--timeline-item-height);
+        max-height: var(--timeline-item-height);
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    /*.timeline-item.is-selected {*/
+    /*    background: var(--spectrum-semantic-cta-color-background-default);*/
+    /*}*/
+
+    .timeline-item.is-disabled {
+
+    }
+
+    .timeline-item.has-keyframes {
+        position: relative;
+        min-width: 100%;
+        padding-left: calc(var(--timeline-keyframe-size) / 2);
+    }
+
+    .timeline-item > .timeline-keyframes-line {
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        left: 0;
+        top: calc(50% - 0.5px);
+        background: var(--spectrum-global-color-gray-400);
+        user-select: none;
+        pointer-events: none;
+    }
+</style>

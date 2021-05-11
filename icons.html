@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Icons</title>
+    <style>
+        #icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            text-align: center;
+            font-size: small;
+        }
+    </style>
+    <script type="module">
+        function LoadIcons(data) {
+            const svg = (new DOMParser())
+                .parseFromString(data, "image/svg+xml")
+                .firstChild;
+
+            if (!svg || svg.tagName !== 'svg') {
+                return null;
+            }
+
+            svg.style.display = 'none';
+            svg.id = 'svg-cons';
+
+            document.head.insertBefore(svg, null);
+
+            return svg;
+        }
+
+        const svg = LoadIcons(await (await fetch('./src/icons.svg')).text());
+
+
+        let html = '';
+
+        svg.querySelectorAll('symbol').forEach(symbol => {
+            html += `
+                <div title="${symbol.id}">
+                <svg
+                        viewBox="0 0 24 24"
+                        role="img"
+                        fill="currentColor"
+                        height="24"
+                        width="24"
+                        aria-hidden="true"
+                >
+                    <use xlink:href="#${symbol.id}"/>
+                </svg>
+                <br>
+                ${symbol.id}
+                </div>
+            `;
+        });
+
+        document.getElementById('icons').innerHTML = html;
+
+    </script>
+</head>
+<body>
+<div id="icons"></div>
+</body>
+</html>

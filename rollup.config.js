@@ -12,6 +12,10 @@ import postcssImport from 'postcss-import';
 import cssnano from 'cssnano';
 
 const production = !process.env.ROLLUP_WATCH;
+const GLOBALS = {
+  '@zindex/skia-ts': 'Skia'
+};
+const EXTERNAL = Object.keys(GLOBALS);
 
 function serve() {
   let server;
@@ -41,8 +45,10 @@ export default [
       sourcemap: true,
       format: 'iife',
       name: 'app',
-      file: 'public/build/bundle.js'
+      file: 'public/build/bundle.js',
+      globals: GLOBALS,
     },
+    external: EXTERNAL,
     plugins: [
       importResolver({
         extensions: ['.js', '.mjs', '.ts', '.css', '.svelte'],

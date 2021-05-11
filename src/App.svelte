@@ -2,33 +2,33 @@
     const ToolbarRegionUpButtons = [
         {
             tool: 'pan',
-            icon: 'pan-tool',
+            icon: 'expr:pan-tool',
             title: 'Pan Tool'
         },
         {
             tool: 'selection',
-            icon: 'selection-tool',
+            icon: 'expr:selection-tool',
             title: 'Selection Tool'
         },
         [
             {
                 tool: 'rectangle-tool',
-                icon: 'rectangle-tool',
+                icon: 'expr:rectangle-tool',
                 title: 'Rectangle Tool'
             },
             {
                 tool: 'polygon-tool',
-                icon: 'polygon-tool',
+                icon: 'expr:polygon-tool',
                 title: 'Polygon Tool'
             },
             {
                 tool: 'star-tool',
-                icon: 'star-tool',
+                icon: 'expr:star-tool',
                 title: 'Star Tool'
             },
             {
                 tool: 'line-tool',
-                icon: 'line-tool',
+                icon: 'expr:line-tool',
                 title: 'Line Tool'
             },
         ]
@@ -38,12 +38,15 @@
     import {TimelinePlayOffset} from "./Stores";
     import ToolbarRegionUp from "./Components/ToolbarRegionUp.svelte";
     import Timeline from "./Components/Timeline/index.svelte";
+    import {doc, animationManager} from "./doc1";
 
     import {CanvasStateTool} from "./Stores";
     import Canvas from "./Components/Canvas.svelte";
 
 
     let themeLight = false;
+
+
 
 </script>
 <sp-icons-medium></sp-icons-medium>
@@ -67,8 +70,8 @@
             primary-size="80%"
             secondary-min="0"
             secondary-max="600">
-        <Canvas />
-        <Timeline playOffset={$TimelinePlayOffset} />
+        <Canvas document={doc} />
+        <Timeline animationManager={animationManager} playOffset={$TimelinePlayOffset} />
     </sp-split-view>
 </sp-theme>
 <style>

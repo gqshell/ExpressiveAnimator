@@ -11,9 +11,13 @@ import CustomIcons from "./icons.svg";
 
 LoadIcons(CustomIcons);
 
-const app = new App({
-    target: document.body,
-    props: {},
-});
+export default LoadApp();
 
-export default app;
+
+async function LoadApp() {
+    window.Skia = await SkiaWasmInit();
+    return new App({
+        target: document.body,
+        props: {},
+    });
+}

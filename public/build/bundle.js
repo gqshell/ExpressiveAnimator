@@ -3085,7 +3085,7 @@ var app = (function () {
      * `{foo: bar}` applies the class `foo` if the value of `bar` is truthy.
      * @param classInfo {ClassInfo}
      */
-    const classMap = directive((classInfo) => (part) => {
+    const classMap$1 = directive((classInfo) => (part) => {
         if (!(part instanceof AttributePart) || (part instanceof PropertyPart) ||
             part.committer.name !== 'class' || part.committer.parts.length > 1) {
             throw new Error('The `classMap` directive must be used in the `class` attribute ' +
@@ -6434,7 +6434,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
 
     var max$1 = Math.max;
     var min$1 = Math.min;
-    var round = Math.round;
+    var round$1 = Math.round;
 
     function within(min, value, max) {
       return max$1(min, min$1(value, max));
@@ -6932,7 +6932,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
       return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
     }
 
-    function flip(_ref) {
+    function flip$1(_ref) {
       var state = _ref.state,
           options = _ref.options,
           name = _ref.name;
@@ -7052,11 +7052,11 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
     } // eslint-disable-next-line import/no-unused-modules
 
 
-    var flip$1 = {
+    var flip$2 = {
       name: 'flip',
       enabled: true,
       phase: 'main',
-      fn: flip,
+      fn: flip$1,
       requiresIfExists: ['offset'],
       data: {
         _skip: false
@@ -7640,8 +7640,8 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
       var win = window;
       var dpr = win.devicePixelRatio || 1;
       return {
-        x: round(round(x * dpr) / dpr) || 0,
-        y: round(round(y * dpr) / dpr) || 0
+        x: round$1(round$1(x * dpr) / dpr) || 0,
+        y: round$1(round$1(y * dpr) / dpr) || 0
       };
     }
 
@@ -8451,7 +8451,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
     const createPopper = popperGenerator({
         defaultModifiers: [
             ...defaultModifiers,
-            flip$1,
+            flip$2,
             preventOverflow$1,
             arrow$1,
             offset$1,
@@ -10282,7 +10282,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
     OF ANY KIND, either express or implied. See the License for the specific language
     governing permissions and limitations under the License.
     */
-    const file$c = (label) => html `
+    const file$g = (label) => html `
     <svg
         class="file"
         role="img"
@@ -10329,7 +10329,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
         }
         render() {
             if (this.variant === 'file') {
-                return file$c(this.label);
+                return file$g(this.label);
             }
             else if (this.variant === 'folder') {
                 return folder(this.label);
@@ -11802,11 +11802,11 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Take input from [0, n] and return it as [0, 1]
      * @hidden
      */
-    function bound01(n, max) {
-        if (isOnePointZero(n)) {
+    function bound01$1(n, max) {
+        if (isOnePointZero$1(n)) {
             n = '100%';
         }
-        var isPercent = isPercentage(n);
+        var isPercent = isPercentage$1(n);
         n = max === 360 ? n : Math.min(max, Math.max(0, parseFloat(n)));
         // Automatically convert percentage into number
         if (isPercent) {
@@ -11834,7 +11834,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Force a number between 0 and 1
      * @hidden
      */
-    function clamp01(val) {
+    function clamp01$1(val) {
         return Math.min(1, Math.max(0, val));
     }
     /**
@@ -11842,21 +11842,21 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
      * @hidden
      */
-    function isOnePointZero(n) {
+    function isOnePointZero$1(n) {
         return typeof n === 'string' && n.indexOf('.') !== -1 && parseFloat(n) === 1;
     }
     /**
      * Check to see if string passed in is a percentage
      * @hidden
      */
-    function isPercentage(n) {
+    function isPercentage$1(n) {
         return typeof n === 'string' && n.indexOf('%') !== -1;
     }
     /**
      * Return a valid alpha value [0,1] with all invalid values being set to 1
      * @hidden
      */
-    function boundAlpha(a) {
+    function boundAlpha$1(a) {
         a = parseFloat(a);
         if (isNaN(a) || a < 0 || a > 1) {
             a = 1;
@@ -11867,7 +11867,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Replace a decimal with it's percentage value
      * @hidden
      */
-    function convertToPercentage(n) {
+    function convertToPercentage$1(n) {
         if (n <= 1) {
             return Number(n) * 100 + "%";
         }
@@ -11877,7 +11877,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Force a hex value to have 2 characters
      * @hidden
      */
-    function pad2(c) {
+    function pad2$1(c) {
         return c.length === 1 ? '0' + c : String(c);
     }
 
@@ -11889,11 +11889,11 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * *Assumes:* r, g, b in [0, 255] or [0, 1]
      * *Returns:* { r, g, b } in [0, 255]
      */
-    function rgbToRgb(r, g, b) {
+    function rgbToRgb$1(r, g, b) {
         return {
-            r: bound01(r, 255) * 255,
-            g: bound01(g, 255) * 255,
-            b: bound01(b, 255) * 255,
+            r: bound01$1(r, 255) * 255,
+            g: bound01$1(g, 255) * 255,
+            b: bound01$1(b, 255) * 255,
         };
     }
     /**
@@ -11901,10 +11901,10 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
      * *Returns:* { h, s, l } in [0,1]
      */
-    function rgbToHsl(r, g, b) {
-        r = bound01(r, 255);
-        g = bound01(g, 255);
-        b = bound01(b, 255);
+    function rgbToHsl$1(r, g, b) {
+        r = bound01$1(r, 255);
+        g = bound01$1(g, 255);
+        b = bound01$1(b, 255);
         var max = Math.max(r, g, b);
         var min = Math.min(r, g, b);
         var h = 0;
@@ -11956,13 +11956,13 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
      * *Returns:* { r, g, b } in the set [0, 255]
      */
-    function hslToRgb(h, s, l) {
+    function hslToRgb$1(h, s, l) {
         var r;
         var g;
         var b;
-        h = bound01(h, 360);
-        s = bound01(s, 100);
-        l = bound01(l, 100);
+        h = bound01$1(h, 360);
+        s = bound01$1(s, 100);
+        l = bound01$1(l, 100);
         if (s === 0) {
             // achromatic
             g = l;
@@ -11984,10 +11984,10 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
      * *Returns:* { h, s, v } in [0,1]
      */
-    function rgbToHsv(r, g, b) {
-        r = bound01(r, 255);
-        g = bound01(g, 255);
-        b = bound01(b, 255);
+    function rgbToHsv$1(r, g, b) {
+        r = bound01$1(r, 255);
+        g = bound01$1(g, 255);
+        b = bound01$1(b, 255);
         var max = Math.max(r, g, b);
         var min = Math.min(r, g, b);
         var h = 0;
@@ -12019,10 +12019,10 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
      * *Returns:* { r, g, b } in the set [0, 255]
      */
-    function hsvToRgb(h, s, v) {
-        h = bound01(h, 360) * 6;
-        s = bound01(s, 100);
-        v = bound01(v, 100);
+    function hsvToRgb$1(h, s, v) {
+        h = bound01$1(h, 360) * 6;
+        s = bound01$1(s, 100);
+        v = bound01$1(v, 100);
         var i = Math.floor(h);
         var f = h - i;
         var p = v * (1 - s);
@@ -12040,11 +12040,11 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Assumes r, g, and b are contained in the set [0, 255]
      * Returns a 3 or 6 character hex
      */
-    function rgbToHex(r, g, b, allow3Char) {
+    function rgbToHex$1(r, g, b, allow3Char) {
         var hex = [
-            pad2(Math.round(r).toString(16)),
-            pad2(Math.round(g).toString(16)),
-            pad2(Math.round(b).toString(16)),
+            pad2$1(Math.round(r).toString(16)),
+            pad2$1(Math.round(g).toString(16)),
+            pad2$1(Math.round(b).toString(16)),
         ];
         // Return a 3 character hex if possible
         if (allow3Char &&
@@ -12062,12 +12062,12 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * a in [0, 1]. Returns a 4 or 8 character rgba hex
      */
     // eslint-disable-next-line max-params
-    function rgbaToHex(r, g, b, a, allow4Char) {
+    function rgbaToHex$1(r, g, b, a, allow4Char) {
         var hex = [
-            pad2(Math.round(r).toString(16)),
-            pad2(Math.round(g).toString(16)),
-            pad2(Math.round(b).toString(16)),
-            pad2(convertDecimalToHex(a)),
+            pad2$1(Math.round(r).toString(16)),
+            pad2$1(Math.round(g).toString(16)),
+            pad2$1(Math.round(b).toString(16)),
+            pad2$1(convertDecimalToHex$1(a)),
         ];
         // Return a 4 character hex if possible
         if (allow4Char &&
@@ -12080,15 +12080,15 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
         return hex.join('');
     }
     /** Converts a decimal to a hex value */
-    function convertDecimalToHex(d) {
+    function convertDecimalToHex$1(d) {
         return Math.round(parseFloat(d) * 255).toString(16);
     }
     /** Converts a hex value to a decimal */
-    function convertHexToDecimal(h) {
-        return parseIntFromHex(h) / 255;
+    function convertHexToDecimal$1(h) {
+        return parseIntFromHex$1(h) / 255;
     }
     /** Parse a base-16 hex value into a base-10 integer */
-    function parseIntFromHex(val) {
+    function parseIntFromHex$1(val) {
         return parseInt(val, 16);
     }
     function numberInputToObject(color) {
@@ -12103,7 +12103,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
     /**
      * @hidden
      */
-    var names = {
+    var names$1 = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
         aqua: '#00ffff',
@@ -12272,7 +12272,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
      * ```
      */
-    function inputToRGB(color) {
+    function inputToRGB$1(color) {
         var rgb = { r: 0, g: 0, b: 0 };
         var a = 1;
         var s = null;
@@ -12281,25 +12281,25 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
         var ok = false;
         var format = false;
         if (typeof color === 'string') {
-            color = stringInputToObject(color);
+            color = stringInputToObject$1(color);
         }
         if (typeof color === 'object') {
-            if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
-                rgb = rgbToRgb(color.r, color.g, color.b);
+            if (isValidCSSUnit$1(color.r) && isValidCSSUnit$1(color.g) && isValidCSSUnit$1(color.b)) {
+                rgb = rgbToRgb$1(color.r, color.g, color.b);
                 ok = true;
                 format = String(color.r).substr(-1) === '%' ? 'prgb' : 'rgb';
             }
-            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
-                s = convertToPercentage(color.s);
-                v = convertToPercentage(color.v);
-                rgb = hsvToRgb(color.h, s, v);
+            else if (isValidCSSUnit$1(color.h) && isValidCSSUnit$1(color.s) && isValidCSSUnit$1(color.v)) {
+                s = convertToPercentage$1(color.s);
+                v = convertToPercentage$1(color.v);
+                rgb = hsvToRgb$1(color.h, s, v);
                 ok = true;
                 format = 'hsv';
             }
-            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
-                s = convertToPercentage(color.s);
-                l = convertToPercentage(color.l);
-                rgb = hslToRgb(color.h, s, l);
+            else if (isValidCSSUnit$1(color.h) && isValidCSSUnit$1(color.s) && isValidCSSUnit$1(color.l)) {
+                s = convertToPercentage$1(color.s);
+                l = convertToPercentage$1(color.l);
+                rgb = hslToRgb$1(color.h, s, l);
                 ok = true;
                 format = 'hsl';
             }
@@ -12307,7 +12307,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
                 a = color.a;
             }
         }
-        a = boundAlpha(a);
+        a = boundAlpha$1(a);
         return {
             ok: ok,
             format: color.format || format,
@@ -12328,7 +12328,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
     // Whitespace can take the place of commas or opening paren
     var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
     var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
-    var matchers = {
+    var matchers$1 = {
         CSS_UNIT: new RegExp(CSS_UNIT),
         rgb: new RegExp('rgb' + PERMISSIVE_MATCH3),
         rgba: new RegExp('rgba' + PERMISSIVE_MATCH4),
@@ -12345,14 +12345,14 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Permissive string parsing.  Take in a number of formats, and output an object
      * based on detected format.  Returns `{ r, g, b }` or `{ h, s, l }` or `{ h, s, v}`
      */
-    function stringInputToObject(color) {
+    function stringInputToObject$1(color) {
         color = color.trim().toLowerCase();
         if (color.length === 0) {
             return false;
         }
         var named = false;
-        if (names[color]) {
-            color = names[color];
+        if (names$1[color]) {
+            color = names$1[color];
             named = true;
         }
         else if (color === 'transparent') {
@@ -12362,65 +12362,65 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
         // Keep most of the number bounding out of this function - don't worry about [0,1] or [0,100] or [0,360]
         // Just return an object and let the conversion functions handle that.
         // This way the result will be the same whether the tinycolor is initialized with string or object.
-        var match = matchers.rgb.exec(color);
+        var match = matchers$1.rgb.exec(color);
         if (match) {
             return { r: match[1], g: match[2], b: match[3] };
         }
-        match = matchers.rgba.exec(color);
+        match = matchers$1.rgba.exec(color);
         if (match) {
             return { r: match[1], g: match[2], b: match[3], a: match[4] };
         }
-        match = matchers.hsl.exec(color);
+        match = matchers$1.hsl.exec(color);
         if (match) {
             return { h: match[1], s: match[2], l: match[3] };
         }
-        match = matchers.hsla.exec(color);
+        match = matchers$1.hsla.exec(color);
         if (match) {
             return { h: match[1], s: match[2], l: match[3], a: match[4] };
         }
-        match = matchers.hsv.exec(color);
+        match = matchers$1.hsv.exec(color);
         if (match) {
             return { h: match[1], s: match[2], v: match[3] };
         }
-        match = matchers.hsva.exec(color);
+        match = matchers$1.hsva.exec(color);
         if (match) {
             return { h: match[1], s: match[2], v: match[3], a: match[4] };
         }
-        match = matchers.hex8.exec(color);
+        match = matchers$1.hex8.exec(color);
         if (match) {
             return {
-                r: parseIntFromHex(match[1]),
-                g: parseIntFromHex(match[2]),
-                b: parseIntFromHex(match[3]),
-                a: convertHexToDecimal(match[4]),
+                r: parseIntFromHex$1(match[1]),
+                g: parseIntFromHex$1(match[2]),
+                b: parseIntFromHex$1(match[3]),
+                a: convertHexToDecimal$1(match[4]),
                 format: named ? 'name' : 'hex8',
             };
         }
-        match = matchers.hex6.exec(color);
+        match = matchers$1.hex6.exec(color);
         if (match) {
             return {
-                r: parseIntFromHex(match[1]),
-                g: parseIntFromHex(match[2]),
-                b: parseIntFromHex(match[3]),
+                r: parseIntFromHex$1(match[1]),
+                g: parseIntFromHex$1(match[2]),
+                b: parseIntFromHex$1(match[3]),
                 format: named ? 'name' : 'hex',
             };
         }
-        match = matchers.hex4.exec(color);
+        match = matchers$1.hex4.exec(color);
         if (match) {
             return {
-                r: parseIntFromHex(match[1] + match[1]),
-                g: parseIntFromHex(match[2] + match[2]),
-                b: parseIntFromHex(match[3] + match[3]),
-                a: convertHexToDecimal(match[4] + match[4]),
+                r: parseIntFromHex$1(match[1] + match[1]),
+                g: parseIntFromHex$1(match[2] + match[2]),
+                b: parseIntFromHex$1(match[3] + match[3]),
+                a: convertHexToDecimal$1(match[4] + match[4]),
                 format: named ? 'name' : 'hex8',
             };
         }
-        match = matchers.hex3.exec(color);
+        match = matchers$1.hex3.exec(color);
         if (match) {
             return {
-                r: parseIntFromHex(match[1] + match[1]),
-                g: parseIntFromHex(match[2] + match[2]),
-                b: parseIntFromHex(match[3] + match[3]),
+                r: parseIntFromHex$1(match[1] + match[1]),
+                g: parseIntFromHex$1(match[2] + match[2]),
+                b: parseIntFromHex$1(match[3] + match[3]),
                 format: named ? 'name' : 'hex',
             };
         }
@@ -12430,8 +12430,8 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
      * Check to see if it looks like a CSS unit
      * (see `matchers` above for definition).
      */
-    function isValidCSSUnit(color) {
-        return Boolean(matchers.CSS_UNIT.exec(String(color)));
+    function isValidCSSUnit$1(color) {
+        return Boolean(matchers$1.CSS_UNIT.exec(String(color)));
     }
 
     var TinyColor = /** @class */ (function () {
@@ -12448,7 +12448,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
                 color = numberInputToObject(color);
             }
             this.originalInput = color;
-            var rgb = inputToRGB(color);
+            var rgb = inputToRGB$1(color);
             this.originalInput = color;
             this.r = rgb.r;
             this.g = rgb.g;
@@ -12533,7 +12533,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * @param alpha - The new alpha value. The accepted range is 0-1.
          */
         TinyColor.prototype.setAlpha = function (alpha) {
-            this.a = boundAlpha(alpha);
+            this.a = boundAlpha$1(alpha);
             this.roundA = Math.round(100 * this.a) / 100;
             return this;
         };
@@ -12541,7 +12541,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * Returns the object as a HSVA object.
          */
         TinyColor.prototype.toHsv = function () {
-            var hsv = rgbToHsv(this.r, this.g, this.b);
+            var hsv = rgbToHsv$1(this.r, this.g, this.b);
             return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this.a };
         };
         /**
@@ -12549,7 +12549,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * "hsva(xxx, xxx, xxx, xx)".
          */
         TinyColor.prototype.toHsvString = function () {
-            var hsv = rgbToHsv(this.r, this.g, this.b);
+            var hsv = rgbToHsv$1(this.r, this.g, this.b);
             var h = Math.round(hsv.h * 360);
             var s = Math.round(hsv.s * 100);
             var v = Math.round(hsv.v * 100);
@@ -12559,7 +12559,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * Returns the object as a HSLA object.
          */
         TinyColor.prototype.toHsl = function () {
-            var hsl = rgbToHsl(this.r, this.g, this.b);
+            var hsl = rgbToHsl$1(this.r, this.g, this.b);
             return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this.a };
         };
         /**
@@ -12567,7 +12567,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * "hsla(xxx, xxx, xxx, xx)".
          */
         TinyColor.prototype.toHslString = function () {
-            var hsl = rgbToHsl(this.r, this.g, this.b);
+            var hsl = rgbToHsl$1(this.r, this.g, this.b);
             var h = Math.round(hsl.h * 360);
             var s = Math.round(hsl.s * 100);
             var l = Math.round(hsl.l * 100);
@@ -12579,7 +12579,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          */
         TinyColor.prototype.toHex = function (allow3Char) {
             if (allow3Char === void 0) { allow3Char = false; }
-            return rgbToHex(this.r, this.g, this.b, allow3Char);
+            return rgbToHex$1(this.r, this.g, this.b, allow3Char);
         };
         /**
          * Returns the hex value of the color -with a # appened.
@@ -12595,7 +12595,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          */
         TinyColor.prototype.toHex8 = function (allow4Char) {
             if (allow4Char === void 0) { allow4Char = false; }
-            return rgbaToHex(this.r, this.g, this.b, this.a, allow4Char);
+            return rgbaToHex$1(this.r, this.g, this.b, this.a, allow4Char);
         };
         /**
          * Returns the hex 8 value of the color -with a # appened.
@@ -12630,7 +12630,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * Returns the object as a RGBA object.
          */
         TinyColor.prototype.toPercentageRgb = function () {
-            var fmt = function (x) { return Math.round(bound01(x, 255) * 100) + "%"; };
+            var fmt = function (x) { return Math.round(bound01$1(x, 255) * 100) + "%"; };
             return {
                 r: fmt(this.r),
                 g: fmt(this.g),
@@ -12642,7 +12642,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
          * Returns the RGBA relative values interpolated into a string
          */
         TinyColor.prototype.toPercentageRgbString = function () {
-            var rnd = function (x) { return Math.round(bound01(x, 255) * 100); };
+            var rnd = function (x) { return Math.round(bound01$1(x, 255) * 100); };
             return this.a === 1
                 ? "rgb(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%)"
                 : "rgba(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%, " + this.roundA + ")";
@@ -12657,8 +12657,8 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
             if (this.a < 1) {
                 return false;
             }
-            var hex = '#' + rgbToHex(this.r, this.g, this.b, false);
-            for (var _i = 0, _a = Object.entries(names); _i < _a.length; _i++) {
+            var hex = '#' + rgbToHex$1(this.r, this.g, this.b, false);
+            for (var _i = 0, _a = Object.entries(names$1); _i < _a.length; _i++) {
                 var _b = _a[_i], key = _b[0], value = _b[1];
                 if (hex === value) {
                     return key;
@@ -12723,7 +12723,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
             if (amount === void 0) { amount = 10; }
             var hsl = this.toHsl();
             hsl.l += amount / 100;
-            hsl.l = clamp01(hsl.l);
+            hsl.l = clamp01$1(hsl.l);
             return new TinyColor(hsl);
         };
         /**
@@ -12747,7 +12747,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
             if (amount === void 0) { amount = 10; }
             var hsl = this.toHsl();
             hsl.l -= amount / 100;
-            hsl.l = clamp01(hsl.l);
+            hsl.l = clamp01$1(hsl.l);
             return new TinyColor(hsl);
         };
         /**
@@ -12777,7 +12777,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
             if (amount === void 0) { amount = 10; }
             var hsl = this.toHsl();
             hsl.s -= amount / 100;
-            hsl.s = clamp01(hsl.s);
+            hsl.s = clamp01$1(hsl.s);
             return new TinyColor(hsl);
         };
         /**
@@ -12788,7 +12788,7 @@ var(--spectrum-global-dimension-size-200))/2);border-width:var(--spectrum-colorh
             if (amount === void 0) { amount = 10; }
             var hsl = this.toHsl();
             hsl.s += amount / 100;
-            hsl.s = clamp01(hsl.s);
+            hsl.s = clamp01$1(hsl.s);
             return new TinyColor(hsl);
         };
         /**
@@ -18152,7 +18152,7 @@ var(--spectrum-global-dimension-static-size-25)))/2*-1)}:host([vertical][resizab
             ? html `
                       <div
                           id="splitter"
-                          class=${classMap(splitterClasses)}
+                          class=${classMap$1(splitterClasses)}
                           role="separator"
                           aria-label=${ifDefined(this.label || undefined)}
                           tabindex=${ifDefined(this.resizable ? '0' : undefined)}
@@ -19895,6 +19895,14 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     function set_current_component(component) {
         current_component = component;
     }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
     // TODO figure out if we still want to support
     // shorthand events, or if we want to implement
     // a real bubbling mechanism
@@ -20369,9 +20377,9 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     /* src/Components/SVGIcon.svelte generated by Svelte v3.38.2 */
 
-    const file$b = "src/Components/SVGIcon.svelte";
+    const file$f = "src/Components/SVGIcon.svelte";
 
-    function create_fragment$b(ctx) {
+    function create_fragment$f(ctx) {
     	let svg;
     	let use;
     	let use_xlink_href_value;
@@ -20381,14 +20389,14 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			svg = svg_element("svg");
     			use = svg_element("use");
     			xlink_attr(use, "xlink:href", use_xlink_href_value = "#" + /*name*/ ctx[0]);
-    			add_location(use, file$b, 10, 4, 206);
+    			add_location(use, file$f, 10, 4, 206);
     			attr_dev(svg, "viewBox", "0 0 22 22");
     			attr_dev(svg, "role", "img");
     			attr_dev(svg, "fill", "currentColor");
     			attr_dev(svg, "height", "18");
     			attr_dev(svg, "width", "18");
     			attr_dev(svg, "aria-hidden", "true");
-    			add_location(svg, file$b, 2, 0, 46);
+    			add_location(svg, file$f, 2, 0, 46);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20411,7 +20419,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20420,7 +20428,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SVGIcon", slots, []);
     	let { name } = $$props;
@@ -20450,13 +20458,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     class SVGIcon extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { name: 0 });
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { name: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SVGIcon",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$f.name
     		});
 
     		const { ctx } = this.$$;
@@ -20477,16 +20485,16 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     /* src/Components/ToolbarSubTools.svelte generated by Svelte v3.38.2 */
-    const file$a = "src/Components/ToolbarSubTools.svelte";
+    const file$e = "src/Components/ToolbarSubTools.svelte";
 
-    function get_each_context$1(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[10] = list[i];
     	return child_ctx;
     }
 
     // (26:16) {#if current !== button}
-    function create_if_block$1(ctx) {
+    function create_if_block$3(ctx) {
     	let sp_action_button;
     	let sp_icon;
     	let svgicon;
@@ -20509,10 +20517,10 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			create_component(svgicon.$$.fragment);
     			t = space();
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$a, 27, 24, 1378);
+    			add_location(sp_icon, file$e, 27, 24, 1378);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*button*/ ctx[10].tool);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*button*/ ctx[10].title);
-    			add_location(sp_action_button, file$a, 26, 20, 1260);
+    			add_location(sp_action_button, file$e, 26, 20, 1260);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20558,7 +20566,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(26:16) {#if current !== button}",
     		ctx
@@ -20568,11 +20576,11 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     // (25:12) {#each buttons as button (button.tool)}
-    function create_each_block$1(key_1, ctx) {
+    function create_each_block$2(key_1, ctx) {
     	let first;
     	let if_block_anchor;
     	let current;
-    	let if_block = /*current*/ ctx[5] !== /*button*/ ctx[10] && create_if_block$1(ctx);
+    	let if_block = /*current*/ ctx[5] !== /*button*/ ctx[10] && create_if_block$3(ctx);
 
     	const block = {
     		key: key_1,
@@ -20600,7 +20608,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$1(ctx);
+    					if_block = create_if_block$3(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -20633,7 +20641,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$1.name,
+    		id: create_each_block$2.name,
     		type: "each",
     		source: "(25:12) {#each buttons as button (button.tool)}",
     		ctx
@@ -20642,7 +20650,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$e(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -20667,12 +20675,12 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	let each_value = /*buttons*/ ctx[2];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*button*/ ctx[10].tool;
-    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$1(ctx, each_value, i);
+    		let child_ctx = get_each_context$2(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
     	}
 
     	const block = {
@@ -20690,25 +20698,25 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			}
 
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$a, 18, 8, 847);
+    			add_location(sp_icon, file$e, 18, 8, 847);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*current*/ ctx[5].title);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*current*/ ctx[5].tool);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*selected*/ ctx[0] === /*current*/ ctx[5].tool);
     			set_custom_element_data(sp_action_button, "disabled", /*disabled*/ ctx[1]);
     			set_custom_element_data(sp_action_button, "hold-affordance", "");
     			set_custom_element_data(sp_action_button, "slot", "trigger");
-    			add_location(sp_action_button, file$a, 17, 4, 638);
+    			add_location(sp_action_button, file$e, 17, 4, 638);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_style(sp_action_group, "padding", "var(--spectrum-global-dimension-size-50)");
-    			add_location(sp_action_group, file$a, 23, 8, 1062);
+    			add_location(sp_action_group, file$e, 23, 8, 1062);
     			set_custom_element_data(sp_popover, "slot", "longpress-content");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_style(sp_popover, "--spectrum-popover-dialog-min-width", "0");
-    			add_location(sp_popover, file$a, 22, 4, 963);
+    			add_location(sp_popover, file$e, 22, 4, 963);
     			set_custom_element_data(overlay_trigger, "type", "inline");
     			set_custom_element_data(overlay_trigger, "placement", /*placement*/ ctx[3]);
     			set_custom_element_data(overlay_trigger, "disabled", /*disabled*/ ctx[1]);
-    			add_location(overlay_trigger, file$a, 13, 0, 452);
+    			add_location(overlay_trigger, file$e, 13, 0, 452);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20763,8 +20771,8 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     				each_value = /*buttons*/ ctx[2];
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, outro_and_destroy_block, create_each_block$1, null, get_each_context$1);
+    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
     				check_outros();
     			}
 
@@ -20810,7 +20818,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20819,7 +20827,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$e($$self, $$props, $$invalidate) {
     	let current;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ToolbarSubTools", slots, []);
@@ -20900,7 +20908,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {
     			disabled: 1,
     			selected: 0,
     			buttons: 2,
@@ -20911,7 +20919,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			component: this,
     			tagName: "ToolbarSubTools",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$e.name
     		});
     	}
 
@@ -20949,9 +20957,9 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     /* src/Components/ToolbarRegionUp.svelte generated by Svelte v3.38.2 */
-    const file$9 = "src/Components/ToolbarRegionUp.svelte";
+    const file$d = "src/Components/ToolbarRegionUp.svelte";
 
-    function get_each_context(ctx, list, i) {
+    function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[5] = list[i];
     	return child_ctx;
@@ -20982,12 +20990,12 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			create_component(svgicon.$$.fragment);
     			t = space();
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$9, 16, 16, 717);
+    			add_location(sp_icon, file$d, 16, 16, 717);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*button*/ ctx[5].title);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*selected*/ ctx[0] === /*button*/ ctx[5].tool);
     			set_custom_element_data(sp_action_button, "disabled", /*disabled*/ ctx[1]);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*button*/ ctx[5].tool);
-    			add_location(sp_action_button, file$9, 15, 12, 551);
+    			add_location(sp_action_button, file$d, 15, 12, 551);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -21051,7 +21059,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     // (13:8) {#if Array.isArray(button)}
-    function create_if_block(ctx) {
+    function create_if_block$2(ctx) {
     	let toolbarsubtools;
     	let updating_selected;
     	let current;
@@ -21113,7 +21121,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block$2.name,
     		type: "if",
     		source: "(13:8) {#if Array.isArray(button)}",
     		ctx
@@ -21123,13 +21131,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     // (12:4) {#each buttons as button}
-    function create_each_block(ctx) {
+    function create_each_block$1(ctx) {
     	let show_if;
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block, create_else_block];
+    	const if_block_creators = [create_if_block$2, create_else_block];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -21195,7 +21203,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block.name,
+    		id: create_each_block$1.name,
     		type: "each",
     		source: "(12:4) {#each buttons as button}",
     		ctx
@@ -21204,7 +21212,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function create_fragment$9(ctx) {
+    function create_fragment$d(ctx) {
     	let sp_action_group;
     	let current;
     	let each_value = /*buttons*/ ctx[2];
@@ -21212,7 +21220,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -21230,7 +21238,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			set_custom_element_data(sp_action_group, "vertical", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$9, 10, 0, 314);
+    			add_location(sp_action_group, file$d, 10, 0, 314);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21251,13 +21259,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(sp_action_group, null);
@@ -21299,7 +21307,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21308,7 +21316,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ToolbarRegionUp", slots, []);
     	let { selected = undefined } = $$props;
@@ -21362,13 +21370,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     class ToolbarRegionUp extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { selected: 0, disabled: 1, buttons: 2 });
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { selected: 0, disabled: 1, buttons: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ToolbarRegionUp",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$d.name
     		});
     	}
 
@@ -21399,9 +21407,9 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     /* src/Components/Timeline/TimelineControls.svelte generated by Svelte v3.38.2 */
 
-    const file$8 = "src/Components/Timeline/TimelineControls.svelte";
+    const file$c = "src/Components/Timeline/TimelineControls.svelte";
 
-    function create_fragment$8(ctx) {
+    function create_fragment$c(ctx) {
     	let div;
 
     	const block = {
@@ -21409,7 +21417,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			div = element("div");
     			div.textContent = "controls";
     			attr_dev(div, "class", "timeline-controls");
-    			add_location(div, file$8, 0, 0, 0);
+    			add_location(div, file$c, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21427,7 +21435,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$8.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21436,7 +21444,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$8($$self, $$props) {
+    function instance$c($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineControls", slots, []);
     	const writable_props = [];
@@ -21451,42 +21459,77 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     class TimelineControls extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {});
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineControls",
     			options,
-    			id: create_fragment$8.name
+    			id: create_fragment$c.name
     		});
     	}
     }
 
     /* src/Components/Timeline/TimelineItem.svelte generated by Svelte v3.38.2 */
 
-    const file$7 = "src/Components/Timeline/TimelineItem.svelte";
+    const file$b = "src/Components/Timeline/TimelineItem.svelte";
 
-    function create_fragment$7(ctx) {
+    // (9:4) {#if keyframes}
+    function create_if_block$1(ctx) {
     	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "timeline-keyframes-line");
+    			add_location(div, file$b, 9, 8, 283);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(9:4) {#if keyframes}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$b(ctx) {
+    	let div;
+    	let t;
     	let current;
+    	let if_block = /*keyframes*/ ctx[2] && create_if_block$1(ctx);
     	const default_slot_template = /*#slots*/ ctx[4].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
 
     	const block = {
     		c: function create() {
     			div = element("div");
+    			if (if_block) if_block.c();
+    			t = space();
     			if (default_slot) default_slot.c();
     			attr_dev(div, "class", "timeline-item");
-    			toggle_class(div, "timeline-middle-line", /*keyframes*/ ctx[2]);
+    			toggle_class(div, "has-keyframes", /*keyframes*/ ctx[2]);
     			toggle_class(div, "is-disabled", /*disabled*/ ctx[0]);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$7, 4, 0, 117);
+    			add_location(div, file$b, 4, 0, 117);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    			append_dev(div, t);
 
     			if (default_slot) {
     				default_slot.m(div, null);
@@ -21495,6 +21538,17 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
+    			if (/*keyframes*/ ctx[2]) {
+    				if (if_block) ; else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					if_block.m(div, t);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
     			if (default_slot) {
     				if (default_slot.p && (!current || dirty & /*$$scope*/ 8)) {
     					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[3], dirty, null, null);
@@ -21502,7 +21556,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			}
 
     			if (dirty & /*keyframes*/ 4) {
-    				toggle_class(div, "timeline-middle-line", /*keyframes*/ ctx[2]);
+    				toggle_class(div, "has-keyframes", /*keyframes*/ ctx[2]);
     			}
 
     			if (dirty & /*disabled*/ 1) {
@@ -21524,13 +21578,14 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
     			if (default_slot) default_slot.d(detaching);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21539,7 +21594,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$b($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineItem", slots, ['default']);
     	let { disabled = false } = $$props;
@@ -21576,13 +21631,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     class TimelineItem extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { disabled: 0, selected: 1, keyframes: 2 });
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { disabled: 0, selected: 1, keyframes: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineItem",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$b.name
     		});
     	}
 
@@ -21613,9 +21668,9 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     /* src/Components/Timeline/Keyframe.svelte generated by Svelte v3.38.2 */
 
-    const file$6 = "src/Components/Timeline/Keyframe.svelte";
+    const file$a = "src/Components/Timeline/Keyframe.svelte";
 
-    function create_fragment$6(ctx) {
+    function create_fragment$a(ctx) {
     	let div;
     	let div_style_value;
     	let mounted;
@@ -21626,128 +21681,8 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			div = element("div");
     			attr_dev(div, "class", "timeline-keyframe");
     			attr_dev(div, "style", div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0]}`);
-    			add_location(div, file$6, 2, 0, 48);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(div, "click", /*click_handler*/ ctx[1], false, false, false),
-    					listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[2], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*offset*/ 1 && div_style_value !== (div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0]}`)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$6.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$6($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Keyframe", slots, []);
-    	let { offset } = $$props;
-    	const writable_props = ["offset"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Keyframe> was created with unknown prop '${key}'`);
-    	});
-
-    	function click_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	function pointerdown_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	$$self.$$set = $$props => {
-    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
-    	};
-
-    	$$self.$capture_state = () => ({ offset });
-
-    	$$self.$inject_state = $$props => {
-    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [offset, click_handler, pointerdown_handler];
-    }
-
-    class Keyframe extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { offset: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Keyframe",
-    			options,
-    			id: create_fragment$6.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*offset*/ ctx[0] === undefined && !("offset" in props)) {
-    			console.warn("<Keyframe> was created without expected prop 'offset'");
-    		}
-    	}
-
-    	get offset() {
-    		throw new Error("<Keyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set offset(value) {
-    		throw new Error("<Keyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/Components/Timeline/Easing.svelte generated by Svelte v3.38.2 */
-
-    const file$5 = "src/Components/Timeline/Easing.svelte";
-
-    function create_fragment$5(ctx) {
-    	let div;
-    	let div_style_value;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			attr_dev(div, "class", "timeline-easing");
-    			attr_dev(div, "style", div_style_value = `--keyframe-easing-start: ${/*start*/ ctx[0]}; --keyframe-easing-end: ${/*end*/ ctx[1]}`);
-    			add_location(div, file$5, 3, 0, 71);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
+    			add_location(div, file$a, 3, 0, 77);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21765,8 +21700,12 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*start, end*/ 3 && div_style_value !== (div_style_value = `--keyframe-easing-start: ${/*start*/ ctx[0]}; --keyframe-easing-end: ${/*end*/ ctx[1]}`)) {
+    			if (dirty & /*offset*/ 1 && div_style_value !== (div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0]}`)) {
     				attr_dev(div, "style", div_style_value);
+    			}
+
+    			if (dirty & /*selected*/ 2) {
+    				toggle_class(div, "is-selected", /*selected*/ ctx[1]);
     			}
     		},
     		i: noop,
@@ -21780,7 +21719,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$5.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21789,15 +21728,15 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Easing", slots, []);
-    	let { start = 0 } = $$props;
-    	let { end = 0 } = $$props;
-    	const writable_props = ["start", "end"];
+    	validate_slots("Keyframe", slots, []);
+    	let { offset } = $$props;
+    	let { selected = false } = $$props;
+    	const writable_props = ["offset", "selected"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Easing> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Keyframe> was created with unknown prop '${key}'`);
     	});
 
     	function click_handler(event) {
@@ -21809,34 +21748,250 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	}
 
     	$$self.$$set = $$props => {
-    		if ("start" in $$props) $$invalidate(0, start = $$props.start);
-    		if ("end" in $$props) $$invalidate(1, end = $$props.end);
+    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
     	};
 
-    	$$self.$capture_state = () => ({ start, end });
+    	$$self.$capture_state = () => ({ offset, selected });
 
     	$$self.$inject_state = $$props => {
-    		if ("start" in $$props) $$invalidate(0, start = $$props.start);
-    		if ("end" in $$props) $$invalidate(1, end = $$props.end);
+    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [start, end, click_handler, pointerdown_handler];
+    	return [offset, selected, click_handler, pointerdown_handler];
+    }
+
+    class Keyframe$1 extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { offset: 0, selected: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Keyframe",
+    			options,
+    			id: create_fragment$a.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*offset*/ ctx[0] === undefined && !("offset" in props)) {
+    			console.warn("<Keyframe> was created without expected prop 'offset'");
+    		}
+    	}
+
+    	get offset() {
+    		throw new Error("<Keyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set offset(value) {
+    		throw new Error("<Keyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<Keyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<Keyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/Easing.svelte generated by Svelte v3.38.2 */
+
+    const file$9 = "src/Components/Timeline/Easing.svelte";
+
+    // (16:0) {#if end != null}
+    function create_if_block(ctx) {
+    	let div;
+    	let div_style_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "timeline-easing");
+    			attr_dev(div, "style", div_style_value = `--timeline-keyframe-easing-start: ${/*min*/ ctx[2]}; --timeline-keyframe-easing-end: ${/*max*/ ctx[3]}`);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
+    			add_location(div, file$9, 16, 0, 284);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div, "click", /*click_handler*/ ctx[5], false, false, false),
+    					listen_dev(div, "contextmenu", /*contextmenu_handler*/ ctx[6], false, false, false),
+    					listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[7], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*min, max*/ 12 && div_style_value !== (div_style_value = `--timeline-keyframe-easing-start: ${/*min*/ ctx[2]}; --timeline-keyframe-easing-end: ${/*max*/ ctx[3]}`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+
+    			if (dirty & /*selected*/ 2) {
+    				toggle_class(div, "is-selected", /*selected*/ ctx[1]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(16:0) {#if end != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$9(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*end*/ ctx[0] != null && create_if_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*end*/ ctx[0] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$9.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$9($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Easing", slots, []);
+    	let { start = 0 } = $$props;
+    	let { end = null } = $$props;
+    	let { selected = false } = $$props;
+    	let min, max;
+    	const writable_props = ["start", "end", "selected"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Easing> was created with unknown prop '${key}'`);
+    	});
+
+    	function click_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function contextmenu_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function pointerdown_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("start" in $$props) $$invalidate(4, start = $$props.start);
+    		if ("end" in $$props) $$invalidate(0, end = $$props.end);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    	};
+
+    	$$self.$capture_state = () => ({ start, end, selected, min, max });
+
+    	$$self.$inject_state = $$props => {
+    		if ("start" in $$props) $$invalidate(4, start = $$props.start);
+    		if ("end" in $$props) $$invalidate(0, end = $$props.end);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ("min" in $$props) $$invalidate(2, min = $$props.min);
+    		if ("max" in $$props) $$invalidate(3, max = $$props.max);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*end, start*/ 17) {
+    			{
+    				if (end != null && start > end) {
+    					$$invalidate(2, min = end);
+    					$$invalidate(3, max = start);
+    				} else {
+    					$$invalidate(2, min = start);
+    					$$invalidate(3, max = end);
+    				}
+    			}
+    		}
+    	};
+
+    	return [
+    		end,
+    		selected,
+    		min,
+    		max,
+    		start,
+    		click_handler,
+    		contextmenu_handler,
+    		pointerdown_handler
+    	];
     }
 
     class Easing extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { start: 0, end: 1 });
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { start: 4, end: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Easing",
     			options,
-    			id: create_fragment$5.name
+    			id: create_fragment$9.name
     		});
     	}
 
@@ -21855,13 +22010,21 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	set end(value) {
     		throw new Error("<Easing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get selected() {
+    		throw new Error("<Easing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<Easing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Components/Timeline/LocalMarker.svelte generated by Svelte v3.38.2 */
 
-    const file$4 = "src/Components/Timeline/LocalMarker.svelte";
+    const file$8 = "src/Components/Timeline/LocalMarker.svelte";
 
-    function create_fragment$4(ctx) {
+    function create_fragment$8(ctx) {
     	let div1;
     	let div0;
     	let t;
@@ -21875,11 +22038,11 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			div0 = element("div");
     			t = text(/*label*/ ctx[0]);
     			attr_dev(div0, "class", "timeline-marker-text");
-    			add_location(div0, file$4, 9, 4, 369);
+    			add_location(div0, file$8, 9, 4, 396);
     			attr_dev(div1, "class", "timeline-local-marker");
     			attr_dev(div1, "data-color", /*color*/ ctx[4]);
-    			attr_dev(div1, "style", div1_style_value = `--marker-offset: ${/*offset*/ ctx[1]}; --marker-length: ${/*length*/ ctx[2]}; --marker-lines: ${/*lines*/ ctx[3]}; background: var(--spectrum-global-color-${/*color*/ ctx[4]}-400)`);
-    			add_location(div1, file$4, 6, 0, 149);
+    			attr_dev(div1, "style", div1_style_value = `--timeline-marker-offset: ${/*offset*/ ctx[1]}; --timeline-marker-length: ${/*length*/ ctx[2]}; --timeline-marker-lines: ${/*lines*/ ctx[3]}; background: var(--spectrum-global-color-${/*color*/ ctx[4]}-400)`);
+    			add_location(div1, file$8, 6, 0, 149);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21905,7 +22068,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     				attr_dev(div1, "data-color", /*color*/ ctx[4]);
     			}
 
-    			if (dirty & /*offset, length, lines, color*/ 30 && div1_style_value !== (div1_style_value = `--marker-offset: ${/*offset*/ ctx[1]}; --marker-length: ${/*length*/ ctx[2]}; --marker-lines: ${/*lines*/ ctx[3]}; background: var(--spectrum-global-color-${/*color*/ ctx[4]}-400)`)) {
+    			if (dirty & /*offset, length, lines, color*/ 30 && div1_style_value !== (div1_style_value = `--timeline-marker-offset: ${/*offset*/ ctx[1]}; --timeline-marker-length: ${/*length*/ ctx[2]}; --timeline-marker-lines: ${/*lines*/ ctx[3]}; background: var(--spectrum-global-color-${/*color*/ ctx[4]}-400)`)) {
     				attr_dev(div1, "style", div1_style_value);
     			}
     		},
@@ -21920,7 +22083,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21929,7 +22092,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("LocalMarker", slots, []);
     	let { label = "" } = $$props;
@@ -21980,7 +22143,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, {
     			label: 0,
     			offset: 1,
     			length: 2,
@@ -21992,7 +22155,7 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			component: this,
     			tagName: "LocalMarker",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$8.name
     		});
     	}
 
@@ -22037,338 +22200,144 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	}
     }
 
-    /* src/Components/Timeline/Timeline.svelte generated by Svelte v3.38.2 */
-    const file$3 = "src/Components/Timeline/Timeline.svelte";
+    const ElementIconMap = {
+        group: 'expr:group',
+        rect: 'expr:rectangle-tool',
+        ellipse: 'expr:ellipse',
+        poly: 'expr:polygon',
+    };
+    const FallbackElementIcon = 'expr:unknown';
+    const ElementTitleMap = {
+        group: 'Group',
+        rect: 'Rectangle',
+        ellipse: 'Ellipse',
+        path: 'Path',
+        star: 'Star',
+        poly: 'Polygon',
+        'regular-polygon': 'Regular polygon',
+        'clip-path': 'Clip path',
+    };
+    const PropertyNameMap = {
+        global: {
+            // Transform
+            originX: 'Origin X',
+            originY: 'Origin Y',
+            translateX: 'Translate X',
+            translateY: 'Translate Y',
+            scaleX: 'Scale X',
+            scaleY: 'Scale Y',
+            skewX: 'Skew X',
+            skewY: 'Skew Y',
+            rotate: 'Rotate',
+            //
+            opacity: 'Opacity',
+            // Fill
+            fill: 'Fill',
+            fillOpacity: 'Fill opacity',
+            // Stroke
+            strokeBrush: 'Stroke',
+            strokeOpacity: 'Stroke opacity',
+            strokeLineWidth: 'Stroke width',
+            strokeDashArray: 'Stroke dashes',
+            strokeDashOffset: 'Stroke dash offset',
+        },
+        rect: {
+            width: 'Width',
+            height: 'Height',
+            // TODO: radius
+            radius: 'Corner radius',
+        },
+        ellipse: {
+            width: 'Width',
+            height: 'Height',
+        },
+        poly: {
+        // TODO: poly
+        //shape: 'Points',
+        },
+        // TODO: rest
+    };
 
-    // (38:8) <TimelineItem selected disabled>
-    function create_default_slot_3(ctx) {
+    /* src/Components/Timeline/Element.svelte generated by Svelte v3.38.2 */
+    const file$7 = "src/Components/Timeline/Element.svelte";
+
+    function create_fragment$7(ctx) {
+    	let div;
+    	let sp_icon;
+    	let svgicon;
     	let t0;
+    	let span;
+    	let t1_value = (/*title*/ ctx[1] || ElementIconMap[/*type*/ ctx[0]] || "Unknown") + "";
     	let t1;
-    	let t2;
-
-    	const block = {
-    		c: function create() {
-    			t0 = text(/*scrollTop*/ ctx[0]);
-    			t1 = text(" - ");
-    			t2 = text(/*scrollLeft*/ ctx[1]);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, t1, anchor);
-    			insert_dev(target, t2, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*scrollTop*/ 1) set_data_dev(t0, /*scrollTop*/ ctx[0]);
-    			if (dirty & /*scrollLeft*/ 2) set_data_dev(t2, /*scrollLeft*/ ctx[1]);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(t2);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_3.name,
-    		type: "slot",
-    		source: "(38:8) <TimelineItem selected disabled>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (41:8) <TimelineItem disabled>
-    function create_default_slot_2(ctx) {
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			t = text("Position X");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, t, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(t);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_2.name,
-    		type: "slot",
-    		source: "(41:8) <TimelineItem disabled>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (50:12) <TimelineItem keyframes={true}>
-    function create_default_slot(ctx) {
-    	let keyframe0;
-    	let t0;
-    	let keyframe1;
-    	let t1;
-    	let keyframe2;
-    	let t2;
-    	let easing0;
-    	let t3;
-    	let easing1;
     	let current;
-    	keyframe0 = new Keyframe({ props: { offset: 0 }, $$inline: true });
-    	keyframe1 = new Keyframe({ props: { offset: 120 }, $$inline: true });
-    	keyframe2 = new Keyframe({ props: { offset: 720 }, $$inline: true });
 
-    	easing0 = new Easing({
-    			props: { start: 0, end: 120 },
-    			$$inline: true
-    		});
-
-    	easing1 = new Easing({
-    			props: { start: 120, end: 720 },
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(keyframe0.$$.fragment);
-    			t0 = space();
-    			create_component(keyframe1.$$.fragment);
-    			t1 = space();
-    			create_component(keyframe2.$$.fragment);
-    			t2 = space();
-    			create_component(easing0.$$.fragment);
-    			t3 = space();
-    			create_component(easing1.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(keyframe0, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			mount_component(keyframe1, target, anchor);
-    			insert_dev(target, t1, anchor);
-    			mount_component(keyframe2, target, anchor);
-    			insert_dev(target, t2, anchor);
-    			mount_component(easing0, target, anchor);
-    			insert_dev(target, t3, anchor);
-    			mount_component(easing1, target, anchor);
-    			current = true;
-    		},
-    		p: noop,
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(keyframe0.$$.fragment, local);
-    			transition_in(keyframe1.$$.fragment, local);
-    			transition_in(keyframe2.$$.fragment, local);
-    			transition_in(easing0.$$.fragment, local);
-    			transition_in(easing1.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(keyframe0.$$.fragment, local);
-    			transition_out(keyframe1.$$.fragment, local);
-    			transition_out(keyframe2.$$.fragment, local);
-    			transition_out(easing0.$$.fragment, local);
-    			transition_out(easing1.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(keyframe0, detaching);
-    			if (detaching) detach_dev(t0);
-    			destroy_component(keyframe1, detaching);
-    			if (detaching) detach_dev(t1);
-    			destroy_component(keyframe2, detaching);
-    			if (detaching) detach_dev(t2);
-    			destroy_component(easing0, detaching);
-    			if (detaching) detach_dev(t3);
-    			destroy_component(easing1, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot.name,
-    		type: "slot",
-    		source: "(50:12) <TimelineItem keyframes={true}>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$3(ctx) {
-    	let div5;
-    	let div0;
-    	let timelineitem0;
-    	let t0;
-    	let timelineitem1;
-    	let t1;
-    	let div4;
-    	let div1;
-    	let timelineitem2;
-    	let t2;
-    	let timelineitem3;
-    	let t3;
-    	let div2;
-    	let t4;
-    	let div3;
-    	let current;
-    	let mounted;
-    	let dispose;
-
-    	timelineitem0 = new TimelineItem({
+    	svgicon = new SVGIcon({
     			props: {
-    				selected: true,
-    				disabled: true,
-    				$$slots: { default: [create_default_slot_3] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	timelineitem1 = new TimelineItem({
-    			props: {
-    				disabled: true,
-    				$$slots: { default: [create_default_slot_2] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	timelineitem2 = new TimelineItem({ $$inline: true });
-
-    	timelineitem3 = new TimelineItem({
-    			props: {
-    				keyframes: true,
-    				$$slots: { default: [create_default_slot] },
-    				$$scope: { ctx }
+    				name: ElementIconMap[/*type*/ ctx[0]] || FallbackElementIcon
     			},
     			$$inline: true
     		});
 
     	const block = {
     		c: function create() {
-    			div5 = element("div");
-    			div0 = element("div");
-    			create_component(timelineitem0.$$.fragment);
+    			div = element("div");
+    			sp_icon = element("sp-icon");
+    			create_component(svgicon.$$.fragment);
     			t0 = space();
-    			create_component(timelineitem1.$$.fragment);
-    			t1 = space();
-    			div4 = element("div");
-    			div1 = element("div");
-    			create_component(timelineitem2.$$.fragment);
-    			t2 = space();
-    			create_component(timelineitem3.$$.fragment);
-    			t3 = space();
-    			div2 = element("div");
-    			t4 = space();
-    			div3 = element("div");
-    			attr_dev(div0, "class", "timeline-elements scroll scroll-invisible scroll-no-padding");
-    			attr_dev(div0, "hidden-x", "");
-    			add_location(div0, file$3, 36, 4, 975);
-    			attr_dev(div1, "class", "timeline-items-wrapper");
-    			add_location(div1, file$3, 45, 8, 1431);
-    			attr_dev(div2, "class", "timeline-play-line");
-    			add_location(div2, file$3, 59, 8, 1967);
-    			attr_dev(div3, "class", "timeline-selection-rect");
-    			set_style(div3, "top", "100px");
-    			set_style(div3, "left", "400px");
-    			set_style(div3, "width", "200px");
-    			set_style(div3, "height", "150px");
-    			add_location(div3, file$3, 60, 8, 2015);
-    			attr_dev(div4, "class", "timeline-keyframes scroll scroll-no-hide scroll-no-padding");
-    			add_location(div4, file$3, 44, 4, 1306);
-    			attr_dev(div5, "class", "timeline");
-    			add_location(div5, file$3, 35, 0, 947);
+    			span = element("span");
+    			t1 = text(t1_value);
+    			set_custom_element_data(sp_icon, "size", "s");
+    			add_location(sp_icon, file$7, 10, 4, 352);
+    			add_location(span, file$7, 11, 4, 447);
+    			attr_dev(div, "class", "timeline-item");
+    			toggle_class(div, "is-disabled", /*disabled*/ ctx[2]);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[3]);
+    			add_location(div, file$7, 7, 0, 252);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div0);
-    			mount_component(timelineitem0, div0, null);
-    			append_dev(div0, t0);
-    			mount_component(timelineitem1, div0, null);
-    			/*div0_binding*/ ctx[9](div0);
-    			append_dev(div5, t1);
-    			append_dev(div5, div4);
-    			append_dev(div4, div1);
-    			mount_component(timelineitem2, div1, null);
-    			append_dev(div1, t2);
-    			mount_component(timelineitem3, div1, null);
-    			append_dev(div4, t3);
-    			append_dev(div4, div2);
-    			append_dev(div4, t4);
-    			append_dev(div4, div3);
-    			/*div4_binding*/ ctx[10](div4);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, sp_icon);
+    			mount_component(svgicon, sp_icon, null);
+    			append_dev(div, t0);
+    			append_dev(div, span);
+    			append_dev(span, t1);
     			current = true;
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(div0, "scroll", /*onScroll*/ ctx[4], false, false, false),
-    					listen_dev(div4, "scroll", /*onScroll*/ ctx[4], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
     		},
     		p: function update(ctx, [dirty]) {
-    			const timelineitem0_changes = {};
+    			const svgicon_changes = {};
+    			if (dirty & /*type*/ 1) svgicon_changes.name = ElementIconMap[/*type*/ ctx[0]] || FallbackElementIcon;
+    			svgicon.$set(svgicon_changes);
+    			if ((!current || dirty & /*title, type*/ 3) && t1_value !== (t1_value = (/*title*/ ctx[1] || ElementIconMap[/*type*/ ctx[0]] || "Unknown") + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*$$scope, scrollLeft, scrollTop*/ 8195) {
-    				timelineitem0_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*disabled*/ 4) {
+    				toggle_class(div, "is-disabled", /*disabled*/ ctx[2]);
     			}
 
-    			timelineitem0.$set(timelineitem0_changes);
-    			const timelineitem1_changes = {};
-
-    			if (dirty & /*$$scope*/ 8192) {
-    				timelineitem1_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*selected*/ 8) {
+    				toggle_class(div, "is-selected", /*selected*/ ctx[3]);
     			}
-
-    			timelineitem1.$set(timelineitem1_changes);
-    			const timelineitem3_changes = {};
-
-    			if (dirty & /*$$scope*/ 8192) {
-    				timelineitem3_changes.$$scope = { dirty, ctx };
-    			}
-
-    			timelineitem3.$set(timelineitem3_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(timelineitem0.$$.fragment, local);
-    			transition_in(timelineitem1.$$.fragment, local);
-    			transition_in(timelineitem2.$$.fragment, local);
-    			transition_in(timelineitem3.$$.fragment, local);
+    			transition_in(svgicon.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(timelineitem0.$$.fragment, local);
-    			transition_out(timelineitem1.$$.fragment, local);
-    			transition_out(timelineitem2.$$.fragment, local);
-    			transition_out(timelineitem3.$$.fragment, local);
+    			transition_out(svgicon.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div5);
-    			destroy_component(timelineitem0);
-    			destroy_component(timelineitem1);
-    			/*div0_binding*/ ctx[9](null);
-    			destroy_component(timelineitem2);
-    			destroy_component(timelineitem3);
-    			/*div4_binding*/ ctx[10](null);
-    			mounted = false;
-    			run_all(dispose);
+    			if (detaching) detach_dev(div);
+    			destroy_component(svgicon);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$3.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22377,16 +22346,1114 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	return block;
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Element", slots, []);
+    	let { type } = $$props;
+    	let { title = null } = $$props;
+    	let { disabled = false } = $$props;
+    	let { selected = false } = $$props;
+    	const writable_props = ["type", "title", "disabled", "selected"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Element> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("type" in $$props) $$invalidate(0, type = $$props.type);
+    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
+    		if ("disabled" in $$props) $$invalidate(2, disabled = $$props.disabled);
+    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		FallbackElementIcon,
+    		ElementIconMap,
+    		ElementTitleMap,
+    		SVGIcon,
+    		type,
+    		title,
+    		disabled,
+    		selected
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("type" in $$props) $$invalidate(0, type = $$props.type);
+    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
+    		if ("disabled" in $$props) $$invalidate(2, disabled = $$props.disabled);
+    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [type, title, disabled, selected];
+    }
+
+    class Element$1 extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, {
+    			type: 0,
+    			title: 1,
+    			disabled: 2,
+    			selected: 3
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Element",
+    			options,
+    			id: create_fragment$7.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*type*/ ctx[0] === undefined && !("type" in props)) {
+    			console.warn("<Element> was created without expected prop 'type'");
+    		}
+    	}
+
+    	get type() {
+    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set type(value) {
+    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get title() {
+    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set title(value) {
+    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/Property.svelte generated by Svelte v3.38.2 */
+    const file$6 = "src/Components/Timeline/Property.svelte";
+
+    function create_fragment$6(ctx) {
+    	let div;
+    	let span;
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			span = element("span");
+    			t = text(/*title*/ ctx[1]);
+    			add_location(span, file$6, 8, 4, 338);
+    			attr_dev(div, "class", "timeline-item");
+    			toggle_class(div, "is-disabled", /*disabled*/ ctx[0]);
+    			add_location(div, file$6, 7, 0, 277);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, span);
+    			append_dev(span, t);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*title*/ 2) set_data_dev(t, /*title*/ ctx[1]);
+
+    			if (dirty & /*disabled*/ 1) {
+    				toggle_class(div, "is-disabled", /*disabled*/ ctx[0]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
+    	let title;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Property", slots, []);
+    	let { name } = $$props;
+    	let { property } = $$props;
+    	let { disabled = false } = $$props;
+    	const writable_props = ["name", "property", "disabled"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Property> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("name" in $$props) $$invalidate(2, name = $$props.name);
+    		if ("property" in $$props) $$invalidate(3, property = $$props.property);
+    		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		PropertyNameMap,
+    		SVGIcon,
+    		name,
+    		property,
+    		disabled,
+    		title
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("name" in $$props) $$invalidate(2, name = $$props.name);
+    		if ("property" in $$props) $$invalidate(3, property = $$props.property);
+    		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
+    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*name, property*/ 12) {
+    			$$invalidate(1, title = (name in PropertyNameMap
+    			? PropertyNameMap[name][property]
+    			: false) || "Unknown");
+    		}
+    	};
+
+    	return [disabled, title, name, property];
+    }
+
+    class Property extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { name: 2, property: 3, disabled: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Property",
+    			options,
+    			id: create_fragment$6.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*name*/ ctx[2] === undefined && !("name" in props)) {
+    			console.warn("<Property> was created without expected prop 'name'");
+    		}
+
+    		if (/*property*/ ctx[3] === undefined && !("property" in props)) {
+    			console.warn("<Property> was created without expected prop 'property'");
+    		}
+    	}
+
+    	get name() {
+    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set name(value) {
+    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get property() {
+    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set property(value) {
+    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/SelectionRect.svelte generated by Svelte v3.38.2 */
+
+    const file$5 = "src/Components/Timeline/SelectionRect.svelte";
+
+    function create_fragment$5(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "timeline-selection-rect");
+    			set_style(div, "top", "50px");
+    			set_style(div, "left", "400px");
+    			set_style(div, "width", "200px");
+    			set_style(div, "height", "150px");
+    			add_location(div, file$5, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("SelectionRect", slots, []);
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SelectionRect> was created with unknown prop '${key}'`);
+    	});
+
+    	return [];
+    }
+
+    class SelectionRect extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SelectionRect",
+    			options,
+    			id: create_fragment$5.name
+    		});
+    	}
+    }
+
+    /* src/Components/Timeline/Timeline.svelte generated by Svelte v3.38.2 */
+    const file$4 = "src/Components/Timeline/Timeline.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[16] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[19] = list[i];
+    	child_ctx[21] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_4(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[16] = list[i];
+    	return child_ctx;
+    }
+
+    // (65:12) {#each animated.animations as animationObject}
+    function create_each_block_4(ctx) {
+    	let property;
+    	let current;
+
+    	property = new Property({
+    			props: {
+    				name: /*animationObject*/ ctx[16].name,
+    				property: /*animationObject*/ ctx[16].property,
+    				disabled: /*animationObject*/ ctx[16].animation.disabled
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(property.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(property, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const property_changes = {};
+    			if (dirty & /*animatedElements*/ 4) property_changes.name = /*animationObject*/ ctx[16].name;
+    			if (dirty & /*animatedElements*/ 4) property_changes.property = /*animationObject*/ ctx[16].property;
+    			if (dirty & /*animatedElements*/ 4) property_changes.disabled = /*animationObject*/ ctx[16].animation.disabled;
+    			property.$set(property_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(property.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(property.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(property, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_4.name,
+    		type: "each",
+    		source: "(65:12) {#each animated.animations as animationObject}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (63:8) {#each animatedElements as animated}
+    function create_each_block_3(ctx) {
+    	let element_1;
+    	let t;
+    	let each_1_anchor;
+    	let current;
+
+    	element_1 = new Element$1({
+    			props: {
+    				title: /*animated*/ ctx[13].element.title,
+    				type: /*animated*/ ctx[13].element.type
+    			},
+    			$$inline: true
+    		});
+
+    	let each_value_4 = /*animated*/ ctx[13].animations;
+    	validate_each_argument(each_value_4);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_4.length; i += 1) {
+    		each_blocks[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			create_component(element_1.$$.fragment);
+    			t = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(element_1, target, anchor);
+    			insert_dev(target, t, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const element_1_changes = {};
+    			if (dirty & /*animatedElements*/ 4) element_1_changes.title = /*animated*/ ctx[13].element.title;
+    			if (dirty & /*animatedElements*/ 4) element_1_changes.type = /*animated*/ ctx[13].element.type;
+    			element_1.$set(element_1_changes);
+
+    			if (dirty & /*animatedElements*/ 4) {
+    				each_value_4 = /*animated*/ ctx[13].animations;
+    				validate_each_argument(each_value_4);
+    				let i;
+
+    				for (i = 0; i < each_value_4.length; i += 1) {
+    					const child_ctx = get_each_context_4(ctx, each_value_4, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block_4(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_4.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(element_1.$$.fragment, local);
+
+    			for (let i = 0; i < each_value_4.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(element_1.$$.fragment, local);
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(element_1, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_3.name,
+    		type: "each",
+    		source: "(63:8) {#each animatedElements as animated}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (78:24) {#each animationObject.animation.keyframes as keyframe, index}
+    function create_each_block_2(ctx) {
+    	let keyframe;
+    	let t;
+    	let easing;
+    	let current;
+
+    	keyframe = new Keyframe$1({
+    			props: { offset: /*keyframe*/ ctx[19].offset },
+    			$$inline: true
+    		});
+
+    	easing = new Easing({
+    			props: {
+    				start: /*keyframe*/ ctx[19].offset,
+    				end: /*animationObject*/ ctx[16].animation.keyframes[/*index*/ ctx[21] + 1]?.offset
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(keyframe.$$.fragment);
+    			t = space();
+    			create_component(easing.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(keyframe, target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(easing, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const keyframe_changes = {};
+    			if (dirty & /*animatedElements*/ 4) keyframe_changes.offset = /*keyframe*/ ctx[19].offset;
+    			keyframe.$set(keyframe_changes);
+    			const easing_changes = {};
+    			if (dirty & /*animatedElements*/ 4) easing_changes.start = /*keyframe*/ ctx[19].offset;
+    			if (dirty & /*animatedElements*/ 4) easing_changes.end = /*animationObject*/ ctx[16].animation.keyframes[/*index*/ ctx[21] + 1]?.offset;
+    			easing.$set(easing_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(keyframe.$$.fragment, local);
+    			transition_in(easing.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(keyframe.$$.fragment, local);
+    			transition_out(easing.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(keyframe, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(easing, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(78:24) {#each animationObject.animation.keyframes as keyframe, index}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (77:20) <TimelineItem keyframes={true} disabled={animationObject.animation.disabled}>
+    function create_default_slot(ctx) {
+    	let t;
+    	let current;
+    	let each_value_2 = /*animationObject*/ ctx[16].animation.keyframes;
+    	validate_each_argument(each_value_2);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t = space();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, t, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*animatedElements*/ 4) {
+    				each_value_2 = /*animationObject*/ ctx[16].animation.keyframes;
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block_2(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(t.parentNode, t);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_2.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value_2.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(77:20) <TimelineItem keyframes={true} disabled={animationObject.animation.disabled}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (76:16) {#each animated.animations as animationObject}
+    function create_each_block_1(ctx) {
+    	let timelineitem;
+    	let current;
+
+    	timelineitem = new TimelineItem({
+    			props: {
+    				keyframes: true,
+    				disabled: /*animationObject*/ ctx[16].animation.disabled,
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(timelineitem.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(timelineitem, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const timelineitem_changes = {};
+    			if (dirty & /*animatedElements*/ 4) timelineitem_changes.disabled = /*animationObject*/ ctx[16].animation.disabled;
+
+    			if (dirty & /*$$scope, animatedElements*/ 67108868) {
+    				timelineitem_changes.$$scope = { dirty, ctx };
+    			}
+
+    			timelineitem.$set(timelineitem_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelineitem.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelineitem.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(timelineitem, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(76:16) {#each animated.animations as animationObject}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (72:12) {#each animatedElements as animated}
+    function create_each_block(ctx) {
+    	let timelineitem;
+    	let t;
+    	let each_1_anchor;
+    	let current;
+    	timelineitem = new TimelineItem({ $$inline: true });
+    	let each_value_1 = /*animated*/ ctx[13].animations;
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			create_component(timelineitem.$$.fragment);
+    			t = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(timelineitem, target, anchor);
+    			insert_dev(target, t, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*animatedElements*/ 4) {
+    				each_value_1 = /*animated*/ ctx[13].animations;
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_1.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelineitem.$$.fragment, local);
+
+    			for (let i = 0; i < each_value_1.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelineitem.$$.fragment, local);
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(timelineitem, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(72:12) {#each animatedElements as animated}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$4(ctx) {
+    	let div4;
+    	let div0;
+    	let t0;
+    	let div3;
+    	let div1;
+    	let t1;
+    	let div2;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	let each_value_3 = /*animatedElements*/ ctx[2];
+    	validate_each_argument(each_value_3);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_3.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
+    	}
+
+    	const out = i => transition_out(each_blocks_1[i], 1, 1, () => {
+    		each_blocks_1[i] = null;
+    	});
+
+    	let each_value = /*animatedElements*/ ctx[2];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const out_1 = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			div4 = element("div");
+    			div0 = element("div");
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t0 = space();
+    			div3 = element("div");
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t1 = space();
+    			div2 = element("div");
+    			attr_dev(div0, "class", "timeline-elements scroll scroll-invisible scroll-no-padding");
+    			attr_dev(div0, "hidden-x", "");
+    			add_location(div0, file$4, 61, 4, 1712);
+    			attr_dev(div1, "class", "timeline-items-wrapper");
+    			add_location(div1, file$4, 70, 8, 2347);
+    			attr_dev(div2, "class", "timeline-play-line");
+    			add_location(div2, file$4, 87, 8, 3253);
+    			attr_dev(div3, "class", "timeline-keyframes scroll scroll-no-hide scroll-no-padding");
+    			add_location(div3, file$4, 69, 4, 2222);
+    			attr_dev(div4, "class", "timeline");
+    			add_location(div4, file$4, 60, 0, 1684);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, div0);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(div0, null);
+    			}
+
+    			/*div0_binding*/ ctx[9](div0);
+    			append_dev(div4, t0);
+    			append_dev(div4, div3);
+    			append_dev(div3, div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			append_dev(div3, t1);
+    			append_dev(div3, div2);
+    			/*div3_binding*/ ctx[10](div3);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div0, "scroll", /*onScroll*/ ctx[3], false, false, false),
+    					listen_dev(div3, "scroll", /*onScroll*/ ctx[3], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*animatedElements*/ 4) {
+    				each_value_3 = /*animatedElements*/ ctx[2];
+    				validate_each_argument(each_value_3);
+    				let i;
+
+    				for (i = 0; i < each_value_3.length; i += 1) {
+    					const child_ctx = get_each_context_3(ctx, each_value_3, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    						transition_in(each_blocks_1[i], 1);
+    					} else {
+    						each_blocks_1[i] = create_each_block_3(child_ctx);
+    						each_blocks_1[i].c();
+    						transition_in(each_blocks_1[i], 1);
+    						each_blocks_1[i].m(div0, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_3.length; i < each_blocks_1.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+
+    			if (dirty & /*animatedElements*/ 4) {
+    				each_value = /*animatedElements*/ ctx[2];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div1, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value.length; i < each_blocks.length; i += 1) {
+    					out_1(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value_3.length; i += 1) {
+    				transition_in(each_blocks_1[i]);
+    			}
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks_1 = each_blocks_1.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				transition_out(each_blocks_1[i]);
+    			}
+
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div4);
+    			destroy_each(each_blocks_1, detaching);
+    			/*div0_binding*/ ctx[9](null);
+    			destroy_each(each_blocks, detaching);
+    			/*div3_binding*/ ctx[10](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+
+
+    function mapAnimations(element, list) {
+    	const animations = [];
+
+    	for (const name in list) {
+    		if (!list.hasOwnProperty(name)) {
+    			continue;
+    		}
+
+    		for (const property in list[name]) {
+    			if (!list[name].hasOwnProperty(property)) {
+    				continue;
+    			}
+
+    			animations.push({
+    				name,
+    				property,
+    				animation: list[name][property]
+    			});
+    		}
+    	}
+
+    	return { element, animations };
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let animatedElements;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Timeline", slots, []);
     	
+    	let { animationManager } = $$props;
     	let { playOffset } = $$props;
     	let { playOffsetMax } = $$props;
     	let { scrollTop = 0 } = $$props;
     	let { scrollLeft = 0 } = $$props;
-    	let { animations = [] } = $$props;
-    	let { selected = [] } = $$props;
 
     	/* Scroll sync Y */
     	let leftPane;
@@ -22407,22 +23474,15 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     		if (top !== prevScrollTop) {
     			(el === rightPane ? leftPane : rightPane).scrollTop = top;
-    			$$invalidate(0, scrollTop = prevScrollTop = top);
+    			$$invalidate(4, scrollTop = prevScrollTop = top);
     		} else if (el === rightPane) {
-    			$$invalidate(1, scrollLeft = rightPane.scrollLeft);
+    			$$invalidate(5, scrollLeft = rightPane.scrollLeft);
     		} //rightPane.scrollWidth
 
     		isScrollingTop = false;
     	};
 
-    	const writable_props = [
-    		"playOffset",
-    		"playOffsetMax",
-    		"scrollTop",
-    		"scrollLeft",
-    		"animations",
-    		"selected"
-    	];
+    	const writable_props = ["animationManager", "playOffset", "playOffsetMax", "scrollTop", "scrollLeft"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Timeline> was created with unknown prop '${key}'`);
@@ -22431,73 +23491,82 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			leftPane = $$value;
-    			$$invalidate(2, leftPane);
+    			$$invalidate(0, leftPane);
     		});
     	}
 
-    	function div4_binding($$value) {
+    	function div3_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			rightPane = $$value;
-    			$$invalidate(3, rightPane);
+    			$$invalidate(1, rightPane);
     		});
     	}
 
     	$$self.$$set = $$props => {
-    		if ("playOffset" in $$props) $$invalidate(5, playOffset = $$props.playOffset);
-    		if ("playOffsetMax" in $$props) $$invalidate(6, playOffsetMax = $$props.playOffsetMax);
-    		if ("scrollTop" in $$props) $$invalidate(0, scrollTop = $$props.scrollTop);
-    		if ("scrollLeft" in $$props) $$invalidate(1, scrollLeft = $$props.scrollLeft);
-    		if ("animations" in $$props) $$invalidate(7, animations = $$props.animations);
-    		if ("selected" in $$props) $$invalidate(8, selected = $$props.selected);
+    		if ("animationManager" in $$props) $$invalidate(6, animationManager = $$props.animationManager);
+    		if ("playOffset" in $$props) $$invalidate(7, playOffset = $$props.playOffset);
+    		if ("playOffsetMax" in $$props) $$invalidate(8, playOffsetMax = $$props.playOffsetMax);
+    		if ("scrollTop" in $$props) $$invalidate(4, scrollTop = $$props.scrollTop);
+    		if ("scrollLeft" in $$props) $$invalidate(5, scrollLeft = $$props.scrollLeft);
     	};
 
     	$$self.$capture_state = () => ({
+    		mapAnimations,
     		TimelineItem,
-    		Keyframe,
+    		Keyframe: Keyframe$1,
     		Easing,
     		LocalMarker,
+    		Element: Element$1,
+    		Property,
+    		SelectionRect,
+    		animationManager,
     		playOffset,
     		playOffsetMax,
     		scrollTop,
     		scrollLeft,
-    		animations,
-    		selected,
     		leftPane,
     		rightPane,
     		isScrollingTop,
     		prevScrollTop,
-    		onScroll
+    		onScroll,
+    		animatedElements
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("playOffset" in $$props) $$invalidate(5, playOffset = $$props.playOffset);
-    		if ("playOffsetMax" in $$props) $$invalidate(6, playOffsetMax = $$props.playOffsetMax);
-    		if ("scrollTop" in $$props) $$invalidate(0, scrollTop = $$props.scrollTop);
-    		if ("scrollLeft" in $$props) $$invalidate(1, scrollLeft = $$props.scrollLeft);
-    		if ("animations" in $$props) $$invalidate(7, animations = $$props.animations);
-    		if ("selected" in $$props) $$invalidate(8, selected = $$props.selected);
-    		if ("leftPane" in $$props) $$invalidate(2, leftPane = $$props.leftPane);
-    		if ("rightPane" in $$props) $$invalidate(3, rightPane = $$props.rightPane);
+    		if ("animationManager" in $$props) $$invalidate(6, animationManager = $$props.animationManager);
+    		if ("playOffset" in $$props) $$invalidate(7, playOffset = $$props.playOffset);
+    		if ("playOffsetMax" in $$props) $$invalidate(8, playOffsetMax = $$props.playOffsetMax);
+    		if ("scrollTop" in $$props) $$invalidate(4, scrollTop = $$props.scrollTop);
+    		if ("scrollLeft" in $$props) $$invalidate(5, scrollLeft = $$props.scrollLeft);
+    		if ("leftPane" in $$props) $$invalidate(0, leftPane = $$props.leftPane);
+    		if ("rightPane" in $$props) $$invalidate(1, rightPane = $$props.rightPane);
     		if ("isScrollingTop" in $$props) isScrollingTop = $$props.isScrollingTop;
     		if ("prevScrollTop" in $$props) prevScrollTop = $$props.prevScrollTop;
+    		if ("animatedElements" in $$props) $$invalidate(2, animatedElements = $$props.animatedElements);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*animationManager*/ 64) {
+    			$$invalidate(2, animatedElements = animationManager.map(mapAnimations));
+    		}
+    	};
+
     	return [
-    		scrollTop,
-    		scrollLeft,
     		leftPane,
     		rightPane,
+    		animatedElements,
     		onScroll,
+    		scrollTop,
+    		scrollLeft,
+    		animationManager,
     		playOffset,
     		playOffsetMax,
-    		animations,
-    		selected,
     		div0_binding,
-    		div4_binding
+    		div3_binding
     	];
     }
 
@@ -22505,32 +23574,43 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, {
-    			playOffset: 5,
-    			playOffsetMax: 6,
-    			scrollTop: 0,
-    			scrollLeft: 1,
-    			animations: 7,
-    			selected: 8
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    			animationManager: 6,
+    			playOffset: 7,
+    			playOffsetMax: 8,
+    			scrollTop: 4,
+    			scrollLeft: 5
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Timeline",
     			options,
-    			id: create_fragment$3.name
+    			id: create_fragment$4.name
     		});
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*playOffset*/ ctx[5] === undefined && !("playOffset" in props)) {
+    		if (/*animationManager*/ ctx[6] === undefined && !("animationManager" in props)) {
+    			console.warn("<Timeline> was created without expected prop 'animationManager'");
+    		}
+
+    		if (/*playOffset*/ ctx[7] === undefined && !("playOffset" in props)) {
     			console.warn("<Timeline> was created without expected prop 'playOffset'");
     		}
 
-    		if (/*playOffsetMax*/ ctx[6] === undefined && !("playOffsetMax" in props)) {
+    		if (/*playOffsetMax*/ ctx[8] === undefined && !("playOffsetMax" in props)) {
     			console.warn("<Timeline> was created without expected prop 'playOffsetMax'");
     		}
+    	}
+
+    	get animationManager() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set animationManager(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get playOffset() {
@@ -22564,21 +23644,114 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	set scrollLeft(value) {
     		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+    }
 
-    	get animations() {
-    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    /* src/Components/Timeline/TimelineRuler.svelte generated by Svelte v3.38.2 */
+
+    const file$3 = "src/Components/Timeline/TimelineRuler.svelte";
+
+    function create_fragment$3(ctx) {
+    	let canvas_1;
+
+    	const block = {
+    		c: function create() {
+    			canvas_1 = element("canvas");
+    			attr_dev(canvas_1, "class", "timeline-ruler");
+    			add_location(canvas_1, file$3, 4, 0, 82);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, canvas_1, anchor);
+    			/*canvas_1_binding*/ ctx[3](canvas_1);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(canvas_1);
+    			/*canvas_1_binding*/ ctx[3](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TimelineRuler", slots, []);
+    	let { zoom = 1 } = $$props;
+    	let { left = 0 } = $$props;
+    	let canvas;
+    	const writable_props = ["zoom", "left"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineRuler> was created with unknown prop '${key}'`);
+    	});
+
+    	function canvas_1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			canvas = $$value;
+    			$$invalidate(0, canvas);
+    		});
     	}
 
-    	set animations(value) {
-    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	$$self.$$set = $$props => {
+    		if ("zoom" in $$props) $$invalidate(1, zoom = $$props.zoom);
+    		if ("left" in $$props) $$invalidate(2, left = $$props.left);
+    	};
+
+    	$$self.$capture_state = () => ({ zoom, left, canvas });
+
+    	$$self.$inject_state = $$props => {
+    		if ("zoom" in $$props) $$invalidate(1, zoom = $$props.zoom);
+    		if ("left" in $$props) $$invalidate(2, left = $$props.left);
+    		if ("canvas" in $$props) $$invalidate(0, canvas = $$props.canvas);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
     	}
 
-    	get selected() {
-    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	return [canvas, zoom, left, canvas_1_binding];
+    }
+
+    class TimelineRuler extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { zoom: 1, left: 2 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TimelineRuler",
+    			options,
+    			id: create_fragment$3.name
+    		});
     	}
 
-    	set selected(value) {
-    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	get zoom() {
+    		throw new Error("<TimelineRuler>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set zoom(value) {
+    		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get left() {
+    		throw new Error("<TimelineRuler>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set left(value) {
+    		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -22586,33 +23759,39 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     const file$2 = "src/Components/Timeline/index.svelte";
 
     function create_fragment$2(ctx) {
-    	let div;
+    	let div1;
+    	let div0;
     	let timelinecontrols;
     	let updating_playOffset;
     	let updating_playOffsetMax;
-    	let t;
+    	let t0;
+    	let timelineruler;
+    	let updating_zoom;
+    	let t1;
     	let timeline;
+    	let updating_animationManager;
     	let updating_scrollTop;
+    	let updating_scrollLeft;
     	let updating_playOffset_1;
     	let updating_playOffsetMax_1;
     	let current;
 
     	function timelinecontrols_playOffset_binding(value) {
-    		/*timelinecontrols_playOffset_binding*/ ctx[4](value);
+    		/*timelinecontrols_playOffset_binding*/ ctx[8](value);
     	}
 
     	function timelinecontrols_playOffsetMax_binding(value) {
-    		/*timelinecontrols_playOffsetMax_binding*/ ctx[5](value);
+    		/*timelinecontrols_playOffsetMax_binding*/ ctx[9](value);
     	}
 
     	let timelinecontrols_props = {};
 
-    	if (/*playOffset*/ ctx[0] !== void 0) {
-    		timelinecontrols_props.playOffset = /*playOffset*/ ctx[0];
+    	if (/*playOffset*/ ctx[2] !== void 0) {
+    		timelinecontrols_props.playOffset = /*playOffset*/ ctx[2];
     	}
 
-    	if (/*playOffsetMax*/ ctx[1] !== void 0) {
-    		timelinecontrols_props.playOffsetMax = /*playOffsetMax*/ ctx[1];
+    	if (/*playOffsetMax*/ ctx[3] !== void 0) {
+    		timelinecontrols_props.playOffsetMax = /*playOffsetMax*/ ctx[3];
     	}
 
     	timelinecontrols = new TimelineControls({
@@ -22623,113 +23802,181 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	binding_callbacks.push(() => bind(timelinecontrols, "playOffset", timelinecontrols_playOffset_binding));
     	binding_callbacks.push(() => bind(timelinecontrols, "playOffsetMax", timelinecontrols_playOffsetMax_binding));
 
+    	function timelineruler_zoom_binding(value) {
+    		/*timelineruler_zoom_binding*/ ctx[10](value);
+    	}
+
+    	let timelineruler_props = { left: /*scrollLeft*/ ctx[5] };
+
+    	if (/*zoom*/ ctx[1] !== void 0) {
+    		timelineruler_props.zoom = /*zoom*/ ctx[1];
+    	}
+
+    	timelineruler = new TimelineRuler({
+    			props: timelineruler_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(timelineruler, "zoom", timelineruler_zoom_binding));
+
+    	function timeline_animationManager_binding(value) {
+    		/*timeline_animationManager_binding*/ ctx[11](value);
+    	}
+
     	function timeline_scrollTop_binding(value) {
-    		/*timeline_scrollTop_binding*/ ctx[6](value);
+    		/*timeline_scrollTop_binding*/ ctx[12](value);
+    	}
+
+    	function timeline_scrollLeft_binding(value) {
+    		/*timeline_scrollLeft_binding*/ ctx[13](value);
     	}
 
     	function timeline_playOffset_binding(value) {
-    		/*timeline_playOffset_binding*/ ctx[7](value);
+    		/*timeline_playOffset_binding*/ ctx[14](value);
     	}
 
     	function timeline_playOffsetMax_binding(value) {
-    		/*timeline_playOffsetMax_binding*/ ctx[8](value);
+    		/*timeline_playOffsetMax_binding*/ ctx[15](value);
     	}
 
     	let timeline_props = {};
 
-    	if (/*scrollTop*/ ctx[2] !== void 0) {
-    		timeline_props.scrollTop = /*scrollTop*/ ctx[2];
+    	if (/*animationManager*/ ctx[0] !== void 0) {
+    		timeline_props.animationManager = /*animationManager*/ ctx[0];
     	}
 
-    	if (/*playOffset*/ ctx[0] !== void 0) {
-    		timeline_props.playOffset = /*playOffset*/ ctx[0];
+    	if (/*scrollTop*/ ctx[4] !== void 0) {
+    		timeline_props.scrollTop = /*scrollTop*/ ctx[4];
     	}
 
-    	if (/*playOffsetMax*/ ctx[1] !== void 0) {
-    		timeline_props.playOffsetMax = /*playOffsetMax*/ ctx[1];
+    	if (/*scrollLeft*/ ctx[5] !== void 0) {
+    		timeline_props.scrollLeft = /*scrollLeft*/ ctx[5];
+    	}
+
+    	if (/*playOffset*/ ctx[2] !== void 0) {
+    		timeline_props.playOffset = /*playOffset*/ ctx[2];
+    	}
+
+    	if (/*playOffsetMax*/ ctx[3] !== void 0) {
+    		timeline_props.playOffsetMax = /*playOffsetMax*/ ctx[3];
     	}
 
     	timeline = new Timeline({ props: timeline_props, $$inline: true });
+    	binding_callbacks.push(() => bind(timeline, "animationManager", timeline_animationManager_binding));
     	binding_callbacks.push(() => bind(timeline, "scrollTop", timeline_scrollTop_binding));
+    	binding_callbacks.push(() => bind(timeline, "scrollLeft", timeline_scrollLeft_binding));
     	binding_callbacks.push(() => bind(timeline, "playOffset", timeline_playOffset_binding));
     	binding_callbacks.push(() => bind(timeline, "playOffsetMax", timeline_playOffsetMax_binding));
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
     			create_component(timelinecontrols.$$.fragment);
-    			t = space();
+    			t0 = space();
+    			create_component(timelineruler.$$.fragment);
+    			t1 = space();
     			create_component(timeline.$$.fragment);
-    			attr_dev(div, "class", "timeline-wrapper");
-    			attr_dev(div, "style", /*style*/ ctx[3]);
-    			add_location(div, file$2, 13, 0, 426);
+    			attr_dev(div0, "class", "timeline-controls-wrapper");
+    			add_location(div0, file$2, 20, 4, 652);
+    			attr_dev(div1, "class", "timeline-wrapper");
+    			attr_dev(div1, "style", /*style*/ ctx[6]);
+    			add_location(div1, file$2, 19, 0, 600);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			mount_component(timelinecontrols, div, null);
-    			append_dev(div, t);
-    			mount_component(timeline, div, null);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			mount_component(timelinecontrols, div0, null);
+    			append_dev(div0, t0);
+    			mount_component(timelineruler, div0, null);
+    			append_dev(div1, t1);
+    			mount_component(timeline, div1, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
     			const timelinecontrols_changes = {};
 
-    			if (!updating_playOffset && dirty & /*playOffset*/ 1) {
+    			if (!updating_playOffset && dirty & /*playOffset*/ 4) {
     				updating_playOffset = true;
-    				timelinecontrols_changes.playOffset = /*playOffset*/ ctx[0];
+    				timelinecontrols_changes.playOffset = /*playOffset*/ ctx[2];
     				add_flush_callback(() => updating_playOffset = false);
     			}
 
-    			if (!updating_playOffsetMax && dirty & /*playOffsetMax*/ 2) {
+    			if (!updating_playOffsetMax && dirty & /*playOffsetMax*/ 8) {
     				updating_playOffsetMax = true;
-    				timelinecontrols_changes.playOffsetMax = /*playOffsetMax*/ ctx[1];
+    				timelinecontrols_changes.playOffsetMax = /*playOffsetMax*/ ctx[3];
     				add_flush_callback(() => updating_playOffsetMax = false);
     			}
 
     			timelinecontrols.$set(timelinecontrols_changes);
+    			const timelineruler_changes = {};
+    			if (dirty & /*scrollLeft*/ 32) timelineruler_changes.left = /*scrollLeft*/ ctx[5];
+
+    			if (!updating_zoom && dirty & /*zoom*/ 2) {
+    				updating_zoom = true;
+    				timelineruler_changes.zoom = /*zoom*/ ctx[1];
+    				add_flush_callback(() => updating_zoom = false);
+    			}
+
+    			timelineruler.$set(timelineruler_changes);
     			const timeline_changes = {};
 
-    			if (!updating_scrollTop && dirty & /*scrollTop*/ 4) {
+    			if (!updating_animationManager && dirty & /*animationManager*/ 1) {
+    				updating_animationManager = true;
+    				timeline_changes.animationManager = /*animationManager*/ ctx[0];
+    				add_flush_callback(() => updating_animationManager = false);
+    			}
+
+    			if (!updating_scrollTop && dirty & /*scrollTop*/ 16) {
     				updating_scrollTop = true;
-    				timeline_changes.scrollTop = /*scrollTop*/ ctx[2];
+    				timeline_changes.scrollTop = /*scrollTop*/ ctx[4];
     				add_flush_callback(() => updating_scrollTop = false);
     			}
 
-    			if (!updating_playOffset_1 && dirty & /*playOffset*/ 1) {
+    			if (!updating_scrollLeft && dirty & /*scrollLeft*/ 32) {
+    				updating_scrollLeft = true;
+    				timeline_changes.scrollLeft = /*scrollLeft*/ ctx[5];
+    				add_flush_callback(() => updating_scrollLeft = false);
+    			}
+
+    			if (!updating_playOffset_1 && dirty & /*playOffset*/ 4) {
     				updating_playOffset_1 = true;
-    				timeline_changes.playOffset = /*playOffset*/ ctx[0];
+    				timeline_changes.playOffset = /*playOffset*/ ctx[2];
     				add_flush_callback(() => updating_playOffset_1 = false);
     			}
 
-    			if (!updating_playOffsetMax_1 && dirty & /*playOffsetMax*/ 2) {
+    			if (!updating_playOffsetMax_1 && dirty & /*playOffsetMax*/ 8) {
     				updating_playOffsetMax_1 = true;
-    				timeline_changes.playOffsetMax = /*playOffsetMax*/ ctx[1];
+    				timeline_changes.playOffsetMax = /*playOffsetMax*/ ctx[3];
     				add_flush_callback(() => updating_playOffsetMax_1 = false);
     			}
 
     			timeline.$set(timeline_changes);
 
-    			if (!current || dirty & /*style*/ 8) {
-    				attr_dev(div, "style", /*style*/ ctx[3]);
+    			if (!current || dirty & /*style*/ 64) {
+    				attr_dev(div1, "style", /*style*/ ctx[6]);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(timelinecontrols.$$.fragment, local);
+    			transition_in(timelineruler.$$.fragment, local);
     			transition_in(timeline.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(timelinecontrols.$$.fragment, local);
+    			transition_out(timelineruler.$$.fragment, local);
     			transition_out(timeline.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div1);
     			destroy_component(timelinecontrols);
+    			destroy_component(timelineruler);
     			destroy_component(timeline);
     		}
     	};
@@ -22746,13 +23993,18 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     }
 
     function instance$2($$self, $$props, $$invalidate) {
+    	let unit;
     	let style;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Timeline", slots, []);
+    	
+    	let { animationManager } = $$props;
+    	let { zoom = 1 } = $$props;
     	let { playOffset = 0 } = $$props;
     	let { playOffsetMax = 3000 } = $$props;
     	let scrollTop = 0;
-    	const writable_props = ["playOffset", "playOffsetMax"];
+    	let scrollLeft = 0;
+    	const writable_props = ["animationManager", "zoom", "playOffset", "playOffsetMax"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Timeline> was created with unknown prop '${key}'`);
@@ -22760,48 +24012,74 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
 
     	function timelinecontrols_playOffset_binding(value) {
     		playOffset = value;
-    		$$invalidate(0, playOffset);
+    		$$invalidate(2, playOffset);
     	}
 
     	function timelinecontrols_playOffsetMax_binding(value) {
     		playOffsetMax = value;
-    		$$invalidate(1, playOffsetMax);
+    		$$invalidate(3, playOffsetMax);
+    	}
+
+    	function timelineruler_zoom_binding(value) {
+    		zoom = value;
+    		$$invalidate(1, zoom);
+    	}
+
+    	function timeline_animationManager_binding(value) {
+    		animationManager = value;
+    		$$invalidate(0, animationManager);
     	}
 
     	function timeline_scrollTop_binding(value) {
     		scrollTop = value;
-    		$$invalidate(2, scrollTop);
+    		$$invalidate(4, scrollTop);
+    	}
+
+    	function timeline_scrollLeft_binding(value) {
+    		scrollLeft = value;
+    		$$invalidate(5, scrollLeft);
     	}
 
     	function timeline_playOffset_binding(value) {
     		playOffset = value;
-    		$$invalidate(0, playOffset);
+    		$$invalidate(2, playOffset);
     	}
 
     	function timeline_playOffsetMax_binding(value) {
     		playOffsetMax = value;
-    		$$invalidate(1, playOffsetMax);
+    		$$invalidate(3, playOffsetMax);
     	}
 
     	$$self.$$set = $$props => {
-    		if ("playOffset" in $$props) $$invalidate(0, playOffset = $$props.playOffset);
-    		if ("playOffsetMax" in $$props) $$invalidate(1, playOffsetMax = $$props.playOffsetMax);
+    		if ("animationManager" in $$props) $$invalidate(0, animationManager = $$props.animationManager);
+    		if ("zoom" in $$props) $$invalidate(1, zoom = $$props.zoom);
+    		if ("playOffset" in $$props) $$invalidate(2, playOffset = $$props.playOffset);
+    		if ("playOffsetMax" in $$props) $$invalidate(3, playOffsetMax = $$props.playOffsetMax);
     	};
 
     	$$self.$capture_state = () => ({
     		TimelineControls,
     		Timeline,
+    		TimelineRuler,
+    		animationManager,
+    		zoom,
     		playOffset,
     		playOffsetMax,
     		scrollTop,
+    		scrollLeft,
+    		unit,
     		style
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("playOffset" in $$props) $$invalidate(0, playOffset = $$props.playOffset);
-    		if ("playOffsetMax" in $$props) $$invalidate(1, playOffsetMax = $$props.playOffsetMax);
-    		if ("scrollTop" in $$props) $$invalidate(2, scrollTop = $$props.scrollTop);
-    		if ("style" in $$props) $$invalidate(3, style = $$props.style);
+    		if ("animationManager" in $$props) $$invalidate(0, animationManager = $$props.animationManager);
+    		if ("zoom" in $$props) $$invalidate(1, zoom = $$props.zoom);
+    		if ("playOffset" in $$props) $$invalidate(2, playOffset = $$props.playOffset);
+    		if ("playOffsetMax" in $$props) $$invalidate(3, playOffsetMax = $$props.playOffsetMax);
+    		if ("scrollTop" in $$props) $$invalidate(4, scrollTop = $$props.scrollTop);
+    		if ("scrollLeft" in $$props) $$invalidate(5, scrollLeft = $$props.scrollLeft);
+    		if ("unit" in $$props) $$invalidate(7, unit = $$props.unit);
+    		if ("style" in $$props) $$invalidate(6, style = $$props.style);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -22809,25 +24087,36 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*playOffset, scrollTop*/ 5) {
+    		if ($$self.$$.dirty & /*zoom*/ 2) {
+    			$$invalidate(7, unit = zoom * 1);
+    		}
+
+    		if ($$self.$$.dirty & /*playOffset, scrollTop, animationManager, unit*/ 149) {
     			// TODO: use zoom and others
-    			$$invalidate(3, style = `
+    			$$invalidate(6, style = `
         --timeline-play-offset: ${playOffset};
         --timeline-scroll-top: ${scrollTop}px;
-        --timeline-max-offset: 3000;
-        --timeline-ms-unit: 1px;
+        --timeline-max-offset: ${animationManager.duration};
+        --timeline-ms-unit: ${unit}px;
     `);
     		}
     	};
 
     	return [
+    		animationManager,
+    		zoom,
     		playOffset,
     		playOffsetMax,
     		scrollTop,
+    		scrollLeft,
     		style,
+    		unit,
     		timelinecontrols_playOffset_binding,
     		timelinecontrols_playOffsetMax_binding,
+    		timelineruler_zoom_binding,
+    		timeline_animationManager_binding,
     		timeline_scrollTop_binding,
+    		timeline_scrollLeft_binding,
     		timeline_playOffset_binding,
     		timeline_playOffsetMax_binding
     	];
@@ -22836,7 +24125,13 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     class Timeline_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { playOffset: 0, playOffsetMax: 1 });
+
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {
+    			animationManager: 0,
+    			zoom: 1,
+    			playOffset: 2,
+    			playOffsetMax: 3
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -22844,6 +24139,29 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			options,
     			id: create_fragment$2.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*animationManager*/ ctx[0] === undefined && !("animationManager" in props)) {
+    			console.warn("<Timeline> was created without expected prop 'animationManager'");
+    		}
+    	}
+
+    	get animationManager() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set animationManager(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get zoom() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set zoom(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get playOffset() {
@@ -22863,115 +24181,6311 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	}
     }
 
-    /* src/Components/Canvas.svelte generated by Svelte v3.38.2 */
+    const EPSILON = 0.00001;
+    function round(value) {
+        return Number.isInteger(value) ? value : Math.round(value * 100) / 100;
+    }
+    function clamp(value, min = 0, max = 1) {
+        return value <= min ? min : (value >= max ? max : value);
+    }
+    function isCloseTo(a, b) {
+        return Math.abs(a - b) <= EPSILON;
+    }
+    function numberToString(value) {
+        return Number.isInteger(value) ? value.toString() : value.toFixed(2);
+    }
 
+    // TinyColor v1.4.2
+    // https://github.com/bgrins/TinyColor
+    // Brian Grinstead, MIT License
+    var trimLeft = /^\s+/, trimRight = /\s+$/, mathRound = Math.round, mathMin = Math.min, mathMax = Math.max, mathRandom = Math.random;
+    function tinycolor(color, opts) {
+        color = (color) ? color : '';
+        opts = opts || {};
+        // If input is already a tinycolor, return itself
+        if (color instanceof tinycolor) {
+            return color;
+        }
+        // If we are called as a function, call using new instead
+        if (!(this instanceof tinycolor)) {
+            // @ts-ignore
+            return new tinycolor(color, opts);
+        }
+        var rgb = inputToRGB(color);
+        this._originalInput = color,
+            this._r = rgb.r,
+            this._g = rgb.g,
+            this._b = rgb.b,
+            this._a = rgb.a,
+            this._roundA = mathRound(100 * this._a) / 100,
+            this._format = opts.format || rgb.format;
+        this._gradientType = opts.gradientType;
+        // Don't let the range of [0,255] come back in [0,1].
+        // Potentially lose a little bit of precision here, but will fix issues where
+        // .5 gets interpreted as half of the total, instead of half of 1
+        // If it was supposed to be 128, this was already taken care of by `inputToRgb`
+        if (this._r < 1) {
+            this._r = mathRound(this._r);
+        }
+        if (this._g < 1) {
+            this._g = mathRound(this._g);
+        }
+        if (this._b < 1) {
+            this._b = mathRound(this._b);
+        }
+        this._ok = rgb.ok;
+    }
+    tinycolor.prototype = {
+        isDark: function () {
+            return this.getBrightness() < 128;
+        },
+        isLight: function () {
+            return !this.isDark();
+        },
+        isValid: function () {
+            return this._ok;
+        },
+        getOriginalInput: function () {
+            return this._originalInput;
+        },
+        getFormat: function () {
+            return this._format;
+        },
+        getAlpha: function () {
+            return this._a;
+        },
+        getBrightness: function () {
+            //http://www.w3.org/TR/AERT#color-contrast
+            var rgb = this.toRgb();
+            return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        },
+        getLuminance: function () {
+            //http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+            var rgb = this.toRgb();
+            var RsRGB, GsRGB, BsRGB, R, G, B;
+            RsRGB = rgb.r / 255;
+            GsRGB = rgb.g / 255;
+            BsRGB = rgb.b / 255;
+            if (RsRGB <= 0.03928) {
+                R = RsRGB / 12.92;
+            }
+            else {
+                R = Math.pow(((RsRGB + 0.055) / 1.055), 2.4);
+            }
+            if (GsRGB <= 0.03928) {
+                G = GsRGB / 12.92;
+            }
+            else {
+                G = Math.pow(((GsRGB + 0.055) / 1.055), 2.4);
+            }
+            if (BsRGB <= 0.03928) {
+                B = BsRGB / 12.92;
+            }
+            else {
+                B = Math.pow(((BsRGB + 0.055) / 1.055), 2.4);
+            }
+            return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+        },
+        setAlpha: function (value) {
+            this._a = boundAlpha(value);
+            this._roundA = mathRound(100 * this._a) / 100;
+            return this;
+        },
+        toHsv: function () {
+            var hsv = rgbToHsv(this._r, this._g, this._b);
+            return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this._a };
+        },
+        toHsvString: function () {
+            var hsv = rgbToHsv(this._r, this._g, this._b);
+            var h = mathRound(hsv.h * 360), s = mathRound(hsv.s * 100), v = mathRound(hsv.v * 100);
+            return (this._a == 1) ?
+                "hsv(" + h + ", " + s + "%, " + v + "%)" :
+                "hsva(" + h + ", " + s + "%, " + v + "%, " + this._roundA + ")";
+        },
+        toHsl: function () {
+            var hsl = rgbToHsl(this._r, this._g, this._b);
+            return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this._a };
+        },
+        toHslString: function () {
+            var hsl = rgbToHsl(this._r, this._g, this._b);
+            var h = mathRound(hsl.h * 360), s = mathRound(hsl.s * 100), l = mathRound(hsl.l * 100);
+            return (this._a == 1) ?
+                "hsl(" + h + ", " + s + "%, " + l + "%)" :
+                "hsla(" + h + ", " + s + "%, " + l + "%, " + this._roundA + ")";
+        },
+        toHex: function (allow3Char) {
+            return rgbToHex(this._r, this._g, this._b, allow3Char);
+        },
+        toHexString: function (allow3Char) {
+            return '#' + this.toHex(allow3Char);
+        },
+        toHex8: function (allow4Char) {
+            return rgbaToHex(this._r, this._g, this._b, this._a, allow4Char);
+        },
+        toHex8String: function (allow4Char) {
+            return '#' + this.toHex8(allow4Char);
+        },
+        toRgb: function () {
+            return { r: mathRound(this._r), g: mathRound(this._g), b: mathRound(this._b), a: this._a };
+        },
+        toRgbString: function () {
+            return (this._a == 1) ?
+                "rgb(" + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ")" :
+                "rgba(" + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ", " + this._roundA + ")";
+        },
+        toPercentageRgb: function () {
+            return {
+                r: mathRound(bound01(this._r, 255) * 100) + "%",
+                g: mathRound(bound01(this._g, 255) * 100) + "%",
+                b: mathRound(bound01(this._b, 255) * 100) + "%",
+                a: this._a
+            };
+        },
+        toPercentageRgbString: function () {
+            return (this._a == 1) ?
+                "rgb(" + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%)" :
+                "rgba(" + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%, " + this._roundA + ")";
+        },
+        toName: function () {
+            if (this._a === 0) {
+                return "transparent";
+            }
+            if (this._a < 1) {
+                return false;
+            }
+            return hexNames[rgbToHex(this._r, this._g, this._b, true)] || false;
+        },
+        toFilter: function (secondColor) {
+            var hex8String = '#' + rgbaToArgbHex(this._r, this._g, this._b, this._a);
+            var secondHex8String = hex8String;
+            var gradientType = this._gradientType ? "GradientType = 1, " : "";
+            if (secondColor) {
+                var s = tinycolor(secondColor);
+                secondHex8String = '#' + rgbaToArgbHex(s._r, s._g, s._b, s._a);
+            }
+            return "progid:DXImageTransform.Microsoft.gradient(" + gradientType + "startColorstr=" + hex8String + ",endColorstr=" + secondHex8String + ")";
+        },
+        toString: function (format) {
+            var formatSet = !!format;
+            format = format || this._format;
+            var formattedString = false;
+            var hasAlpha = this._a < 1 && this._a >= 0;
+            var needsAlphaFormat = !formatSet && hasAlpha && (format === "hex" || format === "hex6" || format === "hex3" || format === "hex4" || format === "hex8" || format === "name");
+            if (needsAlphaFormat) {
+                // Special case for "transparent", all other non-alpha formats
+                // will return rgba when there is transparency.
+                if (format === "name" && this._a === 0) {
+                    return this.toName();
+                }
+                return this.toRgbString();
+            }
+            if (format === "rgb") {
+                formattedString = this.toRgbString();
+            }
+            if (format === "prgb") {
+                formattedString = this.toPercentageRgbString();
+            }
+            if (format === "hex" || format === "hex6") {
+                formattedString = this.toHexString();
+            }
+            if (format === "hex3") {
+                formattedString = this.toHexString(true);
+            }
+            if (format === "hex4") {
+                formattedString = this.toHex8String(true);
+            }
+            if (format === "hex8") {
+                formattedString = this.toHex8String();
+            }
+            if (format === "name") {
+                formattedString = this.toName();
+            }
+            if (format === "hsl") {
+                formattedString = this.toHslString();
+            }
+            if (format === "hsv") {
+                formattedString = this.toHsvString();
+            }
+            return formattedString || this.toHexString();
+        },
+        clone: function () {
+            return tinycolor(this.toString());
+        },
+        _applyModification: function (fn, args) {
+            var color = fn.apply(null, [this].concat([].slice.call(args)));
+            this._r = color._r;
+            this._g = color._g;
+            this._b = color._b;
+            this.setAlpha(color._a);
+            return this;
+        },
+        lighten: function () {
+            return this._applyModification(lighten, arguments);
+        },
+        brighten: function () {
+            return this._applyModification(brighten, arguments);
+        },
+        darken: function () {
+            return this._applyModification(darken, arguments);
+        },
+        desaturate: function () {
+            return this._applyModification(desaturate, arguments);
+        },
+        saturate: function () {
+            return this._applyModification(saturate, arguments);
+        },
+        greyscale: function () {
+            return this._applyModification(greyscale, arguments);
+        },
+        spin: function () {
+            return this._applyModification(spin, arguments);
+        },
+        _applyCombination: function (fn, args) {
+            return fn.apply(null, [this].concat([].slice.call(args)));
+        },
+        analogous: function () {
+            return this._applyCombination(analogous, arguments);
+        },
+        complement: function () {
+            return this._applyCombination(complement, arguments);
+        },
+        monochromatic: function () {
+            return this._applyCombination(monochromatic, arguments);
+        },
+        splitcomplement: function () {
+            return this._applyCombination(splitcomplement, arguments);
+        },
+        triad: function () {
+            return this._applyCombination(triad, arguments);
+        },
+        tetrad: function () {
+            return this._applyCombination(tetrad, arguments);
+        }
+    };
+    // If input is an object, force 1 into "1.0" to handle ratios properly
+    // String input requires "1.0" as input, so 1 will be treated as 1
+    tinycolor.fromRatio = function (color, opts) {
+        if (typeof color == "object") {
+            var newColor = {};
+            for (var i in color) {
+                if (color.hasOwnProperty(i)) {
+                    if (i === "a") {
+                        newColor[i] = color[i];
+                    }
+                    else {
+                        newColor[i] = convertToPercentage(color[i]);
+                    }
+                }
+            }
+            color = newColor;
+        }
+        return tinycolor(color, opts);
+    };
+    // Given a string or object, convert that input to RGB
+    // Possible string inputs:
+    //
+    //     "red"
+    //     "#f00" or "f00"
+    //     "#ff0000" or "ff0000"
+    //     "#ff000000" or "ff000000"
+    //     "rgb 255 0 0" or "rgb (255, 0, 0)"
+    //     "rgb 1.0 0 0" or "rgb (1, 0, 0)"
+    //     "rgba (255, 0, 0, 1)" or "rgba 255, 0, 0, 1"
+    //     "rgba (1.0, 0, 0, 1)" or "rgba 1.0, 0, 0, 1"
+    //     "hsl(0, 100%, 50%)" or "hsl 0 100% 50%"
+    //     "hsla(0, 100%, 50%, 1)" or "hsla 0 100% 50%, 1"
+    //     "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
+    //
+    function inputToRGB(color) {
+        var rgb = { r: 0, g: 0, b: 0 };
+        var a = 1;
+        var s = null;
+        var v = null;
+        var l = null;
+        var ok = false;
+        let format = false;
+        if (typeof color == "string") {
+            color = stringInputToObject(color);
+        }
+        if (typeof color == "object") {
+            if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
+                rgb = rgbToRgb(color.r, color.g, color.b);
+                ok = true;
+                format = String(color.r).substr(-1) === "%" ? "prgb" : "rgb";
+            }
+            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+                s = convertToPercentage(color.s);
+                v = convertToPercentage(color.v);
+                rgb = hsvToRgb(color.h, s, v);
+                ok = true;
+                format = "hsv";
+            }
+            else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+                s = convertToPercentage(color.s);
+                l = convertToPercentage(color.l);
+                rgb = hslToRgb(color.h, s, l);
+                ok = true;
+                format = "hsl";
+            }
+            if (color.hasOwnProperty("a")) {
+                a = color.a;
+            }
+        }
+        a = boundAlpha(a);
+        return {
+            ok: ok,
+            format: color.format || format,
+            r: mathMin(255, mathMax(rgb.r, 0)),
+            g: mathMin(255, mathMax(rgb.g, 0)),
+            b: mathMin(255, mathMax(rgb.b, 0)),
+            a: a
+        };
+    }
+    // Conversion Functions
+    // --------------------
+    // `rgbToHsl`, `rgbToHsv`, `hslToRgb`, `hsvToRgb` modified from:
+    // <http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript>
+    // `rgbToRgb`
+    // Handle bounds / percentage checking to conform to CSS color spec
+    // <http://www.w3.org/TR/css3-color/>
+    // *Assumes:* r, g, b in [0, 255] or [0, 1]
+    // *Returns:* { r, g, b } in [0, 255]
+    function rgbToRgb(r, g, b) {
+        return {
+            r: bound01(r, 255) * 255,
+            g: bound01(g, 255) * 255,
+            b: bound01(b, 255) * 255
+        };
+    }
+    // `rgbToHsl`
+    // Converts an RGB color value to HSL.
+    // *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+    // *Returns:* { h, s, l } in [0,1]
+    function rgbToHsl(r, g, b) {
+        r = bound01(r, 255);
+        g = bound01(g, 255);
+        b = bound01(b, 255);
+        var max = mathMax(r, g, b), min = mathMin(r, g, b);
+        var h, s, l = (max + min) / 2;
+        if (max == min) {
+            h = s = 0; // achromatic
+        }
+        else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+        return { h: h, s: s, l: l };
+    }
+    // `hslToRgb`
+    // Converts an HSL color value to RGB.
+    // *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+    // *Returns:* { r, g, b } in the set [0, 255]
+    function hslToRgb(h, s, l) {
+        var r, g, b;
+        h = bound01(h, 360);
+        s = bound01(s, 100);
+        l = bound01(l, 100);
+        function hue2rgb(p, q, t) {
+            if (t < 0)
+                t += 1;
+            if (t > 1)
+                t -= 1;
+            if (t < 1 / 6)
+                return p + (q - p) * 6 * t;
+            if (t < 1 / 2)
+                return q;
+            if (t < 2 / 3)
+                return p + (q - p) * (2 / 3 - t) * 6;
+            return p;
+        }
+        if (s === 0) {
+            r = g = b = l; // achromatic
+        }
+        else {
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+        return { r: r * 255, g: g * 255, b: b * 255 };
+    }
+    // `rgbToHsv`
+    // Converts an RGB color value to HSV
+    // *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
+    // *Returns:* { h, s, v } in [0,1]
+    function rgbToHsv(r, g, b) {
+        r = bound01(r, 255);
+        g = bound01(g, 255);
+        b = bound01(b, 255);
+        var max = mathMax(r, g, b), min = mathMin(r, g, b);
+        var h, s, v = max;
+        var d = max - min;
+        s = max === 0 ? 0 : d / max;
+        if (max == min) {
+            h = 0; // achromatic
+        }
+        else {
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+        return { h: h, s: s, v: v };
+    }
+    // `hsvToRgb`
+    // Converts an HSV color value to RGB.
+    // *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
+    // *Returns:* { r, g, b } in the set [0, 255]
+    function hsvToRgb(h, s, v) {
+        h = bound01(h, 360) * 6;
+        s = bound01(s, 100);
+        v = bound01(v, 100);
+        var i = Math.floor(h), f = h - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s), mod = i % 6, r = [v, q, p, p, t, v][mod], g = [t, v, v, q, p, p][mod], b = [p, p, t, v, v, q][mod];
+        return { r: r * 255, g: g * 255, b: b * 255 };
+    }
+    // `rgbToHex`
+    // Converts an RGB color to hex
+    // Assumes r, g, and b are contained in the set [0, 255]
+    // Returns a 3 or 6 character hex
+    function rgbToHex(r, g, b, allow3Char) {
+        var hex = [
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16))
+        ];
+        // Return a 3 character hex if possible
+        if (allow3Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1)) {
+            return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
+        }
+        return hex.join("");
+    }
+    // `rgbaToHex`
+    // Converts an RGBA color plus alpha transparency to hex
+    // Assumes r, g, b are contained in the set [0, 255] and
+    // a in [0, 1]. Returns a 4 or 8 character rgba hex
+    function rgbaToHex(r, g, b, a, allow4Char) {
+        var hex = [
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16)),
+            pad2(convertDecimalToHex(a))
+        ];
+        // Return a 4 character hex if possible
+        if (allow4Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1) && hex[3].charAt(0) == hex[3].charAt(1)) {
+            return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
+        }
+        return hex.join("");
+    }
+    // `rgbaToArgbHex`
+    // Converts an RGBA color to an ARGB Hex8 string
+    // Rarely used, but required for "toFilter()"
+    function rgbaToArgbHex(r, g, b, a) {
+        var hex = [
+            pad2(convertDecimalToHex(a)),
+            pad2(mathRound(r).toString(16)),
+            pad2(mathRound(g).toString(16)),
+            pad2(mathRound(b).toString(16))
+        ];
+        return hex.join("");
+    }
+    // `equals`
+    // Can be called with any tinycolor input
+    tinycolor.equals = function (color1, color2) {
+        if (!color1 || !color2) {
+            return false;
+        }
+        return tinycolor(color1).toRgbString() == tinycolor(color2).toRgbString();
+    };
+    tinycolor.random = function () {
+        return tinycolor.fromRatio({
+            r: mathRandom(),
+            g: mathRandom(),
+            b: mathRandom()
+        });
+    };
+    // Modification Functions
+    // ----------------------
+    // Thanks to less.js for some of the basics here
+    // <https://github.com/cloudhead/less.js/blob/master/lib/less/functions.js>
+    function desaturate(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.s -= amount / 100;
+        hsl.s = clamp01(hsl.s);
+        return tinycolor(hsl);
+    }
+    function saturate(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.s += amount / 100;
+        hsl.s = clamp01(hsl.s);
+        return tinycolor(hsl);
+    }
+    function greyscale(color) {
+        return tinycolor(color).desaturate(100);
+    }
+    function lighten(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.l += amount / 100;
+        hsl.l = clamp01(hsl.l);
+        return tinycolor(hsl);
+    }
+    function brighten(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var rgb = tinycolor(color).toRgb();
+        rgb.r = mathMax(0, mathMin(255, rgb.r - mathRound(255 * -(amount / 100))));
+        rgb.g = mathMax(0, mathMin(255, rgb.g - mathRound(255 * -(amount / 100))));
+        rgb.b = mathMax(0, mathMin(255, rgb.b - mathRound(255 * -(amount / 100))));
+        return tinycolor(rgb);
+    }
+    function darken(color, amount) {
+        amount = (amount === 0) ? 0 : (amount || 10);
+        var hsl = tinycolor(color).toHsl();
+        hsl.l -= amount / 100;
+        hsl.l = clamp01(hsl.l);
+        return tinycolor(hsl);
+    }
+    // Spin takes a positive or negative amount within [-360, 360] indicating the change of hue.
+    // Values outside of this range will be wrapped into this range.
+    function spin(color, amount) {
+        var hsl = tinycolor(color).toHsl();
+        var hue = (hsl.h + amount) % 360;
+        hsl.h = hue < 0 ? 360 + hue : hue;
+        return tinycolor(hsl);
+    }
+    // Combination Functions
+    // ---------------------
+    // Thanks to jQuery xColor for some of the ideas behind these
+    // <https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js>
+    function complement(color) {
+        var hsl = tinycolor(color).toHsl();
+        hsl.h = (hsl.h + 180) % 360;
+        return tinycolor(hsl);
+    }
+    function triad(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 120) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 240) % 360, s: hsl.s, l: hsl.l })
+        ];
+    }
+    function tetrad(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 90) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 270) % 360, s: hsl.s, l: hsl.l })
+        ];
+    }
+    function splitcomplement(color) {
+        var hsl = tinycolor(color).toHsl();
+        var h = hsl.h;
+        return [
+            tinycolor(color),
+            tinycolor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l }),
+            tinycolor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l })
+        ];
+    }
+    function analogous(color, results, slices) {
+        results = results || 6;
+        slices = slices || 30;
+        var hsl = tinycolor(color).toHsl();
+        var part = 360 / slices;
+        var ret = [tinycolor(color)];
+        for (hsl.h = ((hsl.h - (part * results >> 1)) + 720) % 360; --results;) {
+            hsl.h = (hsl.h + part) % 360;
+            ret.push(tinycolor(hsl));
+        }
+        return ret;
+    }
+    function monochromatic(color, results) {
+        results = results || 6;
+        var hsv = tinycolor(color).toHsv();
+        var h = hsv.h, s = hsv.s, v = hsv.v;
+        var ret = [];
+        var modification = 1 / results;
+        while (results--) {
+            ret.push(tinycolor({ h: h, s: s, v: v }));
+            v = (v + modification) % 1;
+        }
+        return ret;
+    }
+    // Utility Functions
+    // ---------------------
+    tinycolor.mix = function (color1, color2, amount) {
+        amount = (amount === 0) ? 0 : (amount || 50);
+        var rgb1 = tinycolor(color1).toRgb();
+        var rgb2 = tinycolor(color2).toRgb();
+        var p = amount / 100;
+        var rgba = {
+            r: ((rgb2.r - rgb1.r) * p) + rgb1.r,
+            g: ((rgb2.g - rgb1.g) * p) + rgb1.g,
+            b: ((rgb2.b - rgb1.b) * p) + rgb1.b,
+            a: ((rgb2.a - rgb1.a) * p) + rgb1.a
+        };
+        return tinycolor(rgba);
+    };
+    // Readability Functions
+    // ---------------------
+    // <http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef (WCAG Version 2)
+    // `contrast`
+    // Analyze the 2 colors and returns the color contrast defined by (WCAG Version 2)
+    tinycolor.readability = function (color1, color2) {
+        var c1 = tinycolor(color1);
+        var c2 = tinycolor(color2);
+        return (Math.max(c1.getLuminance(), c2.getLuminance()) + 0.05) / (Math.min(c1.getLuminance(), c2.getLuminance()) + 0.05);
+    };
+    // `isReadable`
+    // Ensure that foreground and background color combinations meet WCAG2 guidelines.
+    // The third argument is an optional Object.
+    //      the 'level' property states 'AA' or 'AAA' - if missing or invalid, it defaults to 'AA';
+    //      the 'size' property states 'large' or 'small' - if missing or invalid, it defaults to 'small'.
+    // If the entire object is absent, isReadable defaults to {level:"AA",size:"small"}.
+    // *Example*
+    //    tinycolor.isReadable("#000", "#111") => false
+    //    tinycolor.isReadable("#000", "#111",{level:"AA",size:"large"}) => false
+    tinycolor.isReadable = function (color1, color2, wcag2) {
+        var readability = tinycolor.readability(color1, color2);
+        var wcag2Parms, out;
+        out = false;
+        wcag2Parms = validateWCAG2Parms(wcag2);
+        switch (wcag2Parms.level + wcag2Parms.size) {
+            case "AAsmall":
+            case "AAAlarge":
+                out = readability >= 4.5;
+                break;
+            case "AAlarge":
+                out = readability >= 3;
+                break;
+            case "AAAsmall":
+                out = readability >= 7;
+                break;
+        }
+        return out;
+    };
+    // `mostReadable`
+    // Given a base color and a list of possible foreground or background
+    // colors for that base, returns the most readable color.
+    // Optionally returns Black or White if the most readable color is unreadable.
+    // *Example*
+    //    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:false}).toHexString(); // "#112255"
+    //    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:true}).toHexString();  // "#ffffff"
+    //    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"large"}).toHexString(); // "#faf3f3"
+    //    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"small"}).toHexString(); // "#ffffff"
+    tinycolor.mostReadable = function (baseColor, colorList, args) {
+        var bestColor = null;
+        var bestScore = 0;
+        var readability;
+        var includeFallbackColors, level, size;
+        args = args || {};
+        includeFallbackColors = args.includeFallbackColors;
+        level = args.level;
+        size = args.size;
+        for (var i = 0; i < colorList.length; i++) {
+            readability = tinycolor.readability(baseColor, colorList[i]);
+            if (readability > bestScore) {
+                bestScore = readability;
+                bestColor = tinycolor(colorList[i]);
+            }
+        }
+        if (tinycolor.isReadable(baseColor, bestColor, { "level": level, "size": size }) || !includeFallbackColors) {
+            return bestColor;
+        }
+        else {
+            args.includeFallbackColors = false;
+            return tinycolor.mostReadable(baseColor, ["#fff", "#000"], args);
+        }
+    };
+    // Big List of Colors
+    // ------------------
+    // <http://www.w3.org/TR/css3-color/#svg-color>
+    var names = tinycolor.names = {
+        aliceblue: "f0f8ff",
+        antiquewhite: "faebd7",
+        aqua: "0ff",
+        aquamarine: "7fffd4",
+        azure: "f0ffff",
+        beige: "f5f5dc",
+        bisque: "ffe4c4",
+        black: "000",
+        blanchedalmond: "ffebcd",
+        blue: "00f",
+        blueviolet: "8a2be2",
+        brown: "a52a2a",
+        burlywood: "deb887",
+        burntsienna: "ea7e5d",
+        cadetblue: "5f9ea0",
+        chartreuse: "7fff00",
+        chocolate: "d2691e",
+        coral: "ff7f50",
+        cornflowerblue: "6495ed",
+        cornsilk: "fff8dc",
+        crimson: "dc143c",
+        cyan: "0ff",
+        darkblue: "00008b",
+        darkcyan: "008b8b",
+        darkgoldenrod: "b8860b",
+        darkgray: "a9a9a9",
+        darkgreen: "006400",
+        darkgrey: "a9a9a9",
+        darkkhaki: "bdb76b",
+        darkmagenta: "8b008b",
+        darkolivegreen: "556b2f",
+        darkorange: "ff8c00",
+        darkorchid: "9932cc",
+        darkred: "8b0000",
+        darksalmon: "e9967a",
+        darkseagreen: "8fbc8f",
+        darkslateblue: "483d8b",
+        darkslategray: "2f4f4f",
+        darkslategrey: "2f4f4f",
+        darkturquoise: "00ced1",
+        darkviolet: "9400d3",
+        deeppink: "ff1493",
+        deepskyblue: "00bfff",
+        dimgray: "696969",
+        dimgrey: "696969",
+        dodgerblue: "1e90ff",
+        firebrick: "b22222",
+        floralwhite: "fffaf0",
+        forestgreen: "228b22",
+        fuchsia: "f0f",
+        gainsboro: "dcdcdc",
+        ghostwhite: "f8f8ff",
+        gold: "ffd700",
+        goldenrod: "daa520",
+        gray: "808080",
+        green: "008000",
+        greenyellow: "adff2f",
+        grey: "808080",
+        honeydew: "f0fff0",
+        hotpink: "ff69b4",
+        indianred: "cd5c5c",
+        indigo: "4b0082",
+        ivory: "fffff0",
+        khaki: "f0e68c",
+        lavender: "e6e6fa",
+        lavenderblush: "fff0f5",
+        lawngreen: "7cfc00",
+        lemonchiffon: "fffacd",
+        lightblue: "add8e6",
+        lightcoral: "f08080",
+        lightcyan: "e0ffff",
+        lightgoldenrodyellow: "fafad2",
+        lightgray: "d3d3d3",
+        lightgreen: "90ee90",
+        lightgrey: "d3d3d3",
+        lightpink: "ffb6c1",
+        lightsalmon: "ffa07a",
+        lightseagreen: "20b2aa",
+        lightskyblue: "87cefa",
+        lightslategray: "789",
+        lightslategrey: "789",
+        lightsteelblue: "b0c4de",
+        lightyellow: "ffffe0",
+        lime: "0f0",
+        limegreen: "32cd32",
+        linen: "faf0e6",
+        magenta: "f0f",
+        maroon: "800000",
+        mediumaquamarine: "66cdaa",
+        mediumblue: "0000cd",
+        mediumorchid: "ba55d3",
+        mediumpurple: "9370db",
+        mediumseagreen: "3cb371",
+        mediumslateblue: "7b68ee",
+        mediumspringgreen: "00fa9a",
+        mediumturquoise: "48d1cc",
+        mediumvioletred: "c71585",
+        midnightblue: "191970",
+        mintcream: "f5fffa",
+        mistyrose: "ffe4e1",
+        moccasin: "ffe4b5",
+        navajowhite: "ffdead",
+        navy: "000080",
+        oldlace: "fdf5e6",
+        olive: "808000",
+        olivedrab: "6b8e23",
+        orange: "ffa500",
+        orangered: "ff4500",
+        orchid: "da70d6",
+        palegoldenrod: "eee8aa",
+        palegreen: "98fb98",
+        paleturquoise: "afeeee",
+        palevioletred: "db7093",
+        papayawhip: "ffefd5",
+        peachpuff: "ffdab9",
+        peru: "cd853f",
+        pink: "ffc0cb",
+        plum: "dda0dd",
+        powderblue: "b0e0e6",
+        purple: "800080",
+        rebeccapurple: "663399",
+        red: "f00",
+        rosybrown: "bc8f8f",
+        royalblue: "4169e1",
+        saddlebrown: "8b4513",
+        salmon: "fa8072",
+        sandybrown: "f4a460",
+        seagreen: "2e8b57",
+        seashell: "fff5ee",
+        sienna: "a0522d",
+        silver: "c0c0c0",
+        skyblue: "87ceeb",
+        slateblue: "6a5acd",
+        slategray: "708090",
+        slategrey: "708090",
+        snow: "fffafa",
+        springgreen: "00ff7f",
+        steelblue: "4682b4",
+        tan: "d2b48c",
+        teal: "008080",
+        thistle: "d8bfd8",
+        tomato: "ff6347",
+        turquoise: "40e0d0",
+        violet: "ee82ee",
+        wheat: "f5deb3",
+        white: "fff",
+        whitesmoke: "f5f5f5",
+        yellow: "ff0",
+        yellowgreen: "9acd32"
+    };
+    // Make it easy to access colors via `hexNames[hex]`
+    var hexNames = tinycolor.hexNames = flip(names);
+    // Utilities
+    // ---------
+    // `{ 'name1': 'val1' }` becomes `{ 'val1': 'name1' }`
+    function flip(o) {
+        var flipped = {};
+        for (var i in o) {
+            if (o.hasOwnProperty(i)) {
+                flipped[o[i]] = i;
+            }
+        }
+        return flipped;
+    }
+    // Return a valid alpha value [0,1] with all invalid values being set to 1
+    function boundAlpha(a) {
+        a = parseFloat(a);
+        if (isNaN(a) || a < 0 || a > 1) {
+            a = 1;
+        }
+        return a;
+    }
+    // Take input from [0, n] and return it as [0, 1]
+    function bound01(n, max) {
+        if (isOnePointZero(n)) {
+            n = "100%";
+        }
+        var processPercent = isPercentage(n);
+        n = mathMin(max, mathMax(0, parseFloat(n)));
+        // Automatically convert percentage into number
+        if (processPercent) {
+            n = Math.trunc(n * max) / 100;
+        }
+        // Handle floating point rounding errors
+        if ((Math.abs(n - max) < 0.000001)) {
+            return 1;
+        }
+        // Convert into [0, 1] range if it isn't already
+        return (n % max) / parseFloat(max);
+    }
+    // Force a number between 0 and 1
+    function clamp01(val) {
+        return mathMin(1, mathMax(0, val));
+    }
+    // Parse a base-16 hex value into a base-10 integer
+    function parseIntFromHex(val) {
+        return parseInt(val, 16);
+    }
+    // Need to handle 1.0 as 100%, since once it is a number, there is no difference between it and 1
+    // <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
+    function isOnePointZero(n) {
+        return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+    }
+    // Check to see if string passed in is a percentage
+    function isPercentage(n) {
+        return typeof n === "string" && n.indexOf('%') != -1;
+    }
+    // Force a hex value to have 2 characters
+    function pad2(c) {
+        return c.length == 1 ? '0' + c : '' + c;
+    }
+    // Replace a decimal with it's percentage value
+    function convertToPercentage(n) {
+        if (n <= 1) {
+            n = (n * 100) + "%";
+        }
+        return n;
+    }
+    // Converts a decimal to a hex value
+    function convertDecimalToHex(d) {
+        return Math.round(parseFloat(d) * 255).toString(16);
+    }
+    // Converts a hex value to a decimal
+    function convertHexToDecimal(h) {
+        return (parseIntFromHex(h) / 255);
+    }
+    var matchers = (function () {
+        // <http://www.w3.org/TR/css3-values/#integers>
+        var CSS_INTEGER = "[-\\+]?\\d+%?";
+        // <http://www.w3.org/TR/css3-values/#number-value>
+        var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+        // Allow positive/negative integer/number.  Don't capture the either/or, just the entire outcome.
+        var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
+        // Actual matching.
+        // Parentheses and commas are optional, but not required.
+        // Whitespace can take the place of commas or opening paren
+        var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+        var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+        return {
+            CSS_UNIT: new RegExp(CSS_UNIT),
+            rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
+            rgba: new RegExp("rgba" + PERMISSIVE_MATCH4),
+            hsl: new RegExp("hsl" + PERMISSIVE_MATCH3),
+            hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
+            hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
+            hsva: new RegExp("hsva" + PERMISSIVE_MATCH4),
+            hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+            hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+            hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+            hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+        };
+    })();
+    // `isValidCSSUnit`
+    // Take in a single string / number and check to see if it looks like a CSS unit
+    // (see `matchers` above for definition).
+    function isValidCSSUnit(color) {
+        return !!matchers.CSS_UNIT.exec(color);
+    }
+    // `stringInputToObject`
+    // Permissive string parsing.  Take in a number of formats, and output an object
+    // based on detected format.  Returns `{ r, g, b }` or `{ h, s, l }` or `{ h, s, v}`
+    function stringInputToObject(color) {
+        color = color.replace(trimLeft, '').replace(trimRight, '').toLowerCase();
+        var named = false;
+        if (names[color]) {
+            color = names[color];
+            named = true;
+        }
+        else if (color == 'transparent') {
+            return { r: 0, g: 0, b: 0, a: 0, format: "name" };
+        }
+        // Try to match string input using regular expressions.
+        // Keep most of the number bounding out of this function - don't worry about [0,1] or [0,100] or [0,360]
+        // Just return an object and let the conversion functions handle that.
+        // This way the result will be the same whether the tinycolor is initialized with string or object.
+        var match;
+        if ((match = matchers.rgb.exec(color))) {
+            return { r: match[1], g: match[2], b: match[3] };
+        }
+        if ((match = matchers.rgba.exec(color))) {
+            return { r: match[1], g: match[2], b: match[3], a: match[4] };
+        }
+        if ((match = matchers.hsl.exec(color))) {
+            return { h: match[1], s: match[2], l: match[3] };
+        }
+        if ((match = matchers.hsla.exec(color))) {
+            return { h: match[1], s: match[2], l: match[3], a: match[4] };
+        }
+        if ((match = matchers.hsv.exec(color))) {
+            return { h: match[1], s: match[2], v: match[3] };
+        }
+        if ((match = matchers.hsva.exec(color))) {
+            return { h: match[1], s: match[2], v: match[3], a: match[4] };
+        }
+        if ((match = matchers.hex8.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1]),
+                g: parseIntFromHex(match[2]),
+                b: parseIntFromHex(match[3]),
+                a: convertHexToDecimal(match[4]),
+                format: named ? "name" : "hex8"
+            };
+        }
+        if ((match = matchers.hex6.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1]),
+                g: parseIntFromHex(match[2]),
+                b: parseIntFromHex(match[3]),
+                format: named ? "name" : "hex"
+            };
+        }
+        if ((match = matchers.hex4.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1] + '' + match[1]),
+                g: parseIntFromHex(match[2] + '' + match[2]),
+                b: parseIntFromHex(match[3] + '' + match[3]),
+                a: convertHexToDecimal(match[4] + '' + match[4]),
+                format: named ? "name" : "hex8"
+            };
+        }
+        if ((match = matchers.hex3.exec(color))) {
+            return {
+                r: parseIntFromHex(match[1] + '' + match[1]),
+                g: parseIntFromHex(match[2] + '' + match[2]),
+                b: parseIntFromHex(match[3] + '' + match[3]),
+                format: named ? "name" : "hex"
+            };
+        }
+        return false;
+    }
+    function validateWCAG2Parms(parms) {
+        // return valid WCAG2 parms for isReadable.
+        // If input parms are invalid, return {"level":"AA", "size":"small"}
+        var level, size;
+        parms = parms || { "level": "AA", "size": "small" };
+        level = (parms.level || "AA").toUpperCase();
+        size = (parms.size || "small").toLowerCase();
+        if (level !== "AA" && level !== "AAA") {
+            level = "AA";
+        }
+        if (size !== "small" && size !== "large") {
+            size = "small";
+        }
+        return { "level": level, "size": size };
+    }
+
+    var Unit;
+    (function (Unit) {
+        Unit["PX"] = "px";
+        Unit["PT"] = "pt";
+        Unit["PC"] = "pc";
+        Unit["CM"] = "cm";
+        Unit["MM"] = "mm";
+        Unit["IN"] = "in";
+    })(Unit || (Unit = {}));
+    const DPI = 96.0;
+    ({
+        [Unit.PT](value) {
+            return value * DPI / 72;
+        },
+        [Unit.PC](value) {
+            return value * 15;
+        },
+        [Unit.CM](value) {
+            return value * DPI / 2.54;
+        },
+        [Unit.MM](value) {
+            return value * DPI / 25.4;
+        },
+        [Unit.IN](value) {
+            return value * DPI;
+        },
+    });
+    ({
+        [Unit.PT](value) {
+            return value * 72 / DPI;
+        },
+        [Unit.PC](value) {
+            return value / 15;
+        },
+        [Unit.CM](value) {
+            return value * 2.54 / DPI;
+        },
+        [Unit.MM](value) {
+            return value * 25.4 / DPI;
+        },
+        [Unit.IN](value) {
+            return value / DPI;
+        },
+    });
+
+    const RADIANS = Math.PI / 180;
+    function getRangePercent(value, min, max) {
+        if (min === max) {
+            return 1;
+        }
+        return (value - min) / (max - min);
+    }
+
+    const SERIALIZE = Symbol("serialize");
+    const UNSERIALIZE = Symbol("unserialize");
+
+    const classMap = new Map();
+    const namedMap = new Map();
+    var repository = {
+        register(handler) {
+            if (!handler.class) {
+                return;
+            }
+            if (!handler.name) {
+                // noinspection JSPrimitiveTypeWrapperUsage
+                handler.name = new String(handler.class.name);
+            }
+            else if (typeof handler.name === "string") {
+                // noinspection JSPrimitiveTypeWrapperUsage
+                handler.name = new String(handler.name);
+            }
+            classMap.set(handler.class, handler);
+            namedMap.set(typeof handler.name === "object" ? handler.name.valueOf() : handler.name, handler);
+        },
+        registerCustom(classObject, serialize, unserialize, hydrate = null, name = null) {
+            this.register({
+                class: classObject,
+                name,
+                serialize,
+                unserialize(data, push) {
+                    push(unserialize(data), hydrate);
+                }
+            });
+        },
+        registerSerializable(classObject, name = null) {
+            if (!(SERIALIZE in classObject.prototype)) {
+                return false;
+            }
+            this.register({
+                class: classObject,
+                name,
+                native: false,
+                serialize: SerializableSerialize,
+                unserialize: SerializableUnserialize,
+            });
+            return true;
+        },
+        hasName(name) {
+            return namedMap.has(name);
+        },
+        hasClass(ctor) {
+            return classMap.has(ctor);
+        },
+        canHandleObject(obj) {
+            return classMap.has(obj.constructor);
+        },
+        getHandlerByName(name) {
+            return namedMap.get(name) || null;
+        },
+        getHandlerByClass(cls) {
+            return classMap.get(cls) || null;
+        },
+        getHandlerByObject(obj) {
+            return classMap.get(obj.constructor) || null;
+        },
+    };
+    function SerializableSerialize(value) {
+        const data = value[SERIALIZE]();
+        // No constructor or constructor shortcut
+        if (data == null || Array.isArray(data)) {
+            return { data };
+        }
+        // No constructor
+        if (!data.hasOwnProperty('constructor')) {
+            if (Object.keys(data).length === 0) {
+                return { data: undefined };
+            }
+            return { data: undefined, lazy: data };
+        }
+        const obj = {
+            data: Array.isArray(data.constructor) ? data.constructor : undefined,
+            lazy: undefined,
+        };
+        delete data.constructor;
+        if (Object.keys(data).length > 0) {
+            obj.lazy = data;
+        }
+        return obj;
+    }
+    function SerializableUnserialize(data, push, classObject) {
+        let obj;
+        if (Array.isArray(data)) {
+            obj = new classObject(...data);
+        }
+        else {
+            obj = new classObject();
+        }
+        push(obj, SerializableHydrate);
+    }
+    function SerializableHydrate(value, lazy) {
+        if (UNSERIALIZE in value) {
+            value[UNSERIALIZE](lazy);
+        }
+    }
+
+    repository.register(createBoxedValueHandler(Boolean, 22 /* Boolean */));
+    repository.register(createBoxedValueHandler(Number, 23 /* Number */));
+    repository.register(createBoxedValueHandler(String, 25 /* String */));
+    repository.register({
+        class: BigInt,
+        native: true,
+        name: 24 /* BigInt */,
+        serialize(value, serializer) {
+            serializer.bigint(value.valueOf());
+        },
+        unserialize(push, unserializer) {
+            push(new Object(unserializer.value()));
+        }
+    });
+    repository.register({
+        class: RegExp,
+        native: true,
+        name: 26 /* RegExp */,
+        serialize(value, serializer) {
+            serializer.stringValue(value.source);
+            serializer.stringValue(value.flags);
+        },
+        unserialize(push, unserializer) {
+            push(new RegExp(unserializer.stringValue(), unserializer.stringValue()));
+        }
+    });
+    repository.register({
+        class: Date,
+        native: true,
+        name: 27 /* Date */,
+        serialize(value, serializer) {
+            serializer.stringValue(value.toISOString());
+        },
+        unserialize(push, unserializer) {
+            push(new Date(unserializer.stringValue()));
+        }
+    });
+    repository.register({
+        class: Map,
+        native: true,
+        name: 28 /* Map */,
+        serialize(value, serializer) {
+            serializer.number(value.size);
+            for (const [key, val] of value.entries()) {
+                serializer.value(key);
+                serializer.value(val);
+            }
+        },
+        unserialize(push, unserializer) {
+            const map = new Map();
+            push(map);
+            let size = unserializer.value();
+            while (size-- > 0) {
+                map.set(unserializer.value(), unserializer.value());
+            }
+        }
+    });
+    repository.register({
+        class: Set,
+        native: true,
+        name: 29 /* Set */,
+        serialize(value, serializer) {
+            serializer.number(value.size);
+            for (const val of value.values()) {
+                serializer.value(val);
+            }
+        },
+        unserialize(push, unserializer) {
+            const set = new Set();
+            push(set);
+            let size = unserializer.value();
+            while (size-- > 0) {
+                set.add(unserializer.value());
+            }
+        }
+    });
+    repository.register(createArrayBufferHandler(ArrayBuffer, 30 /* ArrayBuffer */));
+    repository.register(createArrayBufferHandler(SharedArrayBuffer, 31 /* SharedArrayBuffer */));
+    repository.register(createTypedArrayHandler(DataView, 32 /* DataView */));
+    repository.register(createTypedArrayHandler(Uint8ClampedArray, 33 /* Uint8ClampedArray */));
+    repository.register(createTypedArrayHandler(Uint8Array, 34 /* Uint8Array */));
+    repository.register(createTypedArrayHandler(Int8Array, 35 /* Int8Array */));
+    repository.register(createTypedArrayHandler(Uint16Array, 36 /* Uint16Array */));
+    repository.register(createTypedArrayHandler(Int16Array, 37 /* Int16Array */));
+    repository.register(createTypedArrayHandler(Uint32Array, 38 /* Uint32Array */));
+    repository.register(createTypedArrayHandler(Int32Array, 39 /* Int32Array */));
+    repository.register(createTypedArrayHandler(BigUint64Array, 40 /* BigUint64Array */));
+    repository.register(createTypedArrayHandler(BigInt64Array, 41 /* BigInt64Array */));
+    repository.register(createTypedArrayHandler(Float32Array, 42 /* Float32Array */));
+    repository.register(createTypedArrayHandler(Float64Array, 43 /* Float64Array */));
+    globalThis.ImageData && repository.register({
+        class: ImageData,
+        native: true,
+        name: 102 /* ImageData */,
+        serialize(value, serializer) {
+            serializer.number(value.width);
+            serializer.number(value.height);
+            serializer.object(value.data);
+        },
+        unserialize(push, unserializer) {
+            const width = unserializer.value();
+            const height = unserializer.value();
+            push(new ImageData(unserializer.value(), width, height));
+        }
+    });
+    repository.register({
+        class: URL,
+        native: true,
+        name: 100 /* URL */,
+        serialize(value, serializer) {
+            serializer.string(value.href);
+        },
+        unserialize(push, unserializer) {
+            push(new URL(unserializer.value()));
+        }
+    });
+    repository.register({
+        class: URLSearchParams,
+        native: true,
+        name: 101 /* URLSearchParams */,
+        serialize(value, serializer) {
+            serializer.string(value.toString());
+        },
+        unserialize(push, unserializer) {
+            push(new URLSearchParams(unserializer.value()));
+        }
+    });
+    function createArrayBufferHandler(cls, name) {
+        return {
+            class: cls,
+            native: true,
+            name,
+            serialize(value, serializer) {
+                serializer.number(value.byteLength);
+                serializer.view.writeBuffer(value);
+            },
+            unserialize(push, unserializer) {
+                const buf = new cls(unserializer.value());
+                push(buf);
+                unserializer.view.readIntoBuffer(buf);
+            }
+        };
+    }
+    function createTypedArrayHandler(cls, name) {
+        return {
+            class: cls,
+            native: true,
+            name,
+            serialize(value, serializer) {
+                serializer.number(value.byteOffset);
+                serializer.number(value.byteLength);
+                serializer.object(value.buffer);
+            },
+            unserialize(push, unserializer) {
+                const offset = unserializer.value();
+                const length = unserializer.value();
+                push(new cls(unserializer.value(), offset, length));
+            }
+        };
+    }
+    function createBoxedValueHandler(cls, name) {
+        return {
+            class: cls,
+            native: true,
+            name,
+            serialize(value, serializer) {
+                serializer.value(value.valueOf());
+            },
+            unserialize(push, unserializer) {
+                push(new cls(unserializer.value()));
+            }
+        };
+    }
+
+    function serializable(constructor, name) {
+        return repository.registerSerializable(constructor, name);
+    }
+
+    function registerSerializableMap(map) {
+        for (const [name, func] of Object.entries(map)) {
+            serializable(func, name);
+        }
+    }
+    const UUID_REGEX = /[018]/g;
+    function uuid(separator = '') {
+        const arr = crypto.getRandomValues(new Uint8Array(31));
+        let i = 0;
+        return `10000000${separator}1000${separator}4000${separator}8000${separator}100000000000`
+            .replace(UUID_REGEX, (char) => {
+            const c = parseInt(char);
+            return (c ^ arr[i++] & 15 >> c / 4).toString(16);
+        });
+    }
+
+    function interpolateNumber(percent, from, to) {
+        return from + percent * (to - from);
+    }
+    function interpolateColorComponent(percent, from, to) {
+        return clamp(Math.round(from + percent * (to - from)), 0, 255);
+    }
+    function interpolateAlphaComponent(percent, from, to) {
+        return clamp(round(interpolateNumber(percent, from, to)), 0, 1);
+    }
+
+    var FillRule;
+    (function (FillRule) {
+        FillRule[FillRule["NonZero"] = 0] = "NonZero";
+        FillRule[FillRule["EvenOdd"] = 1] = "EvenOdd";
+    })(FillRule || (FillRule = {}));
+    var BrushType;
+    (function (BrushType) {
+        BrushType[BrushType["None"] = 0] = "None";
+        BrushType[BrushType["Solid"] = 1] = "Solid";
+        BrushType[BrushType["LinearGradient"] = 2] = "LinearGradient";
+        BrushType[BrushType["RadialGradient"] = 3] = "RadialGradient";
+        BrushType[BrushType["TwoPointGradient"] = 4] = "TwoPointGradient";
+        BrushType[BrushType["ConicalGradient"] = 5] = "ConicalGradient";
+        BrushType[BrushType["Pattern"] = 6] = "Pattern";
+        BrushType[BrushType["Pointer"] = 7] = "Pointer";
+    })(BrushType || (BrushType = {}));
+    var PaintOrder;
+    (function (PaintOrder) {
+        PaintOrder[PaintOrder["FillStrokeMarkers"] = 0] = "FillStrokeMarkers";
+        PaintOrder[PaintOrder["FillMarkersStroke"] = 1] = "FillMarkersStroke";
+        PaintOrder[PaintOrder["StrokeFillMarkers"] = 2] = "StrokeFillMarkers";
+        PaintOrder[PaintOrder["StrokeMarkersFill"] = 3] = "StrokeMarkersFill";
+        PaintOrder[PaintOrder["MarkersFillStroke"] = 4] = "MarkersFillStroke";
+        PaintOrder[PaintOrder["MarkersStrokeFill"] = 5] = "MarkersStrokeFill";
+    })(PaintOrder || (PaintOrder = {}));
+    class BaseBrush {
+        constructor(type, opacity) {
+            this._type = type;
+            this._opacity = opacity;
+        }
+        get type() {
+            return this._type;
+        }
+        get opacity() {
+            return this._opacity;
+        }
+        get isVisible() {
+            return this._opacity > 0;
+        }
+        set opacity(value) {
+            this._opacity = clamp(value, 0, 1);
+        }
+        applyPaint(paint) {
+            paint.isAntiAlias = true;
+            paint.alpha = this._opacity;
+            paint.style = Skia.SkPaintStyle.Fill;
+            return true;
+        }
+    }
+    class EmptyBrush extends BaseBrush {
+        constructor(opacity) {
+            super(BrushType.None, opacity !== null && opacity !== void 0 ? opacity : 1);
+        }
+        [SERIALIZE]() {
+            return [this._opacity];
+        }
+        get isVisible() {
+            return false;
+        }
+        clone() {
+            return new EmptyBrush(this._opacity);
+        }
+    }
+
+    class Color {
+        constructor(r = 0, g = 0, b = 0, a = 1.0) {
+            this._rgba = null;
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        }
+        [SERIALIZE]() {
+            return [this.r, this.g, this.b, this.a];
+        }
+        get code() {
+            return (((this.a * 255) << 24) | (this.r << 16) | (this.g << 8) | (this.b << 0)) >>> 0;
+        }
+        get rgba() {
+            if (!this._rgba) {
+                this._rgba = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+            }
+            return this._rgba;
+        }
+        clone() {
+            return new Color(this.r, this.g, this.b, this.a);
+        }
+        inverted() {
+            return new Color(255 - this.r, 255 - this.g, 255 - this.b, this.a);
+        }
+        equals(other) {
+            return (this.r === other.r &&
+                this.g === other.g &&
+                this.b === other.b &&
+                this.a === other.a);
+        }
+        interpolate(percent, color) {
+            if (percent <= 0) {
+                return this;
+            }
+            if (percent >= 1) {
+                return color;
+            }
+            return new Color(interpolateColorComponent(percent, this.r, color.r), interpolateColorComponent(percent, this.g, color.g), interpolateColorComponent(percent, this.b, color.b), interpolateAlphaComponent(percent, this.a, color.a));
+        }
+        toArray() {
+            return [this.r, this.g, this.b, this.a];
+        }
+        toIntArray() {
+            return [this.r, this.g, this.b, this.a * 255];
+        }
+        toFloatArray() {
+            return [this.r / 255, this.g / 255, this.b / 255, this.a];
+        }
+        static fromCode(code) {
+            return new Color((code >> 16) & 0xFF, (code >> 8) & 0xFF, (code >> 0) & 0xFF, ((code >> 24) & 0xFF) / 255);
+        }
+        static from(data) {
+            const color = tinycolor(data);
+            if (!color.isValid()) {
+                return Color.transparent;
+            }
+            const c = color.toRgb();
+            return new Color(c.r, c.g, c.b, c.a);
+        }
+    }
+    Color.transparent = new Color(0, 0, 0, 0);
+    Color.white = new Color(255, 255, 255);
+    Color.black = new Color(0, 0, 0);
+    Color.red = new Color(255, 0, 0);
+    Color.green = new Color(0, 255, 0);
+    Color.blue = new Color(0, 0, 255);
+
+    class SolidBrush extends BaseBrush {
+        constructor(color, opacity = 1) {
+            super(BrushType.Solid, opacity);
+            this.color = color;
+        }
+        [SERIALIZE]() {
+            return [this.color, this._opacity];
+        }
+        get isVisible() {
+            return this.opacity > 0 && this.color.a > 0;
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            paint.color = this.color.code;
+            // When setting paint.color, the opacity is lost
+            // so we must add it again
+            paint.addAlpha(this.opacity);
+            return true;
+        }
+        clone() {
+            return new SolidBrush(this.color, this._opacity);
+        }
+        static fromColor(color, opacity = 1) {
+            return new SolidBrush(color, opacity);
+        }
+        static get BLACK() {
+            return new SolidBrush(Color.black);
+        }
+        static get WHITE() {
+            return new SolidBrush(Color.white);
+        }
+        static get TRANSPARENT() {
+            return new SolidBrush(Color.transparent, 0);
+        }
+    }
+
+    class StopColorList {
+        constructor(list, reference) {
+            this._nativeCache = null;
+            this._stringCache = null;
+            this.list = list || [];
+            this.reference = reference || null;
+        }
+        get length() {
+            return this.list.length;
+        }
+        get isVisible() {
+            for (const stop of this.list) {
+                if (stop.color.a > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        getColorAt(index) {
+            var _a;
+            return (_a = this.list[index]) === null || _a === void 0 ? void 0 : _a.color;
+        }
+        setColorAt(index, color) {
+            if (index > this.list.length || this.list[index].color.equals(color)) {
+                return false;
+            }
+            this.list[index].color = color;
+            this._nativeCache = this._stringCache = null;
+            return true;
+        }
+        getOffsetAt(index) {
+            var _a;
+            return (_a = this.list[index]) === null || _a === void 0 ? void 0 : _a.offset;
+        }
+        setOffsetAt(index, offset) {
+            if (index > this.list.length || this.list[index].offset === offset) {
+                return false;
+            }
+            this.list[index].offset = offset;
+            this.list.sort(sortStopColors);
+            this._nativeCache = this._stringCache = null;
+            return true;
+        }
+        removeColorAt(index) {
+            if (index > this.list.length) {
+                return false;
+            }
+            this.list.splice(index, 1);
+            this._nativeCache = this._stringCache = null;
+            return true;
+        }
+        addStopColor(offset, color) {
+            if (color == null) {
+                color = this.computeColor(offset);
+            }
+            const stop = { color, offset };
+            this.list.push(stop);
+            this.list.sort(sortStopColors);
+            this._nativeCache = this._stringCache = null;
+            return stop;
+        }
+        reverseOffsets() {
+            let changed = false;
+            for (const color of this.list) {
+                if (color.offset !== 0.5) {
+                    color.offset = 1 - color.offset;
+                    changed = true;
+                }
+            }
+            if (changed) {
+                this.list.reverse();
+                this._nativeCache = this._stringCache = null;
+                return true;
+            }
+            return false;
+        }
+        computeColor(offset) {
+            const list = this.list;
+            const length = list.length;
+            if (length === 0) {
+                return Color.black;
+            }
+            if (length === 1) {
+                return list[0].color;
+            }
+            if (offset <= list[0].offset) {
+                return list[0].color;
+            }
+            const last = length - 1;
+            if (offset >= list[last].offset) {
+                return list[last].color;
+            }
+            for (let i = 2; i < last; i++) {
+                const prev = list[i - 1];
+                const current = list[i];
+                if (prev.offset <= offset && offset <= current.offset) {
+                    if (offset === prev.offset) {
+                        return prev.color;
+                    }
+                    if (offset === current.offset) {
+                        return current.color;
+                    }
+                    return prev.color.interpolate(getRangePercent(offset, prev.offset, current.offset), current.color);
+                }
+            }
+            return list[last].color;
+        }
+        static fromColor(color, reference) {
+            if (!color) {
+                return new StopColorList([
+                    { color: Color.black, offset: 0 },
+                    { color: Color.white, offset: 1 },
+                ], reference);
+            }
+            return new StopColorList([
+                { color: color, offset: 0 },
+                { color: color.inverted(), offset: 1 },
+            ], reference);
+        }
+        toNative() {
+            if (this._nativeCache) {
+                return this._nativeCache;
+            }
+            const ret = {
+                colors: [],
+                offsets: [],
+            };
+            for (const stop of this.list) {
+                ret.colors.push(stop.color.code);
+                ret.offsets.push(stop.offset);
+            }
+            return this._nativeCache = ret;
+        }
+        toString() {
+            if (this._stringCache === null) {
+                this._stringCache = this.list.map(stopColorToString).join(', ');
+            }
+            return this._stringCache;
+        }
+        clone() {
+            if (this.reference) {
+                return this;
+            }
+            return new StopColorList(this.list.map(cloneStopColor), null);
+        }
+        [SERIALIZE]() {
+            return [this.list, this.reference];
+        }
+    }
+    function cloneStopColor(stop) {
+        return { color: stop.color, offset: stop.offset };
+    }
+    function stopColorToString(stop) {
+        return stop.color + ' ' + numberToString(stop.offset * 100) + '%';
+    }
+    function sortStopColors(a, b) {
+        if (a.offset === b.offset) {
+            return 0;
+        }
+        return a.offset < b.offset ? -1 : 1;
+    }
+
+    var SpreadMethod;
+    (function (SpreadMethod) {
+        SpreadMethod[SpreadMethod["Pad"] = 0] = "Pad";
+        SpreadMethod[SpreadMethod["Repeat"] = 1] = "Repeat";
+        SpreadMethod[SpreadMethod["Reflect"] = 2] = "Reflect";
+    })(SpreadMethod || (SpreadMethod = {}));
+    class GradientBrush extends BaseBrush {
+        constructor(type, stopColors, spread, opacity = 1, transform = null) {
+            super(type, opacity);
+            this.transform = null;
+            this.stopColors = stopColors;
+            this.spread = spread;
+            this.transform = transform;
+        }
+        get isVisible() {
+            if (!this._opacity) {
+                return false;
+            }
+            return this.stopColors.isVisible;
+        }
+        get nativeSpreadMethod() {
+            switch (this.spread) {
+                case SpreadMethod.Repeat:
+                    return Skia.SkTileMode.Repeat;
+                case SpreadMethod.Reflect:
+                    return Skia.SkTileMode.Mirror;
+                case SpreadMethod.Pad:
+                default:
+                    return Skia.SkTileMode.Clamp; //TODO: or decal?
+            }
+        }
+    }
+
+    class LinearGradientBrush extends GradientBrush {
+        constructor(start, end, stopColors, spread = SpreadMethod.Pad, opacity = 1, transform = null) {
+            super(BrushType.LinearGradient, stopColors, spread, opacity, transform);
+            this.start = start;
+            this.end = end;
+        }
+        [SERIALIZE]() {
+            return [
+                this.start, this.end,
+                this.stopColors, this.spread, this.opacity, this.transform,
+            ];
+        }
+        clone() {
+            return new LinearGradientBrush(this.start.clone(), this.end.clone(), this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            const stop = this.stopColors.toNative();
+            paint.shader = Skia.SkShader.MakeLinearGradient(this.start, this.end, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
+            return true;
+        }
+    }
+
+    class RadialGradientBrush extends GradientBrush {
+        constructor(center, radius, stopColors, spread = SpreadMethod.Pad, opacity = 1, transform = null) {
+            super(BrushType.RadialGradient, stopColors, spread, opacity, transform);
+            this.center = center;
+            this.radius = radius;
+        }
+        [SERIALIZE]() {
+            return [
+                this.center, this.radius,
+                this.stopColors, this.spread, this.opacity, this.transform,
+            ];
+        }
+        clone() {
+            return new RadialGradientBrush(this.center.clone(), this.radius, this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            const stop = this.stopColors.toNative();
+            paint.shader = Skia.SkShader.MakeRadialGradient(this.center, this.radius, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
+            return true;
+        }
+    }
+
+    class TwoPointGradientBrush extends GradientBrush {
+        constructor(start, startRadius, end, endRadius, stopColors, spread = SpreadMethod.Pad, opacity = 1, transform = null) {
+            super(BrushType.TwoPointGradient, stopColors, spread, opacity, transform);
+            this.start = start;
+            this.startRadius = startRadius;
+            this.end = end;
+            this.endRadius = endRadius;
+        }
+        [SERIALIZE]() {
+            return [
+                this.start, this.startRadius, this.end, this.endRadius,
+                this.stopColors, this.spread, this.opacity, this.transform,
+            ];
+        }
+        clone() {
+            return new TwoPointGradientBrush(this.start.clone(), this.startRadius, this.end.clone(), this.endRadius, this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            const stop = this.stopColors.toNative();
+            paint.shader = Skia.SkShader.MakeTwoPointConicalGradient(this.start, this.startRadius, this.end, this.endRadius, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
+            return true;
+        }
+    }
+
+    class ConicalGradientBrush extends GradientBrush {
+        constructor(center, stopColors, spread = SpreadMethod.Pad, startAngle = 0, endAngle = 360, opacity = 1, transform = null) {
+            super(BrushType.ConicalGradient, stopColors, spread, opacity, transform);
+            this.center = center;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+        }
+        [SERIALIZE]() {
+            return [
+                this.center, this.startAngle, this.endAngle,
+                this.stopColors, this.spread, this.opacity, this.transform,
+            ];
+        }
+        clone() {
+            return new ConicalGradientBrush(this.center.clone(), this.stopColors.clone(), this.spread, this.startAngle, this.endAngle, this._opacity, this.transform ? this.transform.clone() : null);
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            const stop = this.stopColors.toNative();
+            paint.shader = Skia.SkShader.MakeSweepGradient(this.center, this.startAngle, this.endAngle, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
+            return true;
+        }
+    }
+
+    class Point {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        /**
+         * Vector direction (angle)
+         */
+        get direction() {
+            return Math.atan2(this.y, this.x);
+        }
+        get length() {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        }
+        get isZero() {
+            return this.x === 0 && this.y === 0;
+        }
+        get isUnit() {
+            return isCloseTo(this.length, 1);
+        }
+        isPerpendicularTo(vector) {
+            return isCloseTo(this.dot(vector), 0);
+        }
+        distanceTo(other) {
+            return Point.distance(this, other);
+        }
+        add(p) {
+            return new Point(this.x + p.x, this.y + p.y);
+        }
+        sub(p) {
+            return new Point(this.x - p.x, this.y - p.y);
+        }
+        scale(s) {
+            return new Point(s * this.x, s * this.y);
+        }
+        offset(x, y) {
+            return new Point(this.x + x, this.y + y);
+        }
+        /**
+         * Dot product
+         * @param vector
+         */
+        dot(vector) {
+            return this.x * vector.x + this.y * vector.y;
+        }
+        /**
+         * Cross product
+         * @param vector
+         */
+        cross(vector) {
+            return this.x * vector.y - this.y * vector.x;
+        }
+        negate() {
+            return new Point(-this.x, -this.y);
+        }
+        toLength(length) {
+            if (this.isZero) {
+                return new Point(0, 0);
+            }
+            return this.scale(length / this.length);
+        }
+        /**
+         * Normalize vector
+         */
+        toUnit() {
+            return this.toLength(1);
+        }
+        equals(other) {
+            return this.x === other.x && this.y === other.y;
+        }
+        clone() {
+            return new Point(this.x, this.y);
+        }
+        [SERIALIZE]() {
+            return [this.x, this.y];
+        }
+        static fromObject(o) {
+            return new Point(o.x, o.y);
+        }
+        /**
+         * Creates a vector from an angle
+         * @param angle In degrees
+         * @param length
+         */
+        static fromAngle(angle, length = 1) {
+            return this.fromDirection(angle * RADIANS, length);
+        }
+        /**
+         * Creates a vector from a direction
+         * @param radians angle in radians
+         * @param length
+         */
+        static fromDirection(radians, length = 1) {
+            return new Point(length * Math.cos(radians), length * Math.sin(radians));
+        }
+        /**
+         * Distance between two points
+         * @param a
+         * @param b
+         */
+        static distance(a, b) {
+            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+        }
+        /**
+         * Center point
+         * @param a
+         * @param b
+         */
+        static center(a, b) {
+            return new Point((a.x + b.x) / 2, (a.y + b.y) / 2);
+        }
+    }
+    Point.ZERO = new Point(0, 0);
+    Point.ONE = new Point(1, 1);
+
+    class Matrix {
+        constructor(a = 1, b = 0, c = 0, d = 1, tx = 0, ty = 0) {
+            this.value = [a, b, c, d, tx, ty];
+        }
+        get a() {
+            return this.value[0];
+        }
+        get b() {
+            return this.value[1];
+        }
+        get c() {
+            return this.value[2];
+        }
+        get d() {
+            return this.value[3];
+        }
+        /**
+         * Alias of tx
+         */
+        get e() {
+            return this.value[4];
+        }
+        /**
+         * Alias of ty
+         */
+        get f() {
+            return this.value[5];
+        }
+        get tx() {
+            return this.value[4];
+        }
+        get ty() {
+            return this.value[5];
+        }
+        get determinant() {
+            const m = this.value;
+            return m[0] * m[3] - m[1] * m[2];
+        }
+        get isInvertible() {
+            return this.determinant !== 0;
+        }
+        get isIdentity() {
+            const m = this.value;
+            return m[0] === 1 && m[1] === 0 &&
+                m[2] === 0 && m[3] === 1 &&
+                m[4] === 0 && m[5] === 0;
+        }
+        toIdentity() {
+            const m = this.value;
+            m[0] = m[3] = 1;
+            m[1] = m[2] = m[4] = m[5] = 0;
+            return this;
+        }
+        reset(a = 1, b = 0, c = 0, d = 1, tx = 0, ty = 0) {
+            const m = this.value;
+            m[0] = a;
+            m[1] = b;
+            m[2] = c;
+            m[3] = d;
+            m[4] = tx;
+            m[5] = ty;
+            return this;
+        }
+        panZoom(pan, zoom = 1) {
+            return this.scale(zoom, zoom).translate(pan.x / zoom, pan.y / zoom);
+        }
+        translate(x = 0, y = 0) {
+            if (x === 0 && y === 0) {
+                return this;
+            }
+            const m = this.value;
+            m[4] += m[0] * x + m[2] * y;
+            m[5] += m[1] * x + m[3] * y;
+            return this;
+        }
+        scale(x = 1, y = 1) {
+            if (x === 1 && y === 1) {
+                return this;
+            }
+            const m = this.value;
+            m[0] *= x;
+            m[1] *= x;
+            m[2] *= y;
+            m[3] *= y;
+            return this;
+        }
+        skew(x = 0, y = 0) {
+            x %= 360;
+            y %= 360;
+            if (x === 0 && y === 0) {
+                return this;
+            }
+            const m = this.value;
+            const a = m[0];
+            const b = m[1];
+            const c = m[2];
+            const d = m[3];
+            if (x) {
+                x = Math.tan(x * RADIANS);
+                m[2] += a * x;
+                m[3] += b * x;
+            }
+            if (y) {
+                y = Math.tan(y * RADIANS);
+                m[0] += c * y;
+                m[1] += d * y;
+            }
+            return this;
+        }
+        rotate(angle) {
+            angle %= 360;
+            if (angle) {
+                angle *= RADIANS;
+                const sin = Math.sin(angle);
+                const cos = Math.cos(angle);
+                const m = this.value;
+                const a = m[0];
+                const b = m[1];
+                m[0] = a * cos + m[2] * sin;
+                m[1] = b * cos + m[3] * sin;
+                m[2] = m[2] * cos - a * sin;
+                m[3] = m[3] * cos - b * sin;
+            }
+            return this;
+        }
+        inverse() {
+            inverseArray(this.value, this.value);
+            return this;
+        }
+        multiply(other) {
+            multiplyArray$1(this.value, other.value, this.value);
+            return this;
+        }
+        preMultiply(other) {
+            multiplyArray$1(other.value, this.value, this.value);
+            return this;
+        }
+        point(x, y) {
+            const m = this.value;
+            return new Point(m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]);
+        }
+        shiftlessPoint(x, y) {
+            const m = this.value;
+            return new Point(m[0] * x + m[2] * y, m[1] * x + m[3] * y);
+        }
+        transformPoint(point) {
+            return this.point(point.x, point.y);
+        }
+        inversePoint(x, y) {
+            const m = [];
+            if (inverseArray(this.value, m)) {
+                return new Point(m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]);
+            }
+            return new Point(x, y);
+        }
+        inverseShiftlessPoint(x, y) {
+            const m = [];
+            if (inverseArray(this.value, m)) {
+                return new Point(m[0] * x + m[2] * y, m[1] * x + m[3] * y);
+            }
+            return new Point(x, y);
+        }
+        transformInversePoint(point) {
+            return this.inversePoint(point.x, point.y);
+        }
+        clone() {
+            const m = this.value;
+            return new Matrix(m[0], m[1], m[2], m[3], m[4], m[5]);
+        }
+        equals(other) {
+            return this.value.every((value, index) => value === other.value[index]);
+        }
+        toString() {
+            return `matrix(${this.value.join(' ')})`;
+        }
+        [SERIALIZE]() {
+            return this.value;
+        }
+        static Create(matrix) {
+            if (!matrix) {
+                return new Matrix();
+            }
+            if (Array.isArray(matrix)) {
+                return new Matrix(...matrix);
+            }
+            return new Matrix(matrix.a || 0, matrix.b || 0, matrix.c || 0, matrix.d || 0, matrix.e || 0, matrix.f || 0);
+        }
+        static CreatePanZoom(pan, zoom = 1) {
+            return new Matrix(zoom, 0, 0, zoom, pan.x, pan.y);
+        }
+        static CreateDevicePixelRatio(dpr = 1) {
+            return new Matrix(dpr, 0, 0, dpr, 0, 0);
+        }
+    }
+    function multiplyArray$1(left, right, dst) {
+        const a = left[0] * right[0] + left[2] * right[1];
+        const b = left[1] * right[0] + left[3] * right[1];
+        const c = left[0] * right[2] + left[2] * right[3];
+        const d = left[1] * right[2] + left[3] * right[3];
+        const tx = left[0] * right[4] + left[2] * right[5] + left[4];
+        const ty = left[1] * right[4] + left[3] * right[5] + left[5];
+        dst[0] = a;
+        dst[1] = b;
+        dst[2] = c;
+        dst[3] = d;
+        dst[4] = tx;
+        dst[5] = ty;
+    }
+    function inverseArray(src, dst) {
+        const det = src[0] * src[3] - src[1] * src[2];
+        if (det === 0) {
+            return false;
+        }
+        const a = src[3] / det, b = -src[1] / det, c = -src[2] / det, d = src[0] / det, e = -(src[3] * src[4] - src[2] * src[5]) / det, f = (src[1] * src[4] - src[0] * src[5]) / det;
+        dst[0] = a;
+        dst[1] = b;
+        dst[2] = c;
+        dst[3] = d;
+        dst[4] = e;
+        dst[5] = f;
+        return true;
+    }
+
+    var PatternTile;
+    (function (PatternTile) {
+        PatternTile[PatternTile["None"] = 0] = "None";
+        PatternTile[PatternTile["Vertical"] = 1] = "Vertical";
+        PatternTile[PatternTile["ReflectVertical"] = 2] = "ReflectVertical";
+        PatternTile[PatternTile["Horizontal"] = 3] = "Horizontal";
+        PatternTile[PatternTile["ReflectHorizontal"] = 4] = "ReflectHorizontal";
+        PatternTile[PatternTile["Both"] = 5] = "Both";
+        PatternTile[PatternTile["ReflectBoth"] = 6] = "ReflectBoth";
+    })(PatternTile || (PatternTile = {}));
+    class PatternBrush extends BaseBrush {
+        constructor(pattern, opacity = 1, tile = PatternTile.Both, transform = new Matrix(), rectangle = null) {
+            super(BrushType.Pattern, opacity);
+            this._pattern = pattern;
+            this._tile = tile;
+            this._transform = transform;
+            this._rectangle = rectangle;
+        }
+        [SERIALIZE]() {
+            return [this._pattern, this._opacity, this._tile, this._transform, this._rectangle];
+        }
+        applyPaint(paint) {
+            super.applyPaint(paint);
+            const picture = this._pattern.getPicture();
+            let xTile, yTile;
+            switch (this._tile) {
+                case PatternTile.Horizontal:
+                    xTile = Skia.SkTileMode.Repeat;
+                    yTile = Skia.SkTileMode.Decal;
+                    break;
+                case PatternTile.ReflectHorizontal:
+                    xTile = Skia.SkTileMode.Mirror;
+                    yTile = Skia.SkTileMode.Decal;
+                    break;
+                case PatternTile.Vertical:
+                    xTile = Skia.SkTileMode.Decal;
+                    yTile = Skia.SkTileMode.Repeat;
+                    break;
+                case PatternTile.ReflectVertical:
+                    xTile = Skia.SkTileMode.Decal;
+                    yTile = Skia.SkTileMode.Mirror;
+                    break;
+                case PatternTile.Both:
+                    xTile = Skia.SkTileMode.Repeat;
+                    yTile = Skia.SkTileMode.Repeat;
+                    break;
+                case PatternTile.ReflectBoth:
+                    xTile = Skia.SkTileMode.Mirror;
+                    yTile = Skia.SkTileMode.Mirror;
+                    break;
+                case PatternTile.None:
+                default:
+                    xTile = Skia.SkTileMode.Decal;
+                    yTile = Skia.SkTileMode.Decal;
+                    break;
+            }
+            if (this._rectangle !== null) {
+                paint.shader = picture.makeShader(xTile, yTile, this._transform, this._rectangle);
+            }
+            else {
+                paint.shader = picture.makeShader(xTile, yTile, this._transform);
+            }
+            picture.delete();
+            return true;
+        }
+        clone() {
+            return new PatternBrush(this._pattern, this._opacity, this._tile, this._transform.clone(), this._rectangle ? this._rectangle.clone() : null);
+        }
+    }
+
+    class PointerBrush extends BaseBrush {
+        constructor(brush, opacity = 1) {
+            super(BrushType.Pointer, opacity);
+            this._pointer = brush;
+        }
+        [SERIALIZE]() {
+            return [this._pointer, this._opacity];
+        }
+        get pointer() {
+            return this._pointer;
+        }
+        applyPaint(paint) {
+            if (this._pointer.applyPaint(paint)) {
+                return super.applyPaint(paint);
+            }
+            return false;
+        }
+        clone() {
+            return new PointerBrush(this._pointer, this._opacity);
+        }
+    }
+
+    class Rectangle {
+        constructor(x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            if (width < 0) {
+                this.x += width;
+                width = -width;
+            }
+            if (height < 0) {
+                this.y += height;
+                height = -height;
+            }
+            this.width = width;
+            this.height = height;
+            this.top = y;
+            this.bottom = y + height;
+            this.left = x;
+            this.right = x + width;
+        }
+        clone() {
+            return new Rectangle(this.x, this.y, this.width, this.height);
+        }
+        equals(other) {
+            return (this.x === other.x &&
+                this.y === other.y &&
+                this.width === other.width &&
+                this.height === other.height);
+        }
+        intersects(other) {
+            return !(this.right < other.left ||
+                other.right < this.left ||
+                this.bottom < other.top ||
+                other.bottom < this.top);
+        }
+        containsPoint(point) {
+            return this.contains(point.x, point.y);
+        }
+        contains(x, y) {
+            return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
+        }
+        get middle() {
+            if (!this._middle) {
+                this._middle = new Point(this.x + this.width / 2, this.y + this.height / 2);
+            }
+            return this._middle;
+        }
+        get topLeft() {
+            if (!this._topLeft) {
+                this._topLeft = new Point(this.left, this.top);
+            }
+            return this._topLeft;
+        }
+        get topRight() {
+            if (!this._topRight) {
+                this._topRight = new Point(this.right, this.top);
+            }
+            return this._topRight;
+        }
+        get bottomLeft() {
+            if (!this._bottomLeft) {
+                this._bottomLeft = new Point(this.left, this.bottom);
+            }
+            return this._bottomLeft;
+        }
+        get bottomRight() {
+            if (!this._bottomRight) {
+                this._bottomRight = new Point(this.right, this.bottom);
+            }
+            return this._bottomRight;
+        }
+        get isVisible() {
+            return this.width > 0 && this.height > 0;
+        }
+        inset(x, y = x) {
+            return this.outset(-x, -y);
+        }
+        outset(x, y = x) {
+            return new Rectangle(this.x - x, this.y - y, this.width + 2 * x, this.height + 2 * y);
+        }
+        [SERIALIZE]() {
+            return [this.x, this.y, this.width, this.height];
+        }
+        static fromLTRBObject(o) {
+            return new Rectangle(o.left, o.top, o.right - o.left, o.bottom - o.top);
+        }
+        static fromLTRB(left, top, right, bottom) {
+            return new Rectangle(left, top, right - left, bottom - top);
+        }
+        static fromSize(size) {
+            return new Rectangle(0, 0, size.width, size.height);
+        }
+        static fromPoints(...points) {
+            if (points.length === 0) {
+                return new Rectangle(0, 0, 0, 0);
+            }
+            let left = points[0].x;
+            let top = points[0].y;
+            let right = left;
+            let bottom = top;
+            for (let i = 1; i < points.length; i++) {
+                const p = points[i];
+                if (p.x < left) {
+                    left = p.x;
+                }
+                else if (p.x > right) {
+                    right = p.x;
+                }
+                if (p.y < top) {
+                    top = p.y;
+                }
+                else if (p.y > bottom) {
+                    bottom = p.y;
+                }
+            }
+            return new Rectangle(left, top, right - left, bottom - top);
+        }
+        static merge(rects) {
+            let left = Number.POSITIVE_INFINITY;
+            let top = Number.POSITIVE_INFINITY;
+            let right = Number.NEGATIVE_INFINITY;
+            let bottom = Number.NEGATIVE_INFINITY;
+            let r = null;
+            for (r of rects) {
+                if (r.left < left) {
+                    left = r.left;
+                }
+                if (r.top < top) {
+                    top = r.top;
+                }
+                if (r.right > right) {
+                    right = r.right;
+                }
+                if (r.bottom > bottom) {
+                    bottom = r.bottom;
+                }
+            }
+            if (r === null) {
+                return new Rectangle(0, 0, 0, 0);
+            }
+            return new Rectangle(left, top, right - left, bottom - top);
+        }
+    }
+
+    var BlendMode;
+    (function (BlendMode) {
+        BlendMode[BlendMode["Color"] = 0] = "Color";
+        BlendMode[BlendMode["ColorBurn"] = 1] = "ColorBurn";
+        BlendMode[BlendMode["ColorDodge"] = 2] = "ColorDodge";
+        BlendMode[BlendMode["Darken"] = 3] = "Darken";
+        BlendMode[BlendMode["Difference"] = 4] = "Difference";
+        BlendMode[BlendMode["Exclusion"] = 5] = "Exclusion";
+        BlendMode[BlendMode["HardLight"] = 6] = "HardLight";
+        BlendMode[BlendMode["Hue"] = 7] = "Hue";
+        BlendMode[BlendMode["Lighten"] = 8] = "Lighten";
+        BlendMode[BlendMode["Luminosity"] = 9] = "Luminosity";
+        BlendMode[BlendMode["Multiply"] = 10] = "Multiply";
+        BlendMode[BlendMode["Normal"] = 11] = "Normal";
+        BlendMode[BlendMode["Overlay"] = 12] = "Overlay";
+        BlendMode[BlendMode["Saturation"] = 13] = "Saturation";
+        BlendMode[BlendMode["Screen"] = 14] = "Screen";
+        BlendMode[BlendMode["SoftLight"] = 15] = "SoftLight";
+    })(BlendMode || (BlendMode = {}));
+    class Composition {
+        constructor(blend = BlendMode.Normal, opacity = 1, isolate = false) {
+            this.blend = blend;
+            this.opacity = clamp(opacity, 0, 1);
+            this.isolate = isolate;
+        }
+        [SERIALIZE]() {
+            return [this.blend, this.opacity, this.isolate];
+        }
+        clone() {
+            return new Composition(this.blend, this.opacity, this.isolate);
+        }
+        get needsLayer() {
+            return this.isolate || this.opacity !== 1 || this.blend !== BlendMode.Normal;
+        }
+        get isVisible() {
+            return this.opacity > 0;
+        }
+        applyPaint(paint) {
+            paint.isAntiAlias = true;
+            paint.alpha = this.opacity;
+            switch (this.blend) {
+                case BlendMode.Color:
+                    paint.blendMode = Skia.SkBlendMode.Color;
+                    break;
+                case BlendMode.ColorBurn:
+                    paint.blendMode = Skia.SkBlendMode.ColorBurn;
+                    break;
+                case BlendMode.ColorDodge:
+                    paint.blendMode = Skia.SkBlendMode.ColorDodge;
+                    break;
+                case BlendMode.Darken:
+                    paint.blendMode = Skia.SkBlendMode.Darken;
+                    break;
+                case BlendMode.Difference:
+                    paint.blendMode = Skia.SkBlendMode.Difference;
+                    break;
+                case BlendMode.Exclusion:
+                    paint.blendMode = Skia.SkBlendMode.Exclusion;
+                    break;
+                case BlendMode.HardLight:
+                    paint.blendMode = Skia.SkBlendMode.HardLight;
+                    break;
+                case BlendMode.Hue:
+                    paint.blendMode = Skia.SkBlendMode.Hue;
+                    break;
+                case BlendMode.Lighten:
+                    paint.blendMode = Skia.SkBlendMode.Lighten;
+                    break;
+                case BlendMode.Luminosity:
+                    paint.blendMode = Skia.SkBlendMode.Luminosity;
+                    break;
+                case BlendMode.Multiply:
+                    paint.blendMode = Skia.SkBlendMode.Multiply;
+                    break;
+                case BlendMode.Normal:
+                    paint.blendMode = Skia.SkBlendMode.SrcOver;
+                    break;
+                case BlendMode.Overlay:
+                    paint.blendMode = Skia.SkBlendMode.Overlay;
+                    break;
+                case BlendMode.Saturation:
+                    paint.blendMode = Skia.SkBlendMode.Saturation;
+                    break;
+                case BlendMode.Screen:
+                    paint.blendMode = Skia.SkBlendMode.Screen;
+                    break;
+                case BlendMode.SoftLight:
+                    paint.blendMode = Skia.SkBlendMode.SoftLight;
+                    break;
+            }
+        }
+    }
+    new Composition(BlendMode.Normal, 1);
+    new Composition(BlendMode.Normal, 1, true);
+    function ApplyCompositionPaint(paint, composition) {
+        if (!composition || !composition.needsLayer) {
+            return false;
+        }
+        composition.applyPaint(paint);
+        return true;
+    }
+
+    class DrawingContext {
+        constructor(canvas, matrix = new Matrix()) {
+            this._stack = [];
+            this._paint = null;
+            this._canvas = canvas;
+            this._matrix = matrix;
+            this._paint = new Skia.SkPaint();
+            this._canvas.setMatrix(matrix);
+        }
+        get canvas() {
+            return this._canvas;
+        }
+        dispose() {
+            // Do not delete canvas
+            this._canvas = null;
+            if (this._paint) {
+                this._paint.delete();
+                this._paint = null;
+            }
+        }
+        get matrix() {
+            return this._matrix;
+        }
+        set matrix(value) {
+            this._matrix = value;
+            this._canvas.setMatrix(value);
+        }
+        multiplyMatrix(matrix) {
+            if (!matrix.isIdentity) {
+                this.matrix = this._matrix.multiply(matrix);
+            }
+        }
+        clipRect(rectangle) {
+            this._canvas.clipRect(rectangle);
+        }
+        clipPath(pathObject) {
+            this._canvas.clipPath(pathObject.path, Skia.SkClipOp.Intersect, true);
+        }
+        clear(color = Color.white) {
+            this._canvas.clear(color.code);
+        }
+        fillRect(rect, brush) {
+            if (!brush.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (brush.applyPaint(paint)) {
+                this._canvas.drawRect(rect, paint);
+            }
+            paint.reset();
+        }
+        strokeRect(rect, pen) {
+            if (!pen.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (pen.applyPaint(paint)) {
+                this._canvas.drawRect(rect, paint);
+            }
+            paint.reset();
+        }
+        fillCircle(center, radius, brush) {
+            if (!brush.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (brush.applyPaint(paint)) {
+                this._canvas.drawCircle(center, radius, paint);
+            }
+            paint.reset();
+        }
+        strokeCircle(center, radius, pen) {
+            if (!pen.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (pen.applyPaint(paint)) {
+                this._canvas.drawCircle(center, radius, paint);
+            }
+            paint.reset();
+        }
+        fillText(text, brush, typeface, point, size = 10) {
+            if (!brush.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (brush.applyPaint(paint)) {
+                const f = new Skia.SkFont(typeface, size);
+                f.hinting = Skia.SkFontHinting.Normal;
+                f.edging = Skia.SkFontEdging.SubpixelAntiAlias;
+                f.isSubpixel = true;
+                this._canvas.drawText(text, paint, f, Skia.SkTextEncoding.UTF8, point);
+            }
+            paint.reset();
+        }
+        drawLine(from, to, pen) {
+            if (!pen.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (pen.applyPaint(paint)) {
+                this._canvas.drawLine(from, to, paint);
+            }
+            paint.reset();
+        }
+        drawImage(image, dx = 0, dy = 0, composition) {
+            // TODO: check sampling here
+            const paint = this._paint;
+            if (ApplyCompositionPaint(paint, composition)) {
+                const sampling = Skia.SkSamplingOptions.MakeMitchell();
+                this._canvas.drawImage(image, dx, dy, sampling, paint);
+                sampling.delete();
+                paint.reset();
+            }
+            else {
+                this._canvas.drawImage(image, dx, dy);
+            }
+        }
+        drawPicture(picture, composition) {
+            const paint = this._paint;
+            if (ApplyCompositionPaint(paint, composition)) {
+                this._canvas.drawPicture(picture, paint);
+                paint.reset();
+            }
+            else {
+                this._canvas.drawPicture(picture);
+            }
+        }
+        fillPath(path, brush) {
+            if (path.isEmpty || !brush.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (brush.applyPaint(paint)) {
+                this._canvas.drawPath(path, paint);
+            }
+            paint.reset();
+        }
+        strokePath(path, pen) {
+            if (path.isEmpty || !pen.isVisible) {
+                return;
+            }
+            const paint = this._paint;
+            if (pen.applyPaint(paint)) {
+                this._canvas.drawPath(path, paint);
+            }
+            paint.reset();
+        }
+        recordPicture(element, callback) {
+            const recorder = new Skia.SkPictureRecorder();
+            const context = new DrawingContext(recorder.beginRecording(element.localBounds));
+            const newBounds = callback.call(element, context);
+            const picture = newBounds
+                ? recorder.finishRecordingAsPicture(newBounds)
+                : recorder.finishRecordingAsPicture();
+            recorder.delete();
+            context.dispose();
+            return picture;
+        }
+        flush() {
+            this._canvas.flush();
+        }
+        restore() {
+            if (this._stack.length === 0) {
+                return;
+            }
+            this._canvas.restore();
+            const ctx = this._stack.pop();
+            this._matrix = ctx.matrix; // this is restored on canvas
+        }
+        save() {
+            this._canvas.save();
+            this._stack.push({
+                matrix: this._matrix.clone(),
+            });
+        }
+        static getStrokePath(path, pen) {
+            const paint = new Skia.SkPaint();
+            pen.applyPaint(paint);
+            const res = path.getFilled(paint);
+            paint.delete();
+            return res;
+        }
+    }
+
+    var Orientation;
+    (function (Orientation) {
+        Orientation[Orientation["None"] = 0] = "None";
+        Orientation[Orientation["Auto"] = 1] = "Auto";
+        Orientation[Orientation["AutoReverse"] = -1] = "AutoReverse";
+    })(Orientation || (Orientation = {}));
+    class GraphicsElement {
+        constructor(id = null) {
+            // Element
+            this._id = null;
+            this._locked = false;
+            this._hidden = false;
+            this._title = null;
+            // Node
+            this._parent = null;
+            this._next = null;
+            this._prev = null;
+            this._first = null;
+            this._last = null;
+            // Transform
+            this._originX = 0;
+            this._originY = 0;
+            this._translateX = 0;
+            this._translateY = 0;
+            this._scaleX = 1;
+            this._scaleY = 1;
+            this._skewX = 0;
+            this._skewY = 0;
+            this._rotate = 0;
+            this._orientation = Orientation.None;
+            // Bounds
+            this._localBounds = null;
+            this._localTightBounds = null;
+            this._globalBounds = null;
+            this._globalTightBounds = null;
+            this._pictureCache = null;
+            // Matrix
+            this._globalMatrix = null;
+            this._localMatrix = null;
+            // Composition
+            this._composition = null;
+            this._id = id;
+        }
+        get parent() {
+            return this._parent;
+        }
+        get firstChild() {
+            return this._first;
+        }
+        get lastChild() {
+            return this._last;
+        }
+        get nextSibling() {
+            return this._next;
+        }
+        get previousSibling() {
+            return this._prev;
+        }
+        get hasChildren() {
+            return this._first != null;
+        }
+        /**
+         * Unique element id
+         */
+        get id() {
+            return this._id;
+        }
+        /**
+         * Element title
+         */
+        get title() {
+            return this._title;
+        }
+        set title(value) {
+            this._title = value;
+        }
+        /**
+         * True if element cannot be selected with mouse
+         */
+        get locked() {
+            return this._locked;
+        }
+        set locked(value) {
+            this._locked = value;
+        }
+        /**
+         * True if element should not be rendered
+         */
+        get hidden() {
+            return this._hidden;
+        }
+        set hidden(value) {
+            if (value !== this._hidden) {
+                this._hidden = value;
+                this.invalidate();
+            }
+        }
+        /**
+         * Bounds without transform applied
+         */
+        get localBounds() {
+            return this.globalBounds;
+        }
+        /**
+         * Tight bounds without transform applied
+         */
+        get localTightBounds() {
+            return this.globalTightBounds;
+        }
+        /**
+         * Bounds with global transform applied
+         */
+        get globalBounds() {
+            if (this._globalBounds == null) {
+                this._globalBounds = Rectangle.merge(this.childrenPropertyIterator('globalBounds'));
+            }
+            return this._globalBounds;
+        }
+        /**
+         * Tight bounds with global transform applied
+         */
+        get globalTightBounds() {
+            if (this._globalTightBounds == null) {
+                this._globalTightBounds = Rectangle.merge(this.childrenPropertyIterator('globalTightBounds'));
+            }
+            return this._globalTightBounds;
+        }
+        /**
+         * Matrix of this element
+         */
+        get localMatrix() {
+            if (this._localMatrix === null) {
+                this._localMatrix = this.getLocalMatrix();
+            }
+            return this._localMatrix;
+        }
+        /**
+         * Full matrix to this element
+         */
+        get globalMatrix() {
+            if (this._globalMatrix === null) {
+                const local = this.localMatrix;
+                if (!this._parent) {
+                    return this._globalMatrix = local;
+                }
+                const global = this._parent.globalMatrix;
+                if (global.isIdentity) {
+                    return this._globalMatrix = local;
+                }
+                return this._globalMatrix = global.clone().multiply(local);
+            }
+            return this._globalMatrix;
+        }
+        /**
+         * Invoke when the "picture" changed (shape, color, etc.)
+         * This will also invoke parent.invalidate()
+         * Do NOT invoke when the matrix (local or global) has changed
+         */
+        invalidate() {
+            if (this._pictureCache !== null) {
+                this._pictureCache.delete();
+                this._pictureCache = null;
+            }
+            if (this._parent != null) {
+                this._parent.invalidate();
+            }
+        }
+        /**
+         * Invoke when the matrix of an ancestor has changed
+         * This is also invoke invalidateGlobalMatrix() for every children
+         */
+        invalidateGlobalMatrix() {
+            this._globalMatrix = null;
+            this._globalBounds = null;
+            this._globalTightBounds = null;
+            for (let n = this._first; n !== null; n = n._next) {
+                if (n._globalMatrix !== null) {
+                    n.invalidateGlobalMatrix();
+                }
+            }
+        }
+        /**
+         * Invoke when local matrix has changed
+         * This is also:
+         *   - invoke invalidateGlobalMatrix() for every children
+         *   - invoke invalidateBoundsAndPicture(true)
+         * @protected
+         */
+        invalidateLocalMatrix() {
+            if (this._globalMatrix !== null) {
+                this.invalidateGlobalMatrix();
+            }
+            this._localMatrix = null;
+            // Invalidate parent's picture, so he can draw us with the new local matrix
+            this.invalidateBoundsAndPicture(true);
+        }
+        /**
+         * Invoked by invalidateLocalMatrix()
+         * This is a helper for: invalidateBounds() + invalidate()
+         * @protected
+         */
+        invalidateBoundsAndPicture(parentPictureOnly = false) {
+            // Invalidate all bounds
+            this._localBounds = null;
+            this._localTightBounds = null;
+            this._globalBounds = null;
+            this._globalTightBounds = null;
+            // Remove self picture
+            if (!parentPictureOnly) {
+                if (this._pictureCache !== null) {
+                    this._pictureCache.delete();
+                    this._pictureCache = null;
+                }
+            }
+            if (this._parent != null) {
+                if (parentPictureOnly) {
+                    // Remove parent picture
+                    if (this._parent._pictureCache !== null) {
+                        this._parent._pictureCache.delete();
+                        this._parent._pictureCache = null;
+                    }
+                }
+                // Bubble
+                this._parent.invalidateBoundsAndPicture(parentPictureOnly);
+            }
+        }
+        /**
+         * Draws contents of the element into a picture
+         */
+        getPicture() {
+            if (this._pictureCache === null) {
+                const recorder = new Skia.SkPictureRecorder();
+                const context = new DrawingContext(recorder.beginRecording(this.pictureBounds));
+                const newBounds = this.drawOnPicture(context);
+                this._pictureCache = newBounds
+                    ? recorder.finishRecordingAsPicture(newBounds)
+                    : recorder.finishRecordingAsPicture();
+                recorder.delete();
+                context.dispose();
+            }
+            return this._pictureCache;
+        }
+        bringForward() {
+            if (!this._next || !this._parent) {
+                return false;
+            }
+            this._parent.insertAfter(this, this._next);
+            return true;
+        }
+        sendBackward() {
+            if (!this._prev || !this._parent) {
+                return false;
+            }
+            this._parent.insertBefore(this, this._prev);
+            return true;
+        }
+        bringToFront() {
+            if (!this._next || !this._parent) {
+                return false;
+            }
+            this._parent.insertAfter(this, this._parent._last);
+            return true;
+        }
+        sendToBack() {
+            if (!this._prev || !this._parent) {
+                return false;
+            }
+            this._parent.insertBefore(this, this._parent._first);
+            return true;
+        }
+        remove() {
+            if (!this._parent) {
+                return false;
+            }
+            this._parent.removeChild(this);
+            return true;
+        }
+        insertAfter(node, target) {
+            if (!this.supportsChildren) {
+                throw new Error("Children are not supported");
+            }
+            if (target._parent !== this) {
+                throw new Error('Invalid target');
+            }
+            if (node._parent) {
+                if (node._parent === this && node._prev === target) {
+                    // Already in the right place
+                    return node;
+                }
+                // We wrap here because we don't want to invalidate twice
+                GraphicsElement.preventInvalidation(() => {
+                    node._parent.removeChild(node);
+                });
+            }
+            node._parent = this;
+            const next = target._next;
+            target._next = node;
+            node._prev = target;
+            node._next = next;
+            if (next) {
+                next._prev = node;
+            }
+            else {
+                this._last = node;
+            }
+            if (!GraphicsElement.invalidationPrevented) {
+                node.invalidateGlobalMatrix();
+                this.invalidateBoundsAndPicture();
+            }
+            return node;
+        }
+        insertBefore(node, target) {
+            if (!this.supportsChildren) {
+                throw new Error("Children are not supported");
+            }
+            if (target._parent !== this) {
+                throw new Error('Invalid target');
+            }
+            if (node._parent) {
+                if (node._parent === this && node._next === target) {
+                    // Already in the right place
+                    return node;
+                }
+                // We wrap here because we don't want to invalidate twice
+                GraphicsElement.preventInvalidation(() => {
+                    node._parent.removeChild(node);
+                });
+            }
+            node._parent = this;
+            const prev = target._prev;
+            target._prev = node;
+            node._next = target;
+            node._prev = prev;
+            if (prev) {
+                prev._next = node;
+            }
+            else {
+                this._first = node;
+            }
+            if (!GraphicsElement.invalidationPrevented) {
+                node.invalidateGlobalMatrix();
+                this.invalidateBoundsAndPicture();
+            }
+            return node;
+        }
+        appendChild(node) {
+            if (!this.supportsChildren) {
+                throw new Error("Children are not supported");
+            }
+            for (let n = this._parent; n != null; n = n._parent) {
+                if (n === node) {
+                    throw new Error('Invalid node');
+                }
+            }
+            if (node._parent) {
+                // We wrap here because we don't want to invalidate twice
+                GraphicsElement.preventInvalidation(() => {
+                    node._parent.removeChild(node);
+                });
+            }
+            node._parent = this;
+            if (this._last) {
+                this._last._next = node;
+                node._prev = this._last;
+            }
+            this._last = node;
+            if (!this._first) {
+                this._first = node;
+            }
+            if (!GraphicsElement.invalidationPrevented) {
+                node.invalidateGlobalMatrix();
+                this.invalidateBoundsAndPicture();
+            }
+            return node;
+        }
+        prependChild(node) {
+            if (this._first) {
+                return this.insertBefore(node, this._first);
+            }
+            return this.appendChild(node);
+        }
+        removeChild(node) {
+            if (!this.supportsChildren) {
+                throw new Error("Children are not supported");
+            }
+            if (node._parent !== this) {
+                throw new Error('Invalid node');
+            }
+            if (this._first === node) {
+                if (this._last === node) {
+                    this._first = this._last = null;
+                }
+                else {
+                    this._first = node._next;
+                    this._first._prev = null;
+                }
+            }
+            else if (this._last === node) {
+                this._last = node._prev;
+                this._last._next = null;
+            }
+            else {
+                node._next._prev = node._prev;
+                node._prev._next = node._next;
+            }
+            node._parent = node._next = node._prev = null;
+            if (!GraphicsElement.invalidationPrevented) {
+                this.invalidateBoundsAndPicture();
+            }
+            return node;
+        }
+        // Transforms
+        getLocalMatrix() {
+            const matrix = new Matrix();
+            matrix
+                .translate(this._originX, this._originY)
+                .rotate(this._rotate)
+                .skew(this._skewX, 0)
+                .skew(0, this._skewY)
+                .scale(this._scaleX, this._scaleY)
+                .translate(this._translateX, this._translateY);
+            return matrix;
+        }
+        get originX() {
+            return this._originX;
+        }
+        set originX(value) {
+            const d = value - this._originX;
+            this._originX = value;
+            this._translateX -= d;
+            this.invalidateLocalMatrix();
+        }
+        get originY() {
+            return this._originY;
+        }
+        set originY(value) {
+            const d = value - this._originY;
+            this._originY = value;
+            this._translateY -= d;
+            this.invalidateLocalMatrix();
+        }
+        get translateX() {
+            return this._translateX;
+        }
+        set translateX(value) {
+            this._translateX = value;
+            this.invalidateLocalMatrix();
+        }
+        get translateY() {
+            return this._translateY;
+        }
+        set translateY(value) {
+            this._translateY = value;
+            this.invalidateLocalMatrix();
+        }
+        get scaleX() {
+            return this._scaleX;
+        }
+        set scaleX(value) {
+            this._scaleX = value;
+            this.invalidateLocalMatrix();
+        }
+        get scaleY() {
+            return this._scaleY;
+        }
+        set scaleY(value) {
+            this._scaleY = value;
+            this.invalidateLocalMatrix();
+        }
+        get rotate() {
+            return this._rotate;
+        }
+        set rotate(value) {
+            this._rotate = value;
+            this.invalidateLocalMatrix();
+        }
+        get orientation() {
+            return this._orientation;
+        }
+        set orientation(value) {
+            this._orientation = value;
+        }
+        // Coordinates
+        get position() {
+            // TODO: what is this?
+            return new Point(this._originX, this._originY);
+        }
+        set position(value) {
+            // TODO: what is this?
+            this._originX = value.x;
+            this._originY = value.y;
+            this.invalidateLocalMatrix();
+        }
+        // Opacity
+        get opacity() {
+            return this.composition.opacity;
+        }
+        set opacity(value) {
+            value = clamp(value, 0, 1);
+            if (value !== this.composition.opacity) {
+                this.composition.opacity = value;
+                this.invalidate();
+            }
+        }
+        // Blend mode
+        get blend() {
+            return this.composition.blend;
+        }
+        set blend(value) {
+            if (value !== this.composition.blend) {
+                this.composition.blend = value;
+                this.invalidate();
+            }
+        }
+        // Isolate
+        get isolate() {
+            return this.composition.isolate;
+        }
+        set isolate(value) {
+            if (value !== this.composition.isolate) {
+                this.composition.isolate = value;
+                this.invalidate();
+            }
+        }
+        // Composition
+        get composition() {
+            if (this._composition == null) {
+                this._composition = new Composition();
+            }
+            return this._composition;
+        }
+        get isVisible() {
+            return this.composition.isVisible;
+        }
+        createClone() {
+            // @ts-ignore
+            return new this.constructor(this._id);
+        }
+        clone() {
+            const clone = this.createClone();
+            clone._title = this._title;
+            clone._locked = this._locked;
+            clone._hidden = this._hidden;
+            clone._originX = this._originX;
+            clone._originY = this._originY;
+            clone._translateX = this._translateX;
+            clone._translateY = this._translateY;
+            clone._scaleX = this._scaleX;
+            clone._scaleY = this._scaleY;
+            clone._skewX = this._skewX;
+            clone._skewY = this._skewY;
+            clone._rotate = this._rotate;
+            clone._orientation = this._orientation;
+            clone._composition = this._composition ? this._composition.clone() : null;
+            this.onClone(clone);
+            if (this.hasChildren) {
+                GraphicsElement.preventInvalidation(() => {
+                    for (const child of this.children()) {
+                        clone.appendChild(child.clone());
+                    }
+                });
+            }
+            if (this._localMatrix) {
+                clone._localMatrix = this._localMatrix;
+            }
+            return clone;
+        }
+        draw(context) {
+            if (this._hidden || !this.isVisible) {
+                // Early exit
+                return;
+            }
+            context.save();
+            context.multiplyMatrix(this.localMatrix);
+            context.drawPicture(this.getPicture(), this.composition);
+            context.restore();
+        }
+        getElementAt(point) {
+            if (this.hidden) {
+                return null;
+            }
+            // TODO: check if locked ...
+            for (const child of this.children(true)) {
+                const result = child.getElementAt(point);
+                if (result) {
+                    return result;
+                }
+            }
+            return null;
+        }
+        dispose() {
+            // Remove picture cache
+            if (this._pictureCache !== null) {
+                this._pictureCache.delete();
+                this._pictureCache = null;
+            }
+            // Remove other objects cache
+            this._composition = null;
+            this._globalMatrix = null;
+            this._localMatrix = null;
+            this._globalBounds = null;
+            this._globalTightBounds = null;
+            this._localBounds = null;
+            this._localTightBounds = null;
+            // Dispose children
+            for (let node = this._first; node != null; node = node._next) {
+                node.dispose();
+            }
+            // Remove links
+            this._parent = this._prev = this._next = this._first = this._last = null;
+        }
+        /**
+         * Iterates all children in reverse order
+         */
+        *[Symbol.iterator]() {
+            for (let node = this._last; node != null; node = node._prev) {
+                yield node;
+            }
+        }
+        /**
+         * Iterates all children
+         * @param reverse
+         */
+        *children(reverse = false) {
+            if (reverse) {
+                for (let node = this._last; node != null; node = node._prev) {
+                    yield node;
+                }
+            }
+            else {
+                for (let node = this._first; node != null; node = node._next) {
+                    yield node;
+                }
+            }
+        }
+        /**
+         * Bounds (without transform) where paint is allowed
+         * @protected
+         */
+        get pictureBounds() {
+            return this.localBounds;
+        }
+        /**
+         * Draws the element
+         * @param context
+         * @return If this functions returns a rect => overwrites picture bounds
+         * @protected
+         */
+        drawOnPicture(context) {
+            this.drawChildrenOnPicture(context);
+        }
+        /**
+         * Draws children
+         * @param context
+         * @protected
+         */
+        drawChildrenOnPicture(context) {
+            for (let node = this._first; node != null; node = node._next) {
+                node.draw(context);
+            }
+        }
+        *childrenPropertyIterator(prop) {
+            for (let node = this._first; node != null; node = node._next) {
+                yield node[prop];
+            }
+        }
+        [SERIALIZE]() {
+            const data = {};
+            if (this.hasChildren) {
+                data.children = Array.from(this.children());
+            }
+            data.element = [this._locked, this._hidden, this._title];
+            data.transform = [
+                this._originX, this._originY,
+                this._translateX, this._translateY,
+                this._scaleX, this._scaleY,
+                this._skewX, this._skewY,
+                this._rotate, this._orientation
+            ];
+            data.composition = this._composition;
+            this.onSerialize(data);
+            return data;
+        }
+        [UNSERIALIZE](data) {
+            [this._locked, this._hidden, this._title] = data.element;
+            [
+                this._originX, this._originY,
+                this._translateX, this._translateY,
+                this._scaleX, this._scaleY,
+                this._skewX, this._skewY,
+                this._rotate, this._orientation,
+            ] = data.transform;
+            this._composition = data.composition;
+            this.onUnserialize(data);
+            if (!data.children || !data.children.length) {
+                return;
+            }
+            GraphicsElement.preventInvalidation(() => {
+                for (const child of data.children) {
+                    this.appendChild(child);
+                }
+            });
+        }
+        static preventInvalidation(f) {
+            this.invalidationPrevented++;
+            try {
+                f();
+            }
+            finally {
+                this.invalidationPrevented--;
+            }
+        }
+    }
+    GraphicsElement.invalidationPrevented = 0;
+
+    var StrokeLineCap;
+    (function (StrokeLineCap) {
+        StrokeLineCap[StrokeLineCap["Butt"] = 0] = "Butt";
+        StrokeLineCap[StrokeLineCap["Round"] = 1] = "Round";
+        StrokeLineCap[StrokeLineCap["Square"] = 2] = "Square";
+    })(StrokeLineCap || (StrokeLineCap = {}));
+    var StrokeLineJoin;
+    (function (StrokeLineJoin) {
+        StrokeLineJoin[StrokeLineJoin["Miter"] = 0] = "Miter";
+        StrokeLineJoin[StrokeLineJoin["Round"] = 1] = "Round";
+        StrokeLineJoin[StrokeLineJoin["Bevel"] = 2] = "Bevel";
+    })(StrokeLineJoin || (StrokeLineJoin = {}));
+    var PenType;
+    (function (PenType) {
+        PenType[PenType["Default"] = 0] = "Default";
+    })(PenType || (PenType = {}));
+    class BasePen {
+        constructor(brush = SolidBrush.BLACK, width = 1, lineCap = StrokeLineCap.Butt, lineJoin = StrokeLineJoin.Miter, miterLimit = 4, dashes = [], offset = 0) {
+            this._brush = brush;
+            this._width = width;
+            this._lineCap = lineCap;
+            this._lineJoin = lineJoin;
+            this._miterLimit = miterLimit;
+            this._dashes = dashes;
+            this._offset = offset;
+        }
+        clone() {
+            const ctor = this.constructor;
+            // @ts-ignore
+            return new ctor(this._brush.clone(), this._width, this._lineCap, this._lineJoin, this._miterLimit, this._dashes.slice(), this._offset);
+        }
+        [SERIALIZE]() {
+            return [
+                this._brush, this._width,
+                this._lineCap, this._lineJoin, this._miterLimit,
+                this._dashes, this._offset,
+            ];
+        }
+        get brush() {
+            return this._brush;
+        }
+        set brush(value) {
+            this._brush = value;
+        }
+        get width() {
+            return this._width;
+        }
+        set width(value) {
+            this._width = value;
+        }
+        get lineCap() {
+            return this._lineCap;
+        }
+        set lineCap(value) {
+            this._lineCap = value;
+        }
+        get lineJoin() {
+            return this._lineJoin;
+        }
+        set lineJoin(value) {
+            this._lineJoin = value;
+        }
+        get miterLimit() {
+            return this._miterLimit;
+        }
+        set miterLimit(value) {
+            this._miterLimit = value;
+        }
+        get dashes() {
+            return this._dashes;
+        }
+        set dashes(value) {
+            this._dashes = value;
+        }
+        get offset() {
+            return this._offset;
+        }
+        set offset(value) {
+            this._offset = value;
+        }
+        get isVisible() {
+            return this._brush.isVisible && this._width > 0;
+        }
+        applyPaint(paint) {
+            if (!this._brush.applyPaint(paint)) {
+                return false;
+            }
+            paint.style = Skia.SkPaintStyle.Stroke;
+            paint.strokeWidth = this._width;
+            paint.strokeMiter = this._miterLimit;
+            switch (this._lineJoin) {
+                case StrokeLineJoin.Bevel:
+                    paint.strokeJoin = Skia.SkPaintStrokeJoin.Bevel;
+                    break;
+                case StrokeLineJoin.Round:
+                    paint.strokeJoin = Skia.SkPaintStrokeJoin.Round;
+                    break;
+                case StrokeLineJoin.Miter:
+                default:
+                    paint.strokeJoin = Skia.SkPaintStrokeJoin.Miter;
+                    break;
+            }
+            switch (this._lineCap) {
+                case StrokeLineCap.Square:
+                    paint.strokeCap = Skia.SkPaintStrokeCap.Square;
+                    break;
+                case StrokeLineCap.Round:
+                    paint.strokeCap = Skia.SkPaintStrokeCap.Round;
+                    break;
+                case StrokeLineCap.Butt:
+                default:
+                    paint.strokeCap = Skia.SkPaintStrokeCap.Butt;
+                    break;
+            }
+            if (this._dashes.length > 0) {
+                paint.pathEffect = Skia.SkPathEffect.MakeDash(this._dashes, this._offset);
+            }
+            return true;
+        }
+    }
+
+    class DefaultPen extends BasePen {
+        get type() {
+            return PenType.Default;
+        }
+    }
+
+    class PaintElement extends GraphicsElement {
+        constructor() {
+            super(...arguments);
+            this._rule = FillRule.NonZero;
+            this._paintOrder = PaintOrder.FillStrokeMarkers;
+        }
+        /**
+         * Fill rule
+         */
+        get fillRule() {
+            return this._rule;
+        }
+        set fillRule(value) {
+            this._rule = value;
+            this.invalidate();
+        }
+        get nativeFillRule() {
+            return this._rule === FillRule.EvenOdd
+                ? Skia.SkPathFillType.EvenOdd
+                : Skia.SkPathFillType.Winding;
+        }
+        get paintOrder() {
+            return this._paintOrder;
+        }
+        set paintOrder(value) {
+            this._paintOrder = value;
+            this.invalidate();
+        }
+        // Fill
+        get fill() {
+            if (!this._fill) {
+                this._fill = new EmptyBrush();
+            }
+            return this._fill;
+        }
+        set fill(value) {
+            this._fill = value;
+            this.invalidate();
+        }
+        get fillOpacity() {
+            return this.fill.opacity;
+        }
+        set fillOpacity(value) {
+            this.fill.opacity = value;
+            this.invalidate();
+        }
+        // Stroke
+        get stroke() {
+            if (!this._stroke) {
+                this._stroke = new DefaultPen();
+            }
+            return this._stroke;
+        }
+        set stroke(value) {
+            this._stroke = value;
+            this.invalidateBoundsAndPicture();
+        }
+        get strokeBrush() {
+            return this.stroke.brush;
+        }
+        set strokeBrush(value) {
+            this.stroke.brush = value;
+            this.invalidate();
+        }
+        get strokeOpacity() {
+            return this.stroke.brush.opacity;
+        }
+        set strokeOpacity(value) {
+            this.stroke.brush.opacity = value;
+            this.invalidate();
+        }
+        get strokeLineWidth() {
+            return this.stroke.width;
+        }
+        set strokeLineWidth(value) {
+            this.stroke.width = value;
+            this.invalidateBoundsAndPicture();
+        }
+        get strokeLineCap() {
+            return this.stroke.lineCap;
+        }
+        set strokeLineCap(value) {
+            const stroke = this.stroke;
+            if (value !== stroke.lineCap) {
+                stroke.lineCap = value;
+                if (stroke.isVisible) {
+                    this.invalidateBoundsAndPicture();
+                }
+            }
+        }
+        get strokeLineJoin() {
+            return this.stroke.lineJoin;
+        }
+        set strokeLineJoin(value) {
+            const stroke = this.stroke;
+            if (value !== stroke.lineJoin) {
+                stroke.lineJoin = value;
+                if (stroke.isVisible) {
+                    this.invalidateBoundsAndPicture();
+                }
+            }
+        }
+        get strokeMiterLimit() {
+            return this.stroke.miterLimit;
+        }
+        set strokeMiterLimit(value) {
+            value = clamp(value, 1, Number.POSITIVE_INFINITY);
+            const stroke = this.stroke;
+            if (value !== stroke.miterLimit) {
+                stroke.miterLimit = value;
+                if (stroke.isVisible) {
+                    this.invalidateBoundsAndPicture();
+                }
+            }
+        }
+        get strokeDashArray() {
+            return this.stroke.dashes;
+        }
+        set strokeDashArray(value) {
+            const stroke = this.stroke;
+            if (value !== stroke.dashes) {
+                stroke.dashes = value;
+                if (stroke.isVisible) {
+                    this.invalidateBoundsAndPicture();
+                }
+            }
+        }
+        get strokeDashOffset() {
+            return this.stroke.offset;
+        }
+        set strokeDashOffset(value) {
+            const stroke = this.stroke;
+            if (value !== stroke.offset) {
+                stroke.offset = value;
+                if (stroke.isVisible) {
+                    this.invalidateBoundsAndPicture();
+                }
+            }
+        }
+        get isVisible() {
+            if (!super.isVisible) {
+                return false;
+            }
+            return (this._fill && this._fill.isVisible) || (this._stroke && this._stroke.isVisible);
+        }
+        swapColors(keepOpacity = false) {
+            const fill = this.fill;
+            const stroke = this.stroke.brush;
+            this._stroke.brush = fill;
+            this._fill = stroke;
+            if (keepOpacity) {
+                // Swap opacity back
+                const fillOp = fill.opacity;
+                fill.opacity = stroke.opacity;
+                stroke.opacity = fillOp;
+            }
+            this.invalidate();
+        }
+        drawOnPicture(context) {
+            const path = this.pathToDraw;
+            if (!path) {
+                return null;
+            }
+            let rect = null;
+            let prevRule = null;
+            const rule = this.nativeFillRule;
+            if (path.fillType !== rule) {
+                prevRule = path.fillType;
+                path.fillType = rule;
+            }
+            switch (this._paintOrder) {
+                case PaintOrder.FillStrokeMarkers:
+                default:
+                    context.fillPath(path, this.fill);
+                    context.strokePath(path, this.stroke);
+                    rect = this.paintMarkers(context);
+                    break;
+                case PaintOrder.FillMarkersStroke:
+                    context.fillPath(path, this.fill);
+                    rect = this.paintMarkers(context);
+                    context.strokePath(path, this.stroke);
+                    break;
+                case PaintOrder.StrokeFillMarkers:
+                    context.strokePath(path, this.stroke);
+                    context.fillPath(path, this.fill);
+                    rect = this.paintMarkers(context);
+                    break;
+                case PaintOrder.StrokeMarkersFill:
+                    context.strokePath(path, this.stroke);
+                    rect = this.paintMarkers(context);
+                    context.fillPath(path, this.fill);
+                    break;
+                case PaintOrder.MarkersFillStroke:
+                    rect = this.paintMarkers(context);
+                    context.fillPath(path, this.fill);
+                    context.strokePath(path, this.stroke);
+                    break;
+                case PaintOrder.MarkersStrokeFill:
+                    rect = this.paintMarkers(context);
+                    context.strokePath(path, this.stroke);
+                    context.fillPath(path, this.fill);
+                    break;
+            }
+            if (!rect) {
+                rect = path.getBounds();
+            }
+            if (prevRule !== null) {
+                path.fillType = prevRule;
+            }
+            return rect;
+        }
+        get supportsChildren() {
+            return false;
+        }
+        dispose() {
+            super.dispose();
+            this._fill = this._stroke = null;
+        }
+        paintMarkers(context) {
+            // TODO: implement markers sometime
+            return null;
+        }
+        onClone(clone) {
+            clone._fill = this._fill ? this._fill.clone() : null;
+            clone._stroke = this._stroke ? this._stroke.clone() : null;
+            clone._rule = this._rule;
+            clone._paintOrder = this._paintOrder;
+        }
+        onSerialize(data) {
+            data.paint = [this._fill, this._stroke, this._rule, this._paintOrder];
+        }
+        onUnserialize(data) {
+            [this._fill, this._stroke, this._rule, this._paintOrder] = data.paint;
+        }
+    }
+
+    class ShapeElement extends PaintElement {
+        constructor(shape, id = null) {
+            super(id);
+            this._localPath = null;
+            this._pathNeedsRebuild = false;
+            this._globalPath = null;
+            this._shape = shape;
+        }
+        get shape() {
+            return this._shape;
+        }
+        set shape(value) {
+            if (value !== this._shape) {
+                this._shape = value;
+                this.invalidateShape();
+            }
+        }
+        get type() {
+            return this._shape.type;
+        }
+        get pathToDraw() {
+            return this.localPath;
+        }
+        /**
+         * A native path object
+         * This object is managed by the element
+         */
+        get localPath() {
+            let setup = false;
+            if (this._localPath == null) {
+                this._localPath = new Skia.SkPath();
+                setup = true;
+            }
+            else if (this._pathNeedsRebuild) {
+                this._localPath.reset();
+                setup = true;
+            }
+            if (setup) {
+                this._localPath.isVolatile = true;
+                this._localPath.fillType = this.nativeFillRule;
+                this._shape.setupPath(this._localPath);
+                this._pathNeedsRebuild = false;
+            }
+            return this._localPath;
+        }
+        /**
+         * A native path object with globalMatrix applied
+         * This object is managed by the element
+         */
+        get globalPath() {
+            if (this._globalPath === null) {
+                this._globalPath = this.localPath.copy();
+                const matrix = this.globalMatrix;
+                if (!matrix.isIdentity) {
+                    this._globalPath.transform(matrix);
+                }
+            }
+            return this._globalPath;
+        }
+        /**
+         * @inheritDoc
+         */
+        get localBounds() {
+            if (this._localBounds === null) {
+                this._localBounds = Rectangle.fromLTRBObject(this.localPath.getBounds());
+            }
+            return this._localBounds;
+        }
+        /**
+         * @inheritDoc
+         */
+        get localTightBounds() {
+            if (this._localTightBounds === null) {
+                this._localTightBounds = Rectangle.fromLTRBObject(this.localPath.computeTightBounds());
+            }
+            return this._localTightBounds;
+        }
+        /**
+         * @inheritDoc
+         */
+        get globalBounds() {
+            if (this._globalBounds !== null) {
+                return this._globalBounds;
+            }
+            const matrix = this.globalMatrix;
+            if (matrix.isIdentity) {
+                return this._globalBounds = this.localBounds;
+            }
+            return this._globalBounds = Rectangle.fromLTRBObject(this.globalPath.getBounds());
+        }
+        /**
+         * @inheritDoc
+         */
+        get globalTightBounds() {
+            if (this._globalTightBounds !== null) {
+                return this._globalTightBounds;
+            }
+            const matrix = this.globalMatrix;
+            if (matrix.isIdentity) {
+                return this._globalTightBounds = this.localTightBounds;
+            }
+            return this._globalTightBounds = Rectangle.fromLTRBObject(this.globalPath.computeTightBounds());
+        }
+        /**
+         * @inheritDoc
+         */
+        get pictureBounds() {
+            const bounds = this.localBounds;
+            const width = this.strokeLineWidth;
+            // We just offset with 2 * line width
+            // TODO: get extra padding from filters
+            return width > 0 ? bounds.outset(width * 2) : bounds;
+        }
+        invalidateBoundsAndPicture(parentPictureOnly = false) {
+            if (this._globalPath !== null) {
+                this._globalPath.delete();
+                this._globalPath = null;
+            }
+            super.invalidateBoundsAndPicture(parentPictureOnly);
+        }
+        invalidateShape() {
+            if (ShapeElement.invalidationPrevented) {
+                return;
+            }
+            this._pathNeedsRebuild = true;
+            this.invalidateBoundsAndPicture();
+        }
+        createClone() {
+            // @ts-ignore
+            return new this.constructor(this._shape.clone(), this._id);
+        }
+        onSerialize(data) {
+            super.onSerialize(data);
+            data.constructor = [this._shape, this._id];
+        }
+        dispose() {
+            super.dispose();
+            if (this._localPath !== null) {
+                this._localPath.delete();
+                this._localPath = null;
+            }
+            if (this._globalPath !== null) {
+                this._globalPath.delete();
+                this._globalPath = null;
+            }
+            this._shape = null;
+        }
+    }
+
+    class GroupElement extends GraphicsElement {
+        get type() {
+            return "group";
+        }
+        get supportsChildren() {
+            return true;
+        }
+        onClone(clone) { }
+        onSerialize(data) { }
+        onUnserialize(data) { }
+    }
+
+    class EllipseShape {
+        constructor(rx = 1, ry = 1) {
+            this.rx = rx;
+            this.ry = ry;
+        }
+        get type() {
+            return "ellipse";
+        }
+        [SERIALIZE]() {
+            return [this.rx, this.ry];
+        }
+        get oval() {
+            return new Rectangle(-this.rx, -this.ry, this.rx * 2, this.ry * 2);
+        }
+        clone() {
+            return new EllipseShape(this.rx, this.ry);
+        }
+        setupPath(path) {
+            path.addEllipse(0, 0, this.rx, this.ry);
+        }
+    }
+    class EllipseElement extends ShapeElement {
+        get rx() {
+            return this._shape.rx;
+        }
+        set rx(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.rx) {
+                this._shape.rx = value;
+                this.invalidateShape();
+            }
+        }
+        get ry() {
+            return this._shape.ry;
+        }
+        set ry(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.ry) {
+                this._shape.ry = value;
+                this.invalidateShape();
+            }
+        }
+    }
+
+    function isGTZero(value) {
+        return value > 0;
+    }
+    class RectShapeRadius {
+        constructor(rx, ry, multiple = false) {
+            this._rx = rx;
+            this._ry = ry;
+            this._multiple = multiple;
+            this.fix();
+        }
+        get isRounded() {
+            if (!this._multiple) {
+                return this._rx > 0 || this._ry > 0;
+            }
+            return (this._rx.findIndex(isGTZero) !== -1
+                ||
+                    this._ry.findIndex(isGTZero) !== -1);
+        }
+        get multiple() {
+            return this._multiple;
+        }
+        set multiple(value) {
+            if (this._multiple !== value) {
+                this._multiple = value;
+                this.fix();
+            }
+        }
+        get rx() {
+            return this._rx;
+        }
+        set rx(value) {
+            if (this._rx === value) {
+                return;
+            }
+            const fix = typeof this._rx !== typeof value;
+            this._rx = value;
+            fix && this.fix();
+        }
+        get ry() {
+            return this._ry;
+        }
+        set ry(value) {
+            if (this._ry === value) {
+                return;
+            }
+            const fix = typeof this._ry !== typeof value;
+            this._ry = value;
+            fix && this.fix();
+        }
+        [SERIALIZE]() {
+            return [this._rx, this._ry, this._multiple];
+        }
+        clone() {
+            return new RectShapeRadius(this._multiple && Array.isArray(this._rx) ? [...this._rx] : this._rx, this._multiple && Array.isArray(this._ry) ? [...this._ry] : this._ry, this._multiple);
+        }
+        fix() {
+            const ax = Array.isArray(this._rx);
+            const ay = Array.isArray(this._ry);
+            if (this._multiple) {
+                if (!ax) {
+                    const r = this._rx;
+                    this._rx = [r, r, r, r];
+                }
+                if (!ay) {
+                    const r = this._ry;
+                    this._ry = [r, r, r, r];
+                }
+            }
+            else {
+                if (ax) {
+                    this._rx = this._rx[0];
+                }
+                if (ay) {
+                    this._ry = this._ry[0];
+                }
+            }
+        }
+    }
+    class RectShape {
+        constructor(width = 1, height = 1, radius = null) {
+            this.width = width;
+            this.height = height;
+            this.radius = radius || (new RectShapeRadius(0, 0, false));
+        }
+        get type() {
+            return "rect";
+        }
+        [SERIALIZE]() {
+            return [this.width, this.height, this.radius];
+        }
+        get isRounded() {
+            return this.radius.isRounded;
+        }
+        get oval() {
+            return new Rectangle(0, 0, this.width, this.height);
+        }
+        clone() {
+            return new RectShape(this.width, this.height, this.radius.clone());
+        }
+        setupPath(path) {
+            if (!this.radius.isRounded) {
+                path.addRect(0, 0, this.width, this.height);
+                return;
+            }
+            const rx = this.radius.rx;
+            const ry = this.radius.ry;
+            if (!this.radius.multiple) {
+                path.addRoundRect(this.oval, rx, ry);
+                return;
+            }
+            path.addRRect({
+                rect: this.oval,
+                rx1: rx[0],
+                ry1: ry[0],
+                rx2: rx[1],
+                ry2: ry[1],
+                rx3: rx[2],
+                ry3: ry[2],
+                rx4: rx[3],
+                ry4: ry[3],
+            });
+        }
+    }
+    class RectElement extends ShapeElement {
+        get radius() {
+            return this._shape.radius;
+        }
+        set radius(value) {
+            if (this._shape.radius !== value) {
+                this._shape.radius = value;
+                this.invalidateShape();
+            }
+        }
+        get width() {
+            return this._shape.width;
+        }
+        set width(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.width) {
+                this._shape.width = value;
+                this.invalidateShape();
+            }
+        }
+        get height() {
+            return this._shape.height;
+        }
+        set height(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.height) {
+                this._shape.height = value;
+                this.invalidateShape();
+            }
+        }
+    }
+
+    class PolyShape {
+        constructor(points, isClosed = false) {
+            this.points = points;
+            this.isClosed = isClosed;
+        }
+        get type() {
+            return "poly";
+        }
+        clone() {
+            return new PolyShape(this.points.slice(), this.isClosed);
+        }
+        [SERIALIZE]() {
+            return [this.points, this.isClosed];
+        }
+        get isLine() {
+            return !this.isClosed && this.points.length === 2;
+        }
+        setupPath(path) {
+            path.addPoly(this.points, this.isClosed);
+        }
+    }
+    class PolyElement extends ShapeElement {
+        get points() {
+            return this._shape.points;
+        }
+        set points(value) {
+            if (value !== this._shape.points) {
+                this._shape.points = value;
+                this.invalidateShape();
+            }
+        }
+        get isClosed() {
+            return this._shape.isClosed;
+        }
+        set isClosed(value) {
+            if (value !== this._shape.isClosed) {
+                this._shape.isClosed = value;
+                this.invalidateShape();
+            }
+        }
+    }
+
+    class RegularPolygonShape {
+        constructor(sides, radius, cornerRadius = 0) {
+            this.sides = sides;
+            this.radius = radius;
+            this.cornerRadius = cornerRadius;
+        }
+        get type() {
+            return "regular-polygon";
+        }
+        [SERIALIZE]() {
+            return [this.sides, this.radius, this.cornerRadius];
+        }
+        clone() {
+            return new RegularPolygonShape(this.sides, this.radius, this.cornerRadius);
+        }
+        setupPath(path) {
+            path.addRegularPolygon(0, 0, this.radius, this.sides, this.cornerRadius);
+        }
+    }
+    class RegularPolygonElement extends ShapeElement {
+        get sides() {
+            return this._shape.sides;
+        }
+        set sides(value) {
+            value = clamp(value, 3, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.sides) {
+                this._shape.sides = value;
+                this.invalidateShape();
+            }
+        }
+        get radius() {
+            return this._shape.radius;
+        }
+        set radius(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.radius) {
+                this._shape.radius = value;
+                this.invalidateShape();
+            }
+        }
+        get cornerRadius() {
+            return this._shape.cornerRadius;
+        }
+        set cornerRadius(value) {
+            value = clamp(value, 0, 1);
+            if (value !== this._shape.cornerRadius) {
+                this._shape.cornerRadius = value;
+                this.invalidateShape();
+            }
+        }
+    }
+
+    class StarShape {
+        constructor(sides, outerRadius, innerRadius, outerCornerRadius = 0, innerCornerRadius = 0, outerRotate = 0, innerRotate = 0, rotate = 0) {
+            this.sides = sides;
+            this.outerRadius = outerRadius;
+            this.innerRadius = innerRadius;
+            this.outerCornerRadius = outerCornerRadius;
+            this.innerCornerRadius = innerCornerRadius;
+            this.outerRotate = outerRotate;
+            this.innerRotate = innerRotate;
+            this.rotate = rotate;
+        }
+        get type() {
+            return "star";
+        }
+        [SERIALIZE]() {
+            return [
+                this.sides,
+                this.outerRadius, this.innerRadius,
+                this.outerCornerRadius, this.innerCornerRadius,
+                this.outerRotate, this.innerRotate, this.rotate,
+            ];
+        }
+        clone() {
+            return new StarShape(this.sides, this.outerRadius, this.innerRadius, this.outerCornerRadius, this.innerCornerRadius, this.outerRotate, this.innerRotate, this.rotate);
+        }
+        setupPath(path) {
+            path.addStar(0, 0, this.outerRadius, this.innerRadius, this.sides, this.outerRotate, this.innerRotate, this.outerCornerRadius, this.innerCornerRadius, this.rotate);
+        }
+    }
+    class StarElement extends ShapeElement {
+        get sides() {
+            return this._shape.sides;
+        }
+        set sides(value) {
+            value = clamp(value, 3, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.sides) {
+                this._shape.sides = value;
+                this.invalidateShape();
+            }
+        }
+        get outerRadius() {
+            return this._shape.outerRadius;
+        }
+        set outerRadius(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.outerRadius) {
+                this._shape.outerRadius = value;
+                this.invalidateShape();
+            }
+        }
+        get innerRadius() {
+            return this._shape.innerRadius;
+        }
+        set innerRadius(value) {
+            value = clamp(value, 0, Number.POSITIVE_INFINITY);
+            if (value !== this._shape.innerRadius) {
+                this._shape.innerRadius = value;
+                this.invalidateShape();
+            }
+        }
+        get outerCornerRadius() {
+            return this._shape.outerCornerRadius;
+        }
+        set outerCornerRadius(value) {
+            value = clamp(value, 0, 1);
+            if (value !== this._shape.outerCornerRadius) {
+                this._shape.outerCornerRadius = value;
+                this.invalidateShape();
+            }
+        }
+        get innerCornerRadius() {
+            return this._shape.innerCornerRadius;
+        }
+        set innerCornerRadius(value) {
+            value = clamp(value, 0, 1);
+            if (value !== this._shape.innerCornerRadius) {
+                this._shape.innerCornerRadius = value;
+                this.invalidateShape();
+            }
+        }
+        get outerRotate() {
+            return this._shape.outerRotate;
+        }
+        set outerRotate(value) {
+            if (value !== this._shape.outerRotate) {
+                this._shape.outerRotate = value;
+                this.invalidateShape();
+            }
+        }
+        get innerRotate() {
+            return this._shape.innerRotate;
+        }
+        set innerRotate(value) {
+            if (value !== this._shape.innerRotate) {
+                this._shape.innerRotate = value;
+                this.invalidateShape();
+            }
+        }
+        get allRotate() {
+            return this._shape.rotate;
+        }
+        set allRotate(value) {
+            if (value !== this._shape.rotate) {
+                this._shape.rotate = value;
+                this.invalidateShape();
+            }
+        }
+    }
+
+    var PathJoint;
+    (function (PathJoint) {
+        PathJoint[PathJoint["Cusp"] = 0] = "Cusp";
+        PathJoint[PathJoint["Corner"] = 1] = "Corner";
+        PathJoint[PathJoint["Symmetric"] = 2] = "Symmetric";
+        PathJoint[PathJoint["Asymmetric"] = 3] = "Asymmetric";
+    })(PathJoint || (PathJoint = {}));
+    var PathNodeType;
+    (function (PathNodeType) {
+        PathNodeType[PathNodeType["Normal"] = 0] = "Normal";
+        PathNodeType[PathNodeType["Start"] = -1] = "Start";
+        PathNodeType[PathNodeType["End"] = 1] = "End";
+    })(PathNodeType || (PathNodeType = {}));
+    // TODO: finish this class
+    class PathShape {
+        constructor(nodes) {
+            this.nodes = nodes;
+        }
+        get type() {
+            return "path";
+        }
+        [SERIALIZE]() {
+            return [this.nodes];
+        }
+        hover(point) {
+            // TODO: remove this from here
+            const options = {
+                handleRadius: 10,
+                nodeRadius: 15,
+                strokeWidth: 3,
+            };
+            const nodes = this.nodes;
+            const length = nodes.length;
+            for (let i = 0; i < length; i++) {
+                const node = nodes[i];
+                if (node.joint !== PathJoint.Corner) {
+                    if (isInRadius(point, options.handleRadius, node.handleOut)) {
+                        ({
+                            type: 'handle',
+                            nodeIndex: i,
+                            node,
+                            handle: node.handleOut,
+                            handleType: 'out',
+                        });
+                        continue;
+                    }
+                    if (isInRadius(point, options.handleRadius, node.handleIn)) {
+                        ({
+                            type: 'handle',
+                            nodeIndex: i,
+                            node,
+                            handle: node.handleIn,
+                            handleType: 'in',
+                        });
+                        continue;
+                    }
+                    if (isInRadius(point, options.strokeWidth, node)) {
+                        continue;
+                    }
+                }
+            }
+        }
+        hoverAt(x, y) {
+            // TODO: remove this from here
+            const options = {
+                handleRadius: 10,
+                nodeRadius: 15,
+                strokeWidth: 3,
+            };
+            // check handles, nodes, paths???
+            const nodes = this.nodes;
+            const p = { x, y };
+            let prev = null;
+            for (let i = nodes.length - 1; i > 0; i--) {
+                const node = nodes[i];
+                if (node.joint !== PathJoint.Corner) {
+                    if (isInRadius(p, options.handleRadius, node.handleOut)) {
+                        return {
+                            type: 'handle',
+                            nodeIndex: i,
+                            node,
+                            handle: node.handleOut,
+                        };
+                    }
+                    if (isInRadius(p, options.handleRadius, node.handleIn)) {
+                        return {
+                            type: 'handle',
+                            nodeIndex: i,
+                            node,
+                            handle: node.handleIn,
+                        };
+                    }
+                }
+                if (isInRadius(p, options.strokeWidth, node)) {
+                    return {
+                        type: 'node',
+                        nodeIndex: i,
+                        node,
+                    };
+                }
+                if (node.type === PathNodeType.End) {
+                    prev = matchStart(nodes, i);
+                }
+                if (prev && isNearLine(p, options.strokeWidth, node, prev)) {
+                    return {
+                        type: 'line',
+                        nodeIndex: i,
+                        node,
+                    };
+                }
+                prev = node.type === PathNodeType.Start ? null : node;
+            }
+        }
+        moveBy(dx, dy) {
+            return moveNodesBy(this.nodes, dx, dy);
+        }
+        moveNodesBy(indexes, dx, dy) {
+            return moveNodesBy(this.getIndexes(indexes).map(index => this.nodes[index]), dx, dy);
+        }
+        deleteNodes(indexes) {
+            indexes = this.getIndexes(indexes);
+            if (!indexes.length) {
+                return false;
+            }
+            const nodes = this.nodes;
+            indexes
+                .sort((a, b) => a - b)
+                .forEach(index => {
+                if (nodes[index].type === PathNodeType.Start) {
+                    if (index < nodes.length - 1 && nodes[index + 1].type !== PathNodeType.Start) {
+                        nodes[index + 1].type = PathNodeType.Start;
+                    }
+                }
+                nodes.splice(index, 1);
+            });
+            return true;
+        }
+        breakNodes(indexes) {
+            indexes = this.getIndexes(indexes);
+            if (!indexes.length) {
+                return false;
+            }
+            // TODO:
+            return true;
+        }
+        clone() {
+            // TODO: proper clone
+            return new PathShape(this.nodes.map(value => (Object.assign({}, value))));
+        }
+        setupPath(path) {
+            const nodes = this.nodes;
+            const length = nodes.length;
+            let prev = null;
+            let first = null;
+            for (let i = 0; i < length; i++) {
+                const node = nodes[i];
+                if (!prev || node.type === PathNodeType.Start) {
+                    path.moveTo(node.x, node.y);
+                    prev = node;
+                    first = node;
+                    continue;
+                }
+                drawCurve(path, prev, node);
+                if (node.type === PathNodeType.End) {
+                    drawCurve(path, node, first);
+                    path.close();
+                    first = prev = null;
+                }
+                else {
+                    prev = node;
+                }
+            }
+        }
+        getIndexes(indexes) {
+            const nodes = this.nodes;
+            const length = nodes.length;
+            return indexes.filter((value, index, array) => {
+                if (value < 0 || value >= length || !Number.isInteger(value)) {
+                    return false;
+                }
+                return array.indexOf(value) === index;
+            });
+        }
+        static fromSkPath(path) {
+            return new PathShape(nodesFromSkPath(path));
+        }
+        static fromString(path) {
+            const skPath = Skia.SkPath.MakeFromString(path, false);
+            const ret = this.fromSkPath(skPath);
+            skPath.delete();
+            return ret;
+        }
+    }
+    class PathElement extends ShapeElement {
+        get nodes() {
+            return this._shape.nodes;
+        }
+        set nodes(value) {
+            if (value !== this._shape.nodes) {
+                this._shape.nodes = value;
+                this.invalidateShape();
+            }
+        }
+    }
+    function drawCurve(path, from, to) {
+        if (to.joint === PathJoint.Corner || !to.handleIn) {
+            if (from.joint === PathJoint.Corner || !from.handleOut) {
+                path.lineTo(to.x, to.y);
+            }
+            else {
+                path.quadTo(to.x, to.y, from.handleOut.x, from.handleOut.y);
+            }
+        }
+        else {
+            if (from.joint === PathJoint.Corner || !from.handleOut) {
+                path.quadTo(to.x, to.y, to.handleIn.x, to.handleIn.y);
+            }
+            else {
+                path.cubicTo(to.x, to.y, from.handleOut.x, from.handleOut.y, to.handleIn.x, to.handleIn.y);
+            }
+        }
+    }
+    function nodesFromSkPath(path) {
+        const nodes = [];
+        let first = null;
+        let last = null;
+        path.walk((verb, p, cp1, cp2) => {
+            switch (verb) {
+                case Skia.SkPathVerb.Move:
+                    first = {
+                        x: p.x,
+                        y: p.y,
+                        type: PathNodeType.Start,
+                        joint: PathJoint.Cusp,
+                        handleIn: null,
+                        handleOut: null,
+                    };
+                    last = first;
+                    break;
+                case Skia.SkPathVerb.Close:
+                    if (last) {
+                        last.type = PathNodeType.End;
+                    }
+                    first = last = null;
+                    break;
+                case Skia.SkPathVerb.Line:
+                    last = {
+                        x: p.x,
+                        y: p.y,
+                        type: PathNodeType.Normal,
+                        joint: PathJoint.Corner,
+                        handleIn: null,
+                        handleOut: null,
+                    };
+                    break;
+                case Skia.SkPathVerb.Quad:
+                    if (last) {
+                        last.handleOut = cp1;
+                    }
+                    last = {
+                        x: p.x,
+                        y: p.y,
+                        type: PathNodeType.Normal,
+                        joint: PathJoint.Cusp,
+                        handleIn: null,
+                        handleOut: null,
+                    };
+                    break;
+                case Skia.SkPathVerb.Cubic:
+                    if (last) {
+                        last.handleOut = cp1;
+                    }
+                    last = {
+                        x: p.x,
+                        y: p.y,
+                        type: PathNodeType.Normal,
+                        joint: PathJoint.Cusp,
+                        handleIn: cp2,
+                        handleOut: null,
+                    };
+                    break;
+            }
+            if (last) {
+                nodes.push(last);
+            }
+        }, false);
+        return nodes;
+    }
+    function moveNodesBy(nodes, dx, dy) {
+        if (dx === 0 && dy === 0) {
+            return false;
+        }
+        const length = nodes.length;
+        if (!length) {
+            return false;
+        }
+        // TODO: points are immutable, we cannot move them this way
+        for (let i = 0; i < length; i++) {
+            const node = nodes[i];
+            node.x += dx;
+            node.y += dy;
+            if (node.handleIn) {
+                node.handleIn.x += dx;
+                node.handleIn.y += dy;
+            }
+            if (node.handleOut) {
+                node.handleOut.x += dx;
+                node.handleOut.y += dy;
+            }
+        }
+        return true;
+    }
+    function isInRadius(point, radius, center) {
+        if (!center) {
+            return false;
+        }
+        return Point.distance(point, center) <= radius;
+    }
+    function isNearLine(point, width, from, to) {
+        // TODO: ...
+        if (from.joint === PathJoint.Corner || !from.handleOut) {
+            if (to.joint === PathJoint.Corner || !to.handleIn) ;
+            // checkOnQuad(from, to, to.handleIn)
+        }
+        if (to.joint === PathJoint.Corner || !to.handleIn) ;
+        //checkOnCubic(from, to, from.handleOut, to.handleIn);
+        return false;
+    }
+    function matchStart(nodes, index) {
+        while (--index > 0) {
+            if (nodes[index].type === PathNodeType.Start) {
+                return nodes[index];
+            }
+            if (nodes[index].type === PathNodeType.End) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    class ColorMatrix {
+        constructor(value) {
+            if (!value || value.length !== 20) {
+                value = new Float32Array(20);
+                value[0] = value[6] = value[12] = value[18] = 1;
+            }
+            this.value = value;
+        }
+        /**
+         * Creates a clone
+         */
+        clone() {
+            return new ColorMatrix(this.value.slice());
+        }
+        [SERIALIZE]() {
+            return [this.value];
+        }
+        /**
+         * Resets matrix
+         */
+        toIdentity() {
+            const v = this.value;
+            v[0] = v[6] = v[12] = v[18] = 1;
+            v[1] = v[2] = v[3] = v[4] =
+                v[5] = v[7] = v[8] = v[9] =
+                    v[10] = v[11] = v[13] = v[14] =
+                        v[15] = v[16] = v[17] = v[19] = 0;
+            return this;
+        }
+        /**
+         * Pre multiply matrix
+         * @param matrix
+         */
+        preMultiply(matrix) {
+            multiplyArray(matrix instanceof ColorMatrix ? matrix.value : matrix, this.value, this.value);
+            return this;
+        }
+        /**
+         * Multiply matrix
+         * @param matrix
+         */
+        multiply(matrix) {
+            multiplyArray(this.value, matrix instanceof ColorMatrix ? matrix.value : matrix, this.value);
+            return this;
+        }
+        /**
+         * Brightness filter
+         * @param v
+         */
+        brightness(v) {
+            return this.multiply([
+                v, 0, 0, 0, 0,
+                0, v, 0, 0, 0,
+                0, 0, v, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        luminanceToAlpha() {
+            return this.multiply([
+                0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0,
+                0.2125, 0.7154, 0.0721, 0, 0
+            ]);
+        }
+        /**
+         * Grayscale filter
+         * @param v
+         */
+        greyscale(v) {
+            return this.multiply([
+                v, v, v, 0, 0,
+                v, v, v, 0, 0,
+                v, v, v, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Hue-rotate filter
+         * @param deg
+         */
+        hueRotate(deg) {
+            deg *= RADIANS;
+            const cosR = Math.cos(deg);
+            const sinR = Math.sin(deg);
+            const wCosR = (1 - cosR) / 3;
+            const wSinR = sinR * Math.sqrt(3) / 3;
+            return this.multiply([
+                cosR + wCosR, wCosR - wSinR, wCosR + wSinR, 0, 0,
+                wCosR + wSinR, cosR + wCosR, wCosR - wSinR, 0, 0,
+                wCosR - wSinR, wCosR - wSinR, cosR + wCosR, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Contrast filter
+         * @param v
+         */
+        contrast(v) {
+            const o = -v / 2;
+            v++;
+            return this.multiply([
+                v, 0, 0, 0, o,
+                0, v, 0, 0, o,
+                0, 0, v, 0, o,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Saturate filter
+         * @param v
+         */
+        saturate(v) {
+            const x = 1 + v * 2 / 3;
+            const y = (1 - x) / 2;
+            return this.multiply([
+                x, y, y, 0, 0,
+                y, x, y, 0, 0,
+                y, y, x, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Desaturate filter
+         * @param v
+         */
+        desaturate(v = 1) {
+            return this.saturate(-v);
+        }
+        /**
+         * Sepia filter
+         * @param v
+         */
+        sepia(v) {
+            return this.multiply([
+                1 - 0.607 * v, 0.769 * v, 0.189 * v, 0, 0,
+                0.349 * v, 1 - 0.314 * v, 0.168 * v, 0, 0,
+                0.272 * v, 0.534 * v, 1 - 0.869 * v, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        // ---
+        /**
+         * Black and white
+         */
+        blackAndWhite() {
+            return this.multiply([
+                0.3, 0.6, 0.1, 0, 0,
+                0.3, 0.6, 0.1, 0, 0,
+                0.3, 0.6, 0.1, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Negative image (inverse of classic rgb matrix)
+         */
+        negative() {
+            return this.multiply([
+                -1, 0, 0, 1, 0,
+                0, -1, 0, 1, 0,
+                0, 0, -1, 1, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Transforms : Red -> Blue and Blue -> Red
+         */
+        bgr() {
+            return this.multiply([
+                0, 0, 1, 0, 0,
+                0, 1, 0, 0, 0,
+                1, 0, 0, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Color motion picture process invented in 1916
+         */
+        technicolor() {
+            return this.multiply([
+                1.9125277891456083, -0.8545344976951645, -0.09155508482755585, 0, 11.793603434377337,
+                -0.3087833385928097, 1.7658908555458428, -0.10601743074722245, 0, -70.35205161461398,
+                -0.231103377548616, -0.7501899197440212, 1.847597816108189, 0, 30.950940869491138,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Polaroid filter
+         */
+        polaroid() {
+            return this.multiply([
+                1.438, -0.062, -0.062, 0, 0,
+                -0.122, 1.378, -0.122, 0, 0,
+                -0.016, -0.016, 1.483, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Color reversal film introduced by Eastman Kodak in 1935
+         */
+        kodachrome() {
+            return this.multiply([
+                1.1285582396593525, -0.3967382283601348, -0.03992559172921793, 0, 63.72958762196502,
+                -0.16404339962244616, 1.0835251566291304, -0.05498805115633132, 0, 24.732407896706203,
+                -0.16786010706155763, -0.5603416277695248, 1.6014850761964943, 0, 35.62982807460946,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Browni filter
+         */
+        browni() {
+            return this.multiply([
+                0.5997023498159715, 0.34553243048391263, -0.2708298674538042, 0, 47.43192855600873,
+                -0.037703249837783157, 0.8609577587992641, 0.15059552388459913, 0, -36.96841498319127,
+                0.24113635128153335, -0.07441037908422492, 0.44972182064877153, 0, -7.562075277591283,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Vintage filter
+         */
+        vintage() {
+            return this.multiply([
+                0.6279345635605994, 0.3202183420819367, -0.03965408211312453, 0, 9.651285835294123,
+                0.02578397704808868, 0.6441188644374771, 0.03259127616149294, 0, 7.462829176470591,
+                0.0466055556782719, -0.0851232987247891, 0.5241648018700465, 0, 5.159190588235296,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Color tone
+         * @param desaturation
+         * @param toned
+         * @param lightColor
+         * @param darkColor
+         */
+        colorTone(desaturation = 0.2, toned = 0.15, lightColor = 0xFFE580, darkColor = 0x338000) {
+            const lR = ((lightColor >> 16) & 0xFF) / 255;
+            const lG = ((lightColor >> 8) & 0xFF) / 255;
+            const lB = (lightColor & 0xFF) / 255;
+            const dR = ((darkColor >> 16) & 0xFF) / 255;
+            const dG = ((darkColor >> 8) & 0xFF) / 255;
+            const dB = (darkColor & 0xFF) / 255;
+            return this.multiply([
+                0.3, 0.59, 0.11, 0, 0,
+                lR, lG, lB, desaturation, 0,
+                dR, dG, dB, toned, 0,
+                lR - dR, lG - dG, lB - dB, 0, 0,
+            ]);
+        }
+        /**
+         * Night effect
+         * @param v
+         */
+        night(v = 0.1) {
+            return this.multiply([
+                -v * 2, -v, 0, 0, 0,
+                -v, 0, v, 0, 0,
+                0, v, v * 2, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * Predator effect
+         * @param v
+         */
+        predator(v) {
+            return this.multiply([
+                11.224130630493164 * v, -4.794486999511719 * v, -2.8746118545532227 * v, 0, 0.40342438220977783 * v,
+                -3.6330697536468506 * v, 9.193157196044922 * v, -2.951810836791992 * v, 0, -1.316135048866272 * v,
+                -3.2184197902679443 * v, -4.2375030517578125 * v, 7.476448059082031 * v, 0, 0.8044459223747253 * v,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        /**
+         * LSD effect
+         */
+        lsd() {
+            return this.multiply([
+                2, -0.4, 0.5, 0, 0,
+                -0.5, 2, -0.4, 0, 0,
+                -0.4, -0.5, 3, 0, 0,
+                0, 0, 0, 1, 0,
+            ]);
+        }
+        warm() {
+            return this.multiply([
+                1.06, 0, 0, 0, 0,
+                0, 1.01, 0, 0, 0,
+                0, 0, 0.93, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        cool() {
+            return this.multiply([
+                0.99, 0, 0, 0, 0,
+                0, 0.93, 0, 0, 0,
+                0, 0, 1.08, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        exposure(v) {
+            return this.multiply([
+                v, 0, 0, 0, 0,
+                0, v, 0, 0, 0,
+                0, 0, v, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        temperature(v) {
+            return this.multiply([
+                1 + v, 0, 0, 0, 0,
+                0, 1, 0, 0, 0,
+                0, 0, 1 - v, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        tint(v) {
+            return this.multiply([
+                1 + v, 0, 0, 0, 0,
+                0, 1, 0, 0, 0,
+                0, 0, 1 + v, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        // ----
+        protanomaly() {
+            return this.multiply([
+                0.817, 0.183, 0, 0, 0,
+                0.333, 0.667, 0, 0, 0,
+                0, 0.125, 0.875, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        deuteranomaly() {
+            return this.multiply([
+                0.8, 0.2, 0, 0, 0,
+                0.258, 0.742, 0, 0, 0,
+                0, 0.142, 0.858, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        protanopia() {
+            return this.multiply([
+                0.567, 0.433, 0, 0, 0,
+                0.558, 0.442, 0, 0, 0,
+                0, 0.242, 0.758, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        deuteranopia() {
+            return this.multiply([
+                0.625, 0.375, 0, 0, 0,
+                0.7, 0.3, 0, 0, 0,
+                0, 0.3, 0.7, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        tritanopia() {
+            return this.multiply([
+                0.95, 0.05, 0, 0, 0,
+                0, 0.433, 0.567, 0, 0,
+                0, 0.475, 0.525, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        achromatopsia() {
+            return this.multiply([
+                0.299, 0.587, 0.114, 0, 0,
+                0.299, 0.587, 0.114, 0, 0,
+                0.299, 0.587, 0.114, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+        achromatomaly() {
+            return this.multiply([
+                0.618, 0.320, 0.062, 0, 0,
+                0.163, 0.775, 0.062, 0, 0,
+                0.163, 0.320, 0.516, 0, 0,
+                0, 0, 0, 1, 0
+            ]);
+        }
+    }
+    function multiplyArray(left, right, dest) {
+        // Red Channel
+        dest[0] = (left[0] * right[0]) + (left[1] * right[5]) + (left[2] * right[10]) + (left[3] * right[15]);
+        dest[1] = (left[0] * right[1]) + (left[1] * right[6]) + (left[2] * right[11]) + (left[3] * right[16]);
+        dest[2] = (left[0] * right[2]) + (left[1] * right[7]) + (left[2] * right[12]) + (left[3] * right[17]);
+        dest[3] = (left[0] * right[3]) + (left[1] * right[8]) + (left[2] * right[13]) + (left[3] * right[18]);
+        dest[4] = (left[0] * right[4]) + (left[1] * right[9]) + (left[2] * right[14]) + (left[3] * right[19]) + left[4];
+        // Green Channel
+        dest[5] = (left[5] * right[0]) + (left[6] * right[5]) + (left[7] * right[10]) + (left[8] * right[15]);
+        dest[6] = (left[5] * right[1]) + (left[6] * right[6]) + (left[7] * right[11]) + (left[8] * right[16]);
+        dest[7] = (left[5] * right[2]) + (left[6] * right[7]) + (left[7] * right[12]) + (left[8] * right[17]);
+        dest[8] = (left[5] * right[3]) + (left[6] * right[8]) + (left[7] * right[13]) + (left[8] * right[18]);
+        dest[9] = (left[5] * right[4]) + (left[6] * right[9]) + (left[7] * right[14]) + (left[8] * right[19]) + left[9];
+        // Blue Channel
+        dest[10] = (left[10] * right[0]) + (left[11] * right[5]) + (left[12] * right[10]) + (left[13] * right[15]);
+        dest[11] = (left[10] * right[1]) + (left[11] * right[6]) + (left[12] * right[11]) + (left[13] * right[16]);
+        dest[12] = (left[10] * right[2]) + (left[11] * right[7]) + (left[12] * right[12]) + (left[13] * right[17]);
+        dest[13] = (left[10] * right[3]) + (left[11] * right[8]) + (left[12] * right[13]) + (left[13] * right[18]);
+        dest[14] = (left[10] * right[4]) + (left[11] * right[9]) + (left[12] * right[14]) + (left[13] * right[19]) + left[14];
+        // Alpha Channel
+        dest[15] = (left[15] * right[0]) + (left[16] * right[5]) + (left[17] * right[10]) + (left[18] * right[15]);
+        dest[16] = (left[15] * right[1]) + (left[16] * right[6]) + (left[17] * right[11]) + (left[18] * right[16]);
+        dest[17] = (left[15] * right[2]) + (left[16] * right[7]) + (left[17] * right[12]) + (left[18] * right[17]);
+        dest[18] = (left[15] * right[3]) + (left[16] * right[8]) + (left[17] * right[13]) + (left[18] * right[18]);
+        dest[19] = (left[15] * right[4]) + (left[16] * right[9]) + (left[17] * right[14]) + (left[18] * right[19]) + left[19];
+    }
+
+    class Document$1 extends GraphicsElement {
+        constructor(bounds, id) {
+            super(id !== null && id !== void 0 ? id : uuid());
+            this.bounds = bounds;
+        }
+        get type() {
+            return "document";
+        }
+        onClone(clone) {
+        }
+        onSerialize(data) {
+            // TODO: ...
+        }
+        onUnserialize(data) {
+        }
+        get supportsChildren() {
+            return true;
+        }
+        draw(context) {
+            if (this._hidden || !this.isVisible) {
+                // Early exit
+                return;
+            }
+            context.save();
+            context.multiplyMatrix(this.localMatrix);
+            context.fillRect(this.bounds, SolidBrush.WHITE);
+            context.drawPicture(this.getPicture(), this.composition);
+            context.restore();
+        }
+    }
+
+    class Keyframe {
+        constructor(value, offset = 0, easing = null) {
+            this.value = value;
+            this.offset = offset;
+            this.easing = easing;
+        }
+        [SERIALIZE]() {
+            return [this.value, this.offset, this.easing];
+        }
+    }
+    class Animation {
+        constructor(interpolator, keyframes = null, disabled = false) {
+            this.interpolate = interpolator;
+            this.keyframes = keyframes !== null && keyframes !== void 0 ? keyframes : [];
+            this.disabled = disabled;
+        }
+        [SERIALIZE]() {
+            return [this.keyframes, this.disabled];
+        }
+        get length() {
+            return this.keyframes.length;
+        }
+        get isAnimated() {
+            return !this.disabled && this.keyframes.length > 1;
+        }
+        get hasKeyframes() {
+            return this.keyframes.length > 0;
+        }
+        getKeyframeAtIndex(index) {
+            return this.keyframes[index] || null;
+        }
+        removeKeyframeAtIndex(index) {
+            const r = this.keyframes.splice(index, 1);
+            return r.length > 0 ? r[0] : null;
+        }
+        addKeyframe(keyframe) {
+            const offset = keyframe.offset;
+            const length = this.keyframes.length;
+            for (let i = 0; i < length; i++) {
+                const k = this.keyframes[i];
+                if (offset === k.offset) {
+                    return this.keyframes[i] = keyframe;
+                }
+                if (offset < k.offset) {
+                    if (i === 0) {
+                        this.keyframes.unshift(keyframe);
+                    }
+                    else {
+                        this.keyframes.splice(i - 1, 0, keyframe);
+                    }
+                    return keyframe;
+                }
+            }
+            this.keyframes.push(keyframe);
+            return keyframe;
+        }
+        removeKeyframe(keyframe) {
+            const index = this.keyframes.indexOf(keyframe);
+            if (index !== -1) {
+                this.keyframes.splice(index, 1);
+                return true;
+            }
+            return false;
+        }
+        getKeyframeAtOffset(offset) {
+            const length = this.keyframes.length;
+            for (let i = 0; i < length; i++) {
+                const k = this.keyframes[i];
+                if (offset === k.offset) {
+                    return k;
+                }
+                if (k.offset > offset) {
+                    return null;
+                }
+            }
+            return null;
+        }
+        addKeyframeAtOffset(offset, value, easing = null) {
+            offset = clamp(offset, 0, 1);
+            if (value == null) {
+                value = this.getValueAtOffset(offset);
+            }
+            let keyframe = this.getKeyframeAtOffset(offset);
+            if (keyframe != null) {
+                keyframe.value = value;
+                if (easing != null) {
+                    keyframe.easing = easing;
+                }
+                return keyframe;
+            }
+            return this.addKeyframe(this.createKeyframe(value, offset, easing));
+        }
+        removeKeyframeAtOffset(offset) {
+            const keyframe = this.getKeyframeAtOffset(offset);
+            if (keyframe == null) {
+                return false;
+            }
+            return this.removeKeyframe(keyframe);
+        }
+        getValueAtOffset(offset) {
+            const keyframes = this.keyframes;
+            const last = keyframes.length - 1;
+            if (last === -1) {
+                return null;
+            }
+            if (last === 0) {
+                return keyframes[0].value;
+            }
+            if (offset <= keyframes[0].offset) {
+                return keyframes[0].value;
+            }
+            if (offset >= keyframes[last].offset) {
+                return keyframes[last].value;
+            }
+            for (let i = 1; i <= last; i++) {
+                if (offset > keyframes[i].offset) {
+                    continue;
+                }
+                const j = i - 1;
+                let percent = getRangePercent(offset, keyframes[j].offset, keyframes[i].offset);
+                const easing = keyframes[j].easing;
+                if (easing != null) {
+                    percent = easing.value(percent);
+                }
+                return this.interpolate(percent, keyframes[j].value, keyframes[i].value);
+            }
+            return null;
+        }
+        createKeyframe(value, offset, easing = null) {
+            return new Keyframe(value, offset, easing);
+        }
+        *[Symbol.iterator]() {
+            const length = this.keyframes.length;
+            for (let i = 0; i < length; i++) {
+                yield this.keyframes[i];
+            }
+        }
+    }
+    class AnimationManager {
+        constructor(duration, animations) {
+            this._map = animations !== null && animations !== void 0 ? animations : new Map();
+            this.duration = duration || 0;
+        }
+        [SERIALIZE]() {
+            return [this._map];
+        }
+        map(f) {
+            const list = [];
+            let r;
+            for (const [element, animationList] of this._map.entries()) {
+                r = f(element, animationList);
+                if (r != null) {
+                    list.push(r);
+                }
+            }
+            return list;
+        }
+        getAnimationList(element) {
+            return this._map.has(element) ? this._map.get(element) : null;
+        }
+        removeAnimationList(element) {
+            if (this._map.has(element)) {
+                this._map.delete(element);
+                return true;
+            }
+            return false;
+        }
+        isAnimated(element) {
+            const list = this.getAnimationList(element);
+            if (list == null) {
+                return false;
+            }
+            for (const propAnimations of Object.values(list)) {
+                for (const animation of Object.values(propAnimations)) {
+                    if (animation.isAnimated) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        getAnimation(element, name, property) {
+            const list = this.getAnimationList(element);
+            if (list == null || !(name in list) || !(property in list[name])) {
+                return null;
+            }
+            return list[name][property];
+        }
+        removeAnimation(element, name, property) {
+            const list = this.getAnimationList(element);
+            if (list == null || !(name in list) || !(property in list[name])) {
+                return false;
+            }
+            delete list[name][property];
+            return true;
+        }
+        addAnimation(element, name, property, animation) {
+            let list;
+            if (this._map.has(element)) {
+                list = this._map.get(element);
+            }
+            else {
+                list = {};
+                this._map.set(element, list);
+            }
+            if (!(name in list)) {
+                list[name] = {};
+            }
+            list[name][property] = animation;
+        }
+    }
+
+    class NumberAnimation extends Animation {
+        constructor(keyframes, disabled = false) {
+            super(interpolateNumber, keyframes, disabled);
+        }
+    }
+
+    var MoveElementMode;
+    (function (MoveElementMode) {
+        MoveElementMode["APPEND"] = "append";
+        MoveElementMode["PREPEND"] = "prepend";
+        MoveElementMode["BEFORE"] = "before";
+        MoveElementMode["AFTER"] = "after";
+    })(MoveElementMode || (MoveElementMode = {}));
+
+    class Ruler {
+        constructor(engine, rulerH, rulerV, size) {
+            this._rulerH = null;
+            this._rulerV = null;
+            this._cacheH = null;
+            this._cacheV = null;
+            this._engine = null;
+            this.visible = true;
+            this._engine = engine;
+            this._rulerH = rulerH.getContext('2d', { alpha: false });
+            this._rulerV = rulerV.getContext('2d', { alpha: false });
+            this.size = size;
+        }
+        updateSize(width, height, dpr) {
+            const size = this.size;
+            this._rulerH.canvas.style.width = width + 'px';
+            this._rulerH.canvas.style.height = size + 'px';
+            this._rulerH.canvas.width = width * dpr;
+            this._rulerH.canvas.height = size * dpr;
+            this._rulerV.canvas.style.height = height + 'px';
+            this._rulerV.canvas.style.width = size + 'px';
+            this._rulerV.canvas.height = height * dpr;
+            this._rulerV.canvas.width = size * dpr;
+            this._rulerH.scale(dpr, dpr);
+            this._rulerV.scale(dpr, dpr);
+        }
+        draw(clear = false, event = null) {
+            if (!this.visible) {
+                return;
+            }
+            const rulerH = this._rulerH;
+            const rulerV = this._rulerV;
+            if (clear) {
+                this._cacheH = this._cacheV = null;
+            }
+            if (this._cacheH !== null) {
+                rulerH.putImageData(this._cacheH, 0, 0);
+                rulerV.putImageData(this._cacheV, 0, 0);
+                if (event) {
+                    this.drawIndicator(rulerH, event.x, false);
+                    this.drawIndicator(rulerV, event.y, true);
+                }
+            }
+            const engine = this._engine;
+            const width = engine.canvasElement.width;
+            const zoom = engine.zoom;
+            const pan = engine.pan;
+            this.drawRuler(rulerH, width, zoom, pan.x, false);
+            this.drawRuler(rulerV, width, zoom, pan.y, true);
+            if (!clear && this._cacheH === null) {
+                this._cacheH = rulerH.getImageData(0, 0, rulerH.canvas.width, rulerH.canvas.height);
+                this._cacheV = rulerV.getImageData(0, 0, rulerV.canvas.width, rulerV.canvas.height);
+            }
+            if (event) {
+                this.drawIndicator(rulerH, event.canvasPosition.x, false);
+                this.drawIndicator(rulerV, event.canvasPosition.y, true);
+            }
+        }
+        drawRuler(ctx, width, zoom, pan, vertical) {
+            ctx.save();
+            ctx.fillStyle = this._engine.themeProperties.main;
+            if (vertical) {
+                ctx.fillRect(0, 0, this.size, ctx.canvas.height);
+            }
+            else {
+                ctx.fillRect(0, 0, ctx.canvas.width, this.size);
+            }
+            ctx.fillStyle = ctx.strokeStyle = this._engine.themeProperties.text;
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = "ideographic";
+            ctx.lineWidth = 1;
+            let step = 0, start = 0;
+            if (zoom >= 1) {
+                if (zoom < 5) {
+                    step = 100;
+                }
+                else if (zoom >= 5 && zoom < 10) {
+                    step = 50;
+                }
+                else if (zoom >= 10 && zoom < 25) {
+                    step = 20;
+                }
+                else {
+                    step = 10;
+                }
+            }
+            else if (zoom < 1) {
+                if (zoom >= 0.5) {
+                    step = 200;
+                }
+                else if (zoom >= 0.25) {
+                    step = 400;
+                }
+                else if (zoom >= 0.125) {
+                    step = 800;
+                }
+                else if (zoom >= 0.05) {
+                    step = 1600;
+                }
+                else if (zoom >= 0.02) {
+                    step = 3200;
+                }
+                else {
+                    step = 6400;
+                }
+            }
+            const segment = step * zoom;
+            const unit = segment / 10;
+            const tx = Math.floor(pan % segment);
+            const path = new Path2D();
+            if (pan > 0) {
+                start = (Math.ceil(-pan / segment) - 1) * step;
+            }
+            else {
+                start = (Math.floor(-pan / segment) - 1) * step;
+            }
+            if (vertical) {
+                ctx.translate(0, 0);
+                ctx.rotate(RADIANS * 90);
+                ctx.translate(tx + 0.5, -this.size + 0.5);
+            }
+            else {
+                ctx.translate(tx + 0.5, 0.5);
+            }
+            const max = Math.ceil(width / segment) + 2;
+            for (let i = -1, k = 0; i < max; i++, k++) {
+                const x = i * segment;
+                for (let j = 0; j < 10; j++) {
+                    const px = Math.floor(x + j * unit);
+                    path.moveTo(px, vertical ? 0 : this.size);
+                    if (j === 0) {
+                        path.lineTo(px, vertical ? 24 : 8);
+                        ctx.fillText((start + k * step).toString(), px + 4, vertical ? 20 : 16);
+                    }
+                    else if (j === 5) {
+                        path.lineTo(px, vertical ? 12 : 20);
+                    }
+                    else {
+                        path.lineTo(px, vertical ? 8 : 24);
+                    }
+                }
+            }
+            ctx.stroke(path);
+            ctx.restore();
+        }
+        drawIndicator(ctx, position, vertical) {
+            const path = new Path2D();
+            position += 0.5;
+            ctx.save();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = this._engine.themeProperties.primary;
+            if (vertical) {
+                path.moveTo(0.5, position);
+                path.lineTo(this.size + 0.5, position);
+            }
+            else {
+                path.moveTo(position, 0.5);
+                path.lineTo(position, this.size + 0.5);
+            }
+            ctx.stroke(path);
+            ctx.restore();
+        }
+    }
+
+    const RULER_SIZE = 32;
+    const ZOOM_MIN = 0.01;
+    const ZOOM_MAX = 50;
+    var RenderHint;
+    (function (RenderHint) {
+        /**
+         * Use the cached picture
+         */
+        RenderHint[RenderHint["Cache"] = 0] = "Cache";
+        /**
+         * ??? When?
+         */
+        RenderHint[RenderHint["Clear"] = 1] = "Clear";
+        /**
+         * ??? When? Clear vs Draw?
+         */
+        RenderHint[RenderHint["Draw"] = 2] = "Draw";
+    })(RenderHint || (RenderHint = {}));
+    class CanvasEngine extends HTMLElement {
+        constructor() {
+            super();
+            this._element = null;
+            this._ruler = null;
+            this._context = null;
+            this._renderCache = null;
+            this._tool = null;
+            this._document = null;
+            this._pan = Point.ZERO;
+            this._zoom = 1;
+            this._background = null;
+            this._boundingBox = null;
+            this._pointerDownEvent = null;
+            this._theme = null;
+            this._surface = null;
+            this._selection = null;
+            this._onDisconnect = null;
+            this.attachShadow({ mode: "open" });
+            this.shadowRoot.innerHTML = getCanvasEngineTemplate();
+            this._element = this.shadowRoot.getElementById('main');
+            this.dpr = this.ownerDocument.defaultView.devicePixelRatio || 1;
+            this._boundingBox = this.getBoundingClientRect();
+            this._ruler = new Ruler(this, this.shadowRoot.getElementById('rulerH'), this.shadowRoot.getElementById('rulerV'), RULER_SIZE);
+        }
+        get themeProperties() {
+            return this._theme;
+        }
+        get surface() {
+            if (!this._surface) {
+                this._surface = Skia.SkSurface.MakeWebGLCanvasSurface(this._element, this._element.width, this._element.height);
+            }
+            return this._surface;
+        }
+        get context() {
+            if (!this._context) {
+                this._context = new DrawingContext(this.surface.getCanvas());
+            }
+            return this._context;
+        }
+        getColorAt(point) {
+            // TODO: how to take the color of pixel???
+            return Color.fromCode(this.surface.getCanvas().colorAt(point));
+        }
+        get showRuler() {
+            return this._ruler.visible;
+        }
+        set showRuler(value) {
+            if (value === this._ruler.visible) {
+                return;
+            }
+            const classList = this.shadowRoot.getElementById('grid').classList;
+            if (value) {
+                classList.remove('no-ruler');
+            }
+            else {
+                classList.add('no-ruler');
+            }
+            this._ruler.visible = value;
+            this._onElementResize();
+        }
+        get rulerSize() {
+            return this._ruler.visible ? this._ruler.size : 0;
+        }
+        get selection() {
+            return this._selection;
+        }
+        get canvasElement() {
+            return this._element;
+        }
+        get pan() {
+            return this._pan;
+        }
+        set pan(value) {
+            this.panAndZoom(value, this._zoom);
+        }
+        get zoom() {
+            return this._zoom;
+        }
+        set zoom(value) {
+            this.panAndZoom(this._pan, value);
+        }
+        panAndZoom(pan, zoom, event) {
+            zoom = clamp(zoom, ZOOM_MIN, ZOOM_MAX);
+            this._pan = pan;
+            this._zoom = zoom;
+            this.render(RenderHint.Clear);
+            this._ruler.draw(true, event);
+        }
+        get matrix() {
+            return Matrix.CreatePanZoom(this._pan, this._zoom);
+        }
+        /**
+         * Inform the UI that the drawing has changed
+         */
+        async update() {
+            await Promise.resolve();
+            this.dispatchEvent(new Event('update'));
+        }
+        /**
+         * Draws the document and tool
+         */
+        async refresh() {
+            this.render(RenderHint.Draw, false);
+            if (this._tool) {
+                await this._tool.refresh(this.buildToolEvent(null));
+            }
+        }
+        /**
+         * Draws the document (without tool)
+         * @param hint
+         * @param flush
+         */
+        render(hint = RenderHint.Cache, flush = true) {
+            // TODO: grid, guides
+            if (hint !== RenderHint.Cache) {
+                // Clear render cache
+                if (this._renderCache !== null) {
+                    this._renderCache.delete();
+                    this._renderCache = null;
+                }
+            }
+            const context = this.context;
+            context.clear(this._background);
+            if (this._renderCache !== null) {
+                // Draw bitmap cache at scale 1:1
+                context.save();
+                context.matrix = context.matrix.toIdentity();
+                context.drawImage(this._renderCache);
+                context.restore();
+                if (flush) {
+                    context.flush();
+                }
+                return;
+            }
+            const document = this._document;
+            if (document !== null) {
+                // Draw document only if exists
+                context.save();
+                context.matrix = context.matrix.panZoom(this._pan, this._zoom);
+                document.draw(context);
+                context.restore();
+            }
+            if (hint === RenderHint.Cache && this._renderCache === null) {
+                this._renderCache = this.surface.makeImageSnapshot();
+            }
+            if (flush) {
+                context.flush();
+            }
+        }
+        get document() {
+            return this._document;
+        }
+        set document(value) {
+            if (this._document === value) {
+                return;
+            }
+            // TODO: ...
+            if (this._selection) {
+                this._selection.clear();
+            }
+            this._document = value;
+            // this._zoom = 1;
+            // this._pan = new Point(0, 0);
+            this.render(RenderHint.Draw);
+            this._ruler.draw(true);
+        }
+        get tool() {
+            return this._tool;
+        }
+        set tool(value) {
+            this.setCurrentTool(value);
+        }
+        /**
+         * Sets current tool with optional data
+         * @param tool
+         * @param data
+         */
+        setCurrentTool(tool, data) {
+            const event = { engine: this };
+            if (this._tool === tool) {
+                if (tool) {
+                    tool.deactivate(event);
+                    tool.activate(event, data);
+                }
+                return;
+            }
+            if (this._tool) {
+                this._tool.deactivate(event);
+            }
+            this._tool = tool;
+            tool.activate(event, data);
+        }
+        /**
+         * Get mouse position relative to canvas
+         * @param x
+         * @param y
+         */
+        getCanvasMouse(x, y) {
+            const rect = this._boundingBox;
+            const padding = this.rulerSize;
+            return new Point(x - rect.x - padding, y - rect.y - padding);
+        }
+        /**
+         * Get mouse position relative to document (resolves pan & zoom)
+         * @param x
+         * @param y
+         */
+        getDocumentMouse(x, y) {
+            const rect = this._boundingBox;
+            const padding = this.rulerSize;
+            const pan = this._pan;
+            const zoom = this._zoom;
+            return new Point((x - rect.x - padding - pan.x) / zoom, (y - rect.y - padding - pan.y) / zoom);
+        }
+        connectedCallback() {
+            // TODO: add https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#Monitoring_screen_resolution_or_zoom_level_changes
+            if (!this.isConnected) {
+                return;
+            }
+            if (this._onDisconnect) {
+                this._onDisconnect();
+                this._onDisconnect = null;
+            }
+            // @ts-ignore
+            const obs = new ResizeObserver(this._onElementResize.bind(this));
+            obs.observe(this);
+            const handler = this._onPointerEvent.bind(this);
+            const canvas = this._element;
+            const window = canvas.ownerDocument.defaultView;
+            canvas.addEventListener('pointerdown', handler);
+            window.addEventListener('pointerup', handler);
+            window.addEventListener('pointermove', handler);
+            canvas.addEventListener('pointerenter', handler);
+            canvas.addEventListener('pointerleave', handler);
+            const wheel = this._onWheel.bind(this);
+            canvas.addEventListener('wheel', wheel);
+            this._onDisconnect = () => {
+                obs.unobserve(this);
+                canvas.removeEventListener('pointerdown', handler);
+                window.removeEventListener('pointerup', handler);
+                window.removeEventListener('pointermove', handler);
+                canvas.removeEventListener('pointerenter', handler);
+                canvas.removeEventListener('pointerleave', handler);
+                canvas.removeEventListener('wheel', wheel);
+            };
+            this.refreshTheme();
+        }
+        disconnectedCallback() {
+            if (this._onDisconnect) {
+                this._onDisconnect();
+                this._onDisconnect = null;
+            }
+        }
+        static get observedAttributes() {
+            return ['theme'];
+        }
+        attributeChangedCallback(name, oldValue, newValue) {
+            if (name === 'theme') {
+                this.refreshTheme(true);
+            }
+        }
+        refreshTheme(render = false) {
+            const computed = this.ownerDocument.defaultView.getComputedStyle(this);
+            this._theme = {
+                main: computed.getPropertyValue('--engine-main-color'),
+                sub: computed.getPropertyValue('--engine-sub-color'),
+                primary: computed.getPropertyValue('--engine-primary-color'),
+                text: computed.getPropertyValue('--engine-text-color'),
+            };
+            this._background = Color.from(this._theme.sub);
+            if (render) {
+                this.render(RenderHint.Draw);
+            }
+            if (this._ruler) {
+                this._ruler.draw(true);
+            }
+        }
+        _onElementResize() {
+            const rect = this._boundingBox = this.getBoundingClientRect();
+            const ruler = this._ruler;
+            const canvas = this._element;
+            const padding = ruler.visible ? ruler.size : 0;
+            const dpr = this.dpr;
+            const width = rect.width - padding;
+            const height = rect.height - padding;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ruler.updateSize(width, height, dpr);
+            if (this._surface) {
+                this._surface.delete();
+                this._surface = null;
+            }
+            if (this._context) {
+                this._context.dispose();
+                this._context = null;
+            }
+            this.render(RenderHint.Draw);
+            ruler.draw(true);
+        }
+        async _onPointerEvent(event) {
+            let lazyToolEvent = null;
+            let method = null;
+            switch (event.type) {
+                case "pointermove":
+                    if (!this._pointerDownEvent && event.composedPath().indexOf(this) < 0) {
+                        // Not for us
+                        return;
+                    }
+                    this._ruler.draw(false, lazyToolEvent = this.buildToolEvent(event));
+                    method = 'onPointerMove';
+                    break;
+                case "pointerdown":
+                    this._pointerDownEvent = lazyToolEvent = this.buildToolEvent(event);
+                    method = 'onPointerDown';
+                    break;
+                case "pointerup":
+                    if (!this._pointerDownEvent) {
+                        // We did not start it
+                        return;
+                    }
+                    lazyToolEvent = this.buildToolEvent(event);
+                    this._pointerDownEvent = null;
+                    method = 'onPointerUp';
+                    break;
+                case "pointerenter":
+                    this._ruler.draw(false, lazyToolEvent = this.buildToolEvent(event));
+                    method = 'onPointerEnter';
+                    break;
+                case "pointerleave":
+                    this._ruler.draw();
+                    method = 'onPointerLeave';
+                    break;
+                default:
+                    return;
+            }
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            if (method && this._tool && this._tool[method]) {
+                const context = this.context;
+                context.save();
+                await this._tool[method](lazyToolEvent || this.buildToolEvent(event));
+                context.restore();
+            }
+        }
+        async _onWheel(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            let zoom, originalZoom, coefficient;
+            // TODO: find a better way to calc zoom
+            zoom = originalZoom = this._zoom;
+            coefficient = clamp(1 - (0.005 * event.deltaY), .85, 1.15);
+            zoom = clamp(zoom * coefficient, 0.01, 50);
+            if (originalZoom === zoom) {
+                return;
+            }
+            const toolEvent = this.buildToolEvent(event);
+            const originalPan = this._pan;
+            const ox = (originalPan.x - toolEvent.canvasPosition.x) / originalZoom;
+            const oy = (originalPan.y - toolEvent.canvasPosition.y) / originalZoom;
+            const pan = new Point(ox * zoom + toolEvent.canvasPosition.x, oy * zoom + toolEvent.canvasPosition.y);
+            toolEvent.originalPan = originalPan;
+            toolEvent.originalZoom = originalZoom;
+            toolEvent.pan = pan;
+            toolEvent.zoom = zoom;
+            this.panAndZoom(pan, zoom, toolEvent);
+            if (this._tool && this._tool.onWheel) {
+                await this._tool.onWheel(toolEvent);
+            }
+        }
+        buildToolEvent(event) {
+            if (!event) {
+                // @ts-ignore
+                return {
+                    pan: this._pan,
+                    zoom: this._zoom,
+                    engine: this,
+                };
+            }
+            const rect = this._boundingBox;
+            const padding = this.rulerSize;
+            const canvasPosition = new Point(event.clientX - rect.x - padding, event.clientY - rect.y - padding);
+            return {
+                event,
+                canvasPosition,
+                x: (canvasPosition.x - this._pan.x) / this._zoom,
+                y: (canvasPosition.y - this._pan.y) / this._zoom,
+                button: event.button > 2 ? 3 : event.button,
+                delta: event instanceof WheelEvent ? event.deltaY : 0,
+                pointerdown: this._pointerDownEvent,
+                pan: this._pan,
+                zoom: this._zoom,
+                engine: this,
+            };
+        }
+    }
+    function getCanvasEngineTemplate() {
+        return `
+<style>            
+    :host {
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        min-width: 300px;
+        min-height: 300px;
+        height: 100%;
+        width: 100%;
+        outline: none;
+    }
+    
+    :host, :host([theme="dark"]) {
+        --engine-main-color: #1F1F23;
+        --engine-sub-color: #2F2E33;
+        --engine-primary-color: #4D7CFF;
+        --engine-text-color: #ABABB0;
+    }
+    
+    :host([theme="light"]) {
+        --engine-main-color: #FFFFFF;
+        --engine-sub-color: #e9e9ec; 
+        --engine-primary-color: #4D7CFF;
+        --engine-text-color: #57575C;
+    }
+    
+    #main {
+        background: var(--engine-sub-color);
+    }
+    #grid {
+        display: grid;
+        grid-template-columns: 32px 1fr;
+        grid-template-rows: 32px 1fr;
+        grid-gap: 0;
+        outline: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        max-height: 100%;
+        box-sizing: border-box;
+    }
+    #grid.no-ruler {
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+        grid-template-areas: "main";
+    }
+    #grid.no-ruler > bg-ruler, #grid.no-ruler > .measure-unit {
+        display: none;
+    }
+    #grid.no-ruler > canvas {
+        grid-area: main;
+    }
+    
+    .bg-ruler {
+        background: var(--engine-main-color);
+    }
+    .measure-unit {
+        display: flex;
+        flex: 1;
+        font-size: 10px;
+        font-family: sans-serif;
+        color: var(--engine-text-color);
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+    }
+</style>
+<div id="grid">
+    <div class="bg-ruler measure-unit">px</div>
+    <canvas id="rulerH" class="bg-ruler" height="32"></canvas>
+    <canvas id="rulerV" class="bg-ruler" width="32"></canvas>
+    <canvas id="main"></canvas>
+</div>
+`;
+    }
+
+    var PointerButton;
+    (function (PointerButton) {
+        PointerButton[PointerButton["Left"] = 0] = "Left";
+        PointerButton[PointerButton["Wheel"] = 1] = "Wheel";
+        PointerButton[PointerButton["Right"] = 2] = "Right";
+        PointerButton[PointerButton["Unknown"] = 3] = "Unknown";
+    })(PointerButton || (PointerButton = {}));
+
+    class BaseTool {
+        constructor() {
+            // Engine at activate
+            this.engine = null;
+            // Data at activate
+            this.data = null;
+            this.pivot = null;
+            /*
+                protected drawSelectionRectangle(event: ToolPointerEvent, pivot: PointLike, fill: Brush): boolean {
+                    const engine = event.engine;
+            
+                    const rect = this.getSelectionRectangle(pivot, event, engine.matrix);
+            
+                    if (!rect.isVisible) {
+                        return false;
+                    }
+            
+                    engine.render(RenderHint.Cache, false);
+            
+                    event.context.fillRect(rect, fill);
+                    event.context.flush();
+            
+                    return true;
+                }
+            
+                protected getSelectionRectangle(pivot: PointLike, cursor: PointLike, matrix?: Matrix): Rectangle {
+                    if (matrix && !matrix.isIdentity) {
+                        return Rectangle.fromPoints(matrix.transformPoint(pivot), matrix.transformPoint(cursor));
+                    }
+            
+                    return Rectangle.fromPoints(pivot, cursor);
+                }
+                */
+        }
+        activate(event, data) {
+            this.data = data;
+            this.engine = event.engine;
+        }
+        deactivate(event) {
+            this.data = null;
+            this.engine = null;
+        }
+        async refresh(event) {
+            event.engine.render();
+        }
+        async onWheel(event) {
+            event.engine.panAndZoom(event.pan, event.zoom, event);
+            await this.afterPanZoom(event);
+        }
+        async onPointerEnter(event) {
+            event.engine.render();
+        }
+        async onPointerLeave(event) {
+            event.engine.render();
+        }
+        async onPointerDown(event) {
+            if (event.button === PointerButton.Left) {
+                await this.onPointerLeftDown(event);
+            }
+            else if (event.button === PointerButton.Wheel) {
+                this.pivot = event.canvasPosition;
+            }
+        }
+        async onPointerUp(event) {
+            if (event.button === PointerButton.Left) {
+                await this.onPointerLeftUp(event);
+            }
+            else if (event.button === PointerButton.Wheel) {
+                await this.doPan(event);
+            }
+            else if (event.button === PointerButton.Right) ;
+            this.pivot = null;
+        }
+        async onPointerMove(event) {
+            if (event.pointerdown) {
+                if (event.pointerdown.button === PointerButton.Left) {
+                    await this.onPointerLeftMove(event);
+                }
+                else if (event.pointerdown.button === PointerButton.Wheel) {
+                    await this.doPan(event);
+                    this.pivot = event.canvasPosition;
+                }
+            }
+            else {
+                await this.onHover(event);
+            }
+        }
+        async doPan(event, pivot = this.pivot) {
+            const pan = event.engine.pan;
+            event.engine.pan = new Point(pan.x + event.canvasPosition.x - pivot.x, pan.y + event.canvasPosition.y - pivot.y);
+            await this.afterPanZoom(event);
+        }
+        async afterPanZoom(event) { }
+    }
+
+    class PanTool extends BaseTool {
+        get type() {
+            return "pan";
+        }
+        async onHover(event) {
+        }
+        async onPointerLeftDown(event) {
+            this.pivot = event.canvasPosition;
+        }
+        async onPointerLeftMove(event) {
+            if (!this.pivot) {
+                return;
+            }
+            await this.doPan(event);
+            this.pivot = event.canvasPosition;
+        }
+        async onPointerLeftUp(event) {
+            if (this.pivot) {
+                await this.doPan(event);
+            }
+        }
+    }
+
+    customElements.define('expressive-canvas-engine', CanvasEngine);
+    registerSerializableMap({
+        'Point': Point,
+        'Rectangle': Rectangle,
+        'Matrix': Matrix,
+        'Color': Color,
+        'ColorMatrix': ColorMatrix,
+        'Composition': Composition,
+        // Pen
+        'DefaultPen': DefaultPen,
+        // Brush
+        'EmptyBrush': EmptyBrush,
+        'SolidBrush': SolidBrush,
+        'PatternBrush': PatternBrush,
+        'PointerBrush': PointerBrush,
+        'StopColorList': StopColorList,
+        'LinearGradientBrush': LinearGradientBrush,
+        'RadialGradientBrush': RadialGradientBrush,
+        'TwoPointGradientBrush': TwoPointGradientBrush,
+        'ConicalGradientBrush': ConicalGradientBrush,
+        // Shapes
+        'EllipseShape': EllipseShape,
+        'PathShape': PathShape,
+        'PolyShape': PolyShape,
+        'RectShape': RectShape,
+        'RegularPolygonShape': RegularPolygonShape,
+        'StarShape': StarShape,
+        // Elements
+        'GroupElement': GroupElement,
+        'EllipseElement': EllipseElement,
+        'PathElement': PathElement,
+        'PolyElement': PolyElement,
+        'RectElement': RectElement,
+        'RegularPolygonElement': RegularPolygonElement,
+        'StarElement': StarElement,
+        // Animations
+        'AnimationManager': AnimationManager,
+        'Keyframe': Keyframe,
+        'NumberAnimation': NumberAnimation,
+    });
+
+    const doc = new Document$1(new Rectangle(0, 0, 500, 800), 'doc-1');
+    const rect = new RectElement(new RectShape(100, 100), 'rect-1');
+    rect.title = 'Rect 1';
+    rect.fill = new SolidBrush(Color.from('green'));
+    rect.stroke = new DefaultPen(new SolidBrush(Color.from('blue')), 5);
+    const rect2 = new RectElement(new RectShape(300, 300), 'rect-2');
+    rect2.title = 'Rect 2';
+    rect2.fill = new SolidBrush(Color.from('yellow'));
+    rect2.stroke = new DefaultPen(new SolidBrush(Color.from('red')), 3);
+    rect2.translateX = 500;
+    rect2.translateY = 200;
+    doc.appendChild(rect);
+    doc.appendChild(rect2);
+    const animationManager = new AnimationManager(1200);
+    animationManager.addAnimation(rect, 'global', 'translateX', new NumberAnimation([
+        new Keyframe(0, 0),
+        new Keyframe(100, 500),
+        new Keyframe(300, 1000),
+    ], false));
+    animationManager.addAnimation(rect, 'global', 'translateY', new NumberAnimation([
+        new Keyframe(0, 100),
+        new Keyframe(10, 300),
+        new Keyframe(50, 800),
+    ], false));
+    animationManager.addAnimation(rect2, 'global', 'scaleX', new NumberAnimation([
+        new Keyframe(0, 0),
+        new Keyframe(100, 500),
+        new Keyframe(300, 1000),
+    ], false));
+
+    /* src/Components/Canvas.svelte generated by Svelte v3.38.2 */
     const file$1 = "src/Components/Canvas.svelte";
 
     function create_fragment$1(ctx) {
     	let div;
-    	let t0;
-    	let overlay_trigger;
-    	let sp_button;
-    	let t2;
-    	let sp_popover;
-    	let sp_menu;
-    	let sp_menu_item0;
-    	let t4;
-    	let sp_menu_item1;
-    	let t6;
-    	let sp_menu_item2;
-    	let t8;
-    	let sp_menu_item3;
-    	let t10;
-    	let sp_menu_item4;
-    	let mounted;
-    	let dispose;
+    	let expressive_canvas_engine;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			t0 = text("Canvas\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    ");
-    			overlay_trigger = element("overlay-trigger");
-    			sp_button = element("sp-button");
-    			sp_button.textContent = "Overlay Trigger";
-    			t2 = space();
-    			sp_popover = element("sp-popover");
-    			sp_menu = element("sp-menu");
-    			sp_menu_item0 = element("sp-menu-item");
-    			sp_menu_item0.textContent = "Select inverse";
-    			t4 = space();
-    			sp_menu_item1 = element("sp-menu-item");
-    			sp_menu_item1.textContent = "Feather...";
-    			t6 = space();
-    			sp_menu_item2 = element("sp-menu-item");
-    			sp_menu_item2.textContent = "Select and mask...";
-    			t8 = space();
-    			sp_menu_item3 = element("sp-menu-item");
-    			sp_menu_item3.textContent = "Save selection";
-    			t10 = space();
-    			sp_menu_item4 = element("sp-menu-item");
-    			sp_menu_item4.textContent = "Make work path";
-    			set_custom_element_data(sp_button, "slot", "trigger");
-    			add_location(sp_button, file$1, 49, 8, 2812);
-    			set_custom_element_data(sp_menu_item0, "value", "item-2");
-    			add_location(sp_menu_item0, file$1, 56, 16, 3092);
-    			set_custom_element_data(sp_menu_item1, "value", "item-3");
-    			add_location(sp_menu_item1, file$1, 57, 16, 3168);
-    			set_custom_element_data(sp_menu_item2, "value", "item-4");
-    			add_location(sp_menu_item2, file$1, 58, 16, 3240);
-    			set_custom_element_data(sp_menu_item3, "value", "item-5");
-    			add_location(sp_menu_item3, file$1, 59, 16, 3320);
-    			set_custom_element_data(sp_menu_item4, "value", "item-6");
-    			set_custom_element_data(sp_menu_item4, "disabled", "");
-    			add_location(sp_menu_item4, file$1, 60, 16, 3396);
-    			add_location(sp_menu, file$1, 55, 12, 3065);
-    			set_custom_element_data(sp_popover, "slot", "hover-content");
-    			set_custom_element_data(sp_popover, "placement", "auto");
-    			add_location(sp_popover, file$1, 54, 8, 3001);
-    			set_custom_element_data(overlay_trigger, "placement", "auto-start");
-    			set_custom_element_data(overlay_trigger, "type", "inline");
-    			set_custom_element_data(overlay_trigger, "offset", "-10");
-    			add_location(overlay_trigger, file$1, 48, 4, 2735);
-    			set_style(div, "position", "relative");
-    			add_location(div, file$1, 0, 0, 0);
+    			expressive_canvas_engine = element("expressive-canvas-engine");
+    			set_custom_element_data(expressive_canvas_engine, "theme", "dark");
+    			add_location(expressive_canvas_engine, file$1, 12, 4, 328);
+    			add_location(div, file$1, 11, 0, 317);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			append_dev(div, t0);
-    			append_dev(div, overlay_trigger);
-    			append_dev(overlay_trigger, sp_button);
-    			append_dev(overlay_trigger, t2);
-    			append_dev(overlay_trigger, sp_popover);
-    			append_dev(sp_popover, sp_menu);
-    			append_dev(sp_menu, sp_menu_item0);
-    			append_dev(sp_menu, t4);
-    			append_dev(sp_menu, sp_menu_item1);
-    			append_dev(sp_menu, t6);
-    			append_dev(sp_menu, sp_menu_item2);
-    			append_dev(sp_menu, t8);
-    			append_dev(sp_menu, sp_menu_item3);
-    			append_dev(sp_menu, t10);
-    			append_dev(sp_menu, sp_menu_item4);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(sp_button, "pointerenter", /*pointerenter_handler*/ ctx[1], false, false, false),
-    					listen_dev(sp_button, "pointerleave", /*pointerleave_handler*/ ctx[2], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
+    			append_dev(div, expressive_canvas_engine);
+    			/*expressive_canvas_engine_binding*/ ctx[2](expressive_canvas_engine);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			mounted = false;
-    			run_all(dispose);
+    			/*expressive_canvas_engine_binding*/ ctx[2](null);
     		}
     	};
 
@@ -22989,32 +30503,57 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     function instance$1($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Canvas", slots, []);
-    	let open = false;
-    	const writable_props = [];
+    	let { document } = $$props;
+    	let canvas;
+
+    	onMount(() => {
+    		$$invalidate(0, canvas.document = document, canvas);
+    		$$invalidate(0, canvas.tool = new PanTool(), canvas);
+    		canvas.render();
+    	}); //console.log(canvas.themeProperties)
+
+    	const writable_props = ["document"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Canvas> was created with unknown prop '${key}'`);
     	});
 
-    	const pointerenter_handler = () => $$invalidate(0, open = true);
-    	const pointerleave_handler = () => $$invalidate(0, open = false);
-    	$$self.$capture_state = () => ({ open });
+    	function expressive_canvas_engine_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			canvas = $$value;
+    			$$invalidate(0, canvas);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("document" in $$props) $$invalidate(1, document = $$props.document);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		CanvasEngine,
+    		Document: Document$1,
+    		PanTool,
+    		document,
+    		canvas
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("open" in $$props) $$invalidate(0, open = $$props.open);
+    		if ("document" in $$props) $$invalidate(1, document = $$props.document);
+    		if ("canvas" in $$props) $$invalidate(0, canvas = $$props.canvas);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [open, pointerenter_handler, pointerleave_handler];
+    	return [canvas, document, expressive_canvas_engine_binding];
     }
 
     class Canvas extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { document: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -23022,6 +30561,21 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			options,
     			id: create_fragment$1.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*document*/ ctx[1] === undefined && !("document" in props)) {
+    			console.warn("<Canvas> was created without expected prop 'document'");
+    		}
+    	}
+
+    	get document() {
+    		throw new Error("<Canvas>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set document(value) {
+    		throw new Error("<Canvas>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -23072,10 +30626,11 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     		});
 
     	binding_callbacks.push(() => bind(toolbarregionup, "selected", toolbarregionup_selected_binding));
-    	canvas = new Canvas({ $$inline: true });
+    	canvas = new Canvas({ props: { document: doc }, $$inline: true });
 
     	timeline = new Timeline_1({
     			props: {
+    				animationManager,
     				playOffset: /*$TimelinePlayOffset*/ ctx[2]
     			},
     			$$inline: true
@@ -23107,38 +30662,38 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     			create_component(canvas.$$.fragment);
     			t10 = space();
     			create_component(timeline.$$.fragment);
-    			add_location(sp_icons_medium, file, 43, 0, 1245);
+    			add_location(sp_icons_medium, file, 44, 0, 1323);
     			set_style(div0, "grid-area", "menubar");
     			attr_dev(div0, "class", "svelte-1m07uhd");
-    			add_location(div0, file, 45, 4, 1363);
+    			add_location(div0, file, 46, 4, 1441);
     			attr_dev(div1, "class", "svelte-1m07uhd");
-    			add_location(div1, file, 50, 8, 1567);
+    			add_location(div1, file, 51, 8, 1645);
     			attr_dev(div2, "class", "toolbar svelte-1m07uhd");
-    			add_location(div2, file, 48, 4, 1441);
-    			add_location(sp_button, file, 54, 12, 1751);
+    			add_location(div2, file, 49, 4, 1519);
+    			add_location(sp_button, file, 55, 12, 1829);
     			attr_dev(div3, "class", "scroll svelte-1m07uhd");
     			attr_dev(div3, "hidden-x", "");
-    			add_location(div3, file, 53, 8, 1708);
+    			add_location(div3, file, 54, 8, 1786);
     			attr_dev(div4, "class", "scroll svelte-1m07uhd");
     			attr_dev(div4, "hidden-x", "");
-    			add_location(div4, file, 56, 8, 1854);
+    			add_location(div4, file, 57, 8, 1932);
     			set_style(sp_split_view0, "grid-area", "sidebar");
     			set_custom_element_data(sp_split_view0, "resizable", "");
     			set_custom_element_data(sp_split_view0, "vertical", "");
     			set_custom_element_data(sp_split_view0, "primary-min", "380");
     			set_custom_element_data(sp_split_view0, "primary-size", "75%");
-    			add_location(sp_split_view0, file, 52, 4, 1600);
+    			add_location(sp_split_view0, file, 53, 4, 1678);
     			set_custom_element_data(sp_split_view1, "class", "content svelte-1m07uhd");
     			set_custom_element_data(sp_split_view1, "resizable", "");
     			set_custom_element_data(sp_split_view1, "vertical", "");
     			set_custom_element_data(sp_split_view1, "primary-size", "80%");
     			set_custom_element_data(sp_split_view1, "secondary-min", "0");
     			set_custom_element_data(sp_split_view1, "secondary-max", "600");
-    			add_location(sp_split_view1, file, 60, 4, 1945);
+    			add_location(sp_split_view1, file, 61, 4, 2023);
     			set_custom_element_data(sp_theme, "scale", "medium");
     			set_custom_element_data(sp_theme, "color", sp_theme_color_value = /*themeLight*/ ctx[0] ? "light" : "dark");
     			set_custom_element_data(sp_theme, "class", "app svelte-1m07uhd");
-    			add_location(sp_theme, file, 44, 0, 1282);
+    			add_location(sp_theme, file, 45, 0, 1360);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -23230,33 +30785,33 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     const ToolbarRegionUpButtons = [
     	{
     		tool: "pan",
-    		icon: "pan-tool",
+    		icon: "expr:pan-tool",
     		title: "Pan Tool"
     	},
     	{
     		tool: "selection",
-    		icon: "selection-tool",
+    		icon: "expr:selection-tool",
     		title: "Selection Tool"
     	},
     	[
     		{
     			tool: "rectangle-tool",
-    			icon: "rectangle-tool",
+    			icon: "expr:rectangle-tool",
     			title: "Rectangle Tool"
     		},
     		{
     			tool: "polygon-tool",
-    			icon: "polygon-tool",
+    			icon: "expr:polygon-tool",
     			title: "Polygon Tool"
     		},
     		{
     			tool: "star-tool",
-    			icon: "star-tool",
+    			icon: "expr:star-tool",
     			title: "Star Tool"
     		},
     		{
     			tool: "line-tool",
-    			icon: "line-tool",
+    			icon: "expr:line-tool",
     			title: "Line Tool"
     		}
     	]
@@ -23290,6 +30845,8 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     		TimelinePlayOffset,
     		ToolbarRegionUp,
     		Timeline: Timeline_1,
+    		doc,
+    		animationManager,
     		CanvasStateTool,
     		Canvas,
     		themeLight,
@@ -23328,15 +30885,19 @@ var(--spectrum-global-dimension-size-125)))}:host([dir=ltr]) ::slotted([slot=ico
     	}
     }
 
-    var CustomIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n</svg>";
+    var CustomIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"expr:fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"expr:menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"expr:menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"expr:swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"expr:player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:path\" viewBox=\"0 0 16 16\">\n        <path d=\"M13,11a1.994,1.994,0,0,0-1.925,1.488c-1.586-.047-2.6-.354-3-.923-.528-.749-.056-2.1.4-3.4.54-1.543,1.1-3.139.266-4.312-.611-.86-1.832-1.287-3.8-1.342a2,2,0,1,0-.007,1c1.582.046,2.594.354,3,.925.533.748.061,2.1-.4,3.4-.54,1.543-1.1,3.139-.266,4.311.611.861,1.833,1.288,3.805,1.343A2,2,0,1,0,13,11ZM3,4A1,1,0,1,1,4,3,1,1,0,0,1,3,4ZM13,14a1,1,0,1,1,1-1A1,1,0,0,1,13,14Z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"expr:character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"expr:line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"expr:add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"expr:align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"expr:assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"expr:boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"expr:boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"expr:boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"expr:bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"expr:send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"expr:bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"expr:send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"expr:cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"expr:delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"expr:drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"expr:duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"expr:ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"expr:flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"expr:group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"expr:guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"expr:hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"expr:join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"expr:join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"expr:layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"expr:layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"expr:lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"expr:line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"expr:polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"expr:rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"expr:star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"expr:ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"expr:rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"expr:selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"expr:snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"expr:stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"expr:switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"expr:distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"expr:v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"expr:zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"expr:fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"expr:checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"expr:checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"expr:radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"expr:radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"expr:gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"expr:pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"expr:save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"expr:fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"expr:anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"expr:anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"expr:anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"expr:anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"expr:unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"expr:polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"expr:ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"expr:clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"expr:symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"expr:center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"expr:center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n</svg>";
 
     LoadIcons(CustomIcons);
-    const app = new App({
-        target: document.body,
-        props: {},
-    });
+    var index = LoadApp();
+    async function LoadApp() {
+        window.Skia = await SkiaWasmInit();
+        return new App({
+            target: document.body,
+            props: {},
+        });
+    }
 
-    return app;
+    return index;
 
 }());
 //# sourceMappingURL=bundle.js.map

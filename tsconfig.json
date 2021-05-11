@@ -1,8 +1,9 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
+    "lib": ["es2020", "dom"],
     "preserveSymlinks": true,
-    "types": ["svelte"],
+    "types": ["svelte", "@zindex/canvas-engine", "@zindex/skia-ts", "@zindex/serialization"],
     "experimentalDecorators": true,
     "module": "ES2020"
   },
