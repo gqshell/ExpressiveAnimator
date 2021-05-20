@@ -12,12 +12,11 @@
 
     <link rel='icon' type='image/png' href='./favicon.png'>
     <link rel='stylesheet' href='./build/bundle.css'>
-
-    <script src="./build/skia-wasm.js"></script>
     <script type="module">
-        window.Skia = await SkiaWasmInit();
+        import SkiaWasmInit from "./build/skia.js";
+        window.SkiaWasmInit = SkiaWasmInit;
     </script>
-    <script defer src='./build/bundle.js'></script>
+    <script defer src="./build/bundle.js"></script>
 </head>
 <body>
 </body>

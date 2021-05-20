@@ -38,7 +38,7 @@
     import {TimelinePlayOffset} from "./Stores";
     import ToolbarRegionUp from "./Components/ToolbarRegionUp.svelte";
     import Timeline from "./Components/Timeline/index.svelte";
-    import {doc, animationManager} from "./doc1";
+    import {project, doc, animationManager} from "./doc1";
 
     import {CanvasStateTool} from "./Stores";
     import Canvas from "./Components/Canvas.svelte";
@@ -70,7 +70,7 @@
             primary-size="80%"
             secondary-min="0"
             secondary-max="600">
-        <Canvas document={doc} />
+        <Canvas project={project} />
         <Timeline animationManager={animationManager} playOffset={$TimelinePlayOffset} />
     </sp-split-view>
 </sp-theme>

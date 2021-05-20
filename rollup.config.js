@@ -13,7 +13,7 @@ import cssnano from 'cssnano';
 
 const production = !process.env.ROLLUP_WATCH;
 const GLOBALS = {
-  '@zindex/skia-ts': 'Skia'
+  '@zindex/skia-ts': 'SkiaWasmInit'
 };
 const EXTERNAL = Object.keys(GLOBALS);
 

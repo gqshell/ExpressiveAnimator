@@ -1,18 +1,16 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {CanvasEngine, Document, PanTool} from "@zindex/canvas-engine";
+    import {CanvasEngine, PanTool, SelectTool, Project} from "@zindex/canvas-engine";
 
-    export let document: Document;
+    export let project: Project;
 
     let canvas: CanvasEngine;
 
     onMount(() => {
-        canvas.document = document;
-        canvas.tool = new PanTool();
-        canvas.render();
+        canvas.project = project;
+        canvas.tool = new SelectTool();
+        canvas.startRenderLoop();
         //console.log(canvas.themeProperties)
     })
 </script>
-<div>
-    <expressive-canvas-engine theme="dark" bind:this={canvas}/>
-</div>
+<canvas-engine style="touch-action: none" bind:this={canvas}/>

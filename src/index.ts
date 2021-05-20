@@ -8,14 +8,15 @@ import App from './App.svelte';
 // Prevent typescript errors
 //@ts-ignore
 import CustomIcons from "./icons.svg";
+import {CanvasEngineInit} from "@zindex/canvas-engine";
+import SkiaWasmInit from "@zindex/skia-ts";
 
 LoadIcons(CustomIcons);
 
 export default LoadApp();
 
-
 async function LoadApp() {
-    window.Skia = await SkiaWasmInit();
+    await CanvasEngineInit(SkiaWasmInit);
     return new App({
         target: document.body,
         props: {},
