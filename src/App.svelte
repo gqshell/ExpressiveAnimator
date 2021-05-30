@@ -38,15 +38,13 @@
     import {TimelinePlayOffset} from "./Stores";
     import ToolbarRegionUp from "./Components/ToolbarRegionUp.svelte";
     import Timeline from "./Components/Timeline/index.svelte";
-    import {project, doc, animationManager} from "./doc1";
+    import {project} from "./doc1";
 
     import {CanvasStateTool} from "./Stores";
     import Canvas from "./Components/Canvas.svelte";
 
 
     let themeLight = false;
-
-
 
 </script>
 <sp-icons-medium></sp-icons-medium>
@@ -71,7 +69,7 @@
             secondary-min="0"
             secondary-max="600">
         <Canvas project={project} />
-        <Timeline animationManager={animationManager} playOffset={$TimelinePlayOffset} />
+        <Timeline project={project} playOffset={$TimelinePlayOffset} />
     </sp-split-view>
 </sp-theme>
 <style>

@@ -1,8 +1,8 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {CanvasEngine, PanTool, SelectTool, Project} from "@zindex/canvas-engine";
+    import {CanvasEngine, PanTool, SelectTool, AnimationProject} from "@zindex/canvas-engine";
 
-    export let project: Project;
+    export let project: AnimationProject;
 
     let canvas: CanvasEngine;
 
@@ -13,4 +13,12 @@
         //console.log(canvas.themeProperties)
     })
 </script>
-<canvas-engine style="touch-action: none" bind:this={canvas}/>
+<div class="canvas-wrapper">
+    <canvas-engine style="touch-action: none" bind:this={canvas}/>
+</div>
+<style>
+    .canvas-wrapper {
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+</style>

@@ -3,15 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && yarn copy-wasm",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "copy-wasm": "cp ./node_modules/@zindex/skia-ts/bin/* ./public/build/"
   },
   "dependencies": {
-    "@spectrum-web-components/bundle": "^0.20.1",
+    "@spectrum-web-components/bundle": "^0.21.1",
     "@zindex/canvas-engine": "../CanvasEngine",
-    "@zindex/serialization": "../../zindex/serialization"
+    "@zindex/serialization": "../../zindex/serialization",
+    "@ctrl/tinycolor": "^3.4.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",

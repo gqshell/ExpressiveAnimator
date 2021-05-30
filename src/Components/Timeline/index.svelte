@@ -1,10 +1,10 @@
 <script lang="ts">
     import TimelineControls from "./TimelineControls.svelte";
     import Timeline from "./Timeline.svelte";
-    import type {AnimationManager} from "@zindex/canvas-engine";
     import TimelineRuler from "./TimelineRuler.svelte";
+    import type {AnimationProject} from "@zindex/canvas-engine";
 
-    export let animationManager: AnimationManager;
+    export let project: AnimationProject;
 
     export let zoom: number = 1;
     export let playOffset: number = 0;
@@ -13,13 +13,13 @@
     let scrollTop: number = 0;
     let scrollLeft: number = 0;
 
-    $: unit = zoom * 1;
+    $: unit = zoom * 0.1;
 
     // TODO: use zoom and others
     $: style = `
         --timeline-play-offset: ${playOffset};
         --timeline-scroll-top: ${scrollTop}px;
-        --timeline-max-offset: ${animationManager.duration};
+        --timeline-max-offset: ${project.document?.animation?.duration || 0};
         --timeline-ms-unit: ${unit}px;
     `;
 </script>
@@ -28,7 +28,7 @@
         <TimelineControls bind:playOffset={playOffset} bind:playOffsetMax={playOffsetMax} />
         <TimelineRuler bind:zoom left={scrollLeft} />
     </div>
-    <Timeline bind:animationManager={animationManager}
+    <Timeline bind:project={project}
               bind:scrollTop bind:scrollLeft
               bind:playOffset={playOffset}
               bind:playOffsetMax={playOffsetMax} />

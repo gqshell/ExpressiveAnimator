@@ -1,31 +1,6 @@
-<script context="module" lang="ts">
-    import type {AnimationList, AnimationManager, GraphicsElement} from "@zindex/canvas-engine";
-
-    function mapAnimations(element: GraphicsElement, list: AnimationList) {
-        const animations = [];
-
-        for (const name in list) {
-            if (!list.hasOwnProperty(name)) {
-                continue;
-            }
-            for (const property in list[name]) {
-                if (!list[name].hasOwnProperty(property)) {
-                    continue;
-                }
-                animations.push({
-                    name,
-                    property,
-                    animation: list[name][property],
-                });
-            }
-        }
-
-        return {element, animations};
-    }
-</script>
 <script lang="ts">
     import TimelineItem from "./TimelineItem.svelte";
-    import type {AnimationManager} from "@zindex/canvas-engine";
+    import type {AnimationProject} from "@zindex/canvas-engine";
     import Keyframe from "./Keyframe.svelte";
     import Easing from "./Easing.svelte";
     import LocalMarker from "./LocalMarker.svelte";
@@ -33,14 +8,43 @@
     import Property from "./Property.svelte";
     import SelectionRect from "./SelectionRect.svelte";
 
-    export let animationManager: AnimationManager;
+    export let project: AnimationProject;
 
     export let playOffset: number;
     export let playOffsetMax: number;
     export let scrollTop: number = 0;
     export let scrollLeft: number = 0;
 
-    $: animatedElements = animationManager.map(mapAnimations);
+    function mapAnimations(project: AnimationProject) {
+        const document = project.document;
+        const documentAnimation = document.animation;
+        if (!documentAnimation) {
+            return [];
+        }
+        const animators = project.animatorSource;
+
+        const list = [];
+
+        let element, properties, animation, property, animator;
+        for ([element, properties] of documentAnimation.getAnimatedElements()) {
+            const animations = [];
+
+            for ([property, animation] of Object.entries(properties)) {
+                animator = animators.getAnimator(element, property);
+                animations.push({
+                    title: animator.title,
+                    property,
+                    animation,
+                })
+            }
+
+            list.push({element, animations});
+        }
+
+        return list;
+    }
+
+    $: animatedElements = mapAnimations(project);
 
     /* Scroll sync Y */
     let leftPane: HTMLElement;
@@ -71,7 +75,7 @@
         {#each animatedElements as animated}
             <Element title={animated.element.title} type={animated.element.type} />
             {#each animated.animations as animationObject}
-                <Property name={animationObject.name} property={animationObject.property} disabled={animationObject.animation.disabled}/>
+                <Property title={animationObject.title} property={animationObject.property} disabled={animationObject.animation.disabled}/>
             {/each}
         {/each}
     </div>
