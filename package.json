@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@spectrum-web-components/bundle": "^0.21.1",
-    "@zindex/canvas-engine": "../CanvasEngine",
-    "@zindex/serialization": "../../zindex/serialization",
+    "@zindex/canvas-engine": "github:ExpressiveSuite/CanvasEngine",
+    "@zindex/serialization": "github:zindex-software/serialization",
     "@ctrl/tinycolor": "^3.4.0"
   },
   "devDependencies": {
