@@ -30,7 +30,7 @@ const urlsToCache = [
 self.addEventListener('install', function(event) {
     // Perform install steps
     event.waitUntil(
-        caches.open(CURRENT_CACHE)
+        caches.open(CACHE_NAME)
             .then(function(cache) {
                 return cache.addAll(urlsToCache);
             })
