@@ -1,15 +1,16 @@
-const CACHE_NAME = 'expressive-animator-20210531-0';
+const CACHE_NAME = 'expressive-animator-20210601-4';
 const CACHE_ALLOW = [CACHE_NAME];
 
 const urlsToCache = [
     '/',
     '/index.html',
     '/favicon.png',
-    '/font.ttf.woff2',
     '/build/bundle.css',
     '/build/bundle.js',
-    '/build/skia.js',
-    '/build/skia.wasm',
+    '/skia/skia.js',
+    '/skia/skia.wasm',
+    '/engine/canvas-engine.js',
+    '/engine/font.ttf.woff2',
     '/icons/icon-48.png',
     '/icons/icon-57.png',
     '/icons/icon-60.png',
@@ -43,6 +44,7 @@ self.addEventListener('fetch', function(event) {
             .then(function(response) {
                 // Cache hit - return response
                 if (response) {
+                    console.log('cache hit');
                     return response;
                 }
 

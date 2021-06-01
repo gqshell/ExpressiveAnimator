@@ -68,7 +68,7 @@
             primary-size="80%"
             secondary-min="0"
             secondary-max="600">
-        <Canvas project={project} />
+        <Canvas project={project} theme="{themeLight ? 'light' : 'dark'}"/>
         <Timeline project={project} playOffset={$TimelinePlayOffset} />
     </sp-split-view>
 </sp-theme>

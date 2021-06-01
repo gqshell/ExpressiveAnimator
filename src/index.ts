@@ -9,14 +9,13 @@ import App from './App.svelte';
 //@ts-ignore
 import CustomIcons from "./icons.svg";
 import {CanvasEngineInit} from "@zindex/canvas-engine";
-import SkiaWasmInit from "@zindex/skia-ts";
 
 LoadIcons(CustomIcons);
 
 export default LoadApp();
 
 async function LoadApp() {
-    await CanvasEngineInit(SkiaWasmInit);
+    await CanvasEngineInit({defaultFont: '/engine/font.ttf.woff2'});
     return new App({
         target: document.body,
         props: {},

@@ -3,17 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "rollup -c && yarn copy-wasm",
+    "build": "rollup -c && yarn copy-skia && yarn copy-engine",
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
-    "copy-wasm": "cp ./node_modules/@zindex/skia-ts/bin/* ./public/build/"
+    "copy-skia": "cp ./node_modules/@zindex/skia-ts/bin/* ./public/skia/",
+    "copy-engine": "cp ./node_modules/@zindex/canvas-engine/dist/* ./public/engine/"
   },
   "dependencies": {
+    "@ctrl/tinycolor": "^3.4.0",
     "@spectrum-web-components/bundle": "^0.21.1",
     "@zindex/canvas-engine": "github:ExpressiveSuite/CanvasEngine",
-    "@zindex/serialization": "github:zindex-software/serialization",
-    "@ctrl/tinycolor": "^3.4.0"
+    "@zindex/serialization": "github:zindex-software/serialization"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
