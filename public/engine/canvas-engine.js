@@ -7972,75 +7972,6 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class MasterDocument extends SingleBoardDocument {
-        constructor(size = new Size(600, 900), id) {
-            super(size, id);
-        }
-        test() {
-            // TODO: remove this
-            const p = new Skia.SkPath();
-            p.addRect(new Rectangle(0, 0, 200, 100));
-            for (let i = 0; i < 10; i++) {
-                const gr = new GroupElement(this);
-                gr.title = "Group " + (i + 1);
-                gr.position = new Point(i * 10, i * 10);
-                gr.scale = new Point(2, 2);
-                for (let j = 0; j < 30; j++) {
-                    const sh = new StarElement(new StarShape(Math.trunc(3 + Math.random() * 10), 150, 0.25), this);
-                    sh.position = new Point(Math.random() * 8000 - 2000, Math.random() * 8000 - 2000);
-                    sh.fill = new SolidBrush(Color.green);
-                    sh.title = "Path " + (i + 1) + " - " + (j + 1);
-                    gr.appendChild(sh);
-                }
-                this.appendChild(gr);
-            }
-            const text = new TextElement(this, 'AHello,    World! $ ÎȘȚĂÂ', FontManager.getDefaultFont(32));
-            text.position = new Point(0, this.localBounds.bottom);
-            // text.strokeBrush = new SolidBrush(Color.from('pink'));
-            // text.strokeLineWidth = 0.1;
-            this.appendChild(text);
-            // const text2 = new TextElement(this, 'Hello, World 2!', FontManager.getDefaultFont(18));
-            // text2.position = new Point(700, 500);
-            // this.appendChild(text2);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class PatternDocument extends SingleBoardDocument {
-        constructor(board = new Rectangle(0, 0, 900, 600), id) {
-            super(board, id);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
     class ShapeBuilderTool extends BaseTool {
         constructor() {
             super(...arguments);
@@ -8121,6 +8052,7 @@
             // Append to document
             engine.document.appendChild(this.element);
             this.element = null;
+            engine.project.state.snapshot();
             // The canvas draw will change
             this.invalidate();
         }
@@ -10838,7 +10770,6 @@
     exports.KeyboardStatus = KeyboardStatus;
     exports.LinearGradientBrush = LinearGradientBrush;
     exports.MaskElement = MaskElement;
-    exports.MasterDocument = MasterDocument;
     exports.Matrix = Matrix;
     exports.Middleware = Middleware;
     exports.NativeReader = NativeReader;
@@ -10849,7 +10780,6 @@
     exports.PathElement = PathElement;
     exports.PathNode = PathNode;
     exports.PatternBrush = PatternBrush;
-    exports.PatternDocument = PatternDocument;
     exports.Point = Point;
     exports.PointerBrush = PointerBrush;
     exports.PolyElement = PolyElement;
