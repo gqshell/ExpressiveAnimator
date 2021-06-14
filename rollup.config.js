@@ -51,7 +51,7 @@ export default [
     external: EXTERNAL,
     plugins: [
       importResolver({
-        extensions: ['.js', '.mjs', '.ts', '.css', '.svelte'],
+        extensions: ['.js', '.mjs', '.ts', '.css', '.pcss', '.svelte'],
         packageJson: true,
       }),
       svelte({

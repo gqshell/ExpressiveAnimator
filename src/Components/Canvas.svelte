@@ -1,28 +1,145 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-    import {CanvasEngine, PanTool, SelectTool, AnimationProject} from "@zindex/canvas-engine";
+    import {onMount, onDestroy, tick} from "svelte";
+    import type {AnimationProject, AnimationStateMeta, KeyframeSelection, AnimationDocument} from "../Core";
+    import type {CanvasEngine, State, Selection, } from "@zindex/canvas-engine";
 
-    export let project: AnimationProject;
-    export let theme: string;
+    import {
+        CurrentTool, CurrentTheme, CurrentTime,
+        CanvasEngineState, CurrentProject, CurrentDocument,
+        CurrentCanvasZoom,
+        notifyAnimationChanged,
+        notifyPropertiesChanged,
+        notifyStateChanged,
+        notifySelectionChanged,
+    } from "../Stores";
+
+    const {showRuler, showGuides, showGrid, highQuality} = CanvasEngineState;
+
+    export let hidden: boolean = false;
 
     let canvas: CanvasEngine;
 
-    $: if (canvas) canvas.setAttribute('theme', theme);
+    $: if (canvas) hidden ? canvas.stopRenderLoop() : canvas.startRenderLoop();
+    $: if (canvas) canvas.setAttribute('theme', $CurrentTheme);
+    $: if (canvas) canvas.tool = $CurrentTool;
+    $: if (canvas) canvas.showRuler = $showRuler;
+    $: if (canvas) canvas.highQuality = $highQuality;
+    $: if (canvas) canvas.project = $CurrentProject;
+    $: if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) canvas.invalidate();
+
 
     onMount(() => {
-        canvas.project = project;
-        canvas.tool = new SelectTool();
-        canvas.startRenderLoop();
-        canvas.setAttribute('theme', theme);
-        //console.log(canvas.themeProperties)
-    })
+        //canvas.preventSurfaceDisposal();
+        canvas.setAttribute('theme', $CurrentTheme);
+        canvas.highQuality = $highQuality;
+        canvas.showRuler = $showRuler;
+        // canvas.showGuides = $showGuides;
+        // canvas.showGrid = $showGrid;
+
+        canvas.tool = $CurrentTool;
+        //canvas.allowSurfaceDisposal();
+
+        canvas.project = $CurrentProject;
+    });
+
+    onDestroy(() => {
+        canvas.project = null;
+        canvas.dispose();
+    });
+
+    function beforeWindowUnload() {
+        if (canvas) {
+            // canvas.dispose();
+            // removing the canvas from dom
+            canvas.parentNode.removeChild(canvas);
+            canvas = null;
+        }
+    }
+
+    async function onZoomChanged(e: CustomEvent<number>) {
+        await tick();
+        $CurrentCanvasZoom = e.detail;
+    }
+
+    async function onPropertiesChanged() {
+        await tick();
+        notifyPropertiesChanged();
+    }
+
+    async function onSnapshotCreated(e: CustomEvent) {
+        await tick();
+        notifyStateChanged();
+    }
+
+    async function onSelectionChanged(e: CustomEvent<Selection<AnimationDocument>>) {
+        await tick();
+        notifySelectionChanged();
+    }
+
+    async function onKeyframeSelectionChanged(e: CustomEvent<KeyframeSelection>) {
+        await tick();
+        // TODO: update keyframe selection
+        console.log('update keyframe selection')
+    }
+
+    async function onKeyframeAdded(e: CustomEvent) {
+        await tick();
+        notifyAnimationChanged();
+    }
+
+    async function onDocumentStateChanged() {
+        await tick();
+        CurrentProject.forceUpdate();
+    }
+
+    async function onDocumentChanged(e: CustomEvent<AnimationDocument>) {
+        if ($CurrentDocument === e.detail) {
+            return;
+        }
+        await tick();
+        // TODO:
+    }
+
+    async function onDocumentAdded(e: CustomEvent<AnimationDocument>) {
+        await tick();
+        // TODO:
+    }
+
+    async function onDocumentRemoved(e: CustomEvent<{document: AnimationDocument, dispose: boolean}>) {
+        await tick();
+        // TODO:
+    }
 </script>
-<div class="canvas-wrapper">
-    <canvas-engine style="touch-action: none" bind:this={canvas} />
+<svelte:window on:beforeunload={beforeWindowUnload}/>
+<div class="canvas-wrapper" tabindex="0">
+    <canvas-engine
+            class:hidden={hidden} bind:this={canvas}
+
+            on:zoomChanged={onZoomChanged}
+            on:documentAdded={onDocumentAdded}
+            on:documentRemoved={onDocumentRemoved}
+            on:documentChanged={onDocumentChanged}
+            on:documentStateChanged={onDocumentStateChanged}
+            on:selectionChanged={onSelectionChanged}
+            on:propertyChanged={onPropertiesChanged}
+            on:snapshotCreated={onSnapshotCreated}
+
+            on:keyframeAdded={onKeyframeAdded}
+            on:keyframeSelectionChanged={onKeyframeSelectionChanged}
+    ></canvas-engine>
+    {#if hidden}
+        <slot />
+    {/if}
 </div>
 <style>
     .canvas-wrapper {
         box-sizing: border-box;
         overflow: hidden;
+    }
+    canvas-engine {
+        touch-action: none;
+    }
+    canvas-engine.hidden {
+        display: none;
     }
 </style>

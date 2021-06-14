@@ -1,18 +1,21 @@
 import {
-    MasterDocument,
     RectElement,
     RectShape,
     SolidBrush,
     Color,
     DefaultPen,
     Point,
-    DocumentAnimation, Rectangle, AnimatorSource, AnimationProject,
+    Size,
+    GroupElement,
 } from "@zindex/canvas-engine";
+
+import {DocumentAnimation, AnimatorSource, AnimationProject, AnimationDocument} from "./Core";
 
 const animators = new AnimatorSource();
 const project = new AnimationProject(animators);
 
-const doc = new MasterDocument(new Rectangle(0, 0,500, 800));
+const doc = new AnimationDocument(new Size(500, 800));
+doc.title = 'Test document 1';
 doc.animation = new DocumentAnimation(doc, 0, 10000);
 
 const rect = new RectElement(new RectShape(100, 100), doc);
@@ -44,7 +47,11 @@ a2.addKeyframeAtOffset(5000, new Point(400, 500));
 a2.addKeyframeAtOffset(9000, new Point(800, 700));
 doc.animation.addAnimation(rect2, "position", a2);
 
-doc.appendChild(rect2);
+const g1 = new GroupElement(doc);
+g1.title = 'Group 1';
+g1.appendChild(rect2);
+
+doc.appendChild(g1);
 
 project.addDocument(doc);
 

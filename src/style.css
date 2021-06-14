@@ -6,3 +6,9 @@ html, body {
     height: 100vh;
     touch-action: none;
 }
+
+
+/*sp-split-view[vertical] {*/
+/*    --spectrum-dragbar-gripper-height: 0;*/
+/*    --spectrum-dragbar-gripper-border-width-vertical: 0;*/
+/*}*/

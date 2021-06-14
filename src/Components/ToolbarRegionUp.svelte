@@ -1,11 +1,13 @@
 <script lang="ts">
     import SVGIcon from "./SVGIcon.svelte";
     import ToolbarSubTools from "./ToolbarSubTools.svelte";
+    import {CurrentTool} from "../Stores";
 
     type ToolbarButtonDef = {
         tool: string,
         icon: string,
         title: string,
+        shortcut?: string,
     };
 
     export let selected: string = undefined;
@@ -13,8 +15,14 @@
     export let buttons: (ToolbarButtonDef | ToolbarButtonDef[])[] = [];
 
     function selectTool(e: MouseEvent) {
-        const el = e.target as HTMLElement;
-        selected = el.getAttribute('data-tool-name');
+        CurrentTool.update((e.target as HTMLElement).getAttribute('data-tool-name'));
+    }
+
+    function toolLabel(tool: ToolbarButtonDef) {
+        if (tool.shortcut) {
+            return tool.title + ' (' + tool.shortcut + ')';
+        }
+        return tool.title;
     }
 </script>
 <sp-action-group vertical quiet emphasized>

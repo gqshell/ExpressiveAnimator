@@ -7,20 +7,21 @@
     "dev": "rollup -c -w",
     "start": "sirv public",
     "validate": "svelte-check",
-    "copy-skia": "cp ./node_modules/@zindex/skia-ts/bin/* ./public/skia/",
+    "copy-skia": "cp ./node_modules/@zindex/skia-js/dist/* ./public/skia/",
     "copy-engine": "cp ./node_modules/@zindex/canvas-engine/dist/* ./public/engine/"
   },
   "dependencies": {
+    "@adobe/focus-ring-polyfill": "^0.1.5",
     "@ctrl/tinycolor": "^3.4.0",
     "@spectrum-web-components/bundle": "^0.21.1",
     "@zindex/canvas-engine": "github:ExpressiveSuite/CanvasEngine",
     "@zindex/serialization": "github:zindex-software/serialization"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
-    "@tsconfig/svelte": "^1.0.0",
+    "@tsconfig/svelte": "^2.0.0",
     "cssnano": "^5.0.1",
     "postcss": "^8.2.14",
     "postcss-cli": "^8.3.1",
@@ -35,7 +36,7 @@
     "rollup-plugin-terser": "^7.0.0",
     "sirv-cli": "^1.0.0",
     "svelte": "^3.0.0",
-    "svelte-check": "^1.0.0",
+    "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"

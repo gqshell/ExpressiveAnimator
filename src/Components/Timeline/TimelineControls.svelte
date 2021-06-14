@@ -1,3 +1,6 @@
+<script lang="ts">
+    // import {TimelineStore} from "../../Stores";
+</script>
 <div class="timeline-controls">
     controls
 </div>

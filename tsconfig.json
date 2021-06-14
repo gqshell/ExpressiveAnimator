@@ -3,9 +3,9 @@
   "compilerOptions": {
     "lib": ["es2020", "dom"],
     "preserveSymlinks": true,
-    "types": ["svelte", "@zindex/canvas-engine", "@zindex/skia-ts", "@zindex/serialization"],
+    "types": ["svelte", "@zindex/canvas-engine", "@zindex/skia-js", "@zindex/serialization"],
     "experimentalDecorators": true,
-    "module": "ES2020"
+    "module": "ES2020",
   },
   "include": ["src/*", "src/**/*"],
   "exclude": [ "public/*", "node_modules/*"]

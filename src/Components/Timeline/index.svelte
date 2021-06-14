@@ -2,13 +2,10 @@
     import TimelineControls from "./TimelineControls.svelte";
     import Timeline from "./Timeline.svelte";
     import TimelineRuler from "./TimelineRuler.svelte";
-    import type {AnimationProject} from "@zindex/canvas-engine";
 
-    export let project: AnimationProject;
+    import {CurrentTime, CurrentMaxTime} from "../../Stores";
 
     export let zoom: number = 1;
-    export let playOffset: number = 0;
-    export let playOffsetMax: number = 3000;
 
     let scrollTop: number = 0;
     let scrollLeft: number = 0;
@@ -17,21 +14,21 @@
 
     // TODO: use zoom and others
     $: style = `
-        --timeline-play-offset: ${playOffset};
+        --timeline-play-offset: ${$CurrentTime};
         --timeline-scroll-top: ${scrollTop}px;
-        --timeline-max-offset: ${project.document?.animation?.duration || 0};
+        --timeline-max-offset: ${$CurrentMaxTime};
         --timeline-ms-unit: ${unit}px;
     `;
 </script>
 <div class="timeline-wrapper" style="{style}">
     <div class="timeline-controls-wrapper">
-        <TimelineControls bind:playOffset={playOffset} bind:playOffsetMax={playOffsetMax} />
+        <TimelineControls />
         <TimelineRuler bind:zoom left={scrollLeft} />
     </div>
-    <Timeline bind:project={project}
-              bind:scrollTop bind:scrollLeft
-              bind:playOffset={playOffset}
-              bind:playOffsetMax={playOffsetMax} />
+    <Timeline bind:scrollTop bind:scrollLeft />
+    <div class="timeline-bottom-bar">
+        bar
+    </div>
 </div>
 <style global>
     .timeline-wrapper {
@@ -50,5 +47,11 @@
         min-height: 28px;
         display: flex;
         flex-direction: row;
+    }
+
+    .timeline-bottom-bar {
+        box-sizing: border-box;
+        border-top: 1px solid var(--spectrum-global-color-gray-300);
+        height: 21px;
     }
 </style>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'expressive-animator-20210601-4';
+const CACHE_NAME = 'expressive-animator-20210614-1';
 const CACHE_ALLOW = [CACHE_NAME];
 
 const urlsToCache = [
@@ -44,7 +44,7 @@ self.addEventListener('fetch', function(event) {
             .then(function(response) {
                 // Cache hit - return response
                 if (response) {
-                    console.log('cache hit');
+                    // console.log('cache hit');
                     return response;
                 }
 

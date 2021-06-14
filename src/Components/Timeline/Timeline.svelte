@@ -1,50 +1,18 @@
 <script lang="ts">
     import TimelineItem from "./TimelineItem.svelte";
-    import type {AnimationProject} from "@zindex/canvas-engine";
     import Keyframe from "./Keyframe.svelte";
     import Easing from "./Easing.svelte";
-    import LocalMarker from "./LocalMarker.svelte";
+    // import LocalMarker from "./LocalMarker.svelte";
     import Element from "./Element.svelte";
     import Property from "./Property.svelte";
-    import SelectionRect from "./SelectionRect.svelte";
+    // import SelectionRect from "./SelectionRect.svelte";
+    import {CurrentDocumentAnimation, CurrentProject} from "../../Stores";
+    import type {DocumentAnimation, AnimationProject} from "../../Core";
 
-    export let project: AnimationProject;
-
-    export let playOffset: number;
-    export let playOffsetMax: number;
     export let scrollTop: number = 0;
     export let scrollLeft: number = 0;
 
-    function mapAnimations(project: AnimationProject) {
-        const document = project.document;
-        const documentAnimation = document.animation;
-        if (!documentAnimation) {
-            return [];
-        }
-        const animators = project.animatorSource;
-
-        const list = [];
-
-        let element, properties, animation, property, animator;
-        for ([element, properties] of documentAnimation.getAnimatedElements()) {
-            const animations = [];
-
-            for ([property, animation] of Object.entries(properties)) {
-                animator = animators.getAnimator(element, property);
-                animations.push({
-                    title: animator.title,
-                    property,
-                    animation,
-                })
-            }
-
-            list.push({element, animations});
-        }
-
-        return list;
-    }
-
-    $: animatedElements = mapAnimations(project);
+    $: animatedElements = mapAnimations($CurrentProject, $CurrentDocumentAnimation);
 
     /* Scroll sync Y */
     let leftPane: HTMLElement;
@@ -69,6 +37,33 @@
         }
         isScrollingTop = false;
     };
+
+    function mapAnimations(project: AnimationProject, documentAnimation: DocumentAnimation | null) {
+        if (!project || !documentAnimation) {
+            return [];
+        }
+        const animators = project.animatorSource;
+
+        const list = [];
+
+        let element, properties, animation, property, animator;
+        for ([element, properties] of documentAnimation.getAnimatedElements()) {
+            const animations = [];
+
+            for ([property, animation] of Object.entries(properties)) {
+                animator = animators.getAnimator(element, property);
+                animations.push({
+                    title: animator.title,
+                    property,
+                    animation,
+                })
+            }
+
+            list.push({element, animations});
+        }
+
+        return list;
+    }
 </script>
 <div class="timeline">
     <div bind:this={leftPane} on:scroll={onScroll} class="timeline-elements scroll scroll-invisible scroll-no-padding" hidden-x>

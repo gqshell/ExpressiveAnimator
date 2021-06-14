@@ -1,4 +1,6 @@
 <script lang="ts">
+    // import {TimelineStore} from "../../Stores";
+
     export let zoom: number = 1;
     export let left: number = 0;
 

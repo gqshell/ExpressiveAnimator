@@ -1,75 +1,52 @@
-<script context="module">
-    const ToolbarRegionUpButtons = [
-        {
-            tool: 'pan',
-            icon: 'expr:pan-tool',
-            title: 'Pan Tool'
-        },
-        {
-            tool: 'selection',
-            icon: 'expr:selection-tool',
-            title: 'Selection Tool'
-        },
-        [
-            {
-                tool: 'rectangle-tool',
-                icon: 'expr:rectangle-tool',
-                title: 'Rectangle Tool'
-            },
-            {
-                tool: 'polygon-tool',
-                icon: 'expr:polygon-tool',
-                title: 'Polygon Tool'
-            },
-            {
-                tool: 'star-tool',
-                icon: 'expr:star-tool',
-                title: 'Star Tool'
-            },
-            {
-                tool: 'line-tool',
-                icon: 'expr:line-tool',
-                title: 'Line Tool'
-            },
-        ]
-    ];
-</script>
 <script lang="ts">
-    import {TimelinePlayOffset} from "./Stores";
-    import ToolbarRegionUp from "./Components/ToolbarRegionUp.svelte";
-    import Timeline from "./Components/Timeline/index.svelte";
-    import {project} from "./doc1";
+    import ToolsComponent from "./Components/Tools";
+    import CanvasComponent from "./Components/Canvas.svelte";
+    import TimelineComponent from "./Components/Timeline";
+    import MenuComponent from "./Components/Menu.svelte";
+    import ProjectStateComponent from "./Components/MenuBar/ProjectState.svelte";
+    import AlignSelectionComponent from "./Components/MenuBar/AlignSelection.svelte";
+    import TreeComponent from "./Components/Tree";
+    import PropertiesComponent from "./Components/Properties";
 
-    import {CanvasStateTool} from "./Stores";
-    import Canvas from "./Components/Canvas.svelte";
+    import {NumberFieldControl} from "./Controls";
 
+    import {CurrentTheme, CurrentProject, CurrentTime, CurrentMaxTime} from "./Stores";
 
-    let themeLight = false;
+    let hidden = false;
 
 </script>
 <sp-icons-medium></sp-icons-medium>
-<sp-theme scale="medium" color={themeLight ? 'light' : 'dark'} class="app">
-    <div style="grid-area: menubar">
-        {$CanvasStateTool}
+<sp-theme scale="medium" color={$CurrentTheme} class="app">
+    <div class="logo">
+        <MenuComponent />
+    </div>
+    <div class="menubar">
+        <ProjectStateComponent />
+        <div>
+            {$CurrentTime}
+            <NumberFieldControl quiet hide-stepper style="width: 64px" bind:value={$CurrentTime} min={0} max={100000} step={0.01} />
+        </div>
+        <div>
+            <sp-button size="s" on:click={CurrentTheme.toggle}>Change theme</sp-button>
+            <sp-button size="s" on:click={() => hidden = !hidden}>Toggle visibility</sp-button>
+        </div>
+        <AlignSelectionComponent />
     </div>
     <div class="toolbar">
-        <ToolbarRegionUp bind:selected={$CanvasStateTool} buttons={ToolbarRegionUpButtons} />
+        <ToolsComponent disabled={$CurrentProject == null} />
         <div>down</div>
     </div>
-    <sp-split-view style="grid-area: sidebar" resizable vertical primary-min="380" primary-size="75%">
-        <div class="scroll" hidden-x>
-            <sp-button on:click={() => themeLight = !themeLight}>Change theme</sp-button>
-        </div>
-        <div class="scroll" hidden-x>
-            tree
-        </div>
+    <sp-split-view class="sidebar" resizable vertical primary-min="380" primary-size="75%">
+        <PropertiesComponent />
+        <TreeComponent />
     </sp-split-view>
-    <sp-split-view class="content" resizable vertical
+    <sp-split-view
+            class="content" resizable vertical
             primary-size="80%"
             secondary-min="0"
             secondary-max="600">
-        <Canvas project={project} theme="{themeLight ? 'light' : 'dark'}"/>
-        <Timeline project={project} playOffset={$TimelinePlayOffset} />
+        <CanvasComponent hidden={hidden}>Now canvas is hidden and this is the fallback content</CanvasComponent>
+        <TimelineComponent />
     </sp-split-view>
 </sp-theme>
 <style>
@@ -87,7 +64,7 @@
         height: 100%;
 
         grid-template-areas:
-                'menubar menubar sidebar'
+                'logo menubar menubar'
                 'toolbar content sidebar'
         ;
         grid-template-rows: 56px auto;
@@ -102,12 +79,38 @@
         box-sizing: border-box;
     }
 
+    .logo {
+        grid-area: logo;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+    }
+
+    .menubar {
+        grid-area: menubar;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+    }
+
     .toolbar {
         grid-area: toolbar;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        user-select: none;
+    }
+
+    .sidebar {
+        grid-area: sidebar;
+        user-select: none;
+        box-sizing: border-box;
+        border-top: var(--spectrum-global-dimension-static-size-25) solid var(--spectrum-global-color-gray-300);
     }
 
     .content {

@@ -1,6 +1,6 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@zindex/skia-ts')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@zindex/skia-ts'], factory) :
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@zindex/skia-js')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@zindex/skia-js'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.Zindex = global.Zindex || {}, global.Zindex.CanvasEngine = {}), global.SkiaWasmInit));
 }(this, (function (exports, SkiaWasmInit) { 'use strict';
 
@@ -54,57 +54,6 @@
             }
             return changed;
         }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const EPSILON = 0.00001;
-    function round(value) {
-        return Number.isInteger(value) ? value : Math.round(value * 100) / 100;
-    }
-    function clamp(value, min = 0, max = 1) {
-        return value <= min ? min : (value >= max ? max : value);
-    }
-    function isCloseTo(a, b) {
-        return Math.abs(a - b) <= EPSILON;
-    }
-    function numberToString(value) {
-        return Number.isInteger(value) ? value.toString() : value.toFixed(2);
-    }
-    function isValidNumber(value) {
-        return Number.isFinite(value) && !Number.isNaN(value);
-    }
-    function parseNumber(value, fallback = 0) {
-        const number = parseFloat(value);
-        return isValidNumber(number) ? number : fallback;
-    }
-    const NUMBER_REGEX = /-?(?:\d\.?\d*[Ee][+\-]?\d+|(?:\d+\.\d*|\d*\.\d+)|\d+)/gm;
-    function parseNumberList(value) {
-        const list = [];
-        let match;
-        while (match = NUMBER_REGEX.exec(value)) {
-            const number = parseFloat(match[0]);
-            if (isValidNumber(number)) {
-                list.push(number);
-            }
-        }
-        return list;
-    }
-    function numberListToString(value, separator = ' ') {
-        return value.map(numberToString).join(separator);
     }
 
     /**
@@ -617,6 +566,77 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    async function readBytes(stream) {
+        const reader = stream.getReader();
+        let bytes = null;
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+                if (bytes === null) {
+                    bytes = new Uint8Array(0);
+                }
+                return bytes;
+            }
+            if (bytes === null) {
+                bytes = new Uint8Array(value);
+                continue;
+            }
+            const n = new Uint8Array(bytes.length + value.byteLength);
+            n.set(bytes);
+            n.set(value, bytes.length);
+            bytes = n;
+        }
+    }
+    function toStream(data) {
+        return new ReadableStream({
+            start(controller) {
+                controller.enqueue(data);
+                controller.close();
+            }
+        });
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    async function compressOrDecompress(stream, compress, algorithm) {
+        const transition = compress ? new CompressionStream(algorithm) : new DecompressionStream(algorithm);
+        return readBytes(stream.pipeThrough(transition));
+    }
+    async function compress(stream, algorithm = 'deflate') {
+        return compressOrDecompress(stream, true, algorithm);
+    }
+    async function decompress(stream, algorithm = 'deflate') {
+        return compressOrDecompress(stream, false, algorithm);
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     exports.Cursor = void 0;
     (function (Cursor) {
         Cursor["Bucket"] = "bucket";
@@ -637,6 +657,8 @@
         Cursor["PointerRemoveAlt"] = "pointer-remove-alt";
         Cursor["PointerSelectable"] = "pointer-selectable";
         Cursor["PointerSelectableAlt"] = "pointer-selectable-alt";
+        Cursor["PointerResize"] = "pointer-resize";
+        Cursor["PointerResizeAlt"] = "pointer-resize-alt";
         Cursor["NotAllowed"] = "not-allowed";
         Cursor["Pen"] = "pen";
         Cursor["PenAdd"] = "pen-add";
@@ -655,115 +677,6 @@
         Cursor["ZoomIn"] = "zoom-in";
         Cursor["ZoomOut"] = "zoom-out";
     })(exports.Cursor || (exports.Cursor = {}));
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    exports.Unit = void 0;
-    (function (Unit) {
-        Unit["PX"] = "px";
-        Unit["PT"] = "pt";
-        Unit["PC"] = "pc";
-        Unit["CM"] = "cm";
-        Unit["MM"] = "mm";
-        Unit["IN"] = "in";
-    })(exports.Unit || (exports.Unit = {}));
-    const DPI = 96.0;
-    const FROM_MAP = {
-        [exports.Unit.PT](value) {
-            return value * DPI / 72;
-        },
-        [exports.Unit.PC](value) {
-            return value * 15;
-        },
-        [exports.Unit.CM](value) {
-            return value * DPI / 2.54;
-        },
-        [exports.Unit.MM](value) {
-            return value * DPI / 25.4;
-        },
-        [exports.Unit.IN](value) {
-            return value * DPI;
-        },
-    };
-    const TO_MAP = {
-        [exports.Unit.PT](value) {
-            return value * 72 / DPI;
-        },
-        [exports.Unit.PC](value) {
-            return value / 15;
-        },
-        [exports.Unit.CM](value) {
-            return value * 2.54 / DPI;
-        },
-        [exports.Unit.MM](value) {
-            return value * 25.4 / DPI;
-        },
-        [exports.Unit.IN](value) {
-            return value / DPI;
-        },
-    };
-    function convertUnit(value, from, to) {
-        if (from !== to) {
-            if (from !== exports.Unit.PX) {
-                value = FROM_MAP[from](value);
-            }
-            if (to !== exports.Unit.PX) {
-                value = TO_MAP[to](value);
-            }
-        }
-        return value;
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const RADIANS = Math.PI / 180;
-    const DEGREES = 180 / Math.PI;
-    function greatestCommonDivisor(a, b) {
-        // https://en.wikipedia.org/wiki/Euclidean_algorithm#Implementations
-        let t;
-        while (b) {
-            t = b;
-            b = a % b;
-            a = t;
-        }
-        return a || 1;
-    }
-    function leastCommonMultiple(a, b) {
-        // https://en.wikipedia.org/wiki/Least_common_multiple#Using_the_greatest_common_divisor
-        return Math.abs((a * b) / greatestCommonDivisor(a, b));
-    }
-    function getRangePercent(value, min, max) {
-        if (min === max) {
-            return 1;
-        }
-        return (value - min) / (max - min);
-    }
 
     /*
      * Copyright 2021 Zindex Software
@@ -860,6 +773,123 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    class NativeReader {
+        constructor(map) {
+            this.map = map;
+        }
+        getJsonFile(name) {
+            return JSON.parse((new TextDecoder()).decode(this.map.get(name)));
+        }
+        getFile(name) {
+            return this.map.get(name);
+        }
+        getManifest() {
+            return this.getJsonFile('manifest.json');
+        }
+        getDocument(id) {
+            return this.getJsonFile('documents/' + id);
+        }
+        dispose() {
+            this.map.clear();
+        }
+        static async fromStream(stream) {
+            const data = await readBytes(stream);
+            const view = new DataView(data.buffer);
+            if (view.getInt32(0) !== 0x65377865) {
+                throw new Error('Invalid file format');
+            }
+            const dictLength = view.getInt32(8);
+            const dictView = new DataView(data.buffer, 16, dictLength);
+            const offset = 16 + dictLength;
+            const dict = JSON.parse(await (new Blob([await decompress(toStream(dictView))], { type: 'application/json' })).text());
+            const map = new Map();
+            for (const [name, info] of Object.entries(dict)) {
+                const fileData = await decompress(toStream(new DataView(data.buffer, offset + info.offset, info.length)));
+                map.set(name, fileData);
+            }
+            return new NativeReader(map);
+        }
+    }
+    class NativeWriter {
+        constructor() {
+            this._files = new Map();
+            this._offset = 0;
+            this._structure = {};
+            this._close = false;
+        }
+        async addFile(name, blob) {
+            if (this._close) {
+                throw new Error('This object is closed');
+            }
+            const bytes = await compress(blob.stream());
+            this._structure[name] = {
+                offset: this._offset,
+                length: bytes.length
+            };
+            this._files.set(name, bytes);
+            this._offset += bytes.length;
+        }
+        dispose() {
+            this._files.clear();
+        }
+        async addJsonFile(name, data) {
+            return this.addFile(name, new Blob([JSON.stringify(data)], { type: 'application/json' }));
+        }
+        async addImage(name, blob) {
+            return this.addFile('images/' + name, blob);
+        }
+        async addFont(name, blob) {
+            return this.addFile('fonts/' + name, blob);
+        }
+        async addDocument(document) {
+            return this.addJsonFile('documents/' + document.id, document);
+        }
+        async addManifest(manifest) {
+            return await this.addJsonFile('manifest.json', manifest);
+        }
+        async toStream() {
+            if (this._close) {
+                throw new Error('This object is closed');
+            }
+            this._close = true;
+            const structure = await compress((new Blob([JSON.stringify(this._structure)], { type: "application/json" })).stream());
+            const offset = this._offset;
+            const files = this._files;
+            return new ReadableStream({
+                start(controller) {
+                    const view = new DataView(new ArrayBuffer(16));
+                    view.setInt32(0, 0x65377865); // ex7e
+                    view.setInt32(4, 0x00000001); // version 1 + 3 bytes reserved
+                    view.setInt32(8, structure.length); // file dictionary length
+                    view.setInt32(12, offset); // file data
+                    controller.enqueue(view.buffer);
+                    controller.enqueue(structure);
+                },
+                pull(controller) {
+                    for (let [, data] of files) {
+                        controller.enqueue(data);
+                    }
+                    controller.close();
+                }
+            });
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     exports.Position = void 0;
     (function (Position) {
         Position[Position["None"] = 0] = "None";
@@ -883,153 +913,40 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class BaseTool {
-        constructor() {
-            this.data = null;
-            this.mouseDownEvent = null;
-            this.panPivot = null;
-            this.isInvalidated = true;
-            this.snapshotImage = null;
-            this.drawDocumentOnly = true;
-            this.allowSnapshotCapture = false;
-            this.keyboardStatus = null;
-            this.defaultCanvasCursor = exports.Cursor.Default;
-        }
-        activate(engine, data) {
-            this.keyboardStatus = engine.keyboardStatus;
-            this.data = data;
-            this.invalidate();
-            // set default cursor
-            engine.cursor = this.defaultCanvasCursor;
-            // update theme
-            this.updateTheme(engine);
-        }
-        deactivate(engine) {
-            this.keyboardStatus = null;
-            this.data = null;
-            this.invalidate();
-            // clear cursor
-            engine.cursor = exports.Cursor.Default;
-        }
-        updateTheme(engine) {
-            // do nothing
-        }
-        invalidate() {
-            this.isInvalidated = true;
-            this.allowSnapshotCapture = false;
-            if (this.snapshotImage !== null) {
-                this.snapshotImage.delete();
-                this.snapshotImage = null;
+    const EPSILON = 0.00001;
+    function round(value) {
+        return Number.isInteger(value) ? value : Math.round(value * 100) / 100;
+    }
+    function clamp(value, min = 0, max = 1) {
+        return value <= min ? min : (value >= max ? max : value);
+    }
+    function isCloseTo(a, b, epsilon = EPSILON) {
+        return Math.abs(a - b) <= EPSILON;
+    }
+    function numberToString(value) {
+        return Number.isInteger(value) ? value.toString() : value.toFixed(2);
+    }
+    function isValidNumber(value) {
+        return Number.isFinite(value) && !Number.isNaN(value);
+    }
+    function parseNumber(value, fallback = 0) {
+        const number = parseFloat(value);
+        return isValidNumber(number) ? number : fallback;
+    }
+    const NUMBER_REGEX = /-?(?:\d\.?\d*[Ee][+\-]?\d+|(?:\d+\.\d*|\d*\.\d+)|\d+)/gm;
+    function parseNumberList(value) {
+        const list = [];
+        let match;
+        while (match = NUMBER_REGEX.exec(value)) {
+            const number = parseFloat(match[0]);
+            if (isValidNumber(number)) {
+                list.push(number);
             }
         }
-        invalidateToolDrawing() {
-            this.isInvalidated = true;
-        }
-        render(engine, timestamp) {
-            if (!this.isInvalidated) {
-                return;
-            }
-            if (this.drawDocumentOnly) {
-                this.drawDocument(engine);
-            }
-            else {
-                this.drawSnapshotImage(engine);
-            }
-            this.isInvalidated = false;
-        }
-        onMouseDown(engine, event) {
-            this.mouseDownEvent = event;
-            if (event.button === exports.MouseButton.Left) {
-                this.onMouseLeftButtonDown(engine, event);
-            }
-            else if (event.button === exports.MouseButton.Wheel) {
-                this.onMouseWheelButtonDown(engine, event);
-            }
-        }
-        onMouseUp(engine, event) {
-            if (event.button === exports.MouseButton.Left) {
-                this.onMouseLeftButtonUp(engine, event);
-            }
-            else if (event.button === exports.MouseButton.Wheel) {
-                this.onMouseWheelButtonUp(engine, event);
-            }
-            else if (event.button === exports.MouseButton.Right) ;
-            this.mouseDownEvent = null;
-            this.panPivot = null;
-        }
-        onMouseMove(engine, event) {
-            if (this.mouseDownEvent) {
-                if (this.mouseDownEvent.button === exports.MouseButton.Left) {
-                    this.onMouseLeftButtonMove(engine, event);
-                }
-                else if (this.mouseDownEvent.button === exports.MouseButton.Wheel) {
-                    this.onMouseWheelButtonMove(engine, event);
-                }
-            }
-            else {
-                this.onMouseHover(engine, event);
-            }
-        }
-        onMouseHover(engine, event) {
-            // nothing to do here, override
-        }
-        onMouseWheelButtonDown(engine, event) {
-            this.panPivot = event.canvasPosition;
-            engine.cursor = exports.Cursor.HandHold;
-        }
-        onMouseWheelButtonUp(engine, event) {
-            this.doPan(engine, event);
-            engine.cursor = this.defaultCanvasCursor;
-        }
-        onMouseWheelButtonMove(engine, event) {
-            this.doPan(engine, event);
-            this.panPivot = event.canvasPosition;
-        }
-        doPan(engine, event, pivot = this.panPivot) {
-            engine.viewBox.panBy(event.canvasPosition.sub(pivot));
-        }
-        drawSnapshotImage(engine, flush = true) {
-            const context = engine.context;
-            if (this.snapshotImage !== null) {
-                // Draw bitmap cache at scale 1:1
-                context.save();
-                context.matrix = context.matrix.toIdentity();
-                context.drawImage(this.snapshotImage);
-                context.restore();
-                if (flush) {
-                    context.flush();
-                }
-                return;
-            }
-            this.drawDocument(engine, false);
-            if (this.allowSnapshotCapture) {
-                this.snapshotImage = engine.makeImageSnapshot();
-            }
-            this.allowSnapshotCapture = true;
-            if (flush) {
-                context.flush();
-            }
-        }
-        drawDocument(engine, flush = true) {
-            const { context, document } = engine;
-            if (document !== null) {
-                document.render(engine);
-            }
-            if (flush) {
-                context.flush();
-            }
-        }
-        decorateVectorElement(engine, element) {
-            const global = engine.globalElementProperties;
-            element.fill = global.fill.clone();
-            element.stroke = global.stroke.clone();
-            element.fillRule = global.fillRule;
-            element.paintOrder = global.paintOrder;
-            element.blend = global.blend;
-            element.opacity = global.opacity;
-            // We do not isolate vector elements
-            // element.isolate = global.isolate;
-        }
+        return list;
+    }
+    function numberListToString(value, separator = ' ') {
+        return value.map(numberToString).join(separator);
     }
 
     /*
@@ -1047,29 +964,158 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class PanTool extends BaseTool {
-        constructor() {
-            super(...arguments);
-            this.defaultCanvasCursor = exports.Cursor.Hand;
+    const RADIANS = Math.PI / 180;
+    const DEGREES = 180 / Math.PI;
+    function greatestCommonDivisor(a, b) {
+        // https://en.wikipedia.org/wiki/Euclidean_algorithm#Implementations
+        let t;
+        while (b) {
+            t = b;
+            b = a % b;
+            a = t;
         }
-        get name() {
-            return "pan";
+        return a || 1;
+    }
+    function leastCommonMultiple(a, b) {
+        // https://en.wikipedia.org/wiki/Least_common_multiple#Using_the_greatest_common_divisor
+        return Math.abs((a * b) / greatestCommonDivisor(a, b));
+    }
+    function getRangePercent(value, min, max) {
+        if (min === max) {
+            return 1;
         }
-        onMouseLeftButtonDown(engine, event) {
-            this.panPivot = event.canvasPosition;
-            engine.cursor = exports.Cursor.HandHold;
+        return (value - min) / (max - min);
+    }
+    function invertPosition(p) {
+        if (p === exports.Position.Start) {
+            return exports.Position.End;
         }
-        onMouseLeftButtonMove(engine, event) {
-            if (!this.panPivot) {
-                return;
+        if (p === exports.Position.End) {
+            return exports.Position.Start;
+        }
+        return p;
+    }
+    function getProportionalScaleUsingPositionAxis(x, y, axis) {
+        if (axis.x === exports.Position.Middle) {
+            return y;
+        }
+        if (axis.y === exports.Position.Middle) {
+            return x;
+        }
+        if (x < 0) {
+            if (y < 0) {
+                return -Math.sqrt(x * y);
             }
-            this.doPan(engine, event);
-            this.panPivot = event.canvasPosition;
+            return -x > y ? x : y;
         }
-        onMouseLeftButtonUp(engine, event) {
-            this.doPan(engine, event);
-            engine.cursor = exports.Cursor.Hand;
+        else if (y < 0) {
+            return -y > x ? y : x;
         }
+        return Math.sqrt(x * y);
+    }
+    function getProportionalScaleFactor(x, y) {
+        if (x === y) {
+            return x;
+        }
+        if (Math.abs(x) === 1) {
+            return y;
+        }
+        if (Math.abs(y) === 1) {
+            return x;
+        }
+        return Math.max(x, y);
+    }
+    function getAxisScale(position, current) {
+        if (isCloseTo(position, current)) {
+            // almost the same position
+            return 1;
+        }
+        // prevent zero and infinity
+        if (!isCloseTo(position, 0) && !isCloseTo(current, 0)) {
+            return position / current;
+        }
+        // flip
+        return position > current ? 1 : -1;
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    exports.Unit = void 0;
+    (function (Unit) {
+        Unit["PX"] = "px";
+        Unit["PT"] = "pt";
+        Unit["PC"] = "pc";
+        Unit["CM"] = "cm";
+        Unit["MM"] = "mm";
+        Unit["IN"] = "in";
+    })(exports.Unit || (exports.Unit = {}));
+    const DPI = 96.0;
+    exports.UnitValue = void 0;
+    (function (UnitValue) {
+        UnitValue[UnitValue["PX"] = 1] = "PX";
+        UnitValue[UnitValue["PT"] = 72 / DPI] = "PT";
+        UnitValue[UnitValue["PC"] = 15] = "PC";
+        UnitValue[UnitValue["CM"] = 2.54 / DPI] = "CM";
+        UnitValue[UnitValue["MM"] = 25.4 / DPI] = "MM";
+        UnitValue[UnitValue["IN"] = 1 / DPI] = "IN";
+    })(exports.UnitValue || (exports.UnitValue = {}));
+    const FROM_MAP = {
+        [exports.Unit.PT](value) {
+            return value * DPI / 72;
+        },
+        [exports.Unit.PC](value) {
+            return value * 15;
+        },
+        [exports.Unit.CM](value) {
+            return value * DPI / 2.54;
+        },
+        [exports.Unit.MM](value) {
+            return value * DPI / 25.4;
+        },
+        [exports.Unit.IN](value) {
+            return value * DPI;
+        },
+    };
+    const TO_MAP = {
+        [exports.Unit.PT](value) {
+            return value * 72 / DPI;
+        },
+        [exports.Unit.PC](value) {
+            return value / 15;
+        },
+        [exports.Unit.CM](value) {
+            return value * 2.54 / DPI;
+        },
+        [exports.Unit.MM](value) {
+            return value * 25.4 / DPI;
+        },
+        [exports.Unit.IN](value) {
+            return value / DPI;
+        },
+    };
+    function convertUnit(value, from, to) {
+        if (from !== to) {
+            if (from !== exports.Unit.PX) {
+                value = FROM_MAP[from](value);
+            }
+            if (to !== exports.Unit.PX) {
+                value = TO_MAP[to](value);
+            }
+        }
+        return value;
     }
 
     /*
@@ -1199,7 +1245,7 @@
             if (percent >= 1) {
                 return color;
             }
-            return new Color(interpolateColorComponent$1(this.r, color.r, percent), interpolateColorComponent$1(this.g, color.g, percent), interpolateColorComponent$1(this.b, color.b, percent), interpolateAlphaComponent$1(this.a, color.a, percent));
+            return new Color(interpolateColorComponent(this.r, color.r, percent), interpolateColorComponent(this.g, color.g, percent), interpolateColorComponent(this.b, color.b, percent), interpolateAlphaComponent(this.a, color.a, percent));
         }
         toArray() {
             return [this.r, this.g, this.b, this.a];
@@ -1227,10 +1273,10 @@
     Color.red = new Color(255, 0, 0);
     Color.green = new Color(0, 255, 0);
     Color.blue = new Color(0, 0, 255);
-    function interpolateColorComponent$1(from, to, percent = 0.5) {
+    function interpolateColorComponent(from, to, percent = 0.5) {
         return clamp(Math.round(from + percent * (to - from)), 0, 255);
     }
-    function interpolateAlphaComponent$1(from, to, percent = 0.5) {
+    function interpolateAlphaComponent(from, to, percent = 0.5) {
         if (from == null) {
             from = 1;
         }
@@ -1671,6 +1717,22 @@
         get angle() {
             return this.direction * DEGREES;
         }
+        getDirectionTo(point) {
+            return Math.atan2(this.y - point.y, this.x - point.x);
+        }
+        getAngleTo(point) {
+            return this.getDirectionTo(point) * DEGREES;
+        }
+        getPositiveAngleTo(point) {
+            const angle = this.getDirectionTo(point) * DEGREES;
+            if (angle < 0) {
+                return angle + 360;
+            }
+            return angle;
+        }
+        getMiddle(other) {
+            return new Point((this.x + other.x) / 2, (this.y + other.y) / 2);
+        }
         get length() {
             return Math.sqrt(this.x * this.x + this.y * this.y);
         }
@@ -1701,11 +1763,29 @@
         sub(p) {
             return new Point(this.x - p.x, this.y - p.y);
         }
+        mul(p) {
+            return new Point(this.x * p.x, this.y * p.y);
+        }
+        div(p) {
+            return new Point(this.x / p.x, this.y / p.y);
+        }
         scale(s) {
             return new Point(s * this.x, s * this.y);
         }
         offset(x, y) {
             return new Point(this.x + x, this.y + y);
+        }
+        mirror(origin, sx = 1, sy = sx) {
+            if (sx == null) {
+                if (sy == null) {
+                    return this;
+                }
+                return new Point(this.x, origin.y * 2 - this.y * sy);
+            }
+            else if (sy == null) {
+                return new Point(origin.x * 2 - this.x * sx, this.y);
+            }
+            return new Point(origin.x * 2 - this.x * sx, origin.y * 2 - this.y * sy);
         }
         /**
          * Dot product
@@ -1743,7 +1823,8 @@
             return this.x === other.x && this.y === other.y;
         }
         clone() {
-            return new Point(this.x, this.y);
+            // immutable, we can reuse the same instance
+            return this;
         }
         static fromObject(o) {
             return new Point(o.x, o.y);
@@ -1752,16 +1833,21 @@
          * Creates a vector from an angle
          * @param angle In degrees
          * @param length
+         * @param delta
          */
-        static fromAngle(angle, length = 1) {
-            return this.fromDirection(angle * RADIANS, length);
+        static fromAngle(angle, length = 1, delta) {
+            return this.fromDirection(angle * RADIANS, length, delta);
         }
         /**
          * Creates a vector from a direction
          * @param radians angle in radians
          * @param length
+         * @param delta
          */
-        static fromDirection(radians, length = 1) {
+        static fromDirection(radians, length = 1, delta) {
+            if (delta) {
+                return new Point(delta.x + length * Math.cos(radians), delta.y + length * Math.sin(radians));
+            }
             return new Point(length * Math.cos(radians), length * Math.sin(radians));
         }
         /**
@@ -2326,7 +2412,9 @@
             this.right = x + width;
         }
         clone() {
-            return new Rectangle(this.x, this.y, this.width, this.height);
+            // this is immutable
+            return this;
+            // return new Rectangle(this.x, this.y, this.width, this.height);
         }
         equals(other) {
             return (this.x === other.x &&
@@ -2334,7 +2422,11 @@
                 this.width === other.width &&
                 this.height === other.height);
         }
-        getPointFromPosition(x, y, ref) {
+        getPointAtPosition(x, y, invert, ref) {
+            if (invert) {
+                x = invertPosition(x);
+                y = invertPosition(y);
+            }
             // let's reuse cached points where available
             switch (y) {
                 case exports.Position.Start:
@@ -2478,6 +2570,33 @@
             }
             return Rectangle.fromPoints(matrix.transformPoint(this.topLeft, shifted), matrix.transformPoint(this.topRight, shifted), matrix.transformPoint(this.bottomRight, shifted), matrix.transformPoint(this.bottomLeft, shifted));
         }
+        *horizontal(center) {
+            yield this.left;
+            if (center) {
+                yield this.middleX;
+            }
+            yield this.right;
+        }
+        *vertical(center) {
+            yield this.top;
+            if (center) {
+                yield this.middleY;
+            }
+            yield this.bottom;
+        }
+        *sidePoints(center) {
+            yield this.topLeft;
+            yield this.topMiddle;
+            yield this.topRight;
+            yield this.middleRight;
+            yield this.bottomRight;
+            yield this.bottomMiddle;
+            yield this.bottomLeft;
+            yield this.middleLeft;
+            if (center) {
+                yield this.middle;
+            }
+        }
         static fromLTRBObject(o) {
             if (!o) {
                 return Rectangle.ZERO;
@@ -2607,7 +2726,7 @@
             return new EllipseShape(this.width, this.height);
         }
         preparePath(path) {
-            path.addEllipse(0, 0, this.width / 2, this.height / 2);
+            path.addEllipse(this.width / 2, this.height / 2, this.width / 2, this.height / 2);
         }
     }
 
@@ -2704,6 +2823,9 @@
         }
         preparePath(path) {
             path.addPath(this.path);
+        }
+        contains(point, matrix) {
+            return this.path.contains(point.x, point.y, matrix);
         }
         get path() {
             if (!this._path) {
@@ -2962,6 +3084,13 @@
                     return false;
                 }
             }
+            return true;
+        }
+        transform(matrix) {
+            if (matrix.isIdentity) {
+                return false;
+            }
+            this.points = this.points.map(p => matrix.transformPoint(p));
             return true;
         }
         clone() {
@@ -3831,6 +3960,22 @@
         clear(color) {
             this._canvas.clear(color.code);
         }
+        drawQuad(quad, paint) {
+            if (!paint.isVisible) {
+                return;
+            }
+            const nativePaint = this._paint;
+            if (paint.preparePaint(nativePaint)) {
+                // TODO: add drawPoly to canvas
+                const p = quad.points;
+                const canvas = this._canvas;
+                canvas.drawLine(p[0].x, p[0].y, p[1].x, p[1].y, nativePaint);
+                canvas.drawLine(p[1].x, p[1].y, p[2].x, p[2].y, nativePaint);
+                canvas.drawLine(p[2].x, p[2].y, p[3].x, p[3].y, nativePaint);
+                canvas.drawLine(p[3].x, p[3].y, p[0].x, p[0].y, nativePaint);
+            }
+            nativePaint.reset();
+        }
         drawRect(rect, paint) {
             if (!paint.isVisible) {
                 return;
@@ -3848,6 +3993,16 @@
             const nativePaint = this._paint;
             if (paint.preparePaint(nativePaint)) {
                 this._canvas.drawCircle(center.x, center.y, radius, nativePaint);
+            }
+            nativePaint.reset();
+        }
+        drawEllipse(center, radiusX, radiusY, paint) {
+            if (!paint.isVisible) {
+                return;
+            }
+            const nativePaint = this._paint;
+            if (paint.preparePaint(nativePaint)) {
+                this._canvas.drawEllipse(center.x, center.y, radiusX, radiusY, nativePaint);
             }
             nativePaint.reset();
         }
@@ -3873,6 +4028,16 @@
             const nativePaint = this._paint;
             if (paint.preparePaint(nativePaint)) {
                 this._canvas.drawLine(from, to, nativePaint);
+            }
+            nativePaint.reset();
+        }
+        drawArc(bounds, startAngle, endAngle, paint) {
+            if (!paint.isVisible || startAngle === endAngle) {
+                return;
+            }
+            const nativePaint = this._paint;
+            if (paint.preparePaint(nativePaint)) {
+                this._canvas.drawArc(bounds, startAngle, endAngle, true, nativePaint);
             }
             nativePaint.reset();
         }
@@ -4131,6 +4296,281 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    const PositionMap = [
+        { x: exports.Position.Start, y: exports.Position.Start },
+        { x: exports.Position.Middle, y: exports.Position.Start },
+        { x: exports.Position.End, y: exports.Position.Start },
+        { x: exports.Position.End, y: exports.Position.Middle },
+        { x: exports.Position.End, y: exports.Position.End },
+        { x: exports.Position.Middle, y: exports.Position.End },
+        { x: exports.Position.Start, y: exports.Position.End },
+        { x: exports.Position.Start, y: exports.Position.Middle },
+    ].map(Object.freeze);
+    class ConvexQuad {
+        constructor(points, sort) {
+            this._area = null;
+            this._ml = null;
+            this._mt = null;
+            this._mr = null;
+            this._mb = null;
+            if (points instanceof Rectangle) {
+                this.bounds = points;
+                this.points = [points.topLeft, points.topRight, points.bottomRight, points.bottomLeft];
+            }
+            else {
+                this.bounds = Rectangle.fromPoints(...points);
+                this.points = [...points];
+            }
+            if (sort) {
+                const center = this.bounds.middle;
+                this.points.sort((a, b) => a.getDirectionTo(center) - b.getDirectionTo(center));
+            }
+        }
+        get isVisible() {
+            return !isCloseTo(this.area, 0);
+        }
+        get left() {
+            return this.bounds.left;
+        }
+        get top() {
+            return this.bounds.top;
+        }
+        get right() {
+            return this.bounds.right;
+        }
+        get bottom() {
+            return this.bounds.bottom;
+        }
+        get width() {
+            return this.bounds.width;
+        }
+        get height() {
+            return this.bounds.height;
+        }
+        get middle() {
+            return this.bounds.middle;
+        }
+        get middleLeft() {
+            if (this._ml == null) {
+                this._ml = this.points[3].getMiddle(this.points[0]);
+            }
+            return this._ml;
+        }
+        get middleTop() {
+            if (this._mt == null) {
+                this._mt = this.points[0].getMiddle(this.points[1]);
+            }
+            return this._mt;
+        }
+        get middleRight() {
+            if (this._mr == null) {
+                this._mr = this.points[1].getMiddle(this.points[2]);
+            }
+            return this._mr;
+        }
+        get middleBottom() {
+            if (this._mb == null) {
+                this._mb = this.points[2].getMiddle(this.points[3]);
+            }
+            return this._mb;
+        }
+        get topLeft() {
+            return this.points[0];
+        }
+        get topRight() {
+            return this.points[1];
+        }
+        get bottomRight() {
+            return this.points[2];
+        }
+        get bottomLeft() {
+            return this.points[3];
+        }
+        get area() {
+            if (this._area == null) {
+                this._area = getTriangleArea(this.points[0], this.points[1], this.points[2]) +
+                    getTriangleArea(this.points[2], this.points[3], this.points[0]);
+            }
+            return this._area;
+        }
+        contains(x, y) {
+            return this.containsPoint(new Point(x, y));
+        }
+        containsPoint(point) {
+            if (!this.bounds.containsPoint(point)) {
+                return false;
+            }
+            let area = 0;
+            area += getTriangleArea(point, this.points[0], this.points[1]);
+            area += getTriangleArea(point, this.points[1], this.points[2]);
+            area += getTriangleArea(point, this.points[2], this.points[3]);
+            area += getTriangleArea(point, this.points[3], this.points[0]);
+            return isCloseTo(area, this.area);
+        }
+        intersectsRect(rect) {
+            if (rect.bottom <= this.top || rect.top >= this.bottom || rect.right <= this.left || rect.left >= this.right) {
+                // no intersection
+                return false;
+            }
+            if (rect.top <= this.top && rect.bottom >= this.bottom || rect.left <= this.left && rect.right >= this.right) {
+                // full vertical or full horizontal or both (inside rect)
+                return true;
+            }
+            // Check if any of our points is inside rect
+            for (let i = 0; i < 4; i++) {
+                if (rect.containsPoint(this.points[i])) {
+                    return true;
+                }
+            }
+            // check if any point from rectangle is inside
+            return this.containsPoint(rect.topLeft) || this.containsPoint(rect.bottomRight)
+                || this.containsPoint(rect.topRight) || this.containsPoint(rect.bottomLeft)
+                || this.containsPoint(rect.middle);
+        }
+        clone() {
+            // this is immutable
+            return this;
+        }
+        equals(other) {
+            for (let i = 0; i < 4; i++) {
+                if (!this.points[i].equals(other.points[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        transform(matrix) {
+            if (!matrix || matrix.isIdentity) {
+                return this;
+            }
+            return new ConvexQuad([
+                matrix.transformPoint(this.points[0]),
+                matrix.transformPoint(this.points[1]),
+                matrix.transformPoint(this.points[2]),
+                matrix.transformPoint(this.points[3]),
+            ]);
+        }
+        getQuadPointPosition(position, tolerance) {
+            let i = 0;
+            for (const point of this.sidePoints()) {
+                if (point.distanceTo(position) <= tolerance) {
+                    return PositionMap[i];
+                }
+                i++;
+            }
+            return null;
+        }
+        getPointAtPosition(x, y, invert) {
+            if (invert) {
+                x = invertPosition(x);
+                y = invertPosition(y);
+            }
+            switch (x) {
+                case exports.Position.Start:
+                    switch (y) {
+                        case exports.Position.Start:
+                            return this.points[0];
+                        case exports.Position.Middle:
+                            return this.middleLeft;
+                        case exports.Position.End:
+                            return this.points[3];
+                    }
+                    break;
+                case exports.Position.Middle:
+                    switch (y) {
+                        case exports.Position.Start:
+                            return this.middleTop;
+                        case exports.Position.Middle:
+                            return this.middle;
+                        case exports.Position.End:
+                            return this.middleBottom;
+                    }
+                    break;
+                case exports.Position.End:
+                    switch (y) {
+                        case exports.Position.Start:
+                            return this.points[1];
+                        case exports.Position.Middle:
+                            return this.middleRight;
+                        case exports.Position.End:
+                            return this.points[2];
+                    }
+                    break;
+            }
+            return null;
+        }
+        *middlePoints(center) {
+            yield this.middleTop;
+            yield this.middleRight;
+            yield this.middleBottom;
+            yield this.middleLeft;
+            if (center) {
+                yield this.middle;
+            }
+        }
+        *sidePoints(center) {
+            yield this.points[0];
+            yield this.middleTop;
+            yield this.points[1];
+            yield this.middleRight;
+            yield this.points[2];
+            yield this.middleBottom;
+            yield this.points[3];
+            yield this.middleLeft;
+            if (center) {
+                yield this.middle;
+            }
+        }
+        static fromSize(size, matrix) {
+            if (!matrix || matrix.isIdentity) {
+                return new ConvexQuad(Rectangle.fromSize(size));
+            }
+            return new ConvexQuad([
+                matrix.point(0, 0),
+                matrix.point(size.width, 0),
+                matrix.point(size.width, size.height),
+                matrix.point(0, size.height),
+            ]);
+        }
+        static fromRectangle(rect, matrix) {
+            if (!matrix || matrix.isIdentity) {
+                return new ConvexQuad(rect);
+            }
+            return new ConvexQuad([
+                matrix.transformPoint(rect.topLeft),
+                matrix.transformPoint(rect.topRight),
+                matrix.transformPoint(rect.bottomRight),
+                matrix.transformPoint(rect.bottomLeft),
+            ]);
+        }
+        static fromPoints(points, matrix) {
+            return new ConvexQuad(points.map(matrix && !matrix.isIdentity ? (p => matrix.transformPoint(p)) : Point.fromObject));
+        }
+    }
+    ConvexQuad.ZERO = new ConvexQuad([Point.ZERO, Point.ZERO, Point.ZERO, Point.ZERO]);
+    function getTriangleArea(p1, p2, p3) {
+        const a = p1.distanceTo(p2);
+        const b = p2.distanceTo(p3);
+        const c = p3.distanceTo(p1);
+        const s = (a + b + c) / 2;
+        return Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     const MAX_ZOOM = 100;
     const MIN_ZOOM = 1 / MAX_ZOOM;
     class ViewBox {
@@ -4192,7 +4632,7 @@
             return Rectangle.fromTransformedPoints(this._matrix, ...points);
         }
         getLineWidth(value = 1) {
-            return value / this._zoom;
+            return value / this.matrix.lineScale;
         }
         zoomFit(rectangle, screen, margin = 0) {
             margin *= 2;
@@ -4243,6 +4683,798 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    class Snapping {
+        constructor() {
+            this.ignoredElements = new Set();
+            this.ignoredX = new Set();
+            this.ignoredY = new Set();
+            this.tolerance = 0;
+            this.dpr = 1;
+            this.result = null;
+            this.boxes = new Set();
+            this.linePen = new DefaultPen();
+            this.boxPen = new DefaultPen();
+        }
+        dispose() {
+            this.reset();
+            this.ignoredElements = null;
+            this.ignoredX = this.ignoredY = null;
+            this.document = null;
+        }
+        render(engine) {
+            if (!this.result) {
+                // nothing to draw
+                return;
+            }
+            const context = engine.context;
+            context.save();
+            context.multiplyMatrix(engine.viewBox.matrix);
+            const scale = context.matrix.lineScale / engine.dpr;
+            const result = this.result;
+            if (result.boxes) {
+                this.boxPen.width = 1 / scale;
+                this.boxPen.dashes = [2 / scale, 4 / scale];
+                for (const box of result.boxes) {
+                    context.drawQuad(box, this.boxPen);
+                }
+            }
+            this.linePen.width = 1 / scale;
+            if (result.points) {
+                const radius = 2 / scale;
+                for (const p of result.points) {
+                    context.drawCircle(p, radius, this.linePen);
+                }
+            }
+            if (result.lines) {
+                for (const l of result.lines) {
+                    context.drawLine(l.from, l.to, this.linePen);
+                }
+            }
+            context.restore();
+        }
+        updateTheme(theme) {
+            this.linePen.brush = this.boxPen.brush = new SolidBrush(theme.snap);
+        }
+        init(engine, ignoreElements) {
+            this.reset();
+            this.document = null;
+            this.options = engine.snappingOptions;
+            if (!this.options.enabled) {
+                return;
+            }
+            this.document = engine.project?.document;
+            this.updateTheme(engine.theme);
+            // TODO: check tolerance
+            // TODO: get options from engine
+            this.dpr = engine.dpr;
+            this.tolerance = this.options.tolerance / engine.dpr;
+            if (ignoreElements) {
+                for (const element of ignoreElements) {
+                    this.ignoredElements.add(element);
+                }
+            }
+            if (this.options.bounds) {
+                this.boxes.add(this.document.globalBounds);
+            }
+            // collect only if the info is needed
+            if (this.options.bounds || this.options.points || this.options.contours) {
+                for (const child of this.document.children(true)) {
+                    this.collect(child);
+                }
+            }
+        }
+        reset() {
+            this.result = null;
+            this.ignoredX.clear();
+            this.ignoredY.clear();
+            this.boxes.clear();
+            this.ignoredElements.clear();
+        }
+        addIgnoredPoints(points) {
+            for (const p of points) {
+                this.ignoredX.add(p.x);
+                this.ignoredY.add(p.y);
+            }
+        }
+        addIgnoreBox(box) {
+            this.ignoredX
+                .add(box.left)
+                .add(box.middle.x)
+                .add(box.right);
+            this.ignoredY
+                .add(box.top)
+                .add(box.middle.y)
+                .add(box.bottom);
+        }
+        clearIgnoredPoints() {
+            this.ignoredX.clear();
+            this.ignoredY.clear();
+        }
+        /**
+         * Returns the snapped point
+         */
+        snapPoint(point) {
+            this.result = null;
+            if (!this.options.enabled) {
+                return point;
+            }
+            this.tolerance = this.options.tolerance / this.dpr;
+            const result = createSnappingResult(point, this.snapOne(point));
+            this.result = result;
+            if (result) {
+                return result.point;
+            }
+            if (this.options.pixel) {
+                // try to snap to pixel
+                return point.rounded();
+            }
+            return point;
+        }
+        snapToSelectionBounds(engine, delta) {
+            // TODO: fix
+            if (engine.viewBox.zoom > 1) {
+                this.tolerance = engine.viewBox.getLineWidth(this.options.tolerance);
+            }
+            this.tolerance /= engine.dpr;
+            return this.snapBounds(engine.selection.length === 1
+                ? engine.selection.activeElement.globalBounds.bounds
+                : engine.selection.boundingBox, delta);
+        }
+        /**
+         * Returns delta
+         */
+        snapBounds(bounds, delta) {
+            // TODO: add extra points
+            this.result = null;
+            if (!this.options.enabled) {
+                return delta;
+            }
+            const result = this.snapBox(bounds, delta, true);
+            this.result = result;
+            if (result) {
+                return result.point;
+            }
+            // TODO: snap to pixel
+            return delta;
+        }
+        snapBox(bounds, delta, center) {
+            if (delta.x !== 0) {
+                this.ignoredX.add(bounds.left).add(bounds.middleX).add(bounds.right);
+            }
+            if (delta.y !== 0) {
+                this.ignoredY.add(bounds.top).add(bounds.middleY).add(bounds.bottom);
+            }
+            const snapX = this.getOneAxisSnaps(bounds.horizontal(center), 'x', delta.x);
+            const snapY = this.getOneAxisSnaps(bounds.vertical(center), 'y', delta.y);
+            this.clearIgnoredPoints();
+            if (snapX.length === 0 && snapY.length === 0) {
+                return null;
+            }
+            const x = snapX.length > 0 ? snapX[0].diff : 0;
+            const y = snapY.length > 0 ? snapY[0].diff : 0;
+            const points = new Set();
+            const boxes = new Set();
+            const lines = [];
+            let mm, line;
+            for (const snap of snapX) {
+                if ((mm = collectAxisSnapItems(snap, 'y', points, boxes)) != null) {
+                    if (mm.max <= bounds.top) {
+                        mm.max = bounds.bottom;
+                    }
+                    else if (mm.min >= bounds.bottom) {
+                        mm.min = bounds.top;
+                    }
+                    line = createMinMaxLine(mm, snap.value, 'y');
+                    if (line) {
+                        lines.push(line);
+                    }
+                }
+            }
+            for (const snap of snapY) {
+                if ((mm = collectAxisSnapItems(snap, 'x', points, boxes)) != null) {
+                    if (mm.max <= bounds.left) {
+                        mm.max = bounds.right;
+                    }
+                    else if (mm.min >= bounds.right) {
+                        mm.min = bounds.left;
+                    }
+                    line = createMinMaxLine(mm, snap.value, 'x');
+                    if (line) {
+                        lines.push(line);
+                    }
+                }
+            }
+            return {
+                point: delta.shifted(x, y),
+                lines: lines.length > 0 ? lines : null,
+                points: points.size > 0 ? points : null,
+                boxes: boxes.size > 0 ? boxes : null,
+            };
+        }
+        getOneAxisSnaps(positions, axis, delta = 0) {
+            let best = Number.POSITIVE_INFINITY;
+            let list = [];
+            let snap;
+            for (const position of positions) {
+                snap = this.snapOneAxis(position, axis, delta);
+                if (!snap || (best < snap.delta)) {
+                    continue;
+                }
+                if (best === snap.delta) {
+                    list.push(snap);
+                    continue;
+                }
+                best = snap.delta;
+                list.splice(0, list.length, snap);
+            }
+            return list;
+        }
+        snapMultiple(points, delta) {
+            let bestSnap = null;
+            for (const point of points) {
+                bestSnap = getBestSnapItem(bestSnap, this.snapOne(point, delta));
+            }
+            if (bestSnap && (bestSnap.x.value != null || bestSnap.y.value != null)) {
+                return bestSnap;
+            }
+            return null;
+        }
+        snapOneAxis(position, axis, delta = 0) {
+            const snap = {
+                value: null,
+                diff: 0,
+                delta: Number.POSITIVE_INFINITY,
+                items: null,
+                original: position,
+            };
+            if (this.options.bounds) {
+                this.snapToOneBoxAxis(snap, position, axis, this.boxes, delta);
+            }
+            if (this.options.guides) {
+                this.snapToGuidesAxis(snap, position, axis, this.document.guides, delta);
+            }
+            if (this.options.grid) {
+                this.snapToGridAxis(snap, position, axis, this.document.grid, delta);
+            }
+            return snap.value == null ? null : snap;
+        }
+        snapOne(point, delta) {
+            const snap = {
+                x: {
+                    value: null,
+                    diff: 0,
+                    delta: Number.POSITIVE_INFINITY,
+                    items: null,
+                    original: point.x,
+                },
+                y: {
+                    value: null,
+                    diff: 0,
+                    delta: Number.POSITIVE_INFINITY,
+                    items: null,
+                    original: point.y,
+                },
+            };
+            if (delta && !delta.isZero) {
+                point = point.add(delta);
+            }
+            if (this.options.bounds) {
+                this.snapToMultipleBoxesAxis(snap, point, this.boxes);
+            }
+            if (this.options.guides) {
+                this.snapToGuides(snap, point, this.document.guides);
+            }
+            if (this.options.grid) {
+                this.snapToGrid(snap, point, this.document.grid);
+            }
+            if (snap.x.value == null && snap.y.value == null) {
+                return null;
+            }
+            return snap;
+        }
+        snapToGrid(snap, point, grid) {
+            // TODO:
+        }
+        snapToGridAxis(snap, position, axis, grid, delta) {
+            // TODO
+            // const tolerance = delta === 0 ? 0 : this.tolerance;
+        }
+        snapToGuides(snap, point, guides) {
+            for (const guide of guides) {
+                if (guide.isHorizontal) {
+                    // snap y
+                    if (!this.ignoredY.has(guide.position)) {
+                        snapToAxis(snap.y, point.y, guide.position, null, null, this.tolerance);
+                    }
+                }
+                else {
+                    // snap x
+                    if (!this.ignoredX.has(guide.position)) {
+                        snapToAxis(snap.x, point.x, guide.position, null, null, this.tolerance);
+                    }
+                }
+            }
+        }
+        snapToGuidesAxis(snap, position, axis, guides, delta) {
+            const horizontal = axis === 'x';
+            const ignored = axis === 'x' ? this.ignoredX : this.ignoredY;
+            let g;
+            const snapPosition = position + delta;
+            const tolerance = delta === 0 ? 0 : this.tolerance;
+            for (const guide of guides) {
+                if (horizontal !== guide.isHorizontal) {
+                    continue;
+                }
+                g = guide.position;
+                if (ignored.has(g) || (delta < 0 && g > position) || (delta > 0 && g < position)) {
+                    // do not snap back
+                    continue;
+                }
+                snapToAxis(snap, snapPosition, g, null, null, tolerance);
+            }
+        }
+        snapToMultipleBoxesAxis(snap, point, boxes) {
+            for (const box of boxes) {
+                for (const boxPoint of box.sidePoints(true)) {
+                    if (!this.ignoredX.has(boxPoint.x)) {
+                        snapToAxis(snap.x, point.x, boxPoint.x, boxPoint, box, this.tolerance);
+                    }
+                    if (!this.ignoredY.has(boxPoint.y)) {
+                        snapToAxis(snap.y, point.y, boxPoint.y, boxPoint, box, this.tolerance);
+                    }
+                }
+            }
+        }
+        snapToOneBoxAxis(snap, position, axis, boxes, delta = 0) {
+            const ignored = axis === 'x' ? this.ignoredX : this.ignoredY;
+            let value;
+            let snapPosition = position + delta;
+            for (const box of boxes) {
+                for (const boxPoint of box.sidePoints(true)) {
+                    value = boxPoint[axis];
+                    if (ignored.has(value) || this.isSnapBack(position, value, delta)) {
+                        // do not snap back
+                        continue;
+                    }
+                    snapToAxis(snap, snapPosition, value, boxPoint, box, this.tolerance);
+                }
+            }
+        }
+        isSnapBack(position, value, delta) {
+            if (delta === 0) {
+                return false;
+            }
+            return (delta < 0 && value > position) || (delta > 0 && value < position);
+        }
+        collect(element) {
+            if (element.hidden || this.ignoredElements.has(element)) {
+                return;
+            }
+            if (this.canCollectChildren(element)) {
+                for (const child of element.children(true)) {
+                    this.collect(child);
+                }
+            }
+            if (!this.canCollectElement(element)) {
+                return;
+            }
+            if (this.options.bounds) {
+                this.boxes.add(element.globalBounds);
+            }
+            if (this.options.points) {
+                this.collectElementPoints(element);
+            }
+        }
+        canCollectChildren(element) {
+            // also check if clip-path, etc.
+            return element.supportsChildren && element.hasChildren && element.type == 'group';
+        }
+        canCollectElement(element) {
+            return element.type !== 'group';
+        }
+        collectElementPoints(element) {
+            // TODO: collect path points, etc.
+        }
+    }
+    function createSnappingResult(point, snap) {
+        if (!snap) {
+            return null;
+        }
+        let points = new Set();
+        let boxes = new Set();
+        let x = null, y = null;
+        let xMinMax;
+        let yMinMax;
+        if (snap.x.value != null) {
+            x = snap.x.value;
+            yMinMax = collectAxisSnapItems(snap.x, 'y', points, boxes);
+        }
+        if (snap.y.value != null) {
+            y = snap.y.value;
+            xMinMax = collectAxisSnapItems(snap.y, 'x', points, boxes);
+        }
+        if (x === null && y === null) {
+            return null;
+        }
+        const newPoint = new Point(x == null ? point.x : x, y == null ? point.y : y);
+        const yL = xMinMax ? createMinMaxLine(updateMinMax(xMinMax, newPoint.x), newPoint.y, 'x') : null;
+        const xL = yMinMax ? createMinMaxLine(updateMinMax(yMinMax, newPoint.y), newPoint.x, 'y') : null;
+        return {
+            point: newPoint,
+            lines: xL ? (yL ? [xL, yL] : [xL]) : yL ? [yL] : null,
+            points,
+            boxes,
+        };
+    }
+    function updateMinMax(minMax, value) {
+        if (value < minMax.min) {
+            minMax.min = value;
+        }
+        else if (value > minMax.max) {
+            minMax.max = value;
+        }
+        return minMax;
+    }
+    function createMinMaxLine(minMax, position, axis) {
+        if (!minMax || minMax.min == minMax.max) {
+            return null;
+        }
+        const pAxis = axis === 'x' ? 'y' : 'x';
+        return {
+            from: {
+                [pAxis]: position,
+                [axis]: minMax.min,
+            },
+            to: {
+                [pAxis]: position,
+                [axis]: minMax.max,
+            }
+        };
+    }
+    function collectAxisSnapItems(snap, axis, points, boxes) {
+        if (!snap.items) {
+            return null;
+        }
+        let min = Number.POSITIVE_INFINITY;
+        let max = Number.NEGATIVE_INFINITY;
+        let value = null;
+        for (const item of snap.items) {
+            if (item.box) {
+                boxes.add(item.box);
+            }
+            if (item.point) {
+                points.add(item.point);
+                value = item.point[axis];
+                if (value < min) {
+                    min = value;
+                }
+                if (value > max) {
+                    max = value;
+                }
+            }
+        }
+        return value === null ? null : { min, max };
+    }
+    function getBestSnapItem(a, b) {
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        let x, y;
+        // Get best x
+        if (a.x.value == null) {
+            x = b.x;
+        }
+        else if (b.x.value == null) {
+            x = a.x;
+        }
+        else if (a.x.delta === b.x.delta) {
+            x = {
+                original: a.x.original,
+                value: a.x.value,
+                diff: a.x.diff,
+                delta: a.x.delta,
+                items: a.x.items ? (b.x.items ? [...a.x.items, ...b.x.items] : a.x.items) : b.x.items,
+            };
+        }
+        else {
+            if (a.x.delta < b.x.delta) {
+                x = a.x;
+            }
+            else {
+                x = b.x;
+            }
+        }
+        // Get best y
+        if (a.y.value == null) {
+            y = b.y;
+        }
+        else if (b.y.value == null) {
+            y = a.y;
+        }
+        else if (a.y.delta === b.y.delta) {
+            y = {
+                original: a.y.original,
+                value: a.y.value,
+                diff: a.y.diff,
+                delta: a.y.delta,
+                items: a.y.items ? (b.y.items ? [...a.y.items, ...b.y.items] : a.y.items) : b.y.items,
+            };
+        }
+        else {
+            if (a.y.delta < b.y.delta) {
+                y = a.y;
+            }
+            else {
+                y = b.y;
+            }
+        }
+        return { x, y };
+    }
+    function snapToAxis(snap, position, value, point, box, tolerance) {
+        if (position === value) {
+            snap.value = value;
+            snap.delta = snap.diff = 0;
+            if (snap.items) {
+                snap.items.push({ point, box });
+            }
+            else {
+                snap.items = [{ point, box }];
+            }
+            return;
+        }
+        const diff = value - position;
+        const d = diff < 0 ? -diff : diff;
+        if (d > tolerance || d > snap.delta) {
+            return;
+        }
+        snap.diff = diff;
+        snap.value = value;
+        if (d !== snap.delta && snap.items) {
+            snap.items.splice(0);
+        }
+        snap.delta = d;
+        if (snap.items) {
+            snap.items.push({ point, box });
+        }
+        else {
+            snap.items = [{ point, box }];
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class BaseTool {
+        constructor() {
+            this.data = null;
+            this.mouseDownEvent = null;
+            this.panPivot = null;
+            this.isInvalidated = true;
+            this.snapshotImage = null;
+            this.allowSnapshotCapture = true;
+            this.keyboardStatus = null;
+            this.defaultCanvasCursor = exports.Cursor.Default;
+            this._snapping = null;
+        }
+        get startPosition() {
+            return this?.mouseDownEvent.position;
+        }
+        activate(engine, data) {
+            this.keyboardStatus = engine.keyboardStatus;
+            this.data = data;
+            this.invalidate();
+            // set default cursor
+            engine.cursor = this.defaultCanvasCursor;
+            // update theme
+            this.updateTheme(engine);
+        }
+        deactivate(engine) {
+            this.keyboardStatus = null;
+            this.mouseDownEvent = null;
+            this.panPivot = null;
+            this.data = null;
+            this.removeSnapping();
+            this.invalidate();
+            // clear cursor
+            engine.cursor = exports.Cursor.Default;
+        }
+        get snapping() {
+            if (!this._snapping) {
+                this._snapping = new Snapping();
+            }
+            return this._snapping;
+        }
+        removeSnapping() {
+            if (this._snapping) {
+                this._snapping.dispose();
+                this._snapping = null;
+            }
+        }
+        updateTheme(engine) {
+            // do nothing
+        }
+        invalidate() {
+            this.isInvalidated = true;
+            this.allowSnapshotCapture = false;
+            if (this.snapshotImage != null) {
+                this.snapshotImage.delete();
+                this.snapshotImage = null;
+            }
+        }
+        invalidateToolDrawing() {
+            this.isInvalidated = true;
+        }
+        render(engine, timestamp) {
+            if (this.isInvalidated) {
+                // Draw document snapshot
+                this.drawDocument(engine);
+                // Draw tool
+                this.draw(engine, timestamp);
+                // Draw snapping
+                if (this._snapping) {
+                    this._snapping.render(engine);
+                }
+                engine.context.flush();
+                this.isInvalidated = false;
+            }
+        }
+        drawDocument(engine) {
+            if (!this.allowSnapshotCapture) {
+                engine.document.render(engine);
+                this.allowSnapshotCapture = true;
+                return;
+            }
+            if (this.snapshotImage != null) {
+                // Draw bitmap cache at scale 1:1
+                const context = engine.context;
+                context.save();
+                context.matrix = context.matrix.toIdentity();
+                context.drawImage(this.snapshotImage);
+                context.restore();
+                return;
+            }
+            // Draw document
+            engine.document.render(engine);
+            // Save a snapshot
+            this.snapshotImage = engine.makeImageSnapshot();
+        }
+        onMouseDown(engine, event) {
+            this.mouseDownEvent = event;
+            if (event.button === exports.MouseButton.Left) {
+                this.onMouseLeftButtonDown(engine, event);
+            }
+            else if (event.button === exports.MouseButton.Wheel) {
+                this.onMouseWheelButtonDown(engine, event);
+            }
+        }
+        onMouseUp(engine, event) {
+            if (event.button === exports.MouseButton.Left) {
+                this.onMouseLeftButtonUp(engine, event);
+            }
+            else if (event.button === exports.MouseButton.Wheel) {
+                this.onMouseWheelButtonUp(engine, event);
+            }
+            else if (event.button === exports.MouseButton.Right) ;
+            this.mouseDownEvent = null;
+            this.panPivot = null;
+        }
+        onMouseMove(engine, event) {
+            if (this.mouseDownEvent) {
+                if (this.mouseDownEvent.button === exports.MouseButton.Left) {
+                    this.onMouseLeftButtonMove(engine, event);
+                }
+                else if (this.mouseDownEvent.button === exports.MouseButton.Wheel) {
+                    this.onMouseWheelButtonMove(engine, event);
+                }
+            }
+            else {
+                this.onMouseHover(engine, event);
+            }
+        }
+        onMouseHover(engine, event) {
+            // nothing to do here, override
+        }
+        onMouseWheelButtonDown(engine, event) {
+            this.panPivot = event.canvasPosition;
+            engine.cursor = exports.Cursor.HandHold;
+        }
+        onMouseWheelButtonUp(engine, event) {
+            this.doPan(engine, event);
+            engine.cursor = this.defaultCanvasCursor;
+        }
+        onMouseWheelButtonMove(engine, event) {
+            this.doPan(engine, event);
+            this.panPivot = event.canvasPosition;
+        }
+        doPan(engine, event, pivot = this.panPivot) {
+            engine.viewBox.panBy(event.canvasPosition.sub(pivot));
+        }
+        decorateVectorElement(engine, element) {
+            const global = engine.globalElementProperties;
+            element.fill = global.fill.clone();
+            element.stroke = global.stroke.clone();
+            element.fillRule = global.fillRule;
+            element.paintOrder = global.paintOrder;
+            element.blend = global.blend;
+            element.opacity = global.opacity;
+            // We do not isolate vector elements
+            // element.isolate = global.isolate;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class PanTool extends BaseTool {
+        constructor() {
+            super(...arguments);
+            this.defaultCanvasCursor = exports.Cursor.Hand;
+        }
+        get name() {
+            return "pan";
+        }
+        draw(engine) {
+            // nothing to draw
+        }
+        onMouseLeftButtonDown(engine, event) {
+            this.panPivot = event.canvasPosition;
+            engine.cursor = exports.Cursor.HandHold;
+        }
+        onMouseLeftButtonMove(engine, event) {
+            if (!this.panPivot) {
+                return;
+            }
+            this.doPan(engine, event);
+            this.panPivot = event.canvasPosition;
+        }
+        onMouseLeftButtonUp(engine, event) {
+            this.doPan(engine, event);
+            engine.cursor = exports.Cursor.Hand;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     class Node {
         constructor(document, id) {
             this._id = null;
@@ -4254,9 +5486,7 @@
             this._first = null;
             this._last = null;
             this._localBounds = null;
-            this._localTightBounds = null;
             this._globalBounds = null;
-            this._globalTightBounds = null;
             this._pictureCache = null;
             this._globalMatrix = null;
             this._localMatrix = null;
@@ -4328,12 +5558,6 @@
             return this.localBounds.transform(this.localMatrix);
         }
         /**
-         * Local tight bounds with local transform applied
-         */
-        get transformedTightBounds() {
-            return this.localTightBounds.transform(this.localMatrix);
-        }
-        /**
          * Bounds without transform applied
          */
         get localBounds() {
@@ -4343,31 +5567,13 @@
             return this._localBounds;
         }
         /**
-         * Tight bounds without transform applied
-         */
-        get localTightBounds() {
-            if (this._localTightBounds === null) {
-                this._localTightBounds = Rectangle.merge(this.childrenPropertyIterator('transformedTightBounds'));
-            }
-            return this._localTightBounds;
-        }
-        /**
          * Bounds with global transform applied
          */
         get globalBounds() {
             if (this._globalBounds === null) {
-                this._globalBounds = Rectangle.merge(this.childrenPropertyIterator('globalBounds'));
+                this._globalBounds = ConvexQuad.fromRectangle(Rectangle.merge(this.childrenPropertyIterator('globalBounds')));
             }
             return this._globalBounds;
-        }
-        /**
-         * Tight bounds with global transform applied
-         */
-        get globalTightBounds() {
-            if (this._globalTightBounds === null) {
-                this._globalTightBounds = Rectangle.merge(this.childrenPropertyIterator('globalTightBounds'));
-            }
-            return this._globalTightBounds;
         }
         /**
          * Matrix of this element
@@ -4416,7 +5622,6 @@
         invalidateGlobalMatrix() {
             this._globalMatrix = null;
             this._globalBounds = null;
-            this._globalTightBounds = null;
             for (let n = this._first; n !== null; n = n._next) {
                 if (n._globalMatrix !== null) {
                     n.invalidateGlobalMatrix();
@@ -4446,9 +5651,7 @@
         invalidateBoundsAndPicture(parentPictureOnly = false) {
             // Invalidate all bounds
             this._localBounds = null;
-            this._localTightBounds = null;
             this._globalBounds = null;
-            this._globalTightBounds = null;
             if (this._parent !== null) {
                 this._parent.invalidateBoundsAndPicture();
             }
@@ -4593,9 +5796,7 @@
             clone._globalMatrix = this._globalMatrix ? this._globalMatrix.clone() : null;
             // Also save bounds to prevent recomputing
             clone._localBounds = this._localBounds;
-            clone._localTightBounds = this._localTightBounds;
             clone._globalBounds = this._globalBounds;
-            clone._globalTightBounds = this._globalTightBounds;
             // // We can save picture-cache clone
             // if (this._pictureCache) {
             //     clone._pictureCache = this._pictureCache.clone();
@@ -4620,9 +5821,7 @@
             this._globalMatrix = null;
             this._localMatrix = null;
             this._globalBounds = null;
-            this._globalTightBounds = null;
             this._localBounds = null;
-            this._localTightBounds = null;
             // Collect children
             const children = Array.from(this.children());
             // Dispose children
@@ -4805,12 +6004,25 @@
             this._parent.removeChild(this);
             return true;
         }
+        /**
+         * True if this is resizable (not scalable)
+         */
+        get isResizable() {
+            return false;
+        }
+        /**
+         * Locally resize (not scale) an element using a simple transform matrix
+         * This should yield [prop, value] that need to change.
+         */
+        localResize(matrix, flip) {
+            return null;
+        }
         // Transforms
         getLocalMatrix() {
             const matrix = new Matrix();
             matrix
                 .translate(this._position.x, this._position.y)
-                .rotate(this._rotate + this.autoOrientAngle)
+                .rotate(this.totalRotate)
                 .skewAxis(this._skewAngle, this._skewAxis)
                 .scale(this._scale.x, this._scale.y)
                 .translate(-this._anchor.x, -this._anchor.y);
@@ -4878,6 +6090,9 @@
             if (this._orientation !== exports.Orientation.None) {
                 this.invalidateLocalMatrix();
             }
+        }
+        get totalRotate() {
+            return this._rotate + this.autoOrientAngle;
         }
         // Coordinates
         get position() {
@@ -4958,13 +6173,15 @@
             context.drawPicture(this.getPicture(), this.composition);
             context.restore();
         }
-        getElementAt(point) {
-            if (this.hidden) {
+        getElementAt(point, seeThrough) {
+            if (this.hidden || this.locked || !this.globalBounds.containsPoint(point)) {
                 return null;
             }
-            // TODO: check if locked ...
+            if (!seeThrough || !this.supportsChildren) {
+                return this;
+            }
             for (let n = this._last; n !== null; n = n._prev) {
-                const result = n.getElementAt(point);
+                const result = n.getElementAt(point, seeThrough);
                 if (result) {
                     return result;
                 }
@@ -5215,11 +6432,9 @@
             return null;
         }
         getElementAt(point) {
-            // TODO: remove this
             if (this.hidden || this.locked) {
                 return null;
             }
-            // TODO: use transformed path???
             return this.pathToDraw?.contains(point.x, point.y, this.globalMatrix) ? this : null;
         }
         clone(newId = false) {
@@ -5268,6 +6483,12 @@
             return this._shape.type;
         }
         /**
+         * @inheritDoc
+         */
+        get isResizable() {
+            return true;
+        }
+        /**
          * A native path object
          * This object is managed by the element
          */
@@ -5308,44 +6529,28 @@
          */
         get localBounds() {
             if (this._localBounds === null) {
-                this._localBounds = Rectangle.fromLTRBObject(this.localPath.getBounds());
+                this._localBounds = Rectangle.fromLTRBObject(this.localPath.computeTightBounds());
             }
             return this._localBounds;
         }
         /**
          * @inheritDoc
          */
-        get localTightBounds() {
-            if (this._localTightBounds === null) {
-                this._localTightBounds = Rectangle.fromLTRBObject(this.localPath.computeTightBounds());
-            }
-            return this._localTightBounds;
-        }
-        /**
-         * @inheritDoc
-         */
         get globalBounds() {
-            if (this._globalBounds !== null) {
-                return this._globalBounds;
+            if (this._globalBounds == null) {
+                this._globalBounds = ConvexQuad.fromRectangle(this.localBounds, this.globalMatrix);
             }
-            const matrix = this.globalMatrix;
-            if (matrix.isIdentity) {
-                return this._globalBounds = this.localBounds;
-            }
-            return this._globalBounds = Rectangle.fromLTRBObject(this.globalPath.getBounds());
+            return this._globalBounds;
         }
         /**
          * @inheritDoc
          */
-        get globalTightBounds() {
-            if (this._globalTightBounds !== null) {
-                return this._globalTightBounds;
+        invalidateGlobalMatrix() {
+            if (this._globalPath) {
+                this._globalPath.delete();
+                this._globalPath = null;
             }
-            const matrix = this.globalMatrix;
-            if (matrix.isIdentity) {
-                return this._globalTightBounds = this.localTightBounds;
-            }
-            return this._globalTightBounds = Rectangle.fromLTRBObject(this.globalPath.computeTightBounds());
+            super.invalidateGlobalMatrix();
         }
         invalidateShape() {
             if (ShapeElement.invalidationPrevented) {
@@ -5418,6 +6623,18 @@
                 this.invalidateShape();
             }
         }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix, flip) {
+            matrix = matrix.clone().translate(flip.x ? this.localBounds.width : 0, flip.y ? this.localBounds.height : 0);
+            if (matrix.tx || matrix.ty) {
+                yield ["anchor", this.anchor.shifted(-matrix.tx, -matrix.ty)];
+            }
+            const bounds = this.localBounds.transform(matrix, false);
+            yield ["width", bounds.width || 0.00001];
+            yield ["height", bounds.height || 0.00001];
+        }
     }
 
     /*
@@ -5470,6 +6687,14 @@
             this._shape = value;
             this.invalidateShape();
         }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix) {
+            const shape = this.shape.clone();
+            shape.transform(matrix);
+            yield ["shape", shape];
+        }
     }
 
     /*
@@ -5505,6 +6730,14 @@
                 this._shape.isClosed = value;
                 this.invalidateShape();
             }
+        }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix) {
+            const shape = this.shape.clone();
+            shape.transform(matrix);
+            yield ["points", shape];
         }
     }
 
@@ -5552,6 +6785,18 @@
                 this._shape.height = value;
                 this.invalidateShape();
             }
+        }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix, flip) {
+            matrix = matrix.clone().translate(flip.x ? this.localBounds.width : 0, flip.y ? this.localBounds.height : 0);
+            if (matrix.tx || matrix.ty) {
+                yield ["anchor", this.anchor.shifted(-matrix.tx, -matrix.ty)];
+            }
+            const bounds = this.localBounds.transform(matrix, false);
+            yield ["width", bounds.width || 0.00001];
+            yield ["height", bounds.height || 0.00001];
         }
     }
 
@@ -5609,6 +6854,14 @@
                 this._shape.angle = value;
                 this.invalidateShape();
             }
+        }
+        *localResize(matrix, flip) {
+            matrix = matrix.clone().translate(flip.x ? this.radius : 0, flip.y ? this.radius : 0);
+            // if (matrix.tx || matrix.ty) {
+            //     yield ["anchor", this.anchor.shifted(-matrix.tx, -matrix.ty)];
+            // }
+            // TODO: improve resize
+            yield ["radius", matrix.point(this.radius, this.radius).length / Math.SQRT2 || 0.00001];
         }
     }
 
@@ -5705,6 +6958,17 @@
                 this.invalidateShape();
             }
         }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix, flip) {
+            matrix = matrix.clone().translate(flip.x ? this.outerRadius : 0, flip.y ? this.outerRadius : 0);
+            // if (matrix.tx || matrix.ty) {
+            //     yield ["anchor", this.anchor.shifted(-matrix.tx, -matrix.ty)];
+            // }
+            // TODO: improve resize
+            yield ["outerRadius", matrix.point(this.outerRadius, this.outerRadius).length / Math.SQRT2 || 0.00001];
+        }
     }
 
     /*
@@ -5742,11 +7006,28 @@
             }
             this.invalidateBoundsAndPicture();
         }
-        get globalBounds() {
+        /**
+         * @inheritDoc
+         */
+        get isResizable() {
+            return true;
+        }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix) {
+            const path = this.path.clone();
+            path.transform(matrix);
+            yield ["path", path];
+        }
+        get localBounds() {
             return this._path.bounds;
         }
-        get globalTightBounds() {
-            return this._path.bounds;
+        get globalBounds() {
+            if (this._globalBounds == null) {
+                this._globalBounds = ConvexQuad.fromRectangle(this.localBounds, this.globalMatrix);
+            }
+            return this._globalBounds;
         }
         get supportsChildren() {
             return true;
@@ -5757,6 +7038,21 @@
                 this._path.dispose();
                 this._path = null;
             }
+        }
+        getElementAt(point, seeThrough) {
+            if (!this._path.contains(point, this.globalMatrix)) {
+                return null;
+            }
+            if (!seeThrough) {
+                return this;
+            }
+            for (const element of this.children(true)) {
+                const result = element.getElementAt(point, seeThrough);
+                if (result) {
+                    return result;
+                }
+            }
+            return null;
         }
         cloneCurrent(newId) {
             return new ClipPathElement(this._path.clone(), this._document, newId ? null : this._id);
@@ -5812,23 +7108,11 @@
         /**
          * @inheritDoc
          */
-        get localTightBounds() {
-            return this.localBounds;
-        }
-        /**
-         * @inheritDoc
-         */
         get globalBounds() {
-            if (this._globalBounds === null) {
-                this._globalBounds = this.localBounds.transform(this.globalMatrix);
+            if (this._globalBounds == null) {
+                this._globalBounds = ConvexQuad.fromRectangle(this.localBounds, this.globalMatrix);
             }
             return this._globalBounds;
-        }
-        /**
-         * @inheritDoc
-         */
-        get globalTightBounds() {
-            return this.globalBounds;
         }
         get text() {
             return this._text;
@@ -5881,6 +7165,15 @@
             if (f.weight !== value) {
                 this.font = FontManager.getFont(f.family, f.style, value, f.size);
             }
+        }
+        /**
+         * @inheritDoc
+         */
+        getElementAt(point) {
+            if (this.hidden || this.locked) {
+                return null;
+            }
+            return this.globalBounds.containsPoint(point) ? this : null;
         }
         /**
          * @inheritDoc
@@ -5941,12 +7234,6 @@
                 this._path = null;
             }
         }
-        getElementAt(point) {
-            if (this.hidden || this.locked) {
-                return null;
-            }
-            return this.globalTightBounds.contains(point.x, point.y) ? this : null;
-        }
         get pathToDraw() {
             if (this._path === null) {
                 this._path = this._font.nativeFont.textToPath(this._text);
@@ -5992,17 +7279,11 @@
             }
             return this._localBounds;
         }
-        get localTightBounds() {
-            return this.localBounds;
-        }
         get globalBounds() {
             if (this._globalBounds == null) {
-                this._globalBounds = this.localBounds.transform(this.globalMatrix);
+                this._globalBounds = ConvexQuad.fromRectangle(this.localBounds, this.globalMatrix);
             }
             return this._globalBounds;
-        }
-        get globalTightBounds() {
-            return this.globalBounds;
         }
         get reference() {
             return this._reference;
@@ -6014,10 +7295,10 @@
             }
         }
         /**
-         * Get the time to use for picture generation, or null to not change time
+         * Get document options used for picture generation
          */
-        getReferenceTime() {
-            return null;
+        getDocumentPictureOptions() {
+            return undefined;
         }
         resolvePicture() {
             if (!this._reference || !this._document || !this._document.project) {
@@ -6025,13 +7306,13 @@
                 return null;
             }
             // Generate a new document picture
-            return this._document.project.getDocumentPicture(this._reference, this.getReferenceTime());
+            return this._document.project.getDocumentPicture(this._reference, this.getDocumentPictureOptions());
         }
         getElementAt(point) {
             if (this.hidden || this.locked) {
                 return null;
             }
-            return this.globalTightBounds.contains(point.x, point.y) ? this : null;
+            return this.globalBounds.containsPoint(point) ? this : null;
         }
     }
 
@@ -6057,7 +7338,6 @@
             this._y = 0;
             this._width = 0;
             this._height = 0;
-            this._time = 0;
         }
         get type() {
             return "symbol";
@@ -6085,17 +7365,11 @@
                 this.invalidateBoundsAndPicture();
             }
         }
-        get time() {
-            return this._time;
-        }
-        set time(value) {
-            if (this._time !== value) {
-                this._time = value;
-                this.invalidate();
-            }
-        }
-        getReferenceTime() {
-            return this._time;
+        /**
+         * @inheritDoc
+         */
+        get isResizable() {
+            return true;
         }
         getBounds() {
             return new Rectangle(0, 0, this._width, this._height);
@@ -6106,7 +7380,6 @@
             clone._y = this._y;
             clone._width = this._width;
             clone._height = this._height;
-            clone._time = this._time;
             return clone;
         }
         /**
@@ -6124,6 +7397,18 @@
             context.drawPicture(picture);
             context.restore();
             return bounds;
+        }
+        /**
+         * @inheritDoc
+         */
+        *localResize(matrix, flip) {
+            matrix = matrix.clone().translate(flip.x ? this.localBounds.width : 0, flip.y ? this.localBounds.height : 0);
+            if (matrix.tx || matrix.ty) {
+                yield ["anchor", this.anchor.shifted(-matrix.tx, -matrix.ty)];
+            }
+            const bounds = this.localBounds.transform(matrix, false);
+            yield ["width", bounds.width || 0.00001];
+            yield ["height", bounds.height || 0.00001];
         }
     }
 
@@ -6145,7 +7430,6 @@
     class MaskElement extends ReferenceElement {
         constructor(reference, document, id) {
             super(reference, document, id);
-            this._time = 0;
             this._absolute = true;
         }
         get supportsChildren() {
@@ -6154,24 +7438,17 @@
         get type() {
             return "mask";
         }
-        get time() {
-            return this._time;
-        }
-        set time(value) {
-            if (this._time !== value) {
-                this._time = value;
-                this.invalidate();
-            }
-        }
-        getReferenceTime() {
-            return this._time;
+        /**
+         * @inheritDoc
+         */
+        get isResizable() {
+            return false;
         }
         getBounds() {
             return null;
         }
         cloneCurrent(newId) {
             const clone = new MaskElement(this._reference, this._document, newId ? null : this._id);
-            clone._time = this._time;
             clone._absolute = this._absolute;
             return clone;
         }
@@ -6469,6 +7746,11 @@
         clone() {
             return new GuideList(this._guides.map((g) => g.clone()));
         }
+        *[Symbol.iterator]() {
+            for (let i = 0, l = this._guides.length; i < l; i++) {
+                yield this._guides[i];
+            }
+        }
     }
 
     /*
@@ -6492,10 +7774,6 @@
             this._elementCache = new Map();
             this._grid = null;
             this._guides = null;
-            // This is optional, and must be manually set
-            // Projects that are not using animations should ignore this
-            // It is kept here only to preserve correct State (see clone(), dispose())
-            this._animation = null;
             /**
              * Readonly! Reference to current project.
              * If null, then this document is not attached to a project.
@@ -6513,38 +7791,17 @@
             }
             return this._localBounds;
         }
-        get localTightBounds() {
-            return this.localBounds;
-        }
         get globalBounds() {
             if (!this._globalBounds) {
-                this._globalBounds = this.localBounds.transform(this.localMatrix);
+                this._globalBounds = ConvexQuad.fromRectangle(this.localBounds, this.localMatrix);
             }
             return this._globalBounds;
-        }
-        get globalTightBounds() {
-            return this.globalBounds;
         }
         get size() {
             return this.localBounds;
         }
         get pictureBounds() {
             return Rectangle.merge([this.localBounds, super.pictureBounds]);
-        }
-        get animation() {
-            return this._animation;
-        }
-        set animation(value) {
-            if (value.document !== this) {
-                return;
-            }
-            if (this._animation) {
-                this._animation.dispose();
-            }
-            this._animation = value;
-            if (value) {
-                value.cleanupAnimatedProperties();
-            }
         }
         clone(newId = false) {
             const clone = super.clone(newId);
@@ -6555,9 +7812,6 @@
             }
             if (this._guides) {
                 clone._guides = this._guides.clone();
-            }
-            if (this._animation) {
-                clone._animation = this._animation.clone(clone);
             }
             return clone;
         }
@@ -6571,10 +7825,6 @@
                 this._guides.dispose();
                 this._guides = null;
             }
-            if (this._animation) {
-                this._animation.dispose();
-                this._animation = null;
-            }
             // Remove reference to project
             this.project = null;
         }
@@ -6587,14 +7837,17 @@
             }
             return this._grid;
         }
+        set grid(value) {
+            this._grid = value;
+        }
         get guides() {
             if (this._guides === null) {
                 this._guides = new GuideList();
             }
             return this._guides;
         }
-        set grid(value) {
-            this._grid = value;
+        set guides(value) {
+            this._guides = value;
         }
         getElementById(id) {
             if (this._elementCache.has(id)) {
@@ -6604,10 +7857,9 @@
             this._elementCache.set(id, element);
             return element;
         }
-        getElementAt(point) {
-            // TODO: remove this or add multiple options (see through groups, etc)
+        getElementAt(point, seeThrough = true) {
             for (const element of this.children(true)) {
-                const el = element.getElementAt(point);
+                const el = element.getElementAt(point, seeThrough);
                 if (el) {
                     return el;
                 }
@@ -6667,10 +7919,10 @@
      * limitations under the License.
      */
     const WHITE_BRUSH = SolidBrush.WHITE;
-    class BoardDocument extends Document {
-        constructor(board, id) {
+    class SingleBoardDocument extends Document {
+        constructor(size, id) {
             super(id);
-            this._board = board;
+            this._board = Rectangle.fromSize(size);
         }
         getBounds() {
             return this._board;
@@ -6720,9 +7972,9 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class MasterDocument extends BoardDocument {
-        constructor(board = new Rectangle(0, 0, 900, 600), id) {
-            super(board, id);
+    class MasterDocument extends SingleBoardDocument {
+        constructor(size = new Size(600, 900), id) {
+            super(size, id);
         }
         test() {
             // TODO: remove this
@@ -6768,217 +8020,9 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class PatternDocument extends BoardDocument {
+    class PatternDocument extends SingleBoardDocument {
         constructor(board = new Rectangle(0, 0, 900, 600), id) {
             super(board, id);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const DefaultSnappingOptions = {
-        pixel: false,
-        grid: false,
-        guides: true,
-        bounds: true,
-        points: true,
-        tolerance: 10,
-    };
-    class Snapping {
-        constructor(engine, options) {
-            // TODO: add ignore points
-            this.options = options || DefaultSnappingOptions;
-            this.list = this.collect(engine.document);
-        }
-        dispose() {
-            this.list = this.options = null;
-        }
-        collect(document) {
-            const list = [];
-            if (this.options.guides) ;
-            this.collectRectPoints(Rectangle.fromSize(document.size), list);
-            if (this.options.bounds || this.options.points) {
-                for (const child of document.children(true)) {
-                    this.collectElementPoints(child, list);
-                }
-            }
-            // Removing duplicates using a custom function is problematic in js
-            // and also very, very slow.
-            // let s = performance.now();
-            // list.filter(filterDuplicatePoints);
-            // console.log(performance.now() - s);
-            return list;
-        }
-        collectRectPoints(rect, list) {
-            const mx = rect.middleX, my = rect.middleY;
-            list.push(new Point(rect.left, my), new Point(mx, rect.top), new Point(rect.right, my), new Point(mx, rect.bottom));
-        }
-        collectElementPoints(element, list) {
-            if (element.hidden) {
-                return;
-            }
-            if (element.supportsChildren) {
-                for (const child of element.children(true)) {
-                    this.collectElementPoints(child, list);
-                }
-            }
-            if (this.options.bounds) {
-                this.collectRectPoints(element.globalTightBounds, list);
-            }
-            if (this.options.points) ;
-        }
-        snapMultiple(point, references) {
-            const data = {
-                point,
-                dist: 0,
-                current: {
-                    x: null,
-                    y: null
-                },
-                delta: {
-                    x: 0,
-                    y: 0
-                },
-                min: {
-                    x: Number.POSITIVE_INFINITY,
-                    y: Number.POSITIVE_INFINITY,
-                },
-                lines: {
-                    top: Number.POSITIVE_INFINITY,
-                    bottom: Number.NEGATIVE_INFINITY,
-                    left: Number.POSITIVE_INFINITY,
-                    right: Number.NEGATIVE_INFINITY,
-                }
-            };
-            for (const reference of references) {
-                this.snapOne(point, reference, data);
-            }
-            data.dist = data.min.x ** 2 + data.min.y ** 2;
-            return data;
-        }
-        snapOne(point, reference, data) {
-            const dx = reference.x - point.x;
-            const mdx = Math.abs(dx);
-            if (mdx <= this.options.tolerance) {
-                if (mdx < data.min.x) {
-                    data.min.x = mdx;
-                    data.delta.x = dx;
-                    data.current.x = reference.x;
-                    data.lines.top = data.lines.bottom = reference.y;
-                }
-                else if (reference.x === data.current.x) {
-                    if (reference.y < data.lines.top) {
-                        data.lines.top = reference.y;
-                    }
-                    if (reference.y > data.lines.bottom) {
-                        data.lines.bottom = reference.y;
-                    }
-                }
-            }
-            const dy = reference.y - point.y;
-            const mdy = Math.abs(dy);
-            if (mdy <= this.options.tolerance) {
-                if (mdy < data.min.y) {
-                    data.min.y = mdy;
-                    data.delta.y = dy;
-                    data.current.y = reference.y;
-                    data.lines.left = data.lines.right = reference.x;
-                }
-                else if (reference.y === data.current.y) {
-                    if (reference.x < data.lines.left) {
-                        data.lines.left = reference.x;
-                    }
-                    if (reference.x > data.lines.right) {
-                        data.lines.right = reference.x;
-                    }
-                }
-            }
-        }
-        preparePoints(points) {
-            if (!this.options.pixel && !this.options.grid) {
-                return points;
-            }
-            return points.map(point => {
-                if (this.options.pixel) {
-                    point = point.rounded();
-                }
-                if (this.options.grid) ;
-                return point;
-            });
-        }
-        snapRect(rect, delta) {
-            if (!this.list || !this.list.length) {
-                return null;
-            }
-            if (delta && !delta.isZero) {
-                return this.snapPoints(rect.topLeft.add(delta), rect.topRight.add(delta), rect.middle.add(delta), rect.bottomLeft.add(delta), rect.bottomRight.add(delta));
-            }
-            return this.snapPoints(rect.topLeft, rect.topRight, rect.middle, rect.bottomLeft, rect.bottomRight);
-        }
-        snapPoints(...points) {
-            if (!this.list || !this.list.length) {
-                return null;
-            }
-            points = this.preparePoints(points);
-            let best = null;
-            for (const p of points) {
-                const ret = this.snapMultiple(p, this.list);
-                if (best == null) {
-                    best = ret;
-                }
-                else {
-                    if (ret.dist < best.dist) {
-                        best = ret;
-                    }
-                    else if (ret.dist === best.dist) {
-                        if (best.current.x === ret.current.x) {
-                            if (ret.lines.top < best.lines.top) {
-                                best.lines.top = ret.lines.top;
-                            }
-                            if (ret.lines.bottom > best.lines.bounds) {
-                                best.lines.bounds = ret.lines.bottom;
-                            }
-                        }
-                        if (best.current.y === ret.current.y) {
-                            if (ret.lines.left < best.lines.left) {
-                                best.lines.left = ret.lines.left;
-                            }
-                            if (ret.lines.right > best.lines.right) {
-                                best.lines.right = ret.lines.right;
-                            }
-                        }
-                    }
-                }
-            }
-            if (!best) {
-                return null;
-            }
-            if (best.point.x < best.lines.left) {
-                best.lines.left = best.point.x;
-            }
-            if (best.point.x > best.lines.right) {
-                best.lines.right = best.point.x;
-            }
-            if (best.point.y < best.lines.top) {
-                best.lines.top = best.point.y;
-            }
-            if (best.point.y > best.lines.bottom) {
-                best.lines.bottom = best.point.y;
-            }
-            return best;
         }
     }
 
@@ -7000,20 +8044,20 @@
     class ShapeBuilderTool extends BaseTool {
         constructor() {
             super(...arguments);
-            this.snappingInfo = null;
+            this.snappingTest = null;
             this.element = null;
             this.startPoint = null;
             this.currentPoint = null;
             this.lastEvent = null;
-            this.snappingLines = null;
-            this.snapLinePen = new DefaultPen(new SolidBrush(Color.from('red')), 1);
             this.defaultCanvasCursor = exports.Cursor.Target;
         }
-        render(engine) {
-            if (!this.isInvalidated) {
-                return;
-            }
-            this.drawSnapshotImage(engine, false);
+        onMouseEnter(engine, event) {
+            this.snapping.init(engine);
+        }
+        onMouseLeave(engine, event) {
+            this.snapping.reset();
+        }
+        draw(engine) {
             // Check if there is something to draw
             if (this.element && this.startPoint && this.currentPoint) {
                 this.updateElement(engine, this.element, this.startPoint, this.currentPoint);
@@ -7023,8 +8067,6 @@
                 this.drawShape(engine, this.element);
                 context.restore();
             }
-            engine.context.flush();
-            this.isInvalidated = false;
         }
         onKeyboardStatusChange(engine, event) {
             this.invalidateToolDrawing();
@@ -7035,47 +8077,17 @@
          */
         drawShape(engine, element) {
             element.draw(engine.context);
-            this.drawSnappingLines(engine);
-        }
-        drawSnappingLines(engine) {
-            if (!this.snappingLines) {
-                return;
-            }
-            // TODO: improve
-            const context = engine.context;
-            const pen = this.snapLinePen;
-            const w = pen.width;
-            pen.width = engine.viewBox.getLineWidth(pen.width);
-            context.drawLine({ x: this.currentPoint.x, y: this.snappingLines.top }, { x: this.currentPoint.x, y: this.snappingLines.bottom }, pen);
-            context.drawLine({ x: this.snappingLines.left, y: this.currentPoint.y }, { x: this.snappingLines.right, y: this.currentPoint.y }, pen);
-            pen.width = w;
         }
         decorateElement(engine, element) {
             // nothing here, you can override this method
         }
-        prepareSnapping(engine) {
-            return new Snapping(engine);
-        }
-        getSnappedPoint(point) {
-            if (!this.snappingInfo) {
-                return point;
-            }
-            const snap = this.snappingInfo.snapPoints(point);
-            if (!snap) {
-                this.snappingLines = null;
-                return point;
-            }
-            this.snappingLines = snap.lines;
-            return point.add(snap.delta);
-        }
         onMouseLeftButtonDown(engine, event) {
-            this.createSnapping(engine);
-            this.startPoint = this.currentPoint = this.getSnappedPoint(event.position);
+            this.startPoint = this.currentPoint = this.snapping.snapPoint(event.position);
             this.createBuilder(engine);
         }
         onMouseLeftButtonMove(engine, event) {
             this.lastEvent = event;
-            const p = this.getSnappedPoint(event.position);
+            const p = this.snapping.snapPoint(event.position);
             if (p.equals(this.currentPoint)) {
                 return;
             }
@@ -7085,15 +8097,6 @@
         onMouseLeftButtonUp(engine, event) {
             this.saveElement(engine);
             this.disposeBuilder();
-        }
-        createSnapping(engine) {
-            if (this.snappingInfo) {
-                this.snappingInfo.dispose();
-            }
-            this.snappingLines = null;
-            // let start = performance.now();
-            this.snappingInfo = this.prepareSnapping(engine);
-            // console.log(performance.now() - start);
         }
         createBuilder(engine) {
             if (!this.element) {
@@ -7107,11 +8110,7 @@
                 this.element.dispose();
                 this.element = null;
             }
-            if (this.snappingInfo) {
-                this.snappingInfo.dispose();
-                this.snappingInfo = null;
-            }
-            this.snappingLines = null;
+            this.snapping.reset();
             this.lastEvent = this.startPoint = this.currentPoint = null;
             this.invalidateToolDrawing();
         }
@@ -7197,21 +8196,40 @@
             return new EllipseElement(new EllipseShape(0, 0), engine.document);
         }
         updateElement(engine, element, from, to) {
-            const rect = Rectangle.fromPoints(from, to);
+            let left = from.x, right = to.x, top = from.y, bottom = to.y;
             if (this.keyboardStatus.isAlt) {
-                // git [uTODO: ... copy rectangle behaviour
+                const rect = Rectangle.fromLTRB(left, top, right, bottom);
                 element.position = rect.topLeft;
+                if (this.keyboardStatus.isShift) {
+                    element.anchor = new Point(rect.diagonal, rect.diagonal);
+                    element.width = element.height = rect.diagonal * 2;
+                }
+                else {
+                    element.anchor = new Point(rect.width, rect.height);
+                    element.width = rect.width * 2;
+                    element.height = rect.height * 2;
+                }
+                return;
             }
-            else {
-                // Center
-                element.position = from;
+            if (left > right) {
+                const tmp = right;
+                right = left;
+                left = tmp;
             }
+            if (top > bottom) {
+                const tmp = bottom;
+                bottom = top;
+                top = tmp;
+            }
+            let rect = Rectangle.fromLTRB(left, top, right, bottom);
+            element.position = rect.topLeft;
+            element.anchor = Point.ZERO;
             if (this.keyboardStatus.isShift) {
-                element.width = element.height = rect.diagonal * 2;
+                element.width = element.height = rect.diagonal;
             }
             else {
-                element.width = rect.width * 2;
-                element.height = rect.height * 2;
+                element.width = rect.width;
+                element.height = rect.height;
             }
         }
     }
@@ -7315,7 +8333,7 @@
         }
         onMouseHover(engine, event) {
             if (this.isBuilding) {
-                this.currentPoint = this.getSnappedPoint(event.position);
+                this.currentPoint = this.snapping.snapPoint(event.position);
                 this.invalidateToolDrawing();
             }
         }
@@ -7385,194 +8403,12 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    var Action;
-    (function (Action) {
-        Action[Action["None"] = 0] = "None";
-        Action[Action["Hover"] = 1] = "Hover";
-        Action[Action["Move"] = 2] = "Move";
-        Action[Action["Select"] = 3] = "Select";
-        Action[Action["RectangleSelection"] = 4] = "RectangleSelection";
-        Action[Action["Pan"] = 5] = "Pan";
-    })(Action || (Action = {}));
-    class SelectTool extends BaseTool {
-        constructor() {
-            super(...arguments);
-            this.position = null;
-            this.selectionPivot = null;
-            this.hoverElement = null;
-            this.selectionRectangle = null;
-            this.defaultCanvasCursor = exports.Cursor.Pointer;
-            this.action = Action.None;
-        }
-        deactivate(engine) {
-            super.deactivate(engine);
-            this.action = Action.None;
-        }
-        updateTheme(engine) {
-            const theme = engine.theme;
-            this.hoverPen = new DefaultPen(new SolidBrush(theme.elementHover));
-            this.selectPen = new DefaultPen(new SolidBrush(theme.selectionBox));
-            this.selectFill = new SolidBrush(theme.selectionArea, 0.25);
-        }
-        get name() {
-            return "select";
-        }
-        render(engine) {
-            if (!this.isInvalidated) {
-                return;
-            }
-            switch (this.action) {
-                case Action.Hover:
-                    engine.cursor = exports.Cursor.PointerSelectable;
-                    break;
-                case Action.Move:
-                case Action.Select:
-                    engine.cursor = exports.Cursor.PointerMove;
-                    break;
-                case Action.RectangleSelection:
-                    engine.cursor = exports.Cursor.Pointer;
-                    break;
-                case Action.Pan:
-                    engine.cursor = exports.Cursor.HandHold;
-                    break;
-                default:
-                    engine.cursor = this.defaultCanvasCursor;
-            }
-            this.drawSnapshotImage(engine, false);
-            if (this.action !== Action.Pan) {
-                this.drawSelectedElements(engine);
-                this.drawHoverElements(engine);
-                this.drawSelectionRectangle(engine);
-            }
-            engine.context.flush();
-            this.isInvalidated = false;
-        }
-        onMouseHover(engine, event) {
-            const prev = this.hoverElement;
-            this.hoverElement = engine.document.getElementAt(event.position);
-            if (prev !== this.hoverElement) {
-                this.action = this.hoverElement ? Action.Hover : Action.None;
-                this.isInvalidated = true;
-            }
-        }
-        onMouseLeftButtonDown(engine, event) {
-            const node = engine.document.getElementAt(event.position);
-            if (node !== null) {
-                this.action = Action.Select;
-                this.position = event.position;
-                //engine.selection.toggle(node, this.keyboardStatus.isCtrl);
-                engine.selection.select(node, this.keyboardStatus.isCtrl || engine.selection.isSelected(node));
-                this.isInvalidated = true;
-                return;
-            }
-            this.action = Action.RectangleSelection;
-            this.selectionPivot = event.position;
-            this.selectionRectangle = engine.viewBox.getRectangleFromPoints(this.selectionPivot, event.position);
-            engine.selection.clear();
-            this.isInvalidated = true;
-        }
-        onMouseLeftButtonMove(engine, event) {
-            if (this.selectionPivot !== null) {
-                this.selectionRectangle = engine.viewBox.getRectangleFromPoints(this.selectionPivot, event.position);
-                this.isInvalidated = true;
-                return;
-            }
-            if (this.position !== null && !this.position.equals(event.position)) {
-                const sub = event.position.sub(this.position);
-                this.position = event.position;
-                if (engine.project.middleware.moveElementsBy(engine.selection, sub)) {
-                    this.action = Action.Move;
-                    this.invalidate();
-                }
-                return;
-            }
-        }
-        onMouseLeftButtonUp(engine, event) {
-            if (this.selectionPivot) {
-                engine.selection.rectSelect(Rectangle.fromTransformedPoints(engine.document.globalMatrix, this.selectionPivot, event.position), engine.document);
-                this.selectionRectangle = null;
-                this.selectionPivot = null;
-                this.isInvalidated = true;
-                this.hoverElement = engine.document.getElementAt(event.position);
-                this.action = this.hoverElement ? Action.Hover : Action.None;
-                return;
-            }
-            if (this.position !== null) {
-                this.position = null;
-                // TODO: Check if object was moved
-                if (this.action === Action.Move) {
-                    engine.project.state.snapshot();
-                }
-                this.action = Action.Hover;
-                this.invalidate();
-                return;
-            }
-        }
-        onMouseWheelButtonDown(engine, event) {
-            super.onMouseWheelButtonDown(engine, event);
-            this.action = Action.Pan;
-            this.isInvalidated = true;
-        }
-        onMouseWheelButtonUp(engine, event) {
-            super.onMouseWheelButtonUp(engine, event);
-            this.hoverElement = engine.document.getElementAt(event.position);
-            this.action = this.hoverElement ? Action.Hover : Action.None;
-            this.isInvalidated = true;
-        }
-        drawSelectedElements(engine) {
-            if (engine.selection.length === 0) {
-                return;
-            }
-            const context = engine.context;
-            context.save();
-            context.multiplyMatrix(engine.viewBox.matrix);
-            this.selectPen.width = engine.viewBox.getLineWidth(1);
-            for (let node of engine.selection) {
-                context.drawRect(node.globalTightBounds, this.selectPen);
-            }
-            context.restore();
-        }
-        drawHoverElements(engine) {
-            if (this.hoverElement === null) {
-                return;
-            }
-            const context = engine.context;
-            context.save();
-            context.multiplyMatrix(engine.viewBox.matrix);
-            this.hoverPen.width = engine.viewBox.getLineWidth(1);
-            if (this.hoverElement instanceof ShapeElement) {
-                context.drawPath(this.hoverElement.globalPath, this.hoverPen);
-            }
-            else {
-                context.drawRect(this.hoverElement.globalBounds, this.hoverPen);
-            }
-            context.restore();
-        }
-        drawSelectionRectangle(engine) {
-            if (this.selectionRectangle !== null && this.selectionRectangle.isVisible) {
-                engine.context.drawRect(this.selectionRectangle, this.selectFill);
-            }
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
     class ColorPickerTool extends BaseTool {
         get name() {
             return "color-picker";
+        }
+        draw(engine, timestamp) {
+            // TODO: ...
         }
         onMouseLeftButtonDown(engine, event) {
             // if (event.domEvent.altKey) {
@@ -7898,6 +8734,8 @@
         --pointer-curve-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Zz4KICAgIDxwYXRoIGQ9Ik0yMy42NSwxMy42NDZWMTUuNWE3Ljc4Myw3Ljc4MywwLDAsMS0uNjgsMy4xMiw4LjU0NCw4LjU0NCwwLDAsMS0xLjg1LDIuNzUsOC44LDguOCwwLDAsMS0yLjc1LDEuODZBOC42MjUsOC42MjUsMCwwLDEsMTUsMjMuOUgxMy4xNXY1LjJIMTVhMTMuODQ0LDEzLjg0NCwwLDAsMCw5Ljc5LTQuMDUsMTMuODQxLDEzLjg0MSwwLDAsMCwyLjk3LTQuNCwxMy4yMzksMTMuMjM5LDAsMCwwLDEuMDktNS4xNXYtMS44NVoiLz4KICAgIDxwYXRoIGQ9Ik0yNC4xNSwxNC4xNDZWMTUuNWE4LjM4NCw4LjM4NCwwLDAsMS0uNzIsMy4zMSw5LjEwNyw5LjEwNywwLDAsMS0xLjk2LDIuOTEsOC45NzUsOC45NzUsMCwwLDEtMi45MSwxLjk3QTkuMiw5LjIsMCwwLDEsMTUsMjQuNEgxMy42NXY0LjJIMTVhMTMuMywxMy4zLDAsMCwwLDkuNDQtMy45MSwxMy4xMTcsMTMuMTE3LDAsMCwwLDIuODYtNC4yNCwxMi43MjgsMTIuNzI4LDAsMCwwLDEuMDUtNC45NXYtMS4zNVptMS45MSw1Ljc4YTEyLjE0MSwxMi4xNDEsMCwwLDEtMi41NywzLjgxLDEyLjAxNywxMi4wMTcsMCwwLDEtMy44MiwyLjU3LDExLjg0NCwxMS44NDQsMCwwLDEtNC42Ny45NHYtMS41YTEwLjQsMTAuNCwwLDAsMCw3LjQyLTMuMDcsMTAuMzA2LDEwLjMwNiwwLDAsMCwyLjI1LTMuMzQsOS42LDkuNiwwLDAsMCwuODMtMy44NEgyN0ExMS40NTUsMTEuNDU1LDAsMCwxLDI2LjA2LDE5LjkyNloiIGZpbGw9IiNmZmYiLz4KICA8L2c+CiAgPGc+CiAgICA8cG9seWdvbiBwb2ludHM9IjE2Ljc3IDE2LjIyNiAxLjM1IDEuNDE2IDAuNSAwLjYwNiAwLjUgMjMuODY2IDEuMzUgMjMuMDM2IDcuNDcgMTcuMDg2IDE3LjY2IDE3LjA4NiAxNi43NyAxNi4yMjYiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTYuNDIgMTYuNTg2IDcuMjYgMTYuNTg2IDEgMjIuNjg2IDEgMS43NzYgMTYuNDIgMTYuNTg2IiBmaWxsPSIjZmZmIi8+CiAgICA8cGF0aCBkPSJNMiw0LjEyNnYxNi4xOWw0Ljg2LTQuNzNoNy4wOFptNC40NSwxMC40NkwzLDE3Ljk0NlY2LjQ3Nmw4LjQ1LDguMTFaIi8+CiAgPC9nPgo8L3N2Zz4K");
         --pointer-move-alt-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMC41NDYgMC41NjMgMC41NDYgMS43MzYgMC41NDYgMjIuNjM3IDAuNTQ2IDIzLjgyMSAxLjM5NCAyMi45OTUgNy41MTQgMTcuMDQxIDE2LjQ2NyAxNy4wNDEgMTcuNzEgMTcuMDQxIDE2LjgxMyAxNi4xOCAxLjM5MiAxLjM3NSAwLjU0NiAwLjU2MyAwLjU0NiAwLjU2MyIvPgogICAgPHBhdGggZD0iTTEuMDQ2LDEuNzM2djIwLjlsNi4yNjUtNi4xaDkuMTU2Wk02LjksMTUuNTQxbC0uMjkxLjI4M0wyLjA0NiwyMC4yNjlWNC4wODJMMTMuOTgxLDE1LjU0MUg2LjlaIiBmaWxsPSIjZmZmIi8+CiAgPC9nPgogIDxnPgogICAgPHJlY3QgeD0iMjIuNSIgeT0iMjMiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIyLjk2Ii8+CiAgICA8cGF0aCBkPSJNMjUuNTM0LDIzLjVoLS4wNjhBMi40NjYsMi40NjYsMCwwLDAsMjMsMjUuOTY2di4wNjhBMi40NjYsMi40NjYsMCwwLDAsMjUuNDY2LDI4LjVoLjA2OEEyLjQ2NiwyLjQ2NiwwLDAsMCwyOCwyNi4wMzR2LS4wNjhBMi40NjYsMi40NjYsMCwwLDAsMjUuNTM0LDIzLjVaTTI3LDI2LjAyYTEuNDgsMS40OCwwLDAsMS0xLjQ4LDEuNDhoLS4wNEExLjQ4LDEuNDgsMCwwLDEsMjQsMjYuMDJ2LS4wNGExLjQ4LDEuNDgsMCwwLDEsMS40OC0xLjQ4aC4wNEExLjQ4LDEuNDgsMCwwLDEsMjcsMjUuOThaIiBmaWxsPSIjZmZmIi8+CiAgICA8Zz4KICAgICAgPHBvbHlnb24gcG9pbnRzPSIyNS40ODggMTIuNSAyNC42NzIgMTMuNjg0IDIxLjA5NSAxOC44NzUgMTkuOTc1IDIwLjUgMjEuOTExIDIwLjUgMjkuMDY0IDIwLjUgMzEgMjAuNSAyOS44OCAxOC44NzUgMjYuMzAzIDEzLjY4NCAyNS40ODggMTIuNSAyNS40ODggMTIuNSIvPgogICAgICA8cGF0aCBkPSJNMzAuMDMyLDE5Ljk4NUgyMC45NDNsNC41NDUtNi41OTVabS03LjE1My0xLjAzSDI4LjFsLTIuNjA4LTMuNzg2WiIgZmlsbD0iI2ZmZiIvPgogICAgPC9nPgogICAgPGc+CiAgICAgIDxwb2x5Z29uIHBvaW50cz0iMzkgMjUuOTg4IDM3LjgxNiAyNS4xNzIgMzIuNjI1IDIxLjU5NSAzMSAyMC40NzUgMzEgMjIuNDExIDMxIDI5LjU2NCAzMSAzMS41IDMyLjYyNSAzMC4zOCAzNy44MTYgMjYuODAzIDM5IDI1Ljk4OCAzOSAyNS45ODgiLz4KICAgICAgPHBhdGggZD0iTTMxLjUxNSwzMC41MzJWMjEuNDQzbDYuNTk1LDQuNTQ1Wm0xLjAzLTcuMTUzVjI4LjZsMy43ODYtMi42MDhaIiBmaWxsPSIjZmZmIi8+CiAgICA8L2c+CiAgICA8Zz4KICAgICAgPHBvbHlnb24gcG9pbnRzPSIyNS41MTIgMzkuNSAyNi4zMjggMzguMzE2IDI5LjkwNSAzMy4xMjUgMzEuMDI1IDMxLjUgMjkuMDg5IDMxLjUgMjEuOTM2IDMxLjUgMjAgMzEuNSAyMS4xMiAzMy4xMjUgMjQuNjk3IDM4LjMxNiAyNS41MTIgMzkuNSAyNS41MTIgMzkuNSIvPgogICAgICA8cGF0aCBkPSJNMjAuOTY4LDMyLjAxNWg5LjA4OUwyNS41MTIsMzguNjFabTcuMTUzLDEuMDNIMjIuOWwyLjYwOCwzLjc4NloiIGZpbGw9IiNmZmYiLz4KICAgIDwvZz4KICAgIDxnPgogICAgICA8cG9seWdvbiBwb2ludHM9IjEyIDI2LjAxMiAxMy4xODQgMjYuODI4IDE4LjM3NSAzMC40MDUgMjAgMzEuNTI1IDIwIDI5LjU4OSAyMCAyMi40MzYgMjAgMjAuNSAxOC4zNzUgMjEuNjIgMTMuMTg0IDI1LjE5NyAxMiAyNi4wMTIgMTIgMjYuMDEyIi8+CiAgICAgIDxwYXRoIGQ9Ik0xOS40ODUsMjEuNDY4djkuMDg5TDEyLjg5LDI2LjAxMlptLTEuMDMsNy4xNTNWMjMuNGwtMy43ODYsMi42MDhaIiBmaWxsPSIjZmZmIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K");
         --pointer-move-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj4KICA8Zz4KICAgIDxyZWN0IHg9IjIyLjUiIHk9IjIzIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMi45NiIvPgogICAgPHBhdGggZD0iTTI1LjUzNCwyMy41aC0uMDY4QTIuNDY2LDIuNDY2LDAsMCwwLDIzLDI1Ljk2NnYuMDY4QTIuNDY2LDIuNDY2LDAsMCwwLDI1LjQ2NiwyOC41aC4wNjhBMi40NjYsMi40NjYsMCwwLDAsMjgsMjYuMDM0di0uMDY4QTIuNDY2LDIuNDY2LDAsMCwwLDI1LjUzNCwyMy41Wk0yNywyNi4wMmExLjQ4LDEuNDgsMCwwLDEtMS40OCwxLjQ4aC0uMDRBMS40OCwxLjQ4LDAsMCwxLDI0LDI2LjAydi0uMDRhMS40OCwxLjQ4LDAsMCwxLDEuNDgtMS40OGguMDRBMS40OCwxLjQ4LDAsMCwxLDI3LDI1Ljk4WiIgZmlsbD0iI2ZmZiIvPgogICAgPGc+CiAgICAgIDxwb2x5Z29uIHBvaW50cz0iMjUuNDg4IDEyLjUgMjQuNjcyIDEzLjY4NCAyMS4wOTUgMTguODc1IDE5Ljk3NSAyMC41IDIxLjkxMSAyMC41IDI5LjA2NCAyMC41IDMxIDIwLjUgMjkuODggMTguODc1IDI2LjMwMyAxMy42ODQgMjUuNDg4IDEyLjUgMjUuNDg4IDEyLjUiLz4KICAgICAgPHBhdGggZD0iTTMwLjAzMiwxOS45ODVIMjAuOTQzbDQuNTQ1LTYuNTk1Wm0tNy4xNTMtMS4wM0gyOC4xbC0yLjYwOC0zLjc4NloiIGZpbGw9IiNmZmYiLz4KICAgIDwvZz4KICAgIDxnPgogICAgICA8cG9seWdvbiBwb2ludHM9IjM5IDI1Ljk4OCAzNy44MTYgMjUuMTcyIDMyLjYyNSAyMS41OTUgMzEgMjAuNDc1IDMxIDIyLjQxMSAzMSAyOS41NjQgMzEgMzEuNSAzMi42MjUgMzAuMzggMzcuODE2IDI2LjgwMyAzOSAyNS45ODggMzkgMjUuOTg4Ii8+CiAgICAgIDxwYXRoIGQ9Ik0zMS41MTUsMzAuNTMyVjIxLjQ0M2w2LjU5NSw0LjU0NVptMS4wMy03LjE1M1YyOC42bDMuNzg2LTIuNjA4WiIgZmlsbD0iI2ZmZiIvPgogICAgPC9nPgogICAgPGc+CiAgICAgIDxwb2x5Z29uIHBvaW50cz0iMjUuNTEyIDM5LjUgMjYuMzI4IDM4LjMxNiAyOS45MDUgMzMuMTI1IDMxLjAyNSAzMS41IDI5LjA4OSAzMS41IDIxLjkzNiAzMS41IDIwIDMxLjUgMjEuMTIgMzMuMTI1IDI0LjY5NyAzOC4zMTYgMjUuNTEyIDM5LjUgMjUuNTEyIDM5LjUiLz4KICAgICAgPHBhdGggZD0iTTIwLjk2OCwzMi4wMTVoOS4wODlMMjUuNTEyLDM4LjYxWm03LjE1MywxLjAzSDIyLjlsMi42MDgsMy43ODZaIiBmaWxsPSIjZmZmIi8+CiAgICA8L2c+CiAgICA8Zz4KICAgICAgPHBvbHlnb24gcG9pbnRzPSIxMiAyNi4wMTIgMTMuMTg0IDI2LjgyOCAxOC4zNzUgMzAuNDA1IDIwIDMxLjUyNSAyMCAyOS41ODkgMjAgMjIuNDM2IDIwIDIwLjUgMTguMzc1IDIxLjYyIDEzLjE4NCAyNS4xOTcgMTIgMjYuMDEyIDEyIDI2LjAxMiIvPgogICAgICA8cGF0aCBkPSJNMTkuNDg1LDIxLjQ2OHY5LjA4OUwxMi44OSwyNi4wMTJabS0xLjAzLDcuMTUzVjIzLjRsLTMuNzg2LDIuNjA4WiIgZmlsbD0iI2ZmZiIvPgogICAgPC9nPgogIDwvZz4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTYuNzcgMTYuMTIgMS4zNSAxLjMxIDAuNSAwLjUgMC41IDIzLjc2IDEuMzUgMjIuOTMgNy40NyAxNi45OCAxNy42NiAxNi45OCAxNi43NyAxNi4xMiIvPgogICAgPHBvbHlnb24gcG9pbnRzPSIxNi40MiAxNi40OCA3LjI2IDE2LjQ4IDEgMjIuNTggMSAxLjY3IDE2LjQyIDE2LjQ4IiBmaWxsPSIjZmZmIi8+CiAgICA8cGF0aCBkPSJNMiw0LjAyVjIwLjIxbDQuODYtNC43M2g3LjA4Wk02LjQ1LDE0LjQ4LDMsMTcuODRWNi4zN2w4LjQ1LDguMTFaIi8+CiAgPC9nPgo8L3N2Zz4K");
+        --pointer-resize-alt-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj4KICA8dGl0bGU+cmVzaXplLWN1cnNvcnM8L3RpdGxlPgogIDxnPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLjUgMC41IDAuNSAxLjY3MyAwLjUgMjIuNTc0IDAuNSAyMy43NTggMS4zNDkgMjIuOTMzIDcuNDY4IDE2Ljk3OCAxNi40MjEgMTYuOTc4IDE3LjY2NCAxNi45NzggMTYuNzY3IDE2LjExNyAxLjM0NiAxLjMxMiAwLjUgMC41IDAuNSAwLjUiLz4KICAgIDxwYXRoIGQ9Ik0xLDEuNjczdjIwLjlsNi4yNjUtNi4xaDkuMTU2Wk02Ljg1OSwxNS40NzhsLS4yOTIuMjgzTDIsMjAuMjA2VjQuMDE5TDEzLjkzNiwxNS40NzhINi44NTlaIiBmaWxsPSIjZmZmIi8+CiAgPC9nPgogIDxnPgogICAgPHJlY3QgeD0iMjIiIHk9IjIyLjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjciLz4KICAgIDxyZWN0IHg9IjIyLjUiIHk9IjIzIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiBmaWxsPSIjZmZmIi8+CiAgICA8cmVjdCB4PSIyMy41IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIvPgogIDwvZz4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjcuNSAxNS41IDI3LjUgMTkuNSAzMiAxOS41IDMyIDI0IDM2IDI0IDM2IDE1LjUgMjcuNSAxNS41Ii8+CiAgICA8cGF0aCBkPSJNMjgsMTZ2M2g0LjV2NC41aDNWMTZabTYuNSw2LjVoLTFWMThIMjlWMTdoNS41WiIgZmlsbD0iI2ZmZiIvPgogIDwvZz4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjMuNSAzNi41IDIzLjUgMzIuNSAxOSAzMi41IDE5IDI4IDE1IDI4IDE1IDM2LjUgMjMuNSAzNi41Ii8+CiAgICA8cGF0aCBkPSJNMjMsMzZWMzNIMTguNVYyOC41aC0zVjM2Wm0tNi41LTYuNWgxVjM0SDIydjFIMTYuNVoiIGZpbGw9IiNmZmYiLz4KICA8L2c+Cjwvc3ZnPg==");
+        --pointer-resize-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj4KICA8dGl0bGU+cmVzaXplLWN1cnNvcnM8L3RpdGxlPgogIDxnPgogICAgPHJlY3QgeD0iMjIiIHk9IjIyLjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjciLz4KICAgIDxyZWN0IHg9IjIyLjUiIHk9IjIzIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiBmaWxsPSIjZmZmIi8+CiAgICA8cmVjdCB4PSIyMy41IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIvPgogIDwvZz4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjcuNSAxNS41IDI3LjUgMTkuNSAzMiAxOS41IDMyIDI0IDM2IDI0IDM2IDE1LjUgMjcuNSAxNS41Ii8+CiAgICA8cGF0aCBkPSJNMjgsMTZ2M2g0LjV2NC41aDNWMTZabTYuNSw2LjVoLTFWMThIMjlWMTdoNS41WiIgZmlsbD0iI2ZmZiIvPgogIDwvZz4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMjMuNSAzNi41IDIzLjUgMzIuNSAxOSAzMi41IDE5IDI4IDE1IDI4IDE1IDM2LjUgMjMuNSAzNi41Ii8+CiAgICA8cGF0aCBkPSJNMjMsMzZWMzNIMTguNVYyOC41aC0zVjM2Wm0tNi41LTYuNWgxVjM0SDIydjFIMTYuNVoiIGZpbGw9IiNmZmYiLz4KICA8L2c+CiAgPGc+CiAgICA8cG9seWdvbiBwb2ludHM9IjE2Ljc3IDE2LjEyIDEuMzUgMS4zMSAwLjUgMC41IDAuNSAyMy43NiAxLjM1IDIyLjkzIDcuNDcgMTYuOTggMTcuNjYgMTYuOTggMTYuNzcgMTYuMTIiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTYuNDIgMTYuNDggNy4yNiAxNi40OCAxIDIyLjU4IDEgMS42NyAxNi40MiAxNi40OCIgZmlsbD0iI2ZmZiIvPgogICAgPHBhdGggZD0iTTIsNC4wMlYyMC4yMWw0Ljg2LTQuNzNoNy4wOFpNNi40NSwxNC40OCwzLDE3Ljg0VjYuMzdsOC40NSw4LjExWiIvPgogIDwvZz4KPC9zdmc+");
         --pointer-remove-alt-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Zz4KICAgIDxyZWN0IHg9IjE4LjUiIHk9IjIyIiB3aWR0aD0iMTAiIGhlaWdodD0iNCIvPgogICAgPHBhdGggZD0iTTE5LDIyLjV2M2g5di0zWm04LDJIMjB2LTFoN1oiIGZpbGw9IiNmZmYiLz4KICA8L2c+CiAgPGc+CiAgICA8cG9seWdvbiBwb2ludHM9IjAuNSAwLjUgMC41IDEuNjczIDAuNSAyMi41NzQgMC41IDIzLjc1OCAxLjM0OSAyMi45MzMgNy40NjggMTYuOTc4IDE2LjQyMSAxNi45NzggMTcuNjY0IDE2Ljk3OCAxNi43NjcgMTYuMTE3IDEuMzQ2IDEuMzEyIDAuNSAwLjUgMC41IDAuNSIvPgogICAgPHBhdGggZD0iTTEsMS42NzN2MjAuOWw2LjI2NS02LjFoOS4xNTZaTTYuODU5LDE1LjQ3OGwtLjI5Mi4yODNMMiwyMC4yMDZWNC4wMTlMMTMuOTM2LDE1LjQ3OEg2Ljg1OVoiIGZpbGw9IiNmZmYiLz4KICA8L2c+Cjwvc3ZnPgo=");
         --pointer-remove-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Zz4KICAgIDxyZWN0IHg9IjE4LjUiIHk9IjIyIiB3aWR0aD0iMTAiIGhlaWdodD0iNCIvPgogICAgPHBhdGggZD0iTTE5LDIyLjV2M2g5di0zWm04LDJIMjB2LTFoN1oiIGZpbGw9IiNmZmYiLz4KICA8L2c+CiAgPGc+CiAgICA8cG9seWdvbiBwb2ludHM9IjE2Ljc3IDE2LjEyIDEuMzUgMS4zMSAwLjUgMC41IDAuNSAyMy43NiAxLjM1IDIyLjkzIDcuNDcgMTYuOTggMTcuNjYgMTYuOTggMTYuNzcgMTYuMTIiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTYuNDIgMTYuNDggNy4yNiAxNi40OCAxIDIyLjU4IDEgMS42NyAxNi40MiAxNi40OCIgZmlsbD0iI2ZmZiIvPgogICAgPHBhdGggZD0iTTIsNC4wMlYyMC4yMWw0Ljg2LTQuNzNoNy4wOFpNNi40NSwxNC40OCwzLDE3Ljg0VjYuMzdsOC40NSw4LjExWiIvPgogIDwvZz4KPC9zdmc+Cg==");
         --pointer-selectable-alt-cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Zz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMC41IDAuNSAwLjUgMS42NzMgMC41IDIyLjU3NCAwLjUgMjMuNzU4IDEuMzQ5IDIyLjkzMyA3LjQ2OCAxNi45NzggMTYuNDIxIDE2Ljk3OCAxNy42NjQgMTYuOTc4IDE2Ljc2NyAxNi4xMTcgMS4zNDYgMS4zMTIgMC41IDAuNSAwLjUgMC41Ii8+CiAgICA8cGF0aCBkPSJNMSwxLjY3M3YyMC45bDYuMjY1LTYuMWg5LjE1NlpNNi44NTksMTUuNDc4bC0uMjkyLjI4M0wyLDIwLjIwNlY0LjAxOUwxMy45MzYsMTUuNDc4SDYuODU5WiIgZmlsbD0iI2ZmZiIvPgogIDwvZz4KICA8Zz4KICAgIDxyZWN0IHg9IjE5LjUiIHk9IjIxIiB3aWR0aD0iNyIgaGVpZ2h0PSI3Ii8+CiAgICA8cmVjdCB4PSIyMCIgeT0iMjEuNSIgd2lkdGg9IjYiIGhlaWdodD0iNiIgZmlsbD0iI2ZmZiIvPgogICAgPHJlY3QgeD0iMjEiIHk9IjIyLjUiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiLz4KICA8L2c+Cjwvc3ZnPgo=");
@@ -7920,7 +8758,6 @@
         --canvas-engine-rulerBackground-color: #2f2f2f;
         --canvas-engine-rulerText-color: #e3e3e3;
         --canvas-engine-rulerIndicator-color: #378ef0;
-        --canvas-engine-grid-color: lightblue;
         --canvas-engine-guide-color: maroon;
         --canvas-engine-snap-color: red;
         --canvas-engine-elementHover-color: red;
@@ -7956,6 +8793,8 @@
     :host([cursor="pointer-curve"]) { cursor: var(--pointer-curve-cursor) 0 0, auto; }
     :host([cursor="pointer-move"]) { cursor: var(--pointer-move-cursor) 0 0, auto; }
     :host([cursor="pointer-move-alt"]) { cursor: var(--pointer-move-alt-cursor) 0 0, auto; }
+    :host([cursor="pointer-resize"]) { cursor: var(--pointer-resize-cursor) 0 0, auto; }
+    :host([cursor="pointer-resize-alt"]) { cursor: var(--pointer-resize-alt-cursor) 0 0, auto; }
     :host([cursor="pointer-remove-alt"]) { cursor: var(--pointer-remove-alt-cursor) 0 0, auto; }
     :host([cursor="pointer-remove"]) { cursor: var(--pointer-remove-cursor) 0 0, auto; }
     :host([cursor="pointer-selectable-alt"]) { cursor: var(--pointer-selectable-alt-cursor) 0 0, auto; }
@@ -8088,17 +8927,22 @@
      */
     class Theme {
         constructor(style) {
-            this.background = Color.from(style.getPropertyValue('--canvas-engine-background-color'));
-            this.rulerBackground = Color.from(style.getPropertyValue('--canvas-engine-rulerBackground-color'));
-            this.rulerText = Color.from(style.getPropertyValue('--canvas-engine-rulerText-color'));
-            this.rulerIndicator = Color.from(style.getPropertyValue('--canvas-engine-rulerIndicator-color'));
-            this.grid = Color.from(style.getPropertyValue('--canvas-engine-grid-color'));
-            this.guide = Color.from(style.getPropertyValue('--canvas-engine-guide-color'));
-            this.snap = Color.from(style.getPropertyValue('--canvas-engine-snap-color'));
-            this.elementHover = Color.from(style.getPropertyValue('--canvas-engine-elementHover-color'));
-            this.guideHover = Color.from(style.getPropertyValue('--canvas-engine-guideHover-color'));
-            this.selectionBox = Color.from(style.getPropertyValue('--canvas-engine-selectionBox-color'));
-            this.selectionArea = Color.from(style.getPropertyValue('--canvas-engine-selectionArea-color'));
+            this.background = this.getColor(style, 'background');
+            this.rulerBackground = this.getColor(style, 'rulerBackground');
+            this.rulerText = this.getColor(style, 'rulerText');
+            this.rulerIndicator = this.getColor(style, 'rulerIndicator');
+            this.guide = this.getColor(style, 'guide');
+            this.guideHover = this.getColor(style, 'guideHover');
+            this.snap = this.getColor(style, 'snap');
+            this.elementHover = this.getColor(style, 'elementHover');
+            this.selectionBox = this.getColor(style, 'selectionBox');
+            this.selectionArea = this.getColor(style, 'selectionArea');
+        }
+        getColor(style, name) {
+            return Color.from(style.getPropertyValue('--canvas-engine-' + name + '-color'));
+        }
+        getSize(style, name) {
+            return parseFloat(style.getPropertyValue('--canvas-engine-' + name + '-size'));
         }
     }
 
@@ -8141,37 +8985,43 @@
             super.updateTheme(engine);
             this.pen = new DefaultPen(new SolidBrush(engine.theme.guide));
         }
-        render(engine, timestamp) {
-            if (!this.isInvalidated) {
-                return;
-            }
-            const context = engine.context;
-            this.drawSnapshotImage(engine, false);
-            context.drawLine(this.from, this.to, this.pen);
-            context.flush();
-            this.isInvalidated = false;
+        draw(engine) {
+            engine.context.drawLine(this.from, this.to, this.pen);
         }
         onMouseLeftButtonDown(engine, event) {
             // set cursor?
             this.onMouseLeftButtonMove(engine, event);
         }
         onMouseLeftButtonMove(engine, event) {
+            const { keyboardStatus, boundingBox, viewBox } = engine;
+            const x = keyboardStatus.isShift ? Math.round(event.position.x) : event.position.x;
+            const y = keyboardStatus.isShift ? Math.round(event.position.y) : event.position.y;
+            const p = viewBox.matrix.point(x, y);
             if (this.data.horizontal) {
-                this.from = new Point(0, event.canvasPosition.y);
-                this.to = new Point(engine.boundingBox.width, event.canvasPosition.y);
+                this.from = new Point(0, p.y);
+                this.to = new Point(boundingBox.width, p.y);
             }
             else {
-                this.from = new Point(event.canvasPosition.x, 0);
-                this.to = new Point(event.canvasPosition.x, engine.boundingBox.height);
+                this.from = new Point(p.x, 0);
+                this.to = new Point(p.x, boundingBox.height);
             }
             this.isInvalidated = true;
         }
         onMouseLeftButtonUp(engine, event) {
             // add guides
             const horizontal = this.data.horizontal;
-            const point = engine.viewBox.getPointPosition(event.canvasPosition);
-            const guide = new Guide(horizontal ? point.y : point.x, horizontal);
-            engine.document.guides.add(guide);
+            const { keyboardStatus } = engine;
+            if ((horizontal && event.canvasPosition.y > 0) || (!horizontal && event.canvasPosition.x > 0)) {
+                let guide;
+                if (horizontal) {
+                    guide = new Guide(keyboardStatus.isShift ? Math.round(event.position.y) : event.position.y, horizontal);
+                }
+                else {
+                    guide = new Guide(keyboardStatus.isShift ? Math.round(event.position.x) : event.position.x, horizontal);
+                }
+                engine.document.guides.add(guide);
+                engine.project.state.snapshot();
+            }
             // release tool
             this.data.release(this.data.tool);
         }
@@ -8204,8 +9054,9 @@
             this._ruler = null;
             this._context = null;
             this._tool = null;
-            this._guideTool = new GuideTool();
             this._project = null;
+            this._guideTool = new GuideTool();
+            this._mousePointerDown = false;
             this._mousePointerInside = false;
             this._mousePointerPosition = { x: 0, y: 0 };
             this._keyboardStatus = new KeyboardStatus();
@@ -8214,12 +9065,24 @@
             this._highQuality = true;
             this._frameCallback = null;
             this._frameId = null;
+            this._preventSurfaceDisposal = false;
+            this._surfaceMustBeDisposed = false;
+            this._deferId = null;
+            this._onDisconnect = null;
+            this._onCanvasDisconnect = null;
             this._cursor = exports.Cursor.Default;
             this._globalElementProperties = null;
             this.boundingBox = null;
-            this._onDisconnect = null;
-            this._onCanvasDisconnect = null;
-            this._deferId = null;
+            this.snappingOptions = {
+                enabled: true,
+                pixel: false,
+                grid: false,
+                guides: true,
+                bounds: true,
+                points: false,
+                contours: false,
+                tolerance: 10,
+            };
             this.attachShadow({
                 mode: "open",
                 // delegatesFocus: true
@@ -8230,6 +9093,7 @@
             this._ruler = new Ruler(this.shadowRoot.getElementById('rulerH').getContext('2d', { alpha: false }), this.shadowRoot.getElementById('rulerV').getContext('2d', { alpha: false }));
             this._globalElementProperties = new GlobalElementProperties();
             this.viewBox = new ViewBox(this.invalidateViewBox.bind(this));
+            this._previousZoom = this.viewBox.zoom;
         }
         get rulerMajorGraduationWidth() {
             return this._ruler.getStep(this.viewBox.zoom);
@@ -8288,6 +9152,11 @@
             return this._surface;
         }
         destroySurface(invalidate) {
+            if (this._preventSurfaceDisposal) {
+                // mark that we need to rebuild surface
+                this._surfaceMustBeDisposed = true;
+                return;
+            }
             if (this._surface) {
                 this._surface.delete();
                 this._surface = null;
@@ -8298,6 +9167,25 @@
             }
             if (invalidate) {
                 this.invalidate();
+            }
+        }
+        /**
+         * Prevents surface from being disposed
+         * Use allowSurfaceDisposal() to restore
+         */
+        preventSurfaceDisposal() {
+            this._preventSurfaceDisposal = true;
+        }
+        /**
+         * Allows surface disposal. Automatically rebuilds surface if needed.
+         */
+        allowSurfaceDisposal() {
+            if (!this._preventSurfaceDisposal) {
+                return;
+            }
+            this._preventSurfaceDisposal = false;
+            if (this._surfaceMustBeDisposed) {
+                this.destroySurface(true);
             }
         }
         get context() {
@@ -8343,6 +9231,11 @@
         invalidateViewBox() {
             this._ruler.draw(this, true);
             this.invalidate();
+            const zoom = this.viewBox.zoom;
+            if (this._previousZoom !== zoom) {
+                this._previousZoom = zoom;
+                this.emit('zoomChanged', zoom);
+            }
         }
         startRenderLoop() {
             if (this._frameId === null) {
@@ -8364,6 +9257,17 @@
         invalidate() {
             this._tool && this._tool.invalidate();
         }
+        emit(name, value, init) {
+            if (value !== undefined) {
+                if (init) {
+                    init.detail = value;
+                }
+                else {
+                    init = { detail: value };
+                }
+            }
+            this.dispatchEvent(new CustomEvent(name, init));
+        }
         makeImageSnapshot() {
             return this.surface.makeImageSnapshot();
         }
@@ -8371,9 +9275,27 @@
             return this._project;
         }
         set project(value) {
-            if (this._project !== value) {
+            if (this._project === value) {
+                // Same project
+                return;
+            }
+            if (this._project) {
+                // Detach from engine
+                this._project.engine = null;
+                // Do not dispose previous!
+            }
+            // Reset viewBox
+            this.viewBox.reset();
+            if (value) {
+                // Attach to engine
+                value.engine = this;
                 this._project = value;
-                this.viewBox.reset();
+                // Project attached, start render loop.
+                this.startRenderLoop();
+            }
+            else {
+                // No project attached, stop render loop.
+                this.stopRenderLoop();
             }
         }
         get document() {
@@ -8471,27 +9393,12 @@
             this.refreshTheme();
         }
         disconnectedCallback() {
-            this.stopRenderLoop();
-            this.setCurrentTool(null);
-            this.destroySurface(false);
-            this.disconnectCanvas();
-            if (this._onDisconnect) {
-                this._onDisconnect();
-                this._onDisconnect = null;
+            this.dispose();
+            // remove canvas element from dom
+            let canvas = this.canvasElement;
+            if (canvas) {
+                canvas.parentNode.removeChild(canvas);
             }
-            if (this._globalElementProperties) {
-                this._globalElementProperties.dispose();
-                this._globalElementProperties = null;
-            }
-            if (this._project) {
-                this._project.dispose();
-                this._project = null;
-            }
-            this._frameCallback = null;
-            this.boundingBox = null;
-            this._ruler.dispose();
-            this.viewBox.dispose();
-            this.boundingBox = null;
         }
         disconnectCanvas() {
             if (this._onCanvasDisconnect) {
@@ -8518,6 +9425,31 @@
                 //
                 canvas = mouse = wheel = null;
             };
+        }
+        dispose() {
+            this.stopRenderLoop();
+            this.setCurrentTool(null);
+            this._preventSurfaceDisposal = false;
+            this.destroySurface(false);
+            this.disconnectCanvas();
+            if (this._onDisconnect) {
+                this._onDisconnect();
+                this._onDisconnect = null;
+            }
+            if (this._globalElementProperties) {
+                this._globalElementProperties.dispose();
+                this._globalElementProperties = null;
+            }
+            if (this._project) {
+                this._project.engine = null;
+                this._project.dispose();
+                this._project = null;
+            }
+            this._frameCallback = null;
+            this.boundingBox = null;
+            this._ruler.dispose();
+            this.viewBox.dispose();
+            this.boundingBox = null;
         }
         resizeCanvas(width, height, dpr = this.dpr) {
             resizeCanvasElement(this.canvasElement, width, height, dpr);
@@ -8564,6 +9496,7 @@
                 this._guideTool.deactivate(this);
                 this._tool?.activate(this, null);
             };
+            this._mousePointerDown = true;
             this.canvasElement.setPointerCapture(event.pointerId);
             this._tool.activate(this, { tool, horizontal, release });
             this._tool.onMouseDown(this, toolEvent);
@@ -8618,10 +9551,15 @@
                     method = 'onMouseMove';
                     break;
                 case "pointerdown":
+                    this._mousePointerDown = true;
                     this.canvasElement.setPointerCapture(event.pointerId);
                     method = 'onMouseDown';
                     break;
                 case "pointerup":
+                    if (!this._mousePointerDown) {
+                        return;
+                    }
+                    this._mousePointerDown = false;
                     this.canvasElement.releasePointerCapture(event.pointerId);
                     method = 'onMouseUp';
                     break;
@@ -8678,1076 +9616,43 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class Keyframe {
-        constructor(value, offset = 0, easing = null) {
-            this.value = value;
-            this.offset = offset;
-            this.easing = easing;
-        }
-        clone() {
-            // T should be immutable
-            return new Keyframe(this.value, this.offset, this.easing);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class Animation {
-        constructor(keyframes = null, disabled = false, interpolate) {
-            this.keyframes = keyframes ?? [];
-            this.disabled = disabled;
-            this.interpolate = interpolate;
-        }
-        clone() {
-            // @ts-ignore
-            return new this.constructor(this.keyframes.map(k => k.clone()), this.disabled, this.interpolate);
-        }
-        get length() {
-            return this.keyframes.length;
-        }
-        get isAnimated() {
-            return !this.disabled && this.keyframes.length > 1;
-        }
-        get hasKeyframes() {
-            return this.keyframes.length > 0;
-        }
-        getKeyframeAtIndex(index) {
-            return this.keyframes[index] || null;
-        }
-        removeKeyframeAtIndex(index) {
-            const r = this.keyframes.splice(index, 1);
-            return r.length > 0 ? r[0] : null;
-        }
-        addKeyframe(keyframe) {
-            const offset = keyframe.offset;
-            const length = this.keyframes.length;
-            for (let i = 0; i < length; i++) {
-                const k = this.keyframes[i];
-                if (offset === k.offset) {
-                    return this.keyframes[i] = keyframe;
-                }
-                if (offset < k.offset) {
-                    this.keyframes.splice(i, 0, keyframe);
-                    return keyframe;
-                }
-            }
-            this.keyframes.push(keyframe);
-            return keyframe;
-        }
-        removeKeyframe(keyframe) {
-            const index = this.keyframes.indexOf(keyframe);
-            if (index !== -1) {
-                this.keyframes.splice(index, 1);
-                return true;
-            }
-            return false;
-        }
-        removeKeyframes(keyframes) {
-            let index, removed = false;
-            for (const k of keyframes) {
-                index = this.keyframes.indexOf(k);
-                if (index !== -1) {
-                    this.keyframes.splice(index, 1);
-                    removed = true;
-                }
-            }
-            return removed;
-        }
-        getKeyframeAtOffset(offset) {
-            const length = this.keyframes.length;
-            for (let i = 0; i < length; i++) {
-                const k = this.keyframes[i];
-                if (offset === k.offset) {
-                    return k;
-                }
-                if (k.offset > offset) {
-                    return null;
-                }
-            }
-            return null;
-        }
-        addKeyframeAtOffset(offset, value, easing = null) {
-            if (value == null) {
-                value = this.getValueAtOffset(offset);
-            }
-            let keyframe = this.getKeyframeAtOffset(offset);
-            if (keyframe != null) {
-                keyframe.value = value;
-                if (easing != null) {
-                    keyframe.easing = easing;
-                }
-                return keyframe;
-            }
-            return this.addKeyframe(this.createKeyframe(value, offset, easing));
-        }
-        removeKeyframeAtOffset(offset) {
-            const keyframe = this.getKeyframeAtOffset(offset);
-            if (keyframe == null) {
-                return false;
-            }
-            return this.removeKeyframe(keyframe);
-        }
-        getValueAtOffset(offset) {
-            const keyframes = this.keyframes;
-            const last = keyframes.length - 1;
-            if (last === -1) {
-                return null;
-            }
-            if (last === 0) {
-                return keyframes[0].value;
-            }
-            if (offset <= keyframes[0].offset) {
-                return keyframes[0].value;
-            }
-            if (offset >= keyframes[last].offset) {
-                return keyframes[last].value;
-            }
-            for (let i = 1; i <= last; i++) {
-                if (offset > keyframes[i].offset) {
-                    continue;
-                }
-                const j = i - 1;
-                let percent = getRangePercent(offset, keyframes[j].offset, keyframes[i].offset);
-                const easing = keyframes[j].easing;
-                if (easing != null) {
-                    percent = easing.value(percent);
-                }
-                return this.interpolate(keyframes[j].value, keyframes[i].value, percent);
-            }
-            return null;
-        }
-        createKeyframe(value, offset, easing = null) {
-            return new Keyframe(value, offset, easing);
-        }
-        *[Symbol.iterator]() {
-            const length = this.keyframes.length;
-            for (let i = 0; i < length; i++) {
-                yield this.keyframes[i];
-            }
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    function interpolateNumber(from, to, percent = 0.5) {
-        return from + percent * (to - from);
-    }
-    function interpolatePositiveNumber(from, to, percent = 0.5) {
-        return Math.max(0, from + percent * (to - from));
-    }
-    function interpolatePercent(from, to, percent = 0.5) {
-        return clamp(interpolateNumber(from, to, percent), 0, 1);
-    }
-    function interpolateColorComponent(from, to, percent = 0.5) {
-        return clamp(Math.round(from + percent * (to - from)), 0, 255);
-    }
-    function interpolateAlphaComponent(from, to, percent = 0.5) {
-        if (from == null) {
-            from = 1;
-        }
-        if (to == null) {
-            to = 1;
-        }
-        return clamp(round(from + percent * (to - from)), 0, 1);
-    }
-    function interpolateDiscrete(from, to, percent = 0.5) {
-        return percent < 0.5 ? from : to;
-    }
-    function interpolatePoint(from, to, percent = 0.5) {
-        return new Point(interpolateNumber(from.x, to.x, percent), interpolateNumber(from.y, to.y, percent));
-    }
-    function interpolatePoly(from, to, percent = 0.5) {
-        if (from.length !== to.length) {
-            return interpolateDiscrete(from, to, percent).slice();
-        }
-        const list = [];
-        const length = from.length;
-        for (let i = 0; i < length; i++) {
-            list.push(interpolatePoint(from[i], to[i], percent));
-        }
-        return list;
-    }
-    function interpolateColor(from, to, percent = 0.5) {
-        if (percent <= 0) {
-            return from;
-        }
-        if (percent >= 1) {
-            return to;
-        }
-        return new Color(interpolateColorComponent(from.r, to.r, percent), interpolateColorComponent(from.g, to.g, percent), interpolateColorComponent(from.b, to.b, percent), interpolateAlphaComponent(from.a, to.a, percent));
-    }
-    function interpolateBrush(from, to, percent = 0.5) {
-        // TODO: implement different brush interpolation
-        return interpolateDiscrete(from, to, percent).clone();
-    }
-    function interpolateDashArray(from, to, percent = 0.5) {
-        // TODO:
-        return percent < 0.5 ? from : to;
-    }
-    function interpolateMotion(from, to, percent = 0.5) {
-        // TODO:
-        // @ts-ignore
-        return interpolatePoint(from, to, percent);
-    }
-    function interpolateRectRadius(from, to, percent = 0.5) {
-        // TODO:
-        return percent < 0.5 ? from : to;
-    }
-    function interpolatePathNode(from, to, percent = 0.5) {
-        // TODO:
-        return interpolateDiscrete(from, to, percent).clone();
-    }
-    function interpolatePath(from, to, percent = 0.5) {
-        if (from.nodes.length !== to.nodes.length) {
-            return interpolateDiscrete(from, to, percent).clone();
-        }
-        const length = from.nodes.length;
-        const nodes = [];
-        for (let i = 0; i < length; i++) {
-            nodes.push(interpolatePathNode(from.nodes[i], to.nodes[i], percent));
-        }
-        // TODO: check if something like mirror, etc.
-        return new Path(nodes);
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class NumberAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateNumber);
-        }
-    }
-    class PercentAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolatePercent);
-        }
-    }
-    class PointAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolatePoint);
-        }
-    }
-    class OpacityAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateAlphaComponent);
-        }
-    }
-    class PositiveNumberAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolatePositiveNumber);
-        }
-    }
-    class BrushAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateBrush);
-        }
-    }
-    class DashArrayAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateDashArray);
-        }
-    }
-    class MotionAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateMotion);
-        }
-    }
-    class RectRadiusAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolateRectRadius);
-        }
-    }
-    class PathAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolatePath);
-        }
-    }
-    class PolyAnimation extends Animation {
-        constructor(keyframes = null, disabled = false) {
-            super(keyframes, disabled, interpolatePoly);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const ElementAnimators = {
-        opacity: {
-            id: 'opacity',
-            title: 'Opacity',
-            create() {
-                return new OpacityAnimation();
-            }
-        }
-    };
-    const TransformAnimators = {
-        position: {
-            id: 'position',
-            title: 'Position',
-            //@ts-ignore
-            create() {
-                // TODO: check this out
-                return new MotionAnimation();
-            }
-        },
-        anchor: {
-            id: 'anchor',
-            title: 'Anchor',
-            create() {
-                return new PointAnimation();
-            }
-        },
-        rotate: {
-            id: 'rotate',
-            title: 'Rotate',
-            create() {
-                return new NumberAnimation();
-            }
-        },
-        scale: {
-            id: 'scale',
-            title: 'Scale',
-            create() {
-                return new PointAnimation();
-            }
-        },
-        skewAngle: {
-            id: 'skew-angle',
-            title: 'Skew angle',
-            create() {
-                return new NumberAnimation();
-            }
-        },
-        skewAxis: {
-            id: 'skew-axis',
-            title: 'Skew axis',
-            create() {
-                return new NumberAnimation();
-            }
-        },
-    };
-    const FillAnimators = {
-        fill: {
-            id: 'fill',
-            title: 'Fill',
-            create() {
-                return new BrushAnimation();
-            }
-        },
-        fillOpacity: {
-            id: 'fill-opacity',
-            title: 'Fill opacity',
-            create() {
-                return new OpacityAnimation();
-            }
-        },
-    };
-    const StrokeAnimators = {
-        strokeBrush: {
-            id: 'stroke',
-            title: 'Stroke',
-            create() {
-                return new BrushAnimation();
-            }
-        },
-        strokeOpacity: {
-            id: 'stroke-opacity',
-            title: 'Stroke opacity',
-            create() {
-                return new OpacityAnimation();
-            }
-        },
-        strokeLineWidth: {
-            id: 'stroke-width',
-            title: 'Stroke width',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        strokeDashOffset: {
-            id: 'stroke-dash-offset',
-            title: 'Dash offset',
-            create() {
-                return new NumberAnimation();
-            }
-        },
-        strokeDashArray: {
-            id: 'stroke-dash-array',
-            title: 'Dash array',
-            create() {
-                return new DashArrayAnimation();
-            }
-        },
-    };
-    const VectorAnimators = {
-        ...ElementAnimators,
-        ...TransformAnimators,
-        ...FillAnimators,
-        ...StrokeAnimators,
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const RectAnimators = {
-        ...VectorAnimators,
-        width: {
-            id: 'width',
-            title: 'Width',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        height: {
-            id: 'height',
-            title: 'Height',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        radius: {
-            id: 'rect-radius',
-            title: 'Radius',
-            create() {
-                return new RectRadiusAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const EllipseAnimators = {
-        ...VectorAnimators,
-        width: {
-            id: 'width',
-            title: 'Width',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        height: {
-            id: 'height',
-            title: 'Height',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const ClipPathAnimators = {
-        ...ElementAnimators,
-        ...TransformAnimators,
-        path: {
-            id: 'path',
-            title: 'Clip path',
-            create() {
-                return new PathAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const PathAnimators = {
-        ...VectorAnimators,
-        path: {
-            id: 'path',
-            title: 'Path',
-            create() {
-                return new PathAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const GroupAnimators = {
-        ...ElementAnimators,
-        ...TransformAnimators,
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const PolyAnimators = {
-        ...VectorAnimators,
-        points: {
-            id: 'points',
-            title: 'Points',
-            create() {
-                return new PolyAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const RegularPolygonAnimators = {
-        ...VectorAnimators,
-        radius: {
-            id: 'radius',
-            title: 'Radius',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        // TODO: cornerRadius?
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const StarAnimators = {
-        ...VectorAnimators,
-        outerRadius: {
-            id: 'radius',
-            title: 'Radius',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        },
-        // TODO: add innerRadius, outerCornerRadius, innerCornerRadius, innerRotate?
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const TextAnimators = {
-        ...VectorAnimators,
-        // TODO: add size animator? other text animators...
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const SymbolAnimators = {
-        ...ElementAnimators,
-        ...TransformAnimators,
-        time: {
-            id: 'time',
-            title: 'Time',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const MaskAnimators = {
-        ...ElementAnimators,
-        ...TransformAnimators,
-        time: {
-            id: 'time',
-            title: 'Time',
-            create() {
-                return new PositiveNumberAnimation();
-            }
-        }
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const DefaultAnimatorsMap = {
-        'rect': RectAnimators,
-        'ellipse': EllipseAnimators,
-        'clip-path': ClipPathAnimators,
-        'path': PathAnimators,
-        'group': GroupAnimators,
-        'poly': PolyAnimators,
-        'regular-polygon': RegularPolygonAnimators,
-        'star': StarAnimators,
-        'text': TextAnimators,
-        'symbol': SymbolAnimators,
-        'mask': MaskAnimators,
-    };
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class AnimatorSource {
-        constructor(source) {
-            this._source = source || new Map(Object.entries(DefaultAnimatorsMap));
-        }
-        setElementAnimators(element, animators) {
-            const type = typeof element === 'string' ? element : element.type;
-            if (!animators) {
-                this._source.delete(type);
-            }
-            else {
-                this._source.set(type, animators);
-            }
-        }
-        setAnimator(element, property, animator) {
-            const type = typeof element === 'string' ? element : element.type;
-            if (!this._source.has(type)) {
-                if (!animator) {
-                    return;
-                }
-                this._source.set(type, {});
-            }
-            const map = this._source.get(type);
-            if (animator) {
-                map[property] = animator;
-            }
-            else if (property in map) {
-                delete map[property];
-            }
-        }
-        getAnimator(element, property) {
-            const type = element.type;
-            if (!this._source.has(type)) {
-                return null;
-            }
-            const list = this._source.get(type);
-            if (!(property in list)) {
-                return null;
-            }
-            return list[property];
-        }
-        isAnimatable(element, property) {
-            if (!(property in element)) {
-                return false;
-            }
-            return this.getAnimator(element, property) != null;
-        }
-        createAnimation(element, property) {
-            if (!(property in element)) {
-                return null;
-            }
-            return this.getAnimator(element, property)?.create();
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    exports.AnimationMode = void 0;
-    (function (AnimationMode) {
-        AnimationMode[AnimationMode["Normal"] = 0] = "Normal";
-        AnimationMode[AnimationMode["Loop"] = 1] = "Loop";
-        AnimationMode[AnimationMode["LoopReverse"] = 2] = "LoopReverse";
-    })(exports.AnimationMode || (exports.AnimationMode = {}));
-    class DocumentAnimation {
-        constructor(document, startTime, endTime, mode = exports.AnimationMode.Normal, animations) {
-            this._document = document;
-            this._startTime = startTime;
-            this._endTime = endTime;
-            this._mode = mode;
-            this._map = animations ?? new Map();
-        }
-        get document() {
-            return this._document;
-        }
-        get startTime() {
-            return this._startTime;
-        }
-        set startTime(value) {
-            this._startTime = clamp(Math.round(value), 0, this._endTime);
-        }
-        get endTime() {
-            return this._endTime;
-        }
-        set endTime(value) {
-            this._endTime = clamp(Math.round(value), this._startTime, Number.POSITIVE_INFINITY);
-        }
-        get duration() {
-            return this._endTime - this._startTime;
-        }
-        get mode() {
-            return this._mode;
-        }
-        set mode(value) {
-            this._mode = value;
-        }
-        mapTime(time) {
-            switch (this._mode) {
-                case exports.AnimationMode.Loop:
-                    time = time % this._endTime;
-                    break;
-                case exports.AnimationMode.LoopReverse:
-                    // TODO:
-                    break;
-            }
-            return clamp(time, this._startTime, this._endTime);
-        }
-        *getAnimatedElements() {
-            let element;
-            for (const [id, properties] of this._map.entries()) {
-                element = this._document.getElementById(id);
-                if (element) {
-                    yield [element, properties];
-                }
-            }
-        }
+    exports.ProjectEvent = void 0;
+    (function (ProjectEvent) {
         /**
-         * Updates the property values for animated documents
+         * A new document was added into the project.
          */
-        updateAnimatedProperties(time, setter) {
-            if (this._map.size === 0) {
-                return false;
-            }
-            time = this.mapTime(time);
-            let updated = false;
-            let element;
-            let property;
-            let animation;
-            let value;
-            for (const [id, properties] of this._map.entries()) {
-                element = this._document.getElementById(id);
-                if (!element) {
-                    continue;
-                }
-                for ([property, animation] of Object.entries(properties)) {
-                    if (animation.disabled) {
-                        continue;
-                    }
-                    value = animation.getValueAtOffset(time);
-                    if (value === null) {
-                        // no keyframes, ignore
-                        continue;
-                    }
-                    if (setter(element, property, value)) {
-                        updated = true;
-                    }
-                }
-            }
-            return updated;
-        }
+        ProjectEvent["documentAdded"] = "documentAdded";
         /**
-         * Remove animated elements that are no longer present in document
+         * A document was removed from the project.
          */
-        cleanupAnimatedProperties() {
-            let changed = false;
-            for (const id of this._map.keys()) {
-                if (this._document.getElementById(id) == null) {
-                    this._map.delete(id);
-                    changed = true;
-                }
-            }
-            return changed;
-        }
-        clone(document) {
-            return new DocumentAnimation(document || this._document, this._startTime, this._endTime, this._mode, this.cloneAnimationMap());
-        }
-        cloneAnimationMap() {
-            const list = new Map();
-            for (const [id, properties] of this._map.entries()) {
-                const value = {};
-                for (const [property, animation] of Object.entries(properties)) {
-                    value[property] = animation.clone();
-                }
-                list.set(id, value);
-            }
-            return list;
-        }
-        dispose() {
-            this._document = null;
-            if (this._map) {
-                this._map.clear();
-                this._map = null;
-            }
-        }
-        getAnimatedProperties(element) {
-            if (element.document !== this._document) {
-                return null;
-            }
-            return this._map.has(element.id) ? this._map.get(element.id) : null;
-        }
-        removeAnimatedProperties(element) {
-            if (element.document !== this._document) {
-                return false;
-            }
-            if (this._map.has(element.id)) {
-                this._map.delete(element.id);
-                return true;
-            }
-            return false;
-        }
-        isAnimated(element) {
-            if (element.document !== this._document) {
-                return false;
-            }
-            const properties = this.getAnimatedProperties(element);
-            if (properties == null) {
-                return false;
-            }
-            for (const prop in properties) {
-                if (properties[prop].isAnimated) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        getAnimation(element, property) {
-            if (element.document !== this._document) {
-                return null;
-            }
-            const properties = this.getAnimatedProperties(element);
-            if (properties == null || !(property in properties)) {
-                return null;
-            }
-            return properties[property];
-        }
-        removeAnimation(element, property) {
-            if (element.document !== this._document) {
-                return false;
-            }
-            const properties = this.getAnimatedProperties(element);
-            if (properties == null || !(property in properties)) {
-                return false;
-            }
-            delete properties[property];
-            if (Object.keys(properties).length === 0) {
-                // Remove empty list
-                this.removeAnimatedProperties(element);
-            }
-            return true;
-        }
-        addAnimation(element, property, animation) {
-            if (element.document !== this._document) {
-                return false;
-            }
-            let properties;
-            if (this._map.has(element.id)) {
-                properties = this._map.get(element.id);
-            }
-            else {
-                properties = {};
-                this._map.set(element.id, properties);
-            }
-            properties[property] = animation;
-            return true;
-        }
-    }
+        ProjectEvent["documentRemoved"] = "documentAdded";
+        /**
+         * Current document changed (different document id).
+         * Selection & State will also change, but without events.
+         */
+        ProjectEvent["documentChanged"] = "documentChanged";
+        /**
+         * Current document state changed.
+         * The document has the same id, but Selection might be changed (no events for selection).
+         */
+        ProjectEvent["documentStateChanged"] = "documentStateChanged";
+        // /**
+        //  * Document tree changed.
+        //  */
+        // documentTreeChanged = 'documentTreeChanged',
+        /**
+         * Current element selection has changed.
+         */
+        ProjectEvent["selectionChanged"] = "selectionChanged";
+        /**
+         * Some property of an element has changed.
+         */
+        ProjectEvent["propertyChanged"] = "propertyChanged";
+        /**
+         * A new snapshot was created.
+         */
+        ProjectEvent["snapshotCreated"] = "snapshotCreated";
+    })(exports.ProjectEvent || (exports.ProjectEvent = {}));
 
     /*
      * Copyright 2021 Zindex Software
@@ -9823,6 +9728,7 @@
             if (this.undoList.length > this.size) {
                 this.disposeRecord(this.undoList.shift());
             }
+            this.project.engine?.emit(exports.ProjectEvent.snapshotCreated);
         }
         dispose() {
             while (this.undoList.length) {
@@ -9836,29 +9742,6 @@
             this.disposeRecord(this.record);
             this.record = null;
             this.project = null;
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class AnimationState extends State {
-        createMeta(document) {
-            const meta = super.createMeta(document);
-            meta.keyframeSelection = this.project.keyframeSelection?.getSelectedKeyframes();
-            return meta;
         }
     }
 
@@ -9927,8 +9810,17 @@
         get hash() {
             return this._hash;
         }
+        get boundingBox() {
+            if (this._selection.size === 0) {
+                return Rectangle.ZERO;
+            }
+            return Rectangle.merge(getBoundingBoxes(this._selection));
+        }
         get length() {
             return this._selection.size;
+        }
+        get isEmpty() {
+            return this._selection.size === 0;
         }
         get activeElement() {
             return this._activeElement;
@@ -9938,6 +9830,18 @@
         }
         get elements() {
             return this._selection;
+        }
+        selectOrDeselect(element, multiple) {
+            if (!this.isSelected(element)) {
+                return this.select(element, multiple);
+            }
+            if (this.activeElement === element) {
+                return false;
+            }
+            if (multiple) {
+                return this.deselect(element);
+            }
+            return this.setActiveElement(element);
         }
         setActiveElement(element) {
             if (!element) {
@@ -9960,8 +9864,11 @@
         isSelected(element) {
             return this._selection.has(element);
         }
-        rectSelect(rect, start, seeThrough = true) {
-            if (this._document !== start.document) {
+        rectSelect(rect, start = null, seeThrough = true) {
+            if (!start) {
+                start = this._document;
+            }
+            else if (this._document !== start.document) {
                 // prevent cross document selection
                 return false;
             }
@@ -9977,12 +9884,12 @@
                         continue;
                     }
                     if (seeThrough && child.supportsChildren) {
-                        if (child.hasChildren) {
+                        if (child.hasChildren && child.globalBounds.intersectsRect(rect)) {
                             doSelection(child);
                         }
                         continue;
                     }
-                    if (rect.intersects(child.globalTightBounds)) {
+                    if (child.globalBounds.intersectsRect(rect)) {
                         selected.add(child);
                     }
                 }
@@ -10180,6 +10087,11 @@
             }
         }
     }
+    function* getBoundingBoxes(elements) {
+        for (const el of elements) {
+            yield el.globalBounds.bounds;
+        }
+    }
 
     /*
      * Copyright 2021 Zindex Software
@@ -10205,6 +10117,7 @@
             this._state = new Map();
             this._middleware = null;
             this._selection = new Selection();
+            this.engine = null;
         }
         dispose() {
             if (this._documentMap == null) {
@@ -10237,6 +10150,8 @@
             this._selection = null;
             // Remove middleware
             this._middleware = null;
+            // Detach engine
+            this.engine = null;
         }
         hasDocument(document) {
             return this._documentMap.has(document.id);
@@ -10253,6 +10168,7 @@
             // Link to current project
             document.project = this;
             this._documentMap.set(id, document);
+            this.engine?.emit(exports.ProjectEvent.documentAdded, document);
             if (this._document == null) {
                 this.setCurrentDocument(document);
             }
@@ -10277,6 +10193,7 @@
             if (id === this._masterDocument) {
                 this._masterDocument = null;
             }
+            this.engine?.emit(exports.ProjectEvent.documentRemoved, { document, dispose });
             if (dispose) {
                 document.dispose();
             }
@@ -10305,7 +10222,7 @@
         /**
          * @inheritDoc
          */
-        getDocumentPicture(id, time) {
+        getDocumentPicture(id, options) {
             const document = this.getDocumentForDraw(id);
             if (!document) {
                 return null;
@@ -10345,8 +10262,13 @@
             return this._document;
         }
         set document(value) {
+            if (this._document === value) {
+                // Same document.
+                return;
+            }
             if (this._documentMap.has(value.id)) {
                 this.setCurrentDocument(value);
+                this.engine?.emit(exports.ProjectEvent.documentChanged, value);
             }
         }
         setCurrentDocument(value, state) {
@@ -10361,9 +10283,10 @@
          * @internal
          */
         replaceDocument(next, meta) {
-            this.setCurrentDocument(next, meta);
             // Overwrite current document
             this._documentMap.set(next.id, next);
+            this.setCurrentDocument(next, meta);
+            this.engine?.emit(exports.ProjectEvent.documentStateChanged, this._state.get(next.id));
             return true;
         }
         createState(maxStack) {
@@ -10405,6 +10328,49 @@
         }
         get project() {
             return this._project;
+        }
+        computeResizeInfo(element, position, axis, centered = false, proportional = false, isLocalPosition = false) {
+            if (!isLocalPosition && !element.globalMatrix.isIdentity) {
+                position = element.globalMatrix.transformInversePoint(position);
+            }
+            const bounds = element.localBounds;
+            const current = bounds.getPointAtPosition(axis.x, axis.y);
+            const origin = centered ? bounds.middle : bounds.getPointAtPosition(axis.x, axis.y, true);
+            const flip = {
+                x: (axis.x === exports.Position.Start && position.x > origin.x) || (axis.x === exports.Position.End && position.x < origin.x),
+                y: (axis.y === exports.Position.Start && position.y > origin.y) || (axis.y === exports.Position.End && position.y < origin.y)
+            };
+            let scaleX = 1, scaleY = 1;
+            if (current.x !== origin.x) {
+                scaleX = (position.x - origin.x) / (current.x - origin.x);
+            }
+            if (current.y !== origin.y) {
+                scaleY = (position.y - origin.y) / (current.y - origin.y);
+            }
+            if (proportional) {
+                scaleX = scaleY = getProportionalScaleFactor(scaleX, scaleY);
+            }
+            const matrix = (new Matrix())
+                .translate(origin.x, origin.y)
+                .scale(scaleX, scaleY)
+                .translate(-origin.x, -origin.y);
+            return { matrix, flip };
+        }
+        resizeElementByMatrix(element, matrix, flip) {
+            if (!element.isResizable) {
+                return false;
+            }
+            const iterator = element.localResize(matrix, flip);
+            if (!iterator) {
+                return false;
+            }
+            let changed = false;
+            for (const [property, value] of iterator) {
+                if (this.setElementProperty(element, property, value)) {
+                    changed = true;
+                }
+            }
+            return changed;
         }
         bringForward(elements) {
             return this.forEachElement(elements, (el) => el.bringForward());
@@ -10595,12 +10561,12 @@
          */
         alignElementToRectangle(element, rectangle, x, y) {
             // TODO: get position?
-            let position = element.localTightBounds.topLeft;
+            let position = element.localBounds.topLeft;
             const matrix = element?.parent.globalMatrix;
             if (matrix && !matrix.isIdentity) {
                 position = matrix.transformPoint(position);
             }
-            let point = rectangle.getPointFromPosition(x, y, position);
+            let point = rectangle.getPointAtPosition(x, y, false, position);
             if (point === null) {
                 return false;
             }
@@ -10611,7 +10577,7 @@
          * Moves the element anchor so the specified bbox point matches origin
          */
         alignElementToOrigin(element, x, y) {
-            const point = element.localTightBounds.getPointFromPosition(x, y, element.anchor.negate());
+            const point = element.localBounds.getPointAtPosition(x, y, false, element.anchor.negate());
             if (point === null) {
                 // no point
                 return false;
@@ -10622,7 +10588,7 @@
          * Moves origin to a position on elements bbox
          */
         alignOriginToElement(element, x, y) {
-            const point = element.localTightBounds.getPointFromPosition(x, y, element.position);
+            const point = element.localBounds.getPointAtPosition(x, y, false, element.position);
             if (point === null) {
                 // no point
                 return false;
@@ -10646,18 +10612,24 @@
                 return false;
             }
             // we must recalculate anchor to keep the element in place
-            this.setElementProperty(element, "anchor", element.anchor.sub(position.sub(point)));
+            this.setElementProperty(element, "anchor", element.anchor.sub(element.localMatrix.transformInversePoint(position.sub(point), false)));
             // set the new position
             return this.setElementPosition(element, point);
         }
         /**
          * Moves the origin by delta (relative to document), but keeps the element position by recalculating anchor
          */
-        moveOriginBy(element, delta) {
+        moveOriginBy(elements, delta) {
             if (delta.isZero) {
                 return false;
             }
-            return this.moveLocalOriginTo(element, element.position.add(this.getElementDeltaPoint(element, delta)));
+            let changed = false;
+            for (const element of elements) {
+                if (this.moveLocalOriginTo(element, element.position.add(this.getElementDeltaPoint(element, delta)))) {
+                    changed = true;
+                }
+            }
+            return changed;
         }
         /**
          * Move element to a different position relative to document
@@ -10667,27 +10639,82 @@
         }
         /**
          * Move one element by delta (relative to document)
+         * Detached uses only anchor
          */
-        moveElementBy(element, delta) {
+        moveElementBy(element, delta, detached) {
             if (delta.isZero) {
                 return false;
+            }
+            if (detached) {
+                const matrix = element.globalMatrix;
+                return this.setElementProperty(element, "anchor", element.anchor.sub(matrix.isIdentity ? delta : matrix.transformInversePoint(delta, false)));
             }
             return this.setElementPosition(element, element.position.add(this.getElementDeltaPoint(element, delta)));
         }
         /**
          * Move multiple elements by delta (relative to document)
+         * Detached uses only anchor
          */
-        moveElementsBy(elements, delta) {
+        moveElementsBy(elements, delta, detached) {
             if (delta.isZero) {
                 return false;
             }
             let changed = false;
+            if (detached) {
+                for (const element of elements) {
+                    const matrix = element.globalMatrix;
+                    if (this.setElementProperty(element, "anchor", element.anchor.sub(matrix.isIdentity ? delta : matrix.transformInversePoint(delta, false)))) {
+                        changed = true;
+                    }
+                }
+            }
+            else {
+                for (const element of elements) {
+                    if (this.setElementPosition(element, element.position.add(this.getElementDeltaPoint(element, delta)))) {
+                        changed = true;
+                    }
+                }
+            }
+            return changed;
+        }
+        rotateElementsBy(elements, delta) {
+            if (delta === 0) {
+                return false;
+            }
+            let changed = false;
             for (const element of elements) {
-                if (this.setElementPosition(element, element.position.add(this.getElementDeltaPoint(element, delta)))) {
+                if (this.setElementProperty(element, "rotate", element.rotate + delta)) {
                     changed = true;
                 }
             }
             return changed;
+        }
+        getScaleFactor(element, axis, position, proportional = false) {
+            const factor = { x: 1, y: 1 };
+            let current = element.localBounds.getPointAtPosition(axis.x, axis.y);
+            if (!element.globalMatrix.isIdentity) {
+                position = element.globalMatrix.transformInversePoint(position);
+            }
+            if (!element.anchor.isZero) {
+                current = current.sub(element.anchor);
+                position = position.sub(element.anchor);
+            }
+            if (axis.x !== exports.Position.Middle) {
+                factor.x = getAxisScale(position.x, current.x);
+            }
+            if (axis.y !== exports.Position.Middle) {
+                factor.y = getAxisScale(position.y, current.y);
+            }
+            if (proportional) {
+                factor.x = factor.y = getProportionalScaleUsingPositionAxis(factor.x, factor.y, axis);
+            }
+            return factor;
+        }
+        scaleElementsByFactor(elements, delta) {
+            if (delta.x === 1 && delta.y === 1) {
+                return false;
+            }
+            return this.setElementsPropertyDynamic(elements, "scale", (element) => element.scale.mul(delta));
         }
         /**
          * Sets the element local position
@@ -10709,7 +10736,7 @@
         setElementsPropertyDynamic(elements, property, value) {
             let changed = false;
             for (const element of elements) {
-                if (element.hasOwnProperty(property) && this.setElementProperty(element, property, value())) {
+                if (this.setElementProperty(element, property, value(element))) {
                     changed = true;
                 }
             }
@@ -10722,7 +10749,7 @@
         setElementsProperty(elements, property, value) {
             let changed = false;
             for (const element of elements) {
-                if (element.hasOwnProperty(property) && this.setElementProperty(element, property, value)) {
+                if (this.setElementProperty(element, property, value)) {
                     changed = true;
                 }
             }
@@ -10740,234 +10767,6 @@
             // update value
             element[property] = value;
             return true;
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class AnimationMiddleware extends Middleware {
-        setTime(time) {
-            if (this.project.setTime(time)) {
-                return this.updateAnimatedProperties(this.project.document);
-            }
-            return false;
-        }
-        getTime() {
-            return this.project.time;
-        }
-        /**
-         * Updates the document animated properties
-         */
-        updateAnimatedProperties(document, time) {
-            const animation = document.animation;
-            if (!animation) {
-                return false;
-            }
-            if (time == null) {
-                time = this.project.time;
-            }
-            return animation.updateAnimatedProperties(time, this.setAnimatedPropertyValue.bind(this));
-        }
-        /**
-         * Get property animation from element, or null if no animation is defined
-         */
-        getAnimation(element, property) {
-            return element.document.animation?.getAnimation(element, property);
-        }
-        setAnimatedPropertyValue(element, property, value) {
-            return super.setElementProperty(element, property, value);
-        }
-        /**
-         * @override
-         */
-        setElementPosition(element, position, angle) {
-            return super.setElementPosition(element, position, angle);
-        }
-        /**
-         * @override
-         */
-        setElementProperty(element, property, value) {
-            const project = this._project;
-            let animation = this.getAnimation(element, property);
-            if (!animation) {
-                const documentAnimation = element.document.animation;
-                if (!documentAnimation || !project.isRecording) {
-                    // document is not animated OR
-                    // we are not recording animations
-                    return super.setElementProperty(element, property, value);
-                }
-                if (project.animatorSource.isAnimatable(element, property)) {
-                    // create a new empty animation
-                    animation = project.animatorSource.createAnimation(element, property);
-                    if (!animation || !documentAnimation.addAnimation(element, property, animation)) {
-                        return false;
-                    }
-                    // Add first keyframe
-                    if (documentAnimation.startTime != project.time) {
-                        animation.addKeyframeAtOffset(documentAnimation.startTime, element[property]);
-                    }
-                }
-                else {
-                    // property is not animatable
-                    return super.setElementProperty(element, property, value);
-                }
-            }
-            else if (animation.disabled) {
-                // animation is disabled
-                return super.setElementProperty(element, property, value);
-            }
-            // Update the animation
-            // This updates the keyframe if there is an existing one
-            if (!animation.addKeyframeAtOffset(project.time, value)) {
-                return false;
-            }
-            super.setElementProperty(element, property, value);
-            return true;
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class KeyframeSelection {
-        // TODO: finish this
-        constructor() {
-        }
-        dispose() {
-        }
-        setDocument(document, state) {
-        }
-        getSelectedKeyframes() {
-            return null;
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    const MAX_TIME = 1000000 * 1000;
-    class AnimationProject extends Project {
-        constructor(source) {
-            super();
-            this._time = 0;
-            this._isRecording = false;
-            this._keyframeSelection = new KeyframeSelection();
-            this._animatorSource = source;
-        }
-        dispose() {
-            super.dispose();
-            this._isRecording = false;
-            if (this._keyframeSelection) {
-                this._keyframeSelection.dispose();
-                this._keyframeSelection = null;
-            }
-        }
-        get time() {
-            return this._time;
-        }
-        set time(value) {
-            this.setTime(value);
-        }
-        setTime(value) {
-            value = clamp(Math.round(value), 0, MAX_TIME);
-            if (this._time === value) {
-                return false;
-            }
-            this._time = value;
-            return true;
-        }
-        /**
-         * @inheritDoc
-         */
-        getDocumentPicture(id, time) {
-            const document = this.getDocumentForDraw(id);
-            if (!document) {
-                return null;
-            }
-            if (time != null) {
-                this.middleware.updateAnimatedProperties(document, time);
-            }
-            return document.getPicture();
-        }
-        get animatorSource() {
-            return this._animatorSource;
-        }
-        get keyframeSelection() {
-            return this._keyframeSelection;
-        }
-        get isRecording() {
-            return this._isRecording;
-        }
-        set isRecording(value) {
-            this._isRecording = value;
-        }
-        /**
-         * @override
-         */
-        setCurrentDocument(value, state) {
-            super.setCurrentDocument(value, state);
-            this._keyframeSelection.setDocument(value, state?.keyframeSelection);
-            this.middleware.updateAnimatedProperties(value, this._time);
-        }
-        // /**
-        //  * @override
-        //  * @internal
-        //  */
-        // replaceDocument(next: Document, meta?: AnimationStateMeta): boolean {
-        //     if (!super.replaceDocument(next, meta)) {
-        //         return false;
-        //     }
-        //     this.middleware.updateAnimatedProperties(next);
-        //     return true;
-        // }
-        /**
-         * @override
-         */
-        createMiddleware() {
-            return new AnimationMiddleware(this);
-        }
-        /**
-         * @override
-         */
-        createState(maxStack) {
-            return new AnimationState(this, maxStack);
         }
     }
 
@@ -11005,138 +10804,99 @@
         await customElements.whenDefined('canvas-engine');
     }
 
-    exports.Animation = Animation;
-    exports.AnimationMiddleware = AnimationMiddleware;
-    exports.AnimationProject = AnimationProject;
-    exports.AnimationState = AnimationState;
-    exports.AnimatorSource = AnimatorSource;
+    exports.AutomaticGrid = AutomaticGrid;
     exports.BaseBrush = BaseBrush;
     exports.BasePen = BasePen;
     exports.BaseTool = BaseTool;
-    exports.BoardDocument = BoardDocument;
-    exports.BrushAnimation = BrushAnimation;
     exports.CanvasEngine = CanvasEngine;
     exports.CanvasEngineInit = CanvasEngineInit;
-    exports.ClipPathAnimators = ClipPathAnimators;
     exports.ClipPathElement = ClipPathElement;
     exports.Color = Color;
     exports.ColorMatrix = ColorMatrix;
     exports.ColorPickerTool = ColorPickerTool;
     exports.Composition = Composition;
     exports.ConicalGradientBrush = ConicalGradientBrush;
+    exports.ConvexQuad = ConvexQuad;
     exports.DEGREES = DEGREES;
-    exports.DashArrayAnimation = DashArrayAnimation;
-    exports.DefaultAnimatorsMap = DefaultAnimatorsMap;
     exports.DefaultPen = DefaultPen;
     exports.Document = Document;
-    exports.DocumentAnimation = DocumentAnimation;
     exports.DrawingContext = DrawingContext;
     exports.EPSILON = EPSILON;
     exports.Element = Element;
-    exports.ElementAnimators = ElementAnimators;
-    exports.EllipseAnimators = EllipseAnimators;
     exports.EllipseElement = EllipseElement;
     exports.EllipseShape = EllipseShape;
     exports.EllipseTool = EllipseTool;
     exports.EmptyBrush = EmptyBrush;
-    exports.FillAnimators = FillAnimators;
     exports.Font = Font;
     exports.FontManager = FontManager;
     exports.GlobalElementProperties = GlobalElementProperties;
     exports.GradientBrush = GradientBrush;
-    exports.GroupAnimators = GroupAnimators;
+    exports.Grid2D = Grid2D;
     exports.GroupElement = GroupElement;
+    exports.Guide = Guide;
+    exports.GuideList = GuideList;
     exports.KeyboardStatus = KeyboardStatus;
-    exports.Keyframe = Keyframe;
-    exports.KeyframeSelection = KeyframeSelection;
     exports.LinearGradientBrush = LinearGradientBrush;
-    exports.MAX_TIME = MAX_TIME;
-    exports.MaskAnimators = MaskAnimators;
     exports.MaskElement = MaskElement;
     exports.MasterDocument = MasterDocument;
     exports.Matrix = Matrix;
     exports.Middleware = Middleware;
-    exports.MotionAnimation = MotionAnimation;
+    exports.NativeReader = NativeReader;
+    exports.NativeWriter = NativeWriter;
     exports.Node = Node;
-    exports.NumberAnimation = NumberAnimation;
-    exports.OpacityAnimation = OpacityAnimation;
     exports.PanTool = PanTool;
     exports.Path = Path;
-    exports.PathAnimation = PathAnimation;
-    exports.PathAnimators = PathAnimators;
     exports.PathElement = PathElement;
     exports.PathNode = PathNode;
     exports.PatternBrush = PatternBrush;
     exports.PatternDocument = PatternDocument;
-    exports.PercentAnimation = PercentAnimation;
     exports.Point = Point;
-    exports.PointAnimation = PointAnimation;
     exports.PointerBrush = PointerBrush;
-    exports.PolyAnimation = PolyAnimation;
-    exports.PolyAnimators = PolyAnimators;
     exports.PolyElement = PolyElement;
     exports.PolyShape = PolyShape;
     exports.PolyTool = PolyTool;
-    exports.PositiveNumberAnimation = PositiveNumberAnimation;
     exports.Project = Project;
     exports.RADIANS = RADIANS;
     exports.RadialGradientBrush = RadialGradientBrush;
-    exports.RectAnimators = RectAnimators;
     exports.RectElement = RectElement;
-    exports.RectRadiusAnimation = RectRadiusAnimation;
     exports.RectShape = RectShape;
     exports.RectShapeRadius = RectShapeRadius;
     exports.Rectangle = Rectangle;
     exports.RectangleTool = RectangleTool;
     exports.ReferenceElement = ReferenceElement;
-    exports.RegularPolygonAnimators = RegularPolygonAnimators;
     exports.RegularPolygonElement = RegularPolygonElement;
     exports.RegularPolygonShape = RegularPolygonShape;
     exports.RegularPolygonTool = RegularPolygonTool;
     exports.Ruler = Ruler;
-    exports.SelectTool = SelectTool;
     exports.Selection = Selection;
     exports.ShapeElement = ShapeElement;
+    exports.SingleBoardDocument = SingleBoardDocument;
     exports.Size = Size;
+    exports.Snapping = Snapping;
     exports.SolidBrush = SolidBrush;
-    exports.StarAnimators = StarAnimators;
     exports.StarElement = StarElement;
     exports.StarShape = StarShape;
     exports.StarTool = StarTool;
     exports.State = State;
     exports.StopColorList = StopColorList;
-    exports.StrokeAnimators = StrokeAnimators;
-    exports.SymbolAnimators = SymbolAnimators;
     exports.SymbolElement = SymbolElement;
-    exports.TextAnimators = TextAnimators;
     exports.TextElement = TextElement;
     exports.Theme = Theme;
-    exports.TransformAnimators = TransformAnimators;
     exports.TwoPointGradientBrush = TwoPointGradientBrush;
-    exports.VectorAnimators = VectorAnimators;
     exports.VectorElement = VectorElement;
     exports.ViewBox = ViewBox;
     exports.clamp = clamp;
     exports.clone = clone;
+    exports.compress = compress;
     exports.convertUnit = convertUnit;
+    exports.decompress = decompress;
     exports.equals = equals;
+    exports.getAxisScale = getAxisScale;
+    exports.getProportionalScaleFactor = getProportionalScaleFactor;
+    exports.getProportionalScaleUsingPositionAxis = getProportionalScaleUsingPositionAxis;
     exports.getRangePercent = getRangePercent;
     exports.greatestCommonDivisor = greatestCommonDivisor;
-    exports.interpolateAlphaComponent = interpolateAlphaComponent;
-    exports.interpolateBrush = interpolateBrush;
-    exports.interpolateColor = interpolateColor;
-    exports.interpolateColorComponent = interpolateColorComponent;
-    exports.interpolateDashArray = interpolateDashArray;
-    exports.interpolateDiscrete = interpolateDiscrete;
-    exports.interpolateMotion = interpolateMotion;
-    exports.interpolateNumber = interpolateNumber;
-    exports.interpolatePath = interpolatePath;
-    exports.interpolatePathNode = interpolatePathNode;
-    exports.interpolatePercent = interpolatePercent;
-    exports.interpolatePoint = interpolatePoint;
-    exports.interpolatePoly = interpolatePoly;
-    exports.interpolatePositiveNumber = interpolatePositiveNumber;
-    exports.interpolateRectRadius = interpolateRectRadius;
+    exports.invertPosition = invertPosition;
     exports.isCloseTo = isCloseTo;
     exports.isMacOS = isMacOS;
     exports.isValidNumber = isValidNumber;
@@ -11146,7 +10906,9 @@
     exports.parseColor = inputToRGB;
     exports.parseNumber = parseNumber;
     exports.parseNumberList = parseNumberList;
+    exports.readBytes = readBytes;
     exports.round = round;
+    exports.toStream = toStream;
     exports.uuid = uuid;
 
     Object.defineProperty(exports, '__esModule', { value: true });
