@@ -30,7 +30,7 @@ import type {Tool} from "@zindex/canvas-engine";
 
 export const Tools = {
     pan: new PanTool(),
-    select: new SelectionTool(),
+    selection: new SelectionTool(),
     transform: new TransformTool(),
 
     // shape
@@ -66,4 +66,4 @@ export const CurrentTool: CurrentToolType = ((initial: Tool) => {
             return true;
         }
     };
-})(Tools.select);
+})(Tools.selection);

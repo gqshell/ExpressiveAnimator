@@ -18,18 +18,20 @@ export type ToolButtonDef = {
     tool: string,
     icon: string,
     title: string,
+    disabled?: boolean,
 };
 
 export type ToolButtons = (ToolButtonDef | ToolButtonDef[])[];
 
 export const buttons: ToolButtons = [
     {
-        tool: 'select',
+        tool: 'selection',
         icon: 'expr:selection-tool',
         title: 'Selection tool (V)'
     },
     {
         tool: 'path',
+        disabled: true,
         icon: 'expr:direct-selection-tool',
         title: 'Node tool (A)'
     },
@@ -42,7 +44,8 @@ export const buttons: ToolButtons = [
         {
             tool: 'pen',
             icon: 'expr:pen-tool',
-            title: 'Pen tool (P)'
+            title: 'Pen tool (P)',
+            disabled: true
         },
         // TODO:
         /*
@@ -59,7 +62,8 @@ export const buttons: ToolButtons = [
         {
             tool: 'line',
             icon: 'expr:line-tool',
-            title: 'Line tool (L)'
+            title: 'Line tool (L)',
+            disabled: true
         },
     ],
     [
@@ -88,12 +92,14 @@ export const buttons: ToolButtons = [
         {
             tool: 'gradient',
             icon: 'expr:gradient-tool',
-            title: 'Gradient tool (G)'
+            title: 'Gradient tool (G)',
+            disabled: true
         },
         {
             tool: 'color-picker',
             icon: 'expr:colorpicker-tool',
-            title: 'Eyedropper tool (I)'
+            title: 'Eyedropper tool (I)',
+            disabled: true
         },
     ],
     // TODO: image tool info
@@ -106,7 +112,8 @@ export const buttons: ToolButtons = [
     {
         tool: 'text',
         icon: 'expr:text-tool',
-        title: 'Text tool (T)'
+        title: 'Text tool (T)',
+        disabled: true
     },
     {
         tool: 'pan',
@@ -116,6 +123,7 @@ export const buttons: ToolButtons = [
     {
         tool: 'zoom',
         icon: 'expr:zoom-tool',
-        title: 'Zoom tool (Z)'
+        title: 'Zoom tool (Z)',
+        disabled: true
     },
 ];

@@ -33,7 +33,7 @@
         <sp-action-group quiet style="padding: var(--spectrum-global-dimension-size-50)">
             {#each buttons as button (button.tool)}
                 {#if current !== button}
-                    <sp-action-button on:click={selectTool} data-tool-name="{button.tool}" title={button.title}>
+                    <sp-action-button disabled={button.disabled} on:click={selectTool} data-tool-name="{button.tool}" title={button.title}>
                         <sp-icon slot="icon">
                             <SVGIcon name={button.icon}/>
                         </sp-icon>
