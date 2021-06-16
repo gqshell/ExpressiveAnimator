@@ -143,7 +143,7 @@
         bottom: calc(0px - var(--timeline-scroll-top));
         left: calc((var(--timeline-keyframe-size) - var(--timeline-play-line-size)) / 2);
         transform: translateX(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)));
-        background: var(--spectrum-global-color-red-400);
+        background: var(--spectrum-global-color-blue-500);
         will-change: top, bottom, transform;
     }
 </style>

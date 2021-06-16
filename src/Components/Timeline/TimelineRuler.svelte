@@ -1,6 +1,7 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-    import {CurrentTheme} from "../../Stores";
+    import {onMount, tick} from "svelte";
+    import {CurrentTheme, CurrentTime, CurrentMaxTime} from "../../Stores";
+    import {clamp} from "@zindex/canvas-engine";
 
     export let zoom: number = 1;
     export let scroll: number = 0;
@@ -10,15 +11,21 @@
 
     let canvas: HTMLCanvasElement;
     let context: CanvasRenderingContext2D;
+    let playHead: HTMLElement;
+    let bounds: DOMRect;
 
     let width = 100;
     let height = 31;
     let dpi = window.devicePixelRatio;
-    let foreground: string = 'white';
-    let background: string = 'black';
+    let foreground: string;
+    let background: string;
+
+    let playHeadPosition: number;
+    let currentTime: number = $CurrentTime;
 
     const minorGraduationWidth = majorGraduationWidth / divisions;
     const halfDivisions = divisions / 2;
+    const unit = majorGraduationWidth / 1000;
 
     $: if (canvas && $CurrentTheme) {
         const style = window.getComputedStyle(canvas);
@@ -81,7 +88,42 @@
         context.stroke(path);
     }
 
+    function playHeadPointerDown(event: PointerEvent) {
+        playHead.setPointerCapture(event.pointerId);
+        currentTime = $CurrentTime;
+        playHeadPosition = event.x;
+    }
+
+    function playHeadPointerMove(event: PointerEvent) {
+        if (playHeadPosition === undefined) {
+            return;
+        }
+
+        let delta = (event.x - playHeadPosition) / zoom / unit;
+
+        currentTime += delta;
+        playHeadPosition = event.x;
+        let time = Math.round(currentTime);
+
+        if (event.shiftKey) {
+            let frame = Math.round(1000 / divisions);
+            time = time - time % frame;
+            let totalFrames = time / frame;
+            let elapsedFrames = totalFrames % divisions;
+            let elapsedSeconds = (totalFrames - elapsedFrames) / divisions;
+            time = Math.round(elapsedSeconds * 1000 + elapsedFrames * 1000 / divisions);
+        }
+
+        $CurrentTime = clamp(time, 0, $CurrentMaxTime);
+    }
+
+    function playHedPointerUp(event: PointerEvent) {
+        playHead.releasePointerCapture(event.pointerId);
+        playHeadPosition = undefined;
+    }
+
     onMount(() => {
+        bounds = canvas.parentElement.getBoundingClientRect();
         context = canvas.getContext('2d', {alpha: false});
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = "high";
@@ -91,13 +133,22 @@
         context.textBaseline = "ideographic";
 
         const observer = new ResizeObserver(() => {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            width = rect.width;
-            height = rect.height;
+            bounds = canvas.parentElement.getBoundingClientRect();
+            width = bounds.width;
+            height = bounds.height;
             canvas.width = width * dpi;
             canvas.height = height * dpi;
         });
         observer.observe(canvas.parentElement);
+
+        playHead.addEventListener('pointerdown', playHeadPointerDown);
+        playHead.addEventListener('pointermove', playHeadPointerMove);
+        playHead.addEventListener('pointerup', playHedPointerUp);
+
+        canvas.addEventListener('dblclick', function (event: MouseEvent) {
+            const x = ((event.clientX - bounds.x - padding) + scroll) / zoom;
+            $CurrentTime = Math.round(x / majorGraduationWidth * 1000);
+        });
 
         return () => {
             observer.disconnect();
@@ -107,7 +158,7 @@
 </script>
 <div class="timeline-ruler">
     <canvas bind:this={canvas}></canvas>
-    <div class="timeline-ruler-play-head"></div>
+    <div bind:this={playHead} class="timeline-ruler-play-head"></div>
 </div>
 <style global>
     .timeline-ruler {
@@ -129,9 +180,9 @@
         height: 12px;
         top: calc(32.5px - 12px);
         left: 0;
-        clip-path: polygon(0 0, 12px 0, 6.5px 12px, 0 0);
-        background: var(--spectrum-global-color-red-400);
-        transform: translateX(calc(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)) - var(--timeline-scroll-left)));
+        clip-path: polygon(0 0, 12px 0, 6px 12px, 0 0);
+        background: var(--spectrum-global-color-blue-500);
+        transform: translateX(calc(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)) - var(--timeline-scroll-left) + 0.5px));
         will-change: transform;
     }
 </style>
