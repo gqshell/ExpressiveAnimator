@@ -16,6 +16,7 @@
     $: style = `
         --timeline-play-offset: ${$CurrentTime};
         --timeline-scroll-top: ${scrollTop}px;
+        --timeline-scroll-left: ${scrollLeft}px;
         --timeline-max-offset: ${$CurrentMaxTime};
         --timeline-ms-unit: ${unit}px;
     `;
