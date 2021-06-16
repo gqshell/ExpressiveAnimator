@@ -10,7 +10,7 @@
     let scrollTop: number = 0;
     let scrollLeft: number = 0;
 
-    $: unit = zoom * 0.1;
+    $: unit = zoom * 0.24;
 
     // TODO: use zoom and others
     $: style = `
@@ -23,9 +23,9 @@
 <div class="timeline-wrapper" style="{style}">
     <div class="timeline-controls-wrapper">
         <TimelineControls />
-        <TimelineRuler bind:zoom left={scrollLeft} />
+        <TimelineRuler bind:zoom scroll={scrollLeft} />
     </div>
-    <Timeline bind:scrollTop bind:scrollLeft />
+    <Timeline bind:scrollTop bind:scrollLeft={scrollLeft} />
     <div class="timeline-bottom-bar">
         bar
     </div>
@@ -42,9 +42,9 @@
     }
 
     .timeline-controls-wrapper {
-        height: 28px;
-        max-height: 28px;
-        min-height: 28px;
+        height: 32px;
+        max-height: 32px;
+        min-height: 32px;
         display: flex;
         flex-direction: row;
     }
