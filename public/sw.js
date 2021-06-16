@@ -1,4 +1,4 @@
-const CACHE_NAME = 'expressive-animator-20210614-1';
+const CACHE_NAME = 'expressive-animator-20210617-1';
 const CACHE_ALLOW = [CACHE_NAME];
 
 const urlsToCache = [
