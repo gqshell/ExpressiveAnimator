@@ -37,7 +37,7 @@ export const buttons: ToolButtons = [
     },
     {
         tool: 'transform',
-        icon: 'expr:center-origin-object',
+        icon: 'expr:transform-tool',
         title: 'Transform tool (F)'
     },
     [
@@ -56,7 +56,7 @@ export const buttons: ToolButtons = [
         },*/
         {
             tool: 'poly',
-            icon: 'expr:guidelines-toggle',
+            icon: 'expr:polyline-tool',
             title: 'Polyline tool (W)'
         },
         {

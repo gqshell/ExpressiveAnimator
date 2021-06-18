@@ -5,7 +5,7 @@
 
     export let zoom: number = 1;
     export let scroll: number = 0;
-    export let divisions: number = 24;
+    export let divisions: number = 30;
     export let padding: number = 6;
     export let majorGraduationWidth = 240;
 
@@ -19,6 +19,7 @@
     let dpi = window.devicePixelRatio;
     let foreground: string;
     let background: string;
+    let paintReady: boolean = false;
 
     let playHeadPosition: number;
     let currentTime: number = $CurrentTime;
@@ -27,15 +28,17 @@
     const halfDivisions = divisions / 2;
     const unit = majorGraduationWidth / 1000;
 
-    $: if (canvas && $CurrentTheme) {
+
+    $: if (paintReady && canvas && $CurrentTheme) {
         const style = window.getComputedStyle(canvas);
         background = style.getPropertyValue('--ruler-background') || 'black';
         foreground = style.getPropertyValue('--ruler-foreground') || 'white';
     }
 
-    $: if (context) {
+    $: if (paintReady && context) {
         context.save();
         context.scale(dpi, dpi);
+        context.clearRect(0, 0, width, height);
         context.fillStyle = background;
         context.strokeStyle = foreground;
         context.fillRect(0, 0, width, height);
@@ -69,8 +72,8 @@
                 } else {
                     text = `${m}:${text}`;
                 }
-                context.fillText(text, x + 4, height - 15);
                 path.lineTo(x + 0.5, height - 20);
+                context.fillText(text, x + 4, height - 15);
             } else if (graduationNo % halfDivisions === 0) {
                 path.lineTo(x + 0.5, height - 15);
             } else {
@@ -88,6 +91,16 @@
         context.stroke(path);
     }
 
+    function computeTime(currentTime: number): number {
+        let time = Math.round(currentTime);
+        let frame = Math.round(1000 / divisions);
+        time = time - time % frame;
+        let totalFrames = time / frame;
+        let elapsedFrames = totalFrames % divisions;
+        let elapsedSeconds = (totalFrames - elapsedFrames) / divisions;
+        return Math.round(elapsedSeconds * 1000 + elapsedFrames * 1000 / divisions);
+    }
+
     function playHeadPointerDown(event: PointerEvent) {
         playHead.setPointerCapture(event.pointerId);
         currentTime = $CurrentTime;
@@ -103,18 +116,8 @@
 
         currentTime += delta;
         playHeadPosition = event.x;
-        let time = Math.round(currentTime);
 
-        if (event.shiftKey) {
-            let frame = Math.round(1000 / divisions);
-            time = time - time % frame;
-            let totalFrames = time / frame;
-            let elapsedFrames = totalFrames % divisions;
-            let elapsedSeconds = (totalFrames - elapsedFrames) / divisions;
-            time = Math.round(elapsedSeconds * 1000 + elapsedFrames * 1000 / divisions);
-        }
-
-        $CurrentTime = clamp(time, 0, $CurrentMaxTime);
+        $CurrentTime = clamp(computeTime(currentTime), 0, $CurrentMaxTime);
     }
 
     function playHedPointerUp(event: PointerEvent) {
@@ -122,8 +125,14 @@
         playHeadPosition = undefined;
     }
 
-    onMount(() => {
+    function setupCanvas() {
         bounds = canvas.parentElement.getBoundingClientRect();
+        width = bounds.width;
+        height = bounds.height;
+        canvas.width = width * dpi;
+        canvas.height = height * dpi;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
         context = canvas.getContext('2d', {alpha: false});
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = "high";
@@ -131,13 +140,16 @@
         context.font = '10px sans-serif';
         context.textAlign = 'left';
         context.textBaseline = "ideographic";
+    }
 
+    onMount(() => {
+        setTimeout(() => {
+            // next frame
+            paintReady = true;
+        });
+        setupCanvas();
         const observer = new ResizeObserver(() => {
-            bounds = canvas.parentElement.getBoundingClientRect();
-            width = bounds.width;
-            height = bounds.height;
-            canvas.width = width * dpi;
-            canvas.height = height * dpi;
+            setupCanvas();
         });
         observer.observe(canvas.parentElement);
 
@@ -145,9 +157,9 @@
         playHead.addEventListener('pointermove', playHeadPointerMove);
         playHead.addEventListener('pointerup', playHedPointerUp);
 
-        canvas.addEventListener('dblclick', function (event: MouseEvent) {
+        canvas.addEventListener('click', function (event: MouseEvent) {
             const x = ((event.clientX - bounds.x - padding) + scroll) / zoom;
-            $CurrentTime = Math.round(x / majorGraduationWidth * 1000);
+            $CurrentTime = clamp(computeTime(x / majorGraduationWidth * 1000), 0, $CurrentMaxTime);
         });
 
         return () => {
@@ -165,6 +177,7 @@
         flex: 1;
         box-sizing: border-box;
         position: relative;
+        overflow: hidden;
         border-bottom: 1px solid var(--spectrum-global-color-gray-300);
         --ruler-background: var(--spectrum-global-color-gray-75);
         --ruler-foreground: var(--spectrum-global-color-gray-800);
