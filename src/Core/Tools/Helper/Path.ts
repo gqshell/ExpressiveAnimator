@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type {PointLike} from "@zindex/canvas-engine";
+import type {PointStruct} from "@zindex/canvas-engine";
 import type {DrawingContext, Path} from "@zindex/canvas-engine";
 import {Color, DefaultPen, PathJoint, PathNode, SolidBrush} from "@zindex/canvas-engine";
 
@@ -34,12 +34,12 @@ export const SIZES = {
 };
 
 export const COLORS = {
-    PathLine: Color.from('blue'),
+    PathLine: Color.parse('blue'),
 
 
 
-    SelectedNodeBackground: Color.from('blue'),
-    NodeBackground: Color.from('white'),
+    SelectedNodeBackground: Color.parse('blue'),
+    NodeBackground: Color.parse('white'),
 }
 
 export const BRUSHES = {
@@ -102,7 +102,7 @@ function drawNodeHandles(context: DrawingContext, node: PathNode, scale: number 
     }
 }
 
-function drawHandle(context: DrawingContext, node: PointLike, handle: PointLike, scale: number = 1) {
+function drawHandle(context: DrawingContext, node: PointStruct, handle: PointStruct, scale: number = 1) {
     // draw line ...
     PENS.PathLine.width = SIZES.HandleLine / scale;
     context.drawLine(node, handle, PENS.PathLine);

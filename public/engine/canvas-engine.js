@@ -56,6 +56,79 @@
         }
     }
 
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    exports.FillRule = void 0;
+    (function (FillRule) {
+        FillRule[FillRule["NonZero"] = 0] = "NonZero";
+        FillRule[FillRule["EvenOdd"] = 1] = "EvenOdd";
+    })(exports.FillRule || (exports.FillRule = {}));
+    exports.BrushType = void 0;
+    (function (BrushType) {
+        BrushType[BrushType["None"] = 0] = "None";
+        BrushType[BrushType["Solid"] = 1] = "Solid";
+        BrushType[BrushType["LinearGradient"] = 2] = "LinearGradient";
+        BrushType[BrushType["RadialGradient"] = 3] = "RadialGradient";
+        BrushType[BrushType["TwoPointGradient"] = 4] = "TwoPointGradient";
+        BrushType[BrushType["ConicalGradient"] = 5] = "ConicalGradient";
+        BrushType[BrushType["Pattern"] = 6] = "Pattern";
+        BrushType[BrushType["Pointer"] = 7] = "Pointer";
+    })(exports.BrushType || (exports.BrushType = {}));
+    exports.PaintOrder = void 0;
+    (function (PaintOrder) {
+        PaintOrder[PaintOrder["FillStrokeMarkers"] = 0] = "FillStrokeMarkers";
+        PaintOrder[PaintOrder["FillMarkersStroke"] = 1] = "FillMarkersStroke";
+        PaintOrder[PaintOrder["StrokeFillMarkers"] = 2] = "StrokeFillMarkers";
+        PaintOrder[PaintOrder["StrokeMarkersFill"] = 3] = "StrokeMarkersFill";
+        PaintOrder[PaintOrder["MarkersFillStroke"] = 4] = "MarkersFillStroke";
+        PaintOrder[PaintOrder["MarkersStrokeFill"] = 5] = "MarkersStrokeFill";
+    })(exports.PaintOrder || (exports.PaintOrder = {}));
+    class Brush {
+        constructor(type) {
+            this.type = type;
+        }
+        preparePaint(paint) {
+            paint.isAntiAlias = true;
+            paint.style = Skia.SkPaintStyle.Fill;
+            return true;
+        }
+        clone() {
+            // Brushes are immutable
+            return this;
+        }
+        equals(other) {
+            return other.type === this.type;
+        }
+    }
+    class EmptyBrush extends Brush {
+        constructor() {
+            super(exports.BrushType.None);
+        }
+        get isVisible() {
+            return false;
+        }
+        static get INSTANCE() {
+            if (EmptyBrush._instance === null) {
+                EmptyBrush._instance = new EmptyBrush();
+            }
+            return EmptyBrush._instance;
+        }
+    }
+    EmptyBrush._instance = null;
+
     /**
      * Take input from [0, n] and return it as [0, 1]
      * @hidden
@@ -757,6 +830,15 @@
             return (c ^ arr[i++] & 15 >> c / 4).toString(16);
         });
     }
+    function sameMatrix(a, b) {
+        if (a == null) {
+            return b == null || b.isIdentity;
+        }
+        if (b == null) {
+            return a.isIdentity;
+        }
+        return a.equals(b);
+    }
 
     /*
      * Copyright 2021 Zindex Software
@@ -1133,82 +1215,6 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    exports.FillRule = void 0;
-    (function (FillRule) {
-        FillRule[FillRule["NonZero"] = 0] = "NonZero";
-        FillRule[FillRule["EvenOdd"] = 1] = "EvenOdd";
-    })(exports.FillRule || (exports.FillRule = {}));
-    exports.BrushType = void 0;
-    (function (BrushType) {
-        BrushType[BrushType["None"] = 0] = "None";
-        BrushType[BrushType["Solid"] = 1] = "Solid";
-        BrushType[BrushType["LinearGradient"] = 2] = "LinearGradient";
-        BrushType[BrushType["RadialGradient"] = 3] = "RadialGradient";
-        BrushType[BrushType["TwoPointGradient"] = 4] = "TwoPointGradient";
-        BrushType[BrushType["ConicalGradient"] = 5] = "ConicalGradient";
-        BrushType[BrushType["Pattern"] = 6] = "Pattern";
-        BrushType[BrushType["Pointer"] = 7] = "Pointer";
-    })(exports.BrushType || (exports.BrushType = {}));
-    exports.PaintOrder = void 0;
-    (function (PaintOrder) {
-        PaintOrder[PaintOrder["FillStrokeMarkers"] = 0] = "FillStrokeMarkers";
-        PaintOrder[PaintOrder["FillMarkersStroke"] = 1] = "FillMarkersStroke";
-        PaintOrder[PaintOrder["StrokeFillMarkers"] = 2] = "StrokeFillMarkers";
-        PaintOrder[PaintOrder["StrokeMarkersFill"] = 3] = "StrokeMarkersFill";
-        PaintOrder[PaintOrder["MarkersFillStroke"] = 4] = "MarkersFillStroke";
-        PaintOrder[PaintOrder["MarkersStrokeFill"] = 5] = "MarkersStrokeFill";
-    })(exports.PaintOrder || (exports.PaintOrder = {}));
-    class BaseBrush {
-        constructor(type, opacity) {
-            this._type = type;
-            this._opacity = opacity;
-        }
-        get type() {
-            return this._type;
-        }
-        get opacity() {
-            return this._opacity;
-        }
-        get isVisible() {
-            return this._opacity > 0;
-        }
-        set opacity(value) {
-            this._opacity = clamp(value, 0, 1);
-        }
-        preparePaint(paint) {
-            paint.isAntiAlias = true;
-            paint.alpha = this._opacity;
-            paint.style = Skia.SkPaintStyle.Fill;
-            return true;
-        }
-    }
-    class EmptyBrush extends BaseBrush {
-        constructor(opacity) {
-            super(exports.BrushType.None, opacity ?? 1);
-        }
-        get isVisible() {
-            return false;
-        }
-        clone() {
-            return new EmptyBrush(this._opacity);
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
     class Color {
         constructor(r = 0, g = 0, b = 0, a = 1.0) {
             this._rgba = null;
@@ -1259,7 +1265,7 @@
         static fromCode(code) {
             return new Color((code >> 16) & 0xFF, (code >> 8) & 0xFF, (code >> 0) & 0xFF, ((code >> 24) & 0xFF) / 255);
         }
-        static from(data) {
+        static parse(data) {
             const color = inputToRGB(data);
             if (!color.ok) {
                 return Color.transparent;
@@ -1301,38 +1307,36 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class SolidBrush extends BaseBrush {
-        constructor(color, opacity = 1) {
-            super(exports.BrushType.Solid, opacity);
+    class SolidBrush extends Brush {
+        constructor(color) {
+            super(exports.BrushType.Solid);
             this.color = color;
         }
         get isVisible() {
-            return this.opacity > 0 && this.color.a > 0;
+            return this.color.a > 0;
         }
         preparePaint(paint) {
             super.preparePaint(paint);
             paint.color = this.color.code;
-            // When setting paint.color, the opacity is lost
-            // so we must add it again
-            paint.addAlpha(this.opacity);
             return true;
         }
-        clone() {
-            return new SolidBrush(this.color, this._opacity);
+        equals(other) {
+            return other.type === this.type &&
+                this.color.equals(other.color);
         }
-        static fromColor(color, opacity = 1) {
-            return new SolidBrush(color, opacity);
+        withColor(color) {
+            if (this.color.equals(color)) {
+                return this;
+            }
+            return new SolidBrush(color);
         }
-        static get BLACK() {
-            return new SolidBrush(Color.black);
-        }
-        static get WHITE() {
-            return new SolidBrush(Color.white);
-        }
-        static get TRANSPARENT() {
-            return new SolidBrush(Color.transparent, 0);
+        static fromColor(color) {
+            return new SolidBrush(color);
         }
     }
+    SolidBrush.BLACK = new SolidBrush(Color.black);
+    SolidBrush.WHITE = new SolidBrush(Color.white);
+    SolidBrush.TRANSPARENT = new SolidBrush(Color.transparent);
 
     /*
      * Copyright 2021 Zindex Software
@@ -1350,78 +1354,32 @@
      * limitations under the License.
      */
     class StopColorList {
-        constructor(list, reference) {
+        constructor(list) {
             this._nativeCache = null;
             this._stringCache = null;
+            this._isVisible = null;
             this.list = list || [];
-            this.reference = reference || null;
         }
         get length() {
             return this.list.length;
         }
         get isVisible() {
-            for (const stop of this.list) {
-                if (stop.color.a > 0) {
-                    return true;
+            if (this._isVisible == null) {
+                this._isVisible = false;
+                for (const stop of this.list) {
+                    if (stop.color.a > 0) {
+                        this._isVisible = true;
+                        break;
+                    }
                 }
             }
-            return false;
+            return this._isVisible;
         }
         getColorAt(index) {
             return this.list[index]?.color;
         }
-        setColorAt(index, color) {
-            if (index > this.list.length || this.list[index].color.equals(color)) {
-                return false;
-            }
-            this.list[index].color = color;
-            this._nativeCache = this._stringCache = null;
-            return true;
-        }
         getOffsetAt(index) {
             return this.list[index]?.offset;
-        }
-        setOffsetAt(index, offset) {
-            if (index > this.list.length || this.list[index].offset === offset) {
-                return false;
-            }
-            this.list[index].offset = offset;
-            this.list.sort(sortStopColors);
-            this._nativeCache = this._stringCache = null;
-            return true;
-        }
-        removeColorAt(index) {
-            if (index > this.list.length) {
-                return false;
-            }
-            this.list.splice(index, 1);
-            this._nativeCache = this._stringCache = null;
-            return true;
-        }
-        addStopColor(offset, color) {
-            if (color == null) {
-                color = this.computeColor(offset);
-            }
-            const stop = { color, offset };
-            this.list.push(stop);
-            this.list.sort(sortStopColors);
-            this._nativeCache = this._stringCache = null;
-            return stop;
-        }
-        reverseOffsets() {
-            let changed = false;
-            for (const color of this.list) {
-                if (color.offset !== 0.5) {
-                    color.offset = 1 - color.offset;
-                    changed = true;
-                }
-            }
-            if (changed) {
-                this.list.reverse();
-                this._nativeCache = this._stringCache = null;
-                return true;
-            }
-            return false;
         }
         computeColor(offset) {
             const list = this.list;
@@ -1454,18 +1412,6 @@
             }
             return list[last].color;
         }
-        static fromColor(color, reference) {
-            if (!color) {
-                return new StopColorList([
-                    { color: Color.black, offset: 0 },
-                    { color: Color.white, offset: 1 },
-                ], reference);
-            }
-            return new StopColorList([
-                { color: color, offset: 0 },
-                { color: color.inverted(), offset: 1 },
-            ], reference);
-        }
         toNative() {
             if (this._nativeCache) {
                 return this._nativeCache;
@@ -1481,17 +1427,112 @@
             return this._nativeCache = ret;
         }
         toString() {
-            if (this._stringCache === null) {
+            if (this._stringCache == null) {
                 this._stringCache = this.list.map(stopColorToString).join(', ');
             }
             return this._stringCache;
         }
-        clone() {
-            if (this.reference) {
-                return this;
-            }
-            return new StopColorList(this.list.map(cloneStopColor), null);
+        createReadonly() {
+            return new StopColorList(this.list.map(cloneStopColor));
         }
+        createWritable() {
+            return new WritableStopColorList(this.list.map(cloneStopColor));
+        }
+        clone() {
+            return this;
+        }
+        equals(other) {
+            if (!other || this.list.length !== other.list.length) {
+                return false;
+            }
+            const length = this.list.length;
+            for (let i = 0; i < length; i++) {
+                if (this.list[i].offset !== other.list[i].offset || !this.list[i].color.equals(other.list[i].color)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        static fromColor(color) {
+            return new StopColorList(createListFromColor(color));
+        }
+    }
+    class WritableStopColorList extends StopColorList {
+        setColorAt(index, color) {
+            if (index > this.list.length || this.list[index].color.equals(color)) {
+                return false;
+            }
+            this.list[index].color = color;
+            this._nativeCache = this._stringCache = this._isVisible = null;
+            return true;
+        }
+        /**
+         * Returns new index
+         */
+        setOffsetAt(index, offset) {
+            if (index < 0 || index > this.list.length) {
+                return null;
+            }
+            if (this.list[index].offset === offset) {
+                return index;
+            }
+            const item = this.list[index];
+            item.offset = offset;
+            this.list.sort(sortStopColors);
+            this._nativeCache = this._stringCache = null;
+            return this.list.indexOf(item);
+        }
+        removeColorAt(index) {
+            if (index > this.list.length) {
+                return false;
+            }
+            this.list.splice(index, 1);
+            this._nativeCache = this._stringCache = this._isVisible = null;
+            return true;
+        }
+        addStopColor(offset, color) {
+            if (color == null) {
+                color = this.computeColor(offset);
+            }
+            const stop = { color, offset };
+            this.list.push(stop);
+            this.list.sort(sortStopColors);
+            this._nativeCache = this._stringCache = this._isVisible = null;
+            return stop;
+        }
+        reverseOffsets() {
+            let changed = false;
+            for (const color of this.list) {
+                if (color.offset !== 0.5) {
+                    color.offset = 1 - color.offset;
+                    changed = true;
+                }
+            }
+            if (changed) {
+                this.list.reverse();
+                this._nativeCache = this._stringCache = null;
+                return true;
+            }
+            return false;
+        }
+        static fromColor(color) {
+            return new WritableStopColorList(createListFromColor(color));
+        }
+        clone() {
+            return this.createWritable();
+        }
+    }
+    function createListFromColor(color) {
+        if (!color) {
+            return [
+                { color: Color.black, offset: 0 },
+                { color: Color.white, offset: 1 },
+            ];
+        }
+        return [
+            { color: color, offset: 0 },
+            { color: color.inverted(), offset: 1 },
+        ];
     }
     function cloneStopColor(stop) {
         return { color: stop.color, offset: stop.offset };
@@ -1527,19 +1568,48 @@
         SpreadMethod[SpreadMethod["Repeat"] = 1] = "Repeat";
         SpreadMethod[SpreadMethod["Reflect"] = 2] = "Reflect";
     })(exports.SpreadMethod || (exports.SpreadMethod = {}));
-    class GradientBrush extends BaseBrush {
-        constructor(type, stopColors, spread, opacity = 1, transform = null) {
-            super(type, opacity);
+    class GradientBrush extends Brush {
+        constructor(type, stopColors, spread, transform = null) {
+            super(type);
             this.transform = null;
             this.stopColors = stopColors;
             this.spread = spread;
             this.transform = transform;
         }
         get isVisible() {
-            if (!this._opacity) {
+            return this.stopColors.isVisible;
+        }
+        withStopColorList(list) {
+            if (list === this.stopColors) {
+                return this;
+            }
+            return this.constructWith(list, this.spread, this.transform);
+        }
+        withSpreadMethod(spread) {
+            if (this.spread === spread) {
+                return this;
+            }
+            return this.constructWith(this.stopColors, spread, this.transform);
+        }
+        withTransform(transform) {
+            if (sameMatrix(this.transform, transform)) {
+                return this;
+            }
+            return this.constructWith(this.stopColors, this.spread, transform);
+        }
+        equals(other) {
+            return this.spread === other.spread &&
+                sameMatrix(this.transform, other.transform) &&
+                this.stopColors.equals(other.stopColors);
+        }
+        preparePaint(paint) {
+            const shader = this.getShader(this.stopColors.toNative(), this.nativeSpreadMethod, this.transform);
+            if (!shader) {
                 return false;
             }
-            return this.stopColors.isVisible;
+            super.preparePaint(paint);
+            paint.shader = shader;
+            return true;
         }
         get nativeSpreadMethod() {
             switch (this.spread) {
@@ -1570,19 +1640,25 @@
      * limitations under the License.
      */
     class LinearGradientBrush extends GradientBrush {
-        constructor(start, end, stopColors, spread = exports.SpreadMethod.Pad, opacity = 1, transform = null) {
-            super(exports.BrushType.LinearGradient, stopColors, spread, opacity, transform);
+        constructor(start, end, stopColors, spread = exports.SpreadMethod.Pad, transform = null) {
+            super(exports.BrushType.LinearGradient, stopColors, spread, transform);
             this.start = start;
             this.end = end;
         }
-        clone() {
-            return new LinearGradientBrush(this.start.clone(), this.end.clone(), this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        equals(other) {
+            return this.type === other.type &&
+                this.start.equals(other.start) &&
+                this.end.equals(other.end) &&
+                super.equals(other);
         }
-        preparePaint(paint) {
-            super.preparePaint(paint);
-            const stop = this.stopColors.toNative();
-            paint.shader = Skia.SkShader.MakeLinearGradient(this.start, this.end, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
-            return true;
+        withPosition(start, end) {
+            return new LinearGradientBrush(start || this.start, end || this.end, this.stopColors, this.spread, this.transform);
+        }
+        constructWith(stopColors, spread, transform) {
+            return new LinearGradientBrush(this.start, this.end, stopColors, spread, transform);
+        }
+        getShader(stop, spread, transform) {
+            return Skia.SkShader.MakeLinearGradient(this.start, this.end, stop.colors, stop.offsets, spread, transform);
         }
     }
 
@@ -1602,19 +1678,25 @@
      * limitations under the License.
      */
     class RadialGradientBrush extends GradientBrush {
-        constructor(center, radius, stopColors, spread = exports.SpreadMethod.Pad, opacity = 1, transform = null) {
-            super(exports.BrushType.RadialGradient, stopColors, spread, opacity, transform);
+        constructor(center, radius, stopColors, spread = exports.SpreadMethod.Pad, transform = null) {
+            super(exports.BrushType.RadialGradient, stopColors, spread, transform);
             this.center = center;
             this.radius = radius;
         }
-        clone() {
-            return new RadialGradientBrush(this.center.clone(), this.radius, this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        equals(other) {
+            return this.type === other.type &&
+                this.radius === other.radius &&
+                this.center.equals(other.center) &&
+                super.equals(other);
         }
-        preparePaint(paint) {
-            super.preparePaint(paint);
-            const stop = this.stopColors.toNative();
-            paint.shader = Skia.SkShader.MakeRadialGradient(this.center, this.radius, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
-            return true;
+        withCircle(center, radius) {
+            return new RadialGradientBrush(center || this.center, radius ?? this.radius, this.stopColors, this.spread, this.transform);
+        }
+        constructWith(stopColors, spread, transform) {
+            return new RadialGradientBrush(this.center, this.radius, stopColors, spread, transform);
+        }
+        getShader(stop, spread, transform) {
+            return Skia.SkShader.MakeRadialGradient(this.center, this.radius, stop.colors, stop.offsets, spread, transform);
         }
     }
 
@@ -1634,21 +1716,32 @@
      * limitations under the License.
      */
     class TwoPointGradientBrush extends GradientBrush {
-        constructor(start, startRadius, end, endRadius, stopColors, spread = exports.SpreadMethod.Pad, opacity = 1, transform = null) {
-            super(exports.BrushType.TwoPointGradient, stopColors, spread, opacity, transform);
+        constructor(start, startRadius, end, endRadius, stopColors, spread = exports.SpreadMethod.Pad, transform = null) {
+            super(exports.BrushType.TwoPointGradient, stopColors, spread, transform);
             this.start = start;
             this.startRadius = startRadius;
             this.end = end;
             this.endRadius = endRadius;
         }
-        clone() {
-            return new TwoPointGradientBrush(this.start.clone(), this.startRadius, this.end.clone(), this.endRadius, this.stopColors.clone(), this.spread, this._opacity, this.transform ? this.transform.clone() : null);
+        equals(other) {
+            return this.type === other.type &&
+                this.startRadius === other.startRadius &&
+                this.endRadius === other.endRadius &&
+                this.start.equals(other.start) &&
+                this.end.equals(other.end) &&
+                super.equals(other);
         }
-        preparePaint(paint) {
-            super.preparePaint(paint);
-            const stop = this.stopColors.toNative();
-            paint.shader = Skia.SkShader.MakeTwoPointConicalGradient(this.start, this.startRadius, this.end, this.endRadius, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
-            return true;
+        withStart(center, radius) {
+            return new TwoPointGradientBrush(center || this.start, radius ?? this.startRadius, this.end, this.endRadius, this.stopColors, this.spread, this.transform);
+        }
+        withEnd(center, radius) {
+            return new TwoPointGradientBrush(this.start, this.startRadius, center || this.end, radius ?? this.endRadius, this.stopColors, this.spread, this.transform);
+        }
+        constructWith(stopColors, spread, transform) {
+            return new TwoPointGradientBrush(this.start, this.startRadius, this.end, this.endRadius, stopColors, spread, transform);
+        }
+        getShader(stop, spread, transform) {
+            return Skia.SkShader.MakeTwoPointConicalGradient(this.start, this.startRadius, this.end, this.endRadius, stop.colors, stop.offsets, spread, transform);
         }
     }
 
@@ -1668,20 +1761,27 @@
      * limitations under the License.
      */
     class ConicalGradientBrush extends GradientBrush {
-        constructor(center, stopColors, spread = exports.SpreadMethod.Pad, startAngle = 0, endAngle = 360, opacity = 1, transform = null) {
-            super(exports.BrushType.ConicalGradient, stopColors, spread, opacity, transform);
+        constructor(center, startAngle = 0, endAngle = 360, stopColors, spread = exports.SpreadMethod.Pad, transform = null) {
+            super(exports.BrushType.ConicalGradient, stopColors, spread, transform);
             this.center = center;
             this.startAngle = startAngle;
             this.endAngle = endAngle;
         }
-        clone() {
-            return new ConicalGradientBrush(this.center.clone(), this.stopColors.clone(), this.spread, this.startAngle, this.endAngle, this._opacity, this.transform ? this.transform.clone() : null);
+        equals(other) {
+            return this.type === other.type &&
+                this.startAngle === other.startAngle &&
+                this.endAngle === other.endAngle &&
+                this.center.equals(other.center) &&
+                super.equals(other);
         }
-        preparePaint(paint) {
-            super.preparePaint(paint);
-            const stop = this.stopColors.toNative();
-            paint.shader = Skia.SkShader.MakeSweepGradient(this.center, this.startAngle, this.endAngle, stop.colors, stop.offsets, this.nativeSpreadMethod, this.transform);
-            return true;
+        withCircle(center, startAngle, endAngle) {
+            return new ConicalGradientBrush(center || this.center, startAngle ?? this.startAngle, endAngle ?? this.endAngle, this.stopColors, this.spread, this.transform);
+        }
+        constructWith(stopColors, spread, transform) {
+            return new ConicalGradientBrush(this.center, this.startAngle, this.endAngle, stopColors, spread, transform);
+        }
+        getShader(stop, spread, transform) {
+            return Skia.SkShader.MakeSweepGradient(this.center, this.startAngle, this.endAngle, stop.colors, stop.offsets, spread, transform);
         }
     }
 
@@ -2143,13 +2243,16 @@
         PatternTile[PatternTile["Both"] = 5] = "Both";
         PatternTile[PatternTile["ReflectBoth"] = 6] = "ReflectBoth";
     })(exports.PatternTile || (exports.PatternTile = {}));
-    class PatternBrush extends BaseBrush {
-        constructor(pattern, opacity = 1, tile = exports.PatternTile.Both, transform = new Matrix(), rectangle = null) {
-            super(exports.BrushType.Pattern, opacity);
+    class PatternBrush extends Brush {
+        constructor(pattern, tile = exports.PatternTile.Both, transform = new Matrix(), rectangle = null) {
+            super(exports.BrushType.Pattern);
             this._pattern = pattern;
             this._tile = tile;
             this._transform = transform;
             this._rectangle = rectangle;
+        }
+        get isVisible() {
+            return true;
         }
         preparePaint(paint) {
             super.preparePaint(paint);
@@ -2188,8 +2291,11 @@
             paint.shader = this._pattern.getPicture().makeShader(xTile, yTile, this._transform, this._rectangle);
             return true;
         }
-        clone() {
-            return new PatternBrush(this._pattern.clone(), this._opacity, this._tile, this._transform.clone(), this._rectangle ? this._rectangle.clone() : null);
+        equals(other) {
+            if (super.equals(other)) {
+                return this._pattern === other._pattern;
+            }
+            return false;
         }
     }
 
@@ -2208,10 +2314,13 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class PointerBrush extends BaseBrush {
-        constructor(brush, opacity = 1) {
-            super(exports.BrushType.Pointer, opacity);
+    class PointerBrush extends Brush {
+        constructor(brush) {
+            super(exports.BrushType.Pointer);
             this._pointer = brush;
+        }
+        get isVisible() {
+            return this._pointer.isVisible;
         }
         get pointer() {
             return this._pointer;
@@ -2222,8 +2331,11 @@
             }
             return false;
         }
-        clone() {
-            return new PointerBrush(this._pointer, this._opacity);
+        equals(other) {
+            if (super.equals(other)) {
+                return this._pointer.equals(other._pointer);
+            }
+            return false;
         }
     }
 
@@ -2258,7 +2370,7 @@
     (function (PenType) {
         PenType[PenType["Default"] = 0] = "Default";
     })(exports.PenType || (exports.PenType = {}));
-    class BasePen {
+    class Pen {
         constructor(brush = SolidBrush.BLACK, width = 1, lineCap = exports.StrokeLineCap.Butt, lineJoin = exports.StrokeLineJoin.Miter, miterLimit = 4, dashes = [], offset = 0) {
             this._brush = brush;
             this._width = width;
@@ -2267,11 +2379,6 @@
             this._miterLimit = miterLimit;
             this._dashes = dashes;
             this._offset = offset;
-        }
-        clone() {
-            const ctor = this.constructor;
-            // @ts-ignore
-            return new ctor(this._brush.clone(), this._width, this._lineCap, this._lineJoin, this._miterLimit, this._dashes.slice(), this._offset);
         }
         get brush() {
             return this._brush;
@@ -2316,7 +2423,20 @@
             this._offset = value;
         }
         get isVisible() {
-            return this._brush.isVisible && this._width > 0;
+            return this._width > 0 && this._brush.isVisible;
+        }
+        equals(other) {
+            return this.type === other.type &&
+                this.width === other.width &&
+                this.lineJoin === other.lineJoin &&
+                this.lineCap === other.lineCap &&
+                this.miterLimit === other.miterLimit &&
+                this.offset === other.offset &&
+                equals(this.dashes, other.dashes) &&
+                this.brush.equals(other.brush);
+        }
+        getPathEffect() {
+            return this._dashes.length > 0 ? Skia.SkPathEffect.MakeDash(this._dashes, this._offset) : null;
         }
         preparePaint(paint) {
             if (!this._brush.preparePaint(paint)) {
@@ -2349,9 +2469,7 @@
                     paint.strokeCap = Skia.SkPaintStrokeCap.Butt;
                     break;
             }
-            if (this._dashes.length > 0) {
-                paint.pathEffect = Skia.SkPathEffect.MakeDash(this._dashes, this._offset);
-            }
+            paint.pathEffect = this.getPathEffect();
             return true;
         }
     }
@@ -2371,9 +2489,12 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class DefaultPen extends BasePen {
+    class DefaultPen extends Pen {
         get type() {
             return exports.PenType.Default;
+        }
+        clone() {
+            return new DefaultPen(this._brush.clone(), this._width, this._lineCap, this._lineJoin, this._miterLimit, this._dashes.slice(), this._offset);
         }
     }
 
@@ -4268,6 +4389,50 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    class PaintOpacityClass {
+        constructor() {
+            this.paint = null;
+            this.opacity = 0;
+        }
+        get isVisible() {
+            return this.opacity > 0 && this.paint?.isVisible;
+        }
+        apply(paint, opacity) {
+            this.paint = paint;
+            this.opacity = opacity;
+            return this;
+        }
+        preparePaint(paint) {
+            if (this.paint.preparePaint(paint)) {
+                paint.addAlpha(this.opacity);
+                // reset
+                this.opacity = 0;
+                this.paint = null;
+                return true;
+            }
+            // reset
+            this.opacity = 0;
+            this.paint = null;
+            return false;
+        }
+    }
+    const PaintOpacity = new PaintOpacityClass();
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     class Size {
         constructor(width, height) {
             this.width = width;
@@ -5406,14 +5571,12 @@
         }
         decorateVectorElement(engine, element) {
             const global = engine.globalElementProperties;
-            element.fill = global.fill.clone();
             element.stroke = global.stroke.clone();
+            element.strokeOpacity = global.strokeOpacity;
+            element.fill = global.fill.clone();
+            element.fillOpacity = global.fillOpacity;
             element.fillRule = global.fillRule;
             element.paintOrder = global.paintOrder;
-            element.blend = global.blend;
-            element.opacity = global.opacity;
-            // We do not isolate vector elements
-            // element.isolate = global.isolate;
         }
     }
 
@@ -5432,31 +5595,88 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class PanTool extends BaseTool {
+    class ShapeBuilderTool extends BaseTool {
         constructor() {
             super(...arguments);
-            this.defaultCanvasCursor = exports.Cursor.Hand;
+            this.element = null;
+            this.startPoint = null;
+            this.currentPoint = null;
+            this.lastEvent = null;
+            this.defaultCanvasCursor = exports.Cursor.Target;
         }
-        get name() {
-            return "pan";
+        onMouseEnter(engine, event) {
+            this.snapping.init(engine);
+        }
+        onMouseLeave(engine, event) {
+            this.snapping.reset();
         }
         draw(engine) {
-            // nothing to draw
+            // Check if there is something to draw
+            if (this.element && this.startPoint && this.currentPoint) {
+                this.updateElement(engine, this.element, this.startPoint, this.currentPoint);
+                const context = engine.context;
+                context.save();
+                context.multiplyMatrix(engine.viewBox.matrix);
+                this.drawShape(engine, this.element);
+                context.restore();
+            }
+        }
+        onKeyboardStatusChange(engine, event) {
+            this.invalidateToolDrawing();
+        }
+        /**
+         * Override this method to draw boxes, etc.
+         * @protected
+         */
+        drawShape(engine, element) {
+            element.draw(engine.context);
+        }
+        decorateElement(engine, element) {
+            // nothing here, you can override this method
         }
         onMouseLeftButtonDown(engine, event) {
-            this.panPivot = event.canvasPosition;
-            engine.cursor = exports.Cursor.HandHold;
+            this.startPoint = this.currentPoint = this.snapping.snapPoint(event.position);
+            this.createBuilder(engine);
         }
         onMouseLeftButtonMove(engine, event) {
-            if (!this.panPivot) {
+            this.lastEvent = event;
+            const p = this.snapping.snapPoint(event.position);
+            if (p.equals(this.currentPoint)) {
                 return;
             }
-            this.doPan(engine, event);
-            this.panPivot = event.canvasPosition;
+            this.currentPoint = p;
+            this.invalidateToolDrawing();
         }
         onMouseLeftButtonUp(engine, event) {
-            this.doPan(engine, event);
-            engine.cursor = exports.Cursor.Hand;
+            this.saveElement(engine);
+            this.disposeBuilder();
+        }
+        createBuilder(engine) {
+            if (!this.element) {
+                this.element = this.createElement(engine, this.startPoint);
+                this.decorateVectorElement(engine, this.element);
+                this.decorateElement(engine, this.element);
+            }
+        }
+        disposeBuilder() {
+            if (this.element) {
+                this.element.dispose();
+                this.element = null;
+            }
+            this.snapping.reset();
+            this.lastEvent = this.startPoint = this.currentPoint = null;
+            this.invalidateToolDrawing();
+        }
+        saveElement(engine) {
+            if (!this.element) {
+                return;
+            }
+            // Append to document
+            engine.document.appendChild(this.element);
+            this.element = null;
+            engine.project.state.snapshot();
+            // The canvas draw will change
+            this.invalidate();
         }
     }
 
@@ -6215,6 +6435,8 @@
             super(...arguments);
             this._fill = null;
             this._stroke = null;
+            this._fillOpacity = 1;
+            this._strokeOpacity = 1;
             this._rule = exports.FillRule.NonZero;
             this._paintOrder = exports.PaintOrder.FillStrokeMarkers;
         }
@@ -6247,10 +6469,10 @@
             this.invalidate();
         }
         get fillOpacity() {
-            return this.fill.opacity;
+            return this._fillOpacity;
         }
         set fillOpacity(value) {
-            this.fill.opacity = value;
+            this._fillOpacity = value;
             this.invalidate();
         }
         // Stroke
@@ -6272,10 +6494,10 @@
             this.invalidate();
         }
         get strokeOpacity() {
-            return this.stroke.brush.opacity;
+            return this._strokeOpacity;
         }
         set strokeOpacity(value) {
-            this.stroke.brush.opacity = value;
+            this._strokeOpacity = value;
             this.invalidate();
         }
         get strokeLineWidth() {
@@ -6380,34 +6602,34 @@
             switch (this._paintOrder) {
                 case exports.PaintOrder.FillStrokeMarkers:
                 default:
-                    context.drawPath(path, this.fill);
-                    context.drawPath(path, this.stroke);
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
                     rect = this.paintMarkers(context);
                     break;
                 case exports.PaintOrder.FillMarkersStroke:
-                    context.drawPath(path, this.fill);
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
                     rect = this.paintMarkers(context);
-                    context.drawPath(path, this.stroke);
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
                     break;
                 case exports.PaintOrder.StrokeFillMarkers:
-                    context.drawPath(path, this.stroke);
-                    context.drawPath(path, this.fill);
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
                     rect = this.paintMarkers(context);
                     break;
                 case exports.PaintOrder.StrokeMarkersFill:
-                    context.drawPath(path, this.stroke);
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
                     rect = this.paintMarkers(context);
-                    context.drawPath(path, this.fill);
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
                     break;
                 case exports.PaintOrder.MarkersFillStroke:
                     rect = this.paintMarkers(context);
-                    context.drawPath(path, this.fill);
-                    context.drawPath(path, this.stroke);
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
                     break;
                 case exports.PaintOrder.MarkersStrokeFill:
                     rect = this.paintMarkers(context);
-                    context.drawPath(path, this.stroke);
-                    context.drawPath(path, this.fill);
+                    context.drawPath(path, PaintOpacity.apply(this.stroke, this._strokeOpacity));
+                    context.drawPath(path, PaintOpacity.apply(this.fill, this._fillOpacity));
                     break;
             }
             if (prevRule !== null) {
@@ -6441,6 +6663,8 @@
             const element = super.clone();
             element._fill = this._fill ? this._fill.clone() : null;
             element._stroke = this._stroke ? this._stroke.clone() : null;
+            element._fillOpacity = this._fillOpacity;
+            element._strokeOpacity = this._strokeOpacity;
             element._rule = this._rule;
             element._paintOrder = this._paintOrder;
             return element;
@@ -7089,7 +7313,7 @@
         }
         get stroke() {
             if (!this._stroke) {
-                this._stroke = new DefaultPen(new EmptyBrush());
+                this._stroke = new DefaultPen(EmptyBrush.INSTANCE);
             }
             return this._stroke;
         }
@@ -7650,7 +7874,7 @@
      * limitations under the License.
      */
     class AutomaticGrid extends Grid2D {
-        constructor(color = Color.from('gray'), hSubdivision = 10, vSubdivision = 10) {
+        constructor(color = Color.parse('gray'), hSubdivision = 10, vSubdivision = 10) {
             super(color, hSubdivision, vSubdivision);
         }
         calcSize(engine) {
@@ -7691,6 +7915,7 @@
     }
     class GuideList {
         constructor(guides = []) {
+            this._pen = new DefaultPen();
             this.isVisible = true;
             this._guides = guides;
         }
@@ -7714,7 +7939,9 @@
         render(engine) {
             const { context, viewBox, boundingBox, dpr } = engine;
             const guides = this._guides;
-            const pen = new DefaultPen(new SolidBrush(engine.theme.guide), dpr / context.matrix.lineScale);
+            const pen = this._pen;
+            pen.width = dpr / context.matrix.lineScale;
+            pen.brush = pen.brush.withColor(engine.theme.guide);
             const topLeft = viewBox.getPointPosition({ x: 0, y: 0 });
             const bottomRight = viewBox.getPointPosition({ x: boundingBox.width, y: boundingBox.height });
             for (let i = 0, l = guides.length; i < l; i++) {
@@ -7972,89 +8199,129 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class ShapeBuilderTool extends BaseTool {
+    class EllipseTool extends ShapeBuilderTool {
+        get name() {
+            return 'ellipse';
+        }
+        createElement(engine, start) {
+            return new EllipseElement(new EllipseShape(0, 0), engine.document);
+        }
+        updateElement(engine, element, from, to) {
+            let left = from.x, right = to.x, top = from.y, bottom = to.y;
+            if (this.keyboardStatus.isAlt) {
+                const rect = Rectangle.fromLTRB(left, top, right, bottom);
+                element.position = rect.topLeft;
+                if (this.keyboardStatus.isShift) {
+                    element.anchor = new Point(rect.diagonal, rect.diagonal);
+                    element.width = element.height = rect.diagonal * 2;
+                }
+                else {
+                    element.anchor = new Point(rect.width, rect.height);
+                    element.width = rect.width * 2;
+                    element.height = rect.height * 2;
+                }
+                return;
+            }
+            if (left > right) {
+                const tmp = right;
+                right = left;
+                left = tmp;
+            }
+            if (top > bottom) {
+                const tmp = bottom;
+                bottom = top;
+                top = tmp;
+            }
+            let rect = Rectangle.fromLTRB(left, top, right, bottom);
+            element.position = rect.topLeft;
+            element.anchor = Point.ZERO;
+            if (this.keyboardStatus.isShift) {
+                element.width = element.height = rect.diagonal;
+            }
+            else {
+                element.width = rect.width;
+                element.height = rect.height;
+            }
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class PolyTool extends ShapeBuilderTool {
         constructor() {
             super(...arguments);
-            this.snappingTest = null;
-            this.element = null;
-            this.startPoint = null;
-            this.currentPoint = null;
-            this.lastEvent = null;
-            this.defaultCanvasCursor = exports.Cursor.Target;
+            this.isBuilding = false;
         }
-        onMouseEnter(engine, event) {
-            this.snapping.init(engine);
+        get name() {
+            return 'poly';
         }
-        onMouseLeave(engine, event) {
-            this.snapping.reset();
-        }
-        draw(engine) {
-            // Check if there is something to draw
-            if (this.element && this.startPoint && this.currentPoint) {
-                this.updateElement(engine, this.element, this.startPoint, this.currentPoint);
-                const context = engine.context;
-                context.save();
-                context.multiplyMatrix(engine.viewBox.matrix);
-                this.drawShape(engine, this.element);
-                context.restore();
+        onMouseHover(engine, event) {
+            if (this.isBuilding) {
+                this.currentPoint = this.snapping.snapPoint(event.position);
+                this.invalidateToolDrawing();
             }
-        }
-        onKeyboardStatusChange(engine, event) {
-            this.invalidateToolDrawing();
-        }
-        /**
-         * Override this method to draw boxes, etc.
-         * @protected
-         */
-        drawShape(engine, element) {
-            element.draw(engine.context);
-        }
-        decorateElement(engine, element) {
-            // nothing here, you can override this method
-        }
-        onMouseLeftButtonDown(engine, event) {
-            this.startPoint = this.currentPoint = this.snapping.snapPoint(event.position);
-            this.createBuilder(engine);
         }
         onMouseLeftButtonMove(engine, event) {
-            this.lastEvent = event;
-            const p = this.snapping.snapPoint(event.position);
-            if (p.equals(this.currentPoint)) {
-                return;
+            this.onMouseHover(engine, event);
+        }
+        onKeyDown(engine, event) {
+            if (this.isBuilding && event.key === 'Escape') {
+                this.commitElement(engine);
             }
-            this.currentPoint = p;
-            this.invalidateToolDrawing();
+        }
+        onMouseLeftButtonDown(engine, event) {
+            if (this.isBuilding) {
+                this.currentPoint = event.position;
+                const points = this.element.shape.points;
+                if (event.position.equals(points[points.length - 2])) {
+                    this.commitElement(engine);
+                }
+                else {
+                    this.element.shape.points.push(event.position);
+                    this.element.invalidateShape();
+                }
+            }
+            else {
+                super.onMouseLeftButtonDown(engine, event);
+                this.isBuilding = true;
+            }
         }
         onMouseLeftButtonUp(engine, event) {
-            this.saveElement(engine);
-            this.disposeBuilder();
         }
-        createBuilder(engine) {
-            if (!this.element) {
-                this.element = this.createElement(engine, this.startPoint);
-                this.decorateVectorElement(engine, this.element);
-                this.decorateElement(engine, this.element);
-            }
-        }
-        disposeBuilder() {
-            if (this.element) {
-                this.element.dispose();
-                this.element = null;
-            }
-            this.snapping.reset();
-            this.lastEvent = this.startPoint = this.currentPoint = null;
-            this.invalidateToolDrawing();
-        }
-        saveElement(engine) {
+        commitElement(engine) {
             if (!this.element) {
                 return;
             }
-            // Append to document
-            engine.document.appendChild(this.element);
-            this.element = null;
-            engine.project.state.snapshot();
-            // The canvas draw will change
-            this.invalidate();
+            const points = this.element.shape.points;
+            points.pop();
+            this.element.isClosed = points[0].equals(points[points.length - 1]);
+            this.element.invalidateShape();
+            this.saveElement(engine);
+            this.disposeBuilder();
+            this.isBuilding = false;
+        }
+        createElement(engine, startPoint) {
+            return new PolyElement(new PolyShape([
+                startPoint,
+                startPoint,
+            ], false), engine.document);
+        }
+        updateElement(engine, element, startPoint, currentPoint) {
+            element.shape.points.splice(-1, 1, currentPoint);
+            element.invalidateShape();
         }
     }
 
@@ -8099,67 +8366,6 @@
             else {
                 element.position = rect.topLeft;
                 element.anchor = Point.ZERO;
-                element.width = rect.width;
-                element.height = rect.height;
-            }
-        }
-    }
-
-    /*
-     * Copyright 2021 Zindex Software
-     *
-     * Licensed under the Apache License, Version 2.0 (the "License");
-     * you may not use this file except in compliance with the License.
-     * You may obtain a copy of the License at
-     *
-     *    http://www.apache.org/licenses/LICENSE-2.0
-     *
-     * Unless required by applicable law or agreed to in writing, software
-     * distributed under the License is distributed on an "AS IS" BASIS,
-     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     * See the License for the specific language governing permissions and
-     * limitations under the License.
-     */
-    class EllipseTool extends ShapeBuilderTool {
-        get name() {
-            return 'ellipse';
-        }
-        createElement(engine, start) {
-            return new EllipseElement(new EllipseShape(0, 0), engine.document);
-        }
-        updateElement(engine, element, from, to) {
-            let left = from.x, right = to.x, top = from.y, bottom = to.y;
-            if (this.keyboardStatus.isAlt) {
-                const rect = Rectangle.fromLTRB(left, top, right, bottom);
-                element.position = rect.topLeft;
-                if (this.keyboardStatus.isShift) {
-                    element.anchor = new Point(rect.diagonal, rect.diagonal);
-                    element.width = element.height = rect.diagonal * 2;
-                }
-                else {
-                    element.anchor = new Point(rect.width, rect.height);
-                    element.width = rect.width * 2;
-                    element.height = rect.height * 2;
-                }
-                return;
-            }
-            if (left > right) {
-                const tmp = right;
-                right = left;
-                left = tmp;
-            }
-            if (top > bottom) {
-                const tmp = bottom;
-                bottom = top;
-                top = tmp;
-            }
-            let rect = Rectangle.fromLTRB(left, top, right, bottom);
-            element.position = rect.topLeft;
-            element.anchor = Point.ZERO;
-            if (this.keyboardStatus.isShift) {
-                element.width = element.height = rect.diagonal;
-            }
-            else {
                 element.width = rect.width;
                 element.height = rect.height;
             }
@@ -8255,68 +8461,31 @@
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class PolyTool extends ShapeBuilderTool {
+    class PanTool extends BaseTool {
         constructor() {
             super(...arguments);
-            this.isBuilding = false;
+            this.defaultCanvasCursor = exports.Cursor.Hand;
         }
         get name() {
-            return 'poly';
+            return "pan";
         }
-        onMouseHover(engine, event) {
-            if (this.isBuilding) {
-                this.currentPoint = this.snapping.snapPoint(event.position);
-                this.invalidateToolDrawing();
-            }
-        }
-        onMouseLeftButtonMove(engine, event) {
-            this.onMouseHover(engine, event);
-        }
-        onKeyDown(engine, event) {
-            if (this.isBuilding && event.key === 'Escape') {
-                this.commitElement(engine);
-            }
+        draw(engine) {
+            // nothing to draw
         }
         onMouseLeftButtonDown(engine, event) {
-            if (this.isBuilding) {
-                this.currentPoint = event.position;
-                const points = this.element.shape.points;
-                if (event.position.equals(points[points.length - 2])) {
-                    this.commitElement(engine);
-                }
-                else {
-                    this.element.shape.points.push(event.position);
-                    this.element.invalidateShape();
-                }
-            }
-            else {
-                super.onMouseLeftButtonDown(engine, event);
-                this.isBuilding = true;
-            }
+            this.panPivot = event.canvasPosition;
+            engine.cursor = exports.Cursor.HandHold;
         }
-        onMouseLeftButtonUp(engine, event) {
-        }
-        commitElement(engine) {
-            if (!this.element) {
+        onMouseLeftButtonMove(engine, event) {
+            if (!this.panPivot) {
                 return;
             }
-            const points = this.element.shape.points;
-            points.pop();
-            this.element.isClosed = points[0].equals(points[points.length - 1]);
-            this.element.invalidateShape();
-            this.saveElement(engine);
-            this.disposeBuilder();
-            this.isBuilding = false;
+            this.doPan(engine, event);
+            this.panPivot = event.canvasPosition;
         }
-        createElement(engine, startPoint) {
-            return new PolyElement(new PolyShape([
-                startPoint,
-                startPoint,
-            ], false), engine.document);
-        }
-        updateElement(engine, element, startPoint, currentPoint) {
-            element.shape.points.splice(-1, 1, currentPoint);
-            element.invalidateShape();
+        onMouseLeftButtonUp(engine, event) {
+            this.doPan(engine, event);
+            engine.cursor = exports.Cursor.Hand;
         }
     }
 
@@ -8815,13 +8984,12 @@
     class GlobalElementProperties {
         constructor() {
             // Vector element
-            this.stroke = null;
-            this.fill = null;
+            this.stroke = new DefaultPen();
+            this.fill = EmptyBrush.INSTANCE;
+            this.fillOpacity = 1;
+            this.strokeOpacity = 1;
             this.fillRule = exports.FillRule.NonZero;
             this.paintOrder = exports.PaintOrder.FillStrokeMarkers;
-            this.blendMode = exports.BlendMode.Normal;
-            this.opacity = 1;
-            this.isolate = false;
             // Rect element
             this.rectRadius = null;
             // Regular polygon
@@ -8834,9 +9002,14 @@
             this.starOuterCornerRadius = 0;
             this.starOuterRotate = 0;
             this.starInnerRotate = 0;
-            this.stroke = new DefaultPen();
-            //this.fill = SolidBrush.BLACK;
-            this.fill = new SolidBrush(Color.from('violet'));
+        }
+        updateFromVectorElement(element) {
+            this.stroke = element.stroke.clone();
+            this.strokeOpacity = element.strokeOpacity;
+            this.fill = element.fill.clone();
+            this.fillOpacity = element.fillOpacity;
+            this.fillRule = element.fillRule;
+            this.paintOrder = element.paintOrder;
         }
         dispose() {
         }
@@ -8871,7 +9044,7 @@
             this.selectionArea = this.getColor(style, 'selectionArea');
         }
         getColor(style, name) {
-            return Color.from(style.getPropertyValue('--canvas-engine-' + name + '-color'));
+            return Color.parse(style.getPropertyValue('--canvas-engine-' + name + '-color'));
         }
         getSize(style, name) {
             return parseFloat(style.getPropertyValue('--canvas-engine-' + name + '-size'));
@@ -8915,7 +9088,7 @@
         }
         updateTheme(engine) {
             super.updateTheme(engine);
-            this.pen = new DefaultPen(new SolidBrush(engine.theme.guide));
+            this.pen.brush = this.pen.brush.withColor(engine.theme.guide);
         }
         draw(engine) {
             engine.context.drawLine(this.from, this.to, this.pen);
@@ -9023,7 +9196,6 @@
             this.dpr = this.ownerDocument.defaultView.devicePixelRatio || 1;
             this._frameCallback = this.renderFrame.bind(this);
             this._ruler = new Ruler(this.shadowRoot.getElementById('rulerH').getContext('2d', { alpha: false }), this.shadowRoot.getElementById('rulerV').getContext('2d', { alpha: false }));
-            this._globalElementProperties = new GlobalElementProperties();
             this.viewBox = new ViewBox(this.invalidateViewBox.bind(this));
             this._previousZoom = this.viewBox.zoom;
         }
@@ -9031,7 +9203,13 @@
             return this._ruler.getStep(this.viewBox.zoom);
         }
         get globalElementProperties() {
+            if (!this._globalElementProperties) {
+                this._globalElementProperties = new GlobalElementProperties();
+            }
             return this._globalElementProperties;
+        }
+        set globalElementProperties(value) {
+            this._globalElementProperties = value;
         }
         /**
          * Returns current pointer position if mouse is inside canvas
@@ -10440,11 +10618,12 @@
                 const fill = element.strokeBrush.clone();
                 // clone fill
                 const stroke = element.fill.clone();
+                let { fillOpacity, strokeOpacity } = element;
                 if (keepOpacity) {
                     // preserve original opacity
-                    const fillOp = fill.opacity;
-                    fill.opacity = stroke.opacity;
-                    stroke.opacity = fillOp;
+                    const temp = fillOpacity;
+                    fillOpacity = strokeOpacity;
+                    strokeOpacity = temp;
                 }
                 // Set stroke brush
                 if (this.setElementProperty(element, "strokeBrush", stroke)) {
@@ -10455,11 +10634,11 @@
                     changed = true;
                 }
                 // Set stroke opacity (to allow animations)
-                if (this.setElementProperty(element, "strokeOpacity", stroke.opacity)) {
+                if (this.setElementProperty(element, "strokeOpacity", strokeOpacity)) {
                     changed = true;
                 }
                 // Set fill opacity (to allow animations)
-                if (this.setElementProperty(element, "fillOpacity", fill.opacity)) {
+                if (this.setElementProperty(element, "fillOpacity", fillOpacity)) {
                     changed = true;
                 }
             };
@@ -10737,9 +10916,8 @@
     }
 
     exports.AutomaticGrid = AutomaticGrid;
-    exports.BaseBrush = BaseBrush;
-    exports.BasePen = BasePen;
     exports.BaseTool = BaseTool;
+    exports.Brush = Brush;
     exports.CanvasEngine = CanvasEngine;
     exports.CanvasEngineInit = CanvasEngineInit;
     exports.ClipPathElement = ClipPathElement;
@@ -10750,6 +10928,7 @@
     exports.ConicalGradientBrush = ConicalGradientBrush;
     exports.ConvexQuad = ConvexQuad;
     exports.DEGREES = DEGREES;
+    exports.DPRObserver = DPRObserver;
     exports.DefaultPen = DefaultPen;
     exports.Document = Document;
     exports.DrawingContext = DrawingContext;
@@ -10775,11 +10954,13 @@
     exports.NativeReader = NativeReader;
     exports.NativeWriter = NativeWriter;
     exports.Node = Node;
+    exports.PaintOpacity = PaintOpacity;
     exports.PanTool = PanTool;
     exports.Path = Path;
     exports.PathElement = PathElement;
     exports.PathNode = PathNode;
     exports.PatternBrush = PatternBrush;
+    exports.Pen = Pen;
     exports.Point = Point;
     exports.PointerBrush = PointerBrush;
     exports.PolyElement = PolyElement;
@@ -10815,6 +10996,7 @@
     exports.TwoPointGradientBrush = TwoPointGradientBrush;
     exports.VectorElement = VectorElement;
     exports.ViewBox = ViewBox;
+    exports.WritableStopColorList = WritableStopColorList;
     exports.clamp = clamp;
     exports.clone = clone;
     exports.compress = compress;
@@ -10837,7 +11019,9 @@
     exports.parseNumber = parseNumber;
     exports.parseNumberList = parseNumberList;
     exports.readBytes = readBytes;
+    exports.resizeCanvasElement = resizeCanvasElement;
     exports.round = round;
+    exports.sameMatrix = sameMatrix;
     exports.toStream = toStream;
     exports.uuid = uuid;
 

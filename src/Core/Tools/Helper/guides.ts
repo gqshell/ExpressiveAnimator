@@ -17,7 +17,7 @@
 import type {CanvasEngine} from "@zindex/canvas-engine";
 import type {Guide} from "@zindex/canvas-engine";
 import {Point} from "@zindex/canvas-engine";
-import type {PointLike} from "@zindex/canvas-engine";
+import type {PointStruct} from "@zindex/canvas-engine";
 
 export function getHoverGuide(engine: CanvasEngine, position: Point): Guide| null {
     const {document, viewBox, dpr} = engine;
@@ -40,7 +40,7 @@ export function getHoverGuide(engine: CanvasEngine, position: Point): Guide| nul
     return null;
 }
 
-export function getGuideLine(engine: CanvasEngine, guide: Guide): PointLike[] {
+export function getGuideLine(engine: CanvasEngine, guide: Guide): PointStruct[] {
     const point = engine.viewBox.matrix.point(guide.position, guide.position);
     if (guide.isHorizontal) {
         return [{x: 0, y: point.y}, {x: engine.boundingBox.width, y: point.y}];

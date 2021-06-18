@@ -1,13 +1,13 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {NumberFieldControl} from "../../Controls";
-    import type {PointLike} from "@zindex/canvas-engine";
+    import type {PointStruct} from "@zindex/canvas-engine";
 
     const dispatch = createEventDispatcher();
 
     export let label: string = '';
 
-    export let value: PointLike;
+    export let value: PointStruct;
 
     export let proportions: boolean = false;
 
@@ -19,7 +19,7 @@
     export let step: number = 1;
     export let round: number = 0.01;
 
-    function getData(item: 'x' | 'y', input: number): PointLike {
+    function getData(item: 'x' | 'y', input: number): PointStruct {
         if (input === value[item]) {
             return;
         }

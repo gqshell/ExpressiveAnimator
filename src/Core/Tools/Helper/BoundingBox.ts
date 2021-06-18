@@ -20,20 +20,21 @@ import type {Element} from "@zindex/canvas-engine";
 import type {CanvasEngine} from "@zindex/canvas-engine";
 import type {AxisPointPosition} from "@zindex/canvas-engine";
 import {ShapeElement, ClipPathElement} from "@zindex/canvas-engine";
+import {PaintOpacity} from "@zindex/canvas-engine";
 
 const BBoxLineWidth = 1;
 const HandleRadius = 4;
 const OriginRadius = 6;
 const RotateRadius = 2;
 const RotateOffset = HandleRadius + RotateRadius * 2;
-const RotatePen = new DefaultPen(new SolidBrush(Color.from('gray')));
-const OriginPen = new DefaultPen(new SolidBrush(Color.from('darkblue')));
-const OutlinePen = new DefaultPen(new SolidBrush(Color.from('red')));
-const HandleFill = new SolidBrush(Color.from('blue'));
+const RotatePen = new DefaultPen(new SolidBrush(Color.parse('gray')));
+const OriginPen = new DefaultPen(new SolidBrush(Color.parse('darkblue')));
+const OutlinePen = new DefaultPen(new SolidBrush(Color.parse('red')));
+const HandleFill = new SolidBrush(Color.parse('blue'));
 const SelectionPen = new DefaultPen(HandleFill);
-const SelectionWrapperPen = new DefaultPen(new SolidBrush(Color.from('lightgray')));
-const SelectionRectangleFill = new SolidBrush(Color.from('blue'), 0.25);
-const AngleFill = new SolidBrush(Color.from('orange'), 0.5);
+const SelectionWrapperPen = new DefaultPen(new SolidBrush(Color.parse('lightgray')));
+const SelectionRectangleFill = new SolidBrush(Color.parse('blue'));
+const AngleFill = new SolidBrush(Color.parse('orange'));
 
 export function drawRotateIndicator(context: DrawingContext, position: Point, startAngle: number, endAngle: number, point: Point | null, dpr: number = 1): void {
     if (startAngle === endAngle) {
@@ -55,7 +56,7 @@ export function drawRotateIndicator(context: DrawingContext, position: Point, st
         position.y - size,
         position.x + size,
         position.y + size
-    ), startAngle, endAngle, AngleFill);
+    ), startAngle, endAngle, PaintOpacity.apply(AngleFill, 0.5));
 
     if (point) {
         OriginPen.width = 1 / scale;
@@ -196,6 +197,6 @@ export function drawElementOutline(context: DrawingContext, element: Element, ma
 
 export function drawSelectionRectangle(engine: CanvasEngine, from: Point, to: Point): void {
     if (from && to && !from.equals(to)) {
-        engine.context.drawRect(engine.viewBox.getRectangleFromPoints(from, to), SelectionRectangleFill);
+        engine.context.drawRect(engine.viewBox.getRectangleFromPoints(from, to), PaintOpacity.apply(SelectionRectangleFill, 0.25));
     }
 }

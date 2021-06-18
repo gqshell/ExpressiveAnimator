@@ -20,9 +20,9 @@ doc.animation = new DocumentAnimation(doc, 0, 10000);
 
 const rect = new RectElement(new RectShape(100, 100), doc);
 rect.title = 'Rect 1';
-rect.fill = new SolidBrush(Color.from('green'));
+rect.fill = new SolidBrush(Color.parse('green'));
 rect.stroke = new DefaultPen(
-    new SolidBrush(Color.from('blue')),
+    new SolidBrush(Color.parse('blue')),
     5
 );
 doc.appendChild(rect);
@@ -35,9 +35,9 @@ doc.animation.addAnimation(rect, "position", a1);
 
 const rect2 = new RectElement(new RectShape(300, 300), doc);
 rect2.title = 'Rect 2';
-rect2.fill = new SolidBrush(Color.from('yellow'));
+rect2.fill = new SolidBrush(Color.parse('yellow'));
 rect2.stroke = new DefaultPen(
-    new SolidBrush(Color.from('red')),
+    new SolidBrush(Color.parse('red')),
     3
 );
 

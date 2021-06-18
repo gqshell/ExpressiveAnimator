@@ -169,6 +169,8 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
     protected setVectorElementProperties(element: VectorElement, properties: any): VectorElement {
         element.stroke = this.deserializePen(properties.stroke);
         element.fill = this.deserializeBrush(properties.fill);
+        element.fillOpacity = properties.fillOpacity;
+        element.strokeOpacity = properties.strokeOpacity;
         element.paintOrder = properties.paintOrder as PaintOrder;
         element.fillRule = properties.fillRule as FillRule;
 
@@ -278,10 +280,7 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
     protected deserializeBrush(data: any): Brush {
         switch (data.type as BrushType) {
             case BrushType.Solid:
-                return new SolidBrush(
-                    Color.fromCode(data.color),
-                    data.opacity
-                );
+                return new SolidBrush(Color.fromCode(data.color));
             case BrushType.LinearGradient:
                 return new LinearGradientBrush(
                     this.deserializePoint(data.start),
@@ -290,7 +289,6 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
                         data.stopColors.map(sc => ({color: Color.fromCode(sc.color), offset: sc.offset}))
                     ),
                     data.spread,
-                    data.opacity,
                     this.deserializeMatrix(data.transform)
                 );
             case BrushType.RadialGradient:
@@ -301,19 +299,17 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
                         data.stopColors.map(sc => ({color: Color.fromCode(sc.color), offset: sc.offset}))
                     ),
                     data.spread,
-                    data.opacity,
                     this.deserializeMatrix(data.transform)
                 );
             case BrushType.ConicalGradient:
                 return new ConicalGradientBrush(
                     this.deserializePoint(data.center),
+                    data.startAngle,
+                    data.endAngle,
                     new StopColorList(
                         data.stopColors.map(sc => ({color: Color.fromCode(sc.color), offset: sc.offset}))
                     ),
                     data.spread,
-                    data.startAngle,
-                    data.endAngle,
-                    data.opacity,
                     this.deserializeMatrix(data.transform)
                 );
         }

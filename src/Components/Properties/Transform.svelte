@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Element, PointLike} from "@zindex/canvas-engine";
+    import type {Element, PointStruct} from "@zindex/canvas-engine";
     import type {AnimationProject} from "../../Core";
     import {Point} from "@zindex/canvas-engine";
     import NumberPair from "./NumberPair.svelte";
@@ -24,7 +24,7 @@
         }
     }
 
-    function setPointProperty(property, value: PointLike) {
+    function setPointProperty(property, value: PointStruct) {
         const project = $CurrentProject;
         if (project.middleware.setElementsProperty(project.selection, property, Point.fromObject(value))) {
             doSnapshot(project);

@@ -187,6 +187,8 @@ export class NativeAnimationExporter implements Exporter<AnimationProject> {
         return {
             stroke: this.serializePen(element.stroke),
             fill: this.serializeBrush(element.fill),
+            fillOpacity: element.fillOpacity,
+            strokeOpacity: element.strokeOpacity,
             paintOrder: element.paintOrder,
             fillRule: element.fillRule
         }
@@ -286,7 +288,6 @@ export class NativeAnimationExporter implements Exporter<AnimationProject> {
     protected serializeBrush(brush: Brush): any {
         const data: any = {
             type: brush.type,
-            opacity: brush.opacity,
         };
 
         switch (brush.type) {

@@ -15,6 +15,8 @@
  */
 
 import type {CanvasEngine} from "@zindex/canvas-engine";
+import type {AnimationDocument} from "../Project";
+import {doc} from "../../doc1";
 
 export class KeyframeCounter {
     private count: number = 0;
@@ -29,13 +31,18 @@ export class KeyframeCounter {
 
     countSelectionKeyframes(engine: CanvasEngine): number {
         const active = engine.selection.activeElement;
-        if (!active || !active.document || !active.document.animation) {
+        if (!active || !active.document) {
+            return 0;
+        }
+
+        const document = active.document as AnimationDocument;
+        if (!document.animation) {
             return 0;
         }
 
         let total: number = 0;
 
-        for (const [, properties] of active.document.animation.getAnimatedEntries()) {
+        for (const [, properties] of document.animation.getAnimatedEntries()) {
             for (const animation of Object.values(properties)) {
                 total += animation.length;
             }
