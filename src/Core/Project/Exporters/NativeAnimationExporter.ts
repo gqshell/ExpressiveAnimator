@@ -16,7 +16,7 @@
 
 import type {Exporter} from "@zindex/canvas-engine";
 import type {AnimationProject} from "../AnimationProject";
-import {NativeWriter} from "@zindex/canvas-engine";
+import {AutomaticGrid, NativeWriter} from "@zindex/canvas-engine";
 import type {
     ClipPathElement,
     Element,
@@ -442,15 +442,18 @@ export class NativeAnimationExporter implements Exporter<AnimationProject> {
             })
         }
         return {
-            isVisible: guideList.isVisible,
             guides
         };
     }
 
     protected serializeGrid(grid: Grid): any {
-        return {
-            isVisible: grid.isVisible,
-            drawToBack: grid.drawToBack
+        if (grid instanceof AutomaticGrid) {
+            return {
+                horizontalSubdivisions: grid.horizontalSubdivisions,
+                verticalSubdivisions: grid.verticalSubdivisions,
+                color: grid.color.code,
+            }
         }
+        return null;
     }
 }

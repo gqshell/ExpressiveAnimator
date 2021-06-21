@@ -7,6 +7,10 @@ html, body {
     touch-action: none;
 }
 
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
 
 /*sp-split-view[vertical] {*/
 /*    --spectrum-dragbar-gripper-height: 0;*/

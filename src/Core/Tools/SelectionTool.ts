@@ -58,8 +58,8 @@ export class SelectionTool extends BaseTool {
     private changed: boolean = false;
     private hoverGuide: Guide|null = null;
     private hoverGuidePosition: number;
-    private guidePen: Pen;
-    private guidePenHover: Pen;
+    private guidePen: Pen = new DefaultPen();
+    private guidePenHover: Pen = new DefaultPen();
 
     private keyframeCounter: KeyframeCounter = new KeyframeCounter();
 
@@ -78,8 +78,8 @@ export class SelectionTool extends BaseTool {
     }
 
     updateTheme(engine:CanvasEngine) {
-        this.guidePen = new DefaultPen(SolidBrush.fromColor(engine.theme.guide));
-        this.guidePenHover = new DefaultPen(SolidBrush.fromColor(engine.theme.guideHover));
+        this.guidePen.brush = SolidBrush.fromColor(engine.theme.guide);
+        this.guidePenHover.brush = SolidBrush.fromColor(engine.theme.guideHover);
     }
 
     draw(engine: CanvasEngine) {

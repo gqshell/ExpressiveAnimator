@@ -16,6 +16,8 @@
 
 </script>
 <sp-icons-medium></sp-icons-medium>
+<sp-icons-workflow></sp-icons-workflow>
+<sp-icons-expr></sp-icons-expr>
 <sp-theme scale="medium" color={$CurrentTheme} class="app">
     <div class="logo">
         <MenuComponent />
@@ -36,7 +38,7 @@
         <ToolsComponent disabled={$CurrentProject == null} />
         <div>down</div>
     </div>
-    <sp-split-view class="sidebar" resizable vertical primary-min="380" primary-size="75%">
+    <sp-split-view class="sidebar" resizable vertical primary-min="160" primary-size="75%">
         <PropertiesComponent />
         <TreeComponent />
     </sp-split-view>
@@ -57,7 +59,7 @@
         padding: 0;
         box-sizing: border-box;
 
-        background: var(--spectrum-global-color-gray-75);
+        background: var(--spectrum-global-color-gray-100);
         color: var(--spectrum-global-color-gray-800);
 
         width: 100%;
@@ -67,12 +69,25 @@
                 'logo menubar menubar'
                 'toolbar content sidebar'
         ;
-        grid-template-rows: 56px auto;
-        grid-template-columns: 56px auto 280px;
+        grid-template-rows: 48px auto;
+        grid-template-columns: 48px auto 260px;
+
+        --spectrum-global-font-family-base: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Trebuchet MS', 'Lucida Grande', sans-serif;
+        --spectrum-global-font-family-serif: 'Source Serif Pro', Georgia, serif;
+        --spectrum-global-font-family-code: 'Source Code Pro', Monaco, monospace;
+
+        --separator-color: var(--spectrum-global-color-gray-300);
 
         --scrollbar-width: 6px;
         --scrollbar-radius: 0px;
         --scrollbar-color: var(--spectrum-global-color-gray-300);
+
+        --spectrum-dragbar-handle-background-color: var(--separator-color);
+        --spectrum-dragbar-handle-background-color-hover: var(--separator-color);
+    }
+
+    .app[color="dark"] {
+        --separator-color: var(--spectrum-global-color-gray-50);
     }
 
     .app div {
@@ -104,20 +119,21 @@
         justify-content: space-between;
         align-items: center;
         user-select: none;
+        border-top: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
     }
 
     .sidebar {
         grid-area: sidebar;
         user-select: none;
         box-sizing: border-box;
-        border-top: var(--spectrum-global-dimension-static-size-25) solid var(--spectrum-global-color-gray-300);
+        border-top: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
     }
 
     .content {
         box-sizing: border-box;
 
         grid-area: content;
-        border: var(--spectrum-global-dimension-static-size-25) solid var(--spectrum-global-color-gray-300);
+        border: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
         border-bottom: none;
     }
 

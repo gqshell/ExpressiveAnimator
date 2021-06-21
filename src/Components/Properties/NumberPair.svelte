@@ -1,7 +1,8 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
-    import {NumberFieldControl} from "../../Controls";
+    //import {NumberFieldControl} from "../../Controls";
     import type {PointStruct} from "@zindex/canvas-engine";
+    import SpTextField from "../../Controls/SpTextField.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -17,11 +18,11 @@
     export let min: number = Number.MIN_SAFE_INTEGER;
     export let max: number = Number.MAX_SAFE_INTEGER;
     export let step: number = 1;
-    export let round: number = 0.01;
+    export let round: number = 0.0001;
 
     function getData(item: 'x' | 'y', input: number): PointStruct {
         if (input === value[item]) {
-            return;
+            return value;
         }
 
         let data = {x: value.x, y: value.y};
@@ -37,7 +38,6 @@
 
     function onInput(item: 'x' | 'y', input: number) {
         value = getData(item, input);
-        console.log(value)
     }
 
     function onChange(item: 'x' | 'y', input: number) {
@@ -48,16 +48,22 @@
 <div class="number-pair-wrapper">
     <sp-field-label>{label}</sp-field-label>
     <div class="number-pair">
-        <NumberFieldControl hide-stepper size="s" title={xTitle}
-                            on:input={e => onInput('x', e.detail)}
-                            on:change={e => onChange('x', e.detail)}
-                            style="width: var(--spectrum-global-dimension-size-800)"
-                            value={value.x} min={min} max={max} step={step} round={round} />
-        <NumberFieldControl hide-stepper size="s" title={yTitle}
-                            on:input={e => onInput('y', e.detail)}
-                            on:change={e => onChange('y', e.detail)}
-                            style="width: var(--spectrum-global-dimension-size-800)"
-                            value={value.y} min={min} max={max} step={step} round={round} />
+        <SpTextField
+                type="number"
+                size="S" style="width: var(--spectrum-global-dimension-size-800)"
+                title={xTitle}
+                value={value.x} min={min} max={max} step={step} round={round}
+                on:input={e => onInput('x', e.detail)}
+                on:change={e => onChange('x', e.detail)}
+        />
+        <SpTextField
+                type="number"
+                size="S" style="width: var(--spectrum-global-dimension-size-800)"
+                title={yTitle}
+                value={value.y} min={min} max={max} step={step} round={round}
+                on:input={e => onInput('y', e.detail)}
+                on:change={e => onChange('y', e.detail)}
+        />
     </div>
     {#if $$slots.default}
         <slot />

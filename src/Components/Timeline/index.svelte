@@ -52,7 +52,7 @@
 
     .timeline-bottom-bar {
         box-sizing: border-box;
-        border-top: 1px solid var(--spectrum-global-color-gray-300);
+        border-top: 1px solid var(--separator-color);
         height: 21px;
     }
 </style>

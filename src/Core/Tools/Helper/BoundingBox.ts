@@ -26,12 +26,11 @@ const BBoxLineWidth = 1;
 const HandleRadius = 4;
 const OriginRadius = 6;
 const RotateRadius = 2;
-const RotateOffset = HandleRadius + RotateRadius * 2;
+const RotateOffset = HandleRadius + RotateRadius * 3;
 const RotatePen = new DefaultPen(new SolidBrush(Color.parse('gray')));
-const OriginPen = new DefaultPen(new SolidBrush(Color.parse('darkblue')));
+const OriginPen = new DefaultPen(new SolidBrush(Color.parse('magenta')));
 const OutlinePen = new DefaultPen(new SolidBrush(Color.parse('red')));
-const HandleFill = new SolidBrush(Color.parse('blue'));
-const SelectionPen = new DefaultPen(HandleFill);
+const SelectionPen = new DefaultPen(new SolidBrush(Color.parse('blue')));
 const SelectionWrapperPen = new DefaultPen(new SolidBrush(Color.parse('lightgray')));
 const SelectionRectangleFill = new SolidBrush(Color.parse('blue'));
 const AngleFill = new SolidBrush(Color.parse('orange'));
@@ -162,7 +161,8 @@ export function drawElementBoundingBox(context: DrawingContext, element: Element
 
     const radius = HandleRadius / scale;
     for (const point of box.sidePoints()) {
-        context.drawCircle(point, radius, HandleFill);
+        context.drawCircle(point, radius, SolidBrush.WHITE);
+        context.drawCircle(point, radius, SelectionPen);
     }
 }
 

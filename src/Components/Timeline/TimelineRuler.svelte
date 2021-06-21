@@ -73,7 +73,7 @@
                     text = `${m}:${text}`;
                 }
                 path.lineTo(x + 0.5, height - 20);
-                context.fillText(text, x + 4, height - 15);
+                context.fillText(text, Math.ceil(x) + 4.5, height - 15);
             } else if (graduationNo % halfDivisions === 0) {
                 path.lineTo(x + 0.5, height - 15);
             } else {
@@ -178,24 +178,23 @@
         box-sizing: border-box;
         position: relative;
         overflow: hidden;
-        border-bottom: 1px solid var(--spectrum-global-color-gray-300);
+        border-bottom: 1px solid var(--separator-color);
         --ruler-background: var(--spectrum-global-color-gray-75);
-        --ruler-foreground: var(--spectrum-global-color-gray-800);
+        --ruler-foreground: var(--spectrum-alias-text-color);
     }
     .timeline-ruler > canvas {
         width: 100%;
         height: 100%;
-        background: var(--spectrum-global-color-gray-800);
     }
     .timeline-ruler-play-head {
         position: absolute;
-        width: 12px;
-        height: 12px;
-        top: calc(32.5px - 12px);
+        width: 13px;
+        height: 13px;
+        top: 19px;
         left: 0;
-        clip-path: polygon(0 0, 12px 0, 6px 12px, 0 0);
+        clip-path: polygon(0 0, 13px 0, 6.5px 13px, 0 0);
         background: var(--spectrum-global-color-blue-500);
-        transform: translateX(calc(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)) - var(--timeline-scroll-left) + 0.5px));
+        transform: translateX(calc(var(--timeline-play-offset) * var(--timeline-ms-unit) - var(--timeline-scroll-left)));
         will-change: transform;
     }
 </style>

@@ -16,7 +16,6 @@
 
 import type {CanvasEngine} from "@zindex/canvas-engine";
 import type {AnimationDocument} from "../Project";
-import {doc} from "../../doc1";
 
 export class KeyframeCounter {
     private count: number = 0;

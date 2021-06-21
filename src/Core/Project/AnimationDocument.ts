@@ -44,4 +44,10 @@ export class AnimationDocument extends SingleBoardDocument {
             value.cleanupAnimatedProperties();
         }
     }
+
+    clone(newId?: boolean): AnimationDocument {
+        const clone = super.clone(newId) as AnimationDocument;
+        clone._animation = this._animation?.clone(clone);
+        return clone;
+    }
 }

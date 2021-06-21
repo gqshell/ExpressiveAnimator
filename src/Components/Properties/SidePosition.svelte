@@ -1,7 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import {Position} from "@zindex/canvas-engine";
-    import SVGIcon from "../SVGIcon.svelte";
     export let icon: string;
 
     export let size: number = 50;
@@ -22,7 +21,7 @@
 </script>
 <overlay-trigger placement="left" type="inline">
     <sp-action-button slot="trigger" quiet size="s">
-        <sp-icon slot="icon"><SVGIcon name={icon} /></sp-icon>
+        <sp-icon name={icon} slot="icon"></sp-icon>
     </sp-action-button>
     <sp-popover bind:this={popover} slot="click-content" open tip>
         <svg width={size + radius} height={size + radius} viewBox={`${-radius} ${-radius} ${size} ${size}`}>

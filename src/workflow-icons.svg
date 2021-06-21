@@ -1,57 +1,62 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="height: 0; width: 0; position: absolute; visibility: hidden;">
-    <symbol id="workflow:FolderOpen" viewBox="0 0 18 18">
+    <symbol id="FolderOpen" viewBox="0 0 18 18">
         <path d="M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z"/>
     </symbol>
-    <symbol id="workflow:SaveFloppy" viewBox="0 0 18 18">
+    <symbol id="SaveFloppy" viewBox="0 0 18 18">
         <path d="M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z"/>
     </symbol>
-    <symbol id="workflow:Undo" viewBox="0 0 18 18">
+    <symbol id="Undo" viewBox="0 0 18 18">
         <path d="M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z"/>
     </symbol>
-    <symbol id="workflow:Redo" viewBox="0 0 18 18">
+    <symbol id="Redo" viewBox="0 0 18 18">
         <path d="M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z"/>
     </symbol>
-    <symbol id="workflow:AlignLeft" viewBox="0 0 18 18">
+    <symbol id="AlignLeft" viewBox="0 0 18 18">
         <rect class="a" height="18" rx="0.25" width="1" x="1" />
         <rect class="a" height="5" rx="0.5" width="13" x="3" y="10" />
         <rect class="a" height="5" rx="0.5" width="8" x="3" y="3" />
     </symbol>
-    <symbol id="workflow:AlignCenter" viewBox="0 0 18 18">
+    <symbol id="AlignCenter" viewBox="0 0 18 18">
         <path class="a" d="M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z" />
     </symbol>
-    <symbol id="workflow:AlignRight" viewBox="0 0 18 18">
+    <symbol id="AlignRight" viewBox="0 0 18 18">
         <rect class="a" height="18" rx="0.25" width="1" x="16" />
         <rect class="a" height="5" rx="0.5" width="13" x="2" y="10" />
         <rect class="a" height="5" rx="0.5" width="8" x="7" y="3" />
     </symbol>
-    <symbol id="workflow:AlignTop" viewBox="0 0 18 18">
+    <symbol id="AlignTop" viewBox="0 0 18 18">
         <rect class="a" height="1" rx="0.25" width="18" y="1" />
         <rect class="a" height="13" rx="0.5" width="5" x="3" y="3" />
         <rect class="a" height="8" rx="0.5" width="5" x="10" y="3" />
     </symbol>
-    <symbol id="workflow:AlignMiddle" viewBox="0 0 18 18">
+    <symbol id="AlignMiddle" viewBox="0 0 18 18">
         <path class="a" d="M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z" />
     </symbol>
-    <symbol id="workflow:AlignBottom" viewBox="0 0 18 18">
+    <symbol id="AlignBottom" viewBox="0 0 18 18">
         <rect class="a" height="13" rx="0.5" width="5" x="3" y="2" />
         <rect class="a" height="8" rx="0.5" width="5" x="10" y="7" />
         <rect class="a" height="1" rx="0.25" width="18" y="16" />
     </symbol>
-    <symbol id="workflow:DistributeHorizontally" viewBox="0 0 18 18">
+    <symbol id="DistributeHorizontally" viewBox="0 0 18 18">
         <rect class="a" height="12" rx="0.5" width="6" x="6" y="3" />
         <rect class="a" height="18" rx="0.25" width="1" x="2" />
         <rect class="a" height="18" rx="0.25" width="1" x="15" />
     </symbol>
-    <symbol id="workflow:DistributeVertically" viewBox="0 0 18 18">
+    <symbol id="DistributeVertically" viewBox="0 0 18 18">
         <rect class="a" height="6" rx="0.5" width="12" x="3" y="6" />
         <rect class="a" height="1" rx="0.25" width="18" y="15" />
         <rect class="a" height="1" rx="0.25" width="18" y="2" />
     </symbol>
-    <symbol id="workflow:ChevronRight" viewBox="0 0 18 18">
+    <symbol id="ChevronRight" viewBox="0 0 18 18">
         <path class="a" d="M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z" />
     </symbol>
+    <symbol id="Refresh" viewBox="0 0 18 18">
+        <path class="a" d="M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z" />
+        <path class="a" d="M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z" />
+    </symbol>
+
 <!--
-    <symbol id="workflow:" viewBox="0 0 18 18">
+    <symbol id="" viewBox="0 0 18 18">
     </symbol>
 -->
 </svg>

@@ -78,9 +78,9 @@ export const buttons: ToolButtons = [
             title: 'Ellipse tool (E)'
         },
         {
-            tool: 'polygon',
+            tool: 'regular-polygon',
             icon: 'expr:polygon-tool',
-            title: 'Polygon tool (O)'
+            title: 'Regular polygon tool (O)'
         },
         {
             tool: 'star',

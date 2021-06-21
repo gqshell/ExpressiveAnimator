@@ -1,6 +1,5 @@
 <script lang="ts">
     import type {Element, Selection} from "@zindex/canvas-engine";
-    import SVGIcon from "../SVGIcon.svelte";
     import DropIndicator from "./DropIndicator";
     import {MoveElementMode} from "@zindex/canvas-engine";
     import {AnimationDocument} from "../../Core";
@@ -35,14 +34,13 @@
     >
         <a tabindex="0" on:click data-element-id={element.id} class="spectrum-TreeView-itemLink" href={'javascript:void(0);'}>
             {#if element.supportsChildren}
-                <sp-icon class="spectrum-TreeView-itemIndicator"
-                         on:click|preventDefault|stopPropagation={() => open = !open}>
-                    <SVGIcon name="workflow:ChevronRight"/>
+                <sp-icon
+                        name="workflow:ChevronRight"
+                        class="spectrum-TreeView-itemIndicator"
+                        on:click|preventDefault|stopPropagation={() => open = !open}>
                 </sp-icon>
             {/if}
-            <sp-icon class="spectrum-TreeView-itemIcon">
-                <SVGIcon name="expr:polygon"/>
-            </sp-icon>
+            <sp-icon name="expr:polygon" class="spectrum-TreeView-itemIcon"></sp-icon>
             <span class="spectrum-TreeView-itemLabel">{element.title || `(${element.type.toLowerCase()})`}</span>
         </a>
     </li>

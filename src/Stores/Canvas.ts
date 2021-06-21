@@ -15,11 +15,14 @@
  */
 
 import {writable} from "svelte/store";
+import {GlobalElementProperties} from "@zindex/canvas-engine";
 
 export const CanvasEngineState = {
     showGuides: writable<boolean>(true),
+    lockGuides: writable<boolean>(false),
     showRuler: writable<boolean>(true),
-    showGrid: writable<boolean>(true),
+    showGrid: writable<boolean>(false),
+    showGridToBack: writable<boolean>(true),
     highQuality: writable<boolean>(true),
     snapping: writable({
         // Global flag
@@ -35,3 +38,4 @@ export const CanvasEngineState = {
 };
 
 export const CurrentCanvasZoom = writable<number>(1);
+export const CurrentGlobalElementProperties = new GlobalElementProperties();

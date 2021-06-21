@@ -34,7 +34,7 @@ export const Tools = {
     transform: new TransformTool(),
 
     // shape
-    rect: new RectangleTool(),
+    rectangle: new RectangleTool(),
     ellipse: new EllipseTool(),
     'regular-polygon': new RegularPolygonTool(),
     star: new StarTool(),

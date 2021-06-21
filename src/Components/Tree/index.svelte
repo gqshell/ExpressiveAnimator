@@ -154,7 +154,6 @@
 </div>
 <style>
     .tree-wrapper {
-        --scrollbar-width: 8px;
         display: flex;
         flex-direction: column;
     }
@@ -173,5 +172,8 @@
         width: 100%;
         height: 32px;
         overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 </style>

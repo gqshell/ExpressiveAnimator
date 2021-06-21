@@ -1,6 +1,5 @@
 <script lang="ts">
     import {FallbackElementIcon, ElementIconMap, ElementTitleMap} from "../Mapping";
-    import SVGIcon from "../SVGIcon.svelte";
 
     export let type: string;
     export let title: string | null = null;
@@ -10,6 +9,6 @@
 <div class="timeline-item"
      class:is-disabled={disabled}
      class:is-selected={selected}>
-    <sp-icon size="s"><SVGIcon name={ElementIconMap[type] || FallbackElementIcon} /></sp-icon>
+    <sp-icon name={ElementIconMap[type] || FallbackElementIcon} size="s"></sp-icon>
     <span>{title || ElementIconMap[type] || 'Unknown'}</span>
 </div>

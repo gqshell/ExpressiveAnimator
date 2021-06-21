@@ -16,3 +16,4 @@
 
 export * from "./SelectionTool";
 export * from "./TransformTool";
+export * from "./KeyframeCounter";

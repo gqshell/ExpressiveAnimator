@@ -97,15 +97,13 @@
 </div>
 <style global>
     .timeline {
-        --scrollbar-width: 8px;
-
         flex: 1;
         display: flex;
         flex-direction: row;
         min-height: 0;
 
-        --timeline-item-height: 22px;
-        --timeline-keyframe-size: 12px;
+        --timeline-item-height: 23px;
+        --timeline-keyframe-size: 13px;
 
         background: var(--spectrum-global-color-gray-100);
     }
@@ -116,7 +114,7 @@
 
     .timeline > .timeline-elements {
         width: 240px;
-        border-right: 1px solid var(--spectrum-global-color-gray-300);
+        border-right: 1px solid var(--separator-color);
         border-bottom: var(--scrollbar-width) solid transparent;
     }
 
@@ -141,7 +139,7 @@
         position: absolute;
         top: var(--timeline-scroll-top);
         bottom: calc(0px - var(--timeline-scroll-top));
-        left: calc((var(--timeline-keyframe-size) - var(--timeline-play-line-size)) / 2);
+        left: calc(calc(var(--timeline-keyframe-size) - var(--timeline-play-line-size)) / 2);
         transform: translateX(calc(var(--timeline-play-offset) * var(--timeline-ms-unit)));
         background: var(--spectrum-global-color-blue-500);
         will-change: top, bottom, transform;

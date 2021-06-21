@@ -10,7 +10,7 @@
         z-index: 6;
         position: absolute;
         left: 0;
-        transform: translateX(calc(var(--keyframe-offset) * var(--timeline-ms-unit) + 0.5px));
+        transform: translateX(calc(var(--keyframe-offset) * var(--timeline-ms-unit)));
         width: var(--timeline-keyframe-size);
         height: var(--timeline-keyframe-size);
         border-radius: 50%;

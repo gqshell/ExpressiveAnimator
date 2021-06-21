@@ -1,5 +1,4 @@
 <script lang="ts">
-    import SVGIcon from "./SVGIcon.svelte";
     import ToolbarSubTools from "./ToolbarSubTools.svelte";
     import {CurrentTool} from "../Stores";
 
@@ -31,9 +30,7 @@
             <ToolbarSubTools bind:selected={selected} buttons={button} disabled={disabled} />
         {:else}
             <sp-action-button on:click={selectTool} title={button.title} selected={selected === button.tool} disabled={disabled} data-tool-name="{button.tool}">
-                <sp-icon slot="icon">
-                    <SVGIcon name={button.icon}/>
-                </sp-icon>
+                <sp-icon name={button.icon} slot="icon"></sp-icon>
             </sp-action-button>
         {/if}
     {/each}

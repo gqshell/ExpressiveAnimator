@@ -41,7 +41,7 @@
         height: 1px;
         position: absolute;
         left: 0;
-        top: calc(50% - 0.5px);
+        top: 50%;
         background: var(--spectrum-global-color-gray-400);
         user-select: none;
         pointer-events: none;

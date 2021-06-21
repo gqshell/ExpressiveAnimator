@@ -1,6 +1,4 @@
 <script lang="ts">
-    import SVGIcon from "./SVGIcon.svelte";
-
     export let disabled: boolean = false;
     export let selected: string = undefined;
     export let buttons = [];
@@ -22,18 +20,14 @@
                  on:sp-closed={() => open = false}
 >
     <sp-action-button on:click={e => !open && selectTool(e)} title={current.title} data-tool-name="{current.tool}" selected={selected === current.tool} disabled={disabled} hold-affordance slot="trigger">
-        <sp-icon slot="icon">
-            <SVGIcon name={current.icon}/>
-        </sp-icon>
+        <sp-icon name={current.icon} slot="icon"></sp-icon>
     </sp-action-button>
     <sp-popover slot="longpress-content" tip style="--spectrum-popover-dialog-min-width: 0;">
         <sp-action-group quiet style="padding: var(--spectrum-global-dimension-size-50)">
             {#each buttons as button (button.tool)}
                 {#if current !== button}
                     <sp-action-button on:click={selectTool} data-tool-name="{button.tool}" title={button.title}>
-                        <sp-icon slot="icon">
-                            <SVGIcon name={button.icon}/>
-                        </sp-icon>
+                        <sp-icon name={button.icon} slot="icon"></sp-icon>
                     </sp-action-button>
                 {/if}
             {/each}

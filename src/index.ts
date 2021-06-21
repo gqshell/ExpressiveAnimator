@@ -2,7 +2,7 @@ import "./spectrum";
 import "./style.css";
 import "./scroll.css";
 
-import LoadIcons from "./LoadIcons";
+import {loadIconSet} from "./LoadIcons";
 import App from './App.svelte';
 
 // Prevent typescript errors
@@ -17,13 +17,15 @@ import {CanvasEngineInit} from "@zindex/canvas-engine";
 import {CurrentProject} from "./Stores";
 import {project} from "./doc1";
 
-LoadIcons(CustomIcons);
-LoadIcons(AdobeWorkflowIcons);
-
 export default LoadApp();
 
 async function LoadApp() {
-    await CanvasEngineInit({defaultFont: '/engine/font.ttf.woff2'});
+    await patchIcon();
+    await loadIconSet('expr', CustomIcons);
+    await loadIconSet('workflow', AdobeWorkflowIcons);
+    await CanvasEngineInit({
+        defaultFont: document.querySelector('meta[name="expressive:default-font"]').getAttribute('content')
+    });
     // Set test project
     // @ts-ignore
     //project.document.test();
@@ -32,4 +34,16 @@ async function LoadApp() {
         target: document.body,
         props: {},
     });
+}
+
+async function patchIcon() {
+    await customElements.whenDefined('sp-icon');
+    const icon = customElements.get('sp-icon');
+    const prop = Object.getOwnPropertyDescriptor(icon.prototype, 'name')
+    const set = prop.set;
+    prop.set = function (value) {
+        set.call(this, value);
+        this.setAttribute('name', value);
+    }
+    Object.defineProperty(icon.prototype, 'name', prop);
 }

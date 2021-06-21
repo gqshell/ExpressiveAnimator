@@ -1,19 +1,19 @@
 <script lang="ts">
     import {onMount, onDestroy, tick} from "svelte";
-    import type {AnimationProject, AnimationStateMeta, KeyframeSelection, AnimationDocument} from "../Core";
-    import type {CanvasEngine, State, Selection, } from "@zindex/canvas-engine";
+    import type {KeyframeSelection, AnimationDocument} from "../Core";
+    import type {CanvasEngine, Selection} from "@zindex/canvas-engine";
 
     import {
         CurrentTool, CurrentTheme, CurrentTime,
         CanvasEngineState, CurrentProject, CurrentDocument,
-        CurrentCanvasZoom,
+        CurrentCanvasZoom, CurrentGlobalElementProperties,
         notifyAnimationChanged,
         notifyPropertiesChanged,
         notifyStateChanged,
         notifySelectionChanged,
     } from "../Stores";
 
-    const {showRuler, showGuides, showGrid, highQuality} = CanvasEngineState;
+    const {showRuler, showGuides, lockGuides, showGrid, showGridToBack, highQuality} = CanvasEngineState;
 
     export let hidden: boolean = false;
 
@@ -23,21 +23,28 @@
     $: if (canvas) canvas.setAttribute('theme', $CurrentTheme);
     $: if (canvas) canvas.tool = $CurrentTool;
     $: if (canvas) canvas.showRuler = $showRuler;
+    $: if (canvas) canvas.showGuides = $showGuides;
+    $: if (canvas) canvas.lockGuides = $lockGuides;
+    $: if (canvas) canvas.showGrid = $showGrid;
+    $: if (canvas) canvas.showGridToBack = $showGridToBack;
     $: if (canvas) canvas.highQuality = $highQuality;
     $: if (canvas) canvas.project = $CurrentProject;
     $: if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) canvas.invalidate();
 
 
     onMount(() => {
-        //canvas.preventSurfaceDisposal();
+        canvas.preventSurfaceDisposal();
+        canvas.globalElementProperties = CurrentGlobalElementProperties;
         canvas.setAttribute('theme', $CurrentTheme);
         canvas.highQuality = $highQuality;
         canvas.showRuler = $showRuler;
-        // canvas.showGuides = $showGuides;
-        // canvas.showGrid = $showGrid;
+        canvas.showGuides = $showGuides;
+        canvas.lockGuides = $lockGuides;
+        canvas.showGrid = $showGrid;
+        canvas.showGridToBack = $showGridToBack;
 
         canvas.tool = $CurrentTool;
-        //canvas.allowSurfaceDisposal();
+        canvas.allowSurfaceDisposal();
 
         canvas.project = $CurrentProject;
     });
@@ -138,6 +145,7 @@
     }
     canvas-engine {
         touch-action: none;
+        --canvas-engine-background-color: var(--separator-color);
     }
     canvas-engine.hidden {
         display: none;

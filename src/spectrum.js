@@ -65,7 +65,7 @@ import '@spectrum-web-components/theme/theme-light';
 import '@spectrum-web-components/theme/theme-dark';
 import '@spectrum-web-components/theme/scale-medium';
 
-// import '@spectrum-web-components/thumbnail/sp-thumbnail.js';
+import '@spectrum-web-components/thumbnail/sp-thumbnail.js';
 // import '@spectrum-web-components/toast/sp-toast.js';
 // import '@spectrum-web-components/tooltip/sp-tooltip.js';
 import '@spectrum-web-components/underlay/sp-underlay.js';

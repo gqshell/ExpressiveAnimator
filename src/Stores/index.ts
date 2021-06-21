@@ -48,6 +48,7 @@ export * from "./Theme";
 export * from "./Canvas";
 export * from "./Project";
 export * from "./Time";
+export * from "./App";
 
 
 

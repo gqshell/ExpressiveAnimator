@@ -20,6 +20,10 @@ import {Point} from "@zindex/canvas-engine";
 import type {PointStruct} from "@zindex/canvas-engine";
 
 export function getHoverGuide(engine: CanvasEngine, position: Point): Guide| null {
+    if (engine.lockGuides || !engine.showGuides) {
+        return null;
+    }
+
     const {document, viewBox, dpr} = engine;
 
     const epsilon = dpr / viewBox.zoom;

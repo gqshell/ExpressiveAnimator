@@ -404,17 +404,19 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
     }
 
     protected deserializeGuides(data: any): GuideList {
-        const guides: GuideList = new GuideList(
+        return new GuideList(
             data.guides.map(g => new Guide(g.position, g.isHorizontal, g.isHidden))
         );
-        guides.isVisible = data.isVisible;
-        return guides;
     }
 
     protected deserializeGrid(data: any): Grid {
-        const grid: Grid = new AutomaticGrid();
-        grid.isVisible = data.isVisible;
-        grid.drawToBack = data.drawToBack;
+        if (!data) {
+            return null;
+        }
+        const grid: AutomaticGrid = new AutomaticGrid();
+        grid.color = Color.fromCode(data.color);
+        grid.horizontalSubdivisions = data.horizontalSubdivisions;
+        grid.verticalSubdivisions = data.verticalSubdivisions;
         return grid;
     }
 }
