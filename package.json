@@ -1,14 +1,14 @@
 {
-  "name": "@zindex/animator",
-  "version": "0.0.1",
+  "name": "@zindex/expressive-animator",
+  "version": "0.1.0",
   "private": true,
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
-    "build": "rollup -c && yarn copy-skia && yarn copy-engine",
+    "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public",
-    "validate": "svelte-check",
-    "copy-skia": "cp ./node_modules/@zindex/skia-js/dist/* ./public/skia/",
-    "copy-engine": "cp ./node_modules/@zindex/canvas-engine/dist/* ./public/engine/"
+    "validate": "svelte-check"
   },
   "dependencies": {
     "@adobe/focus-ring-polyfill": "^0.1.5",
@@ -34,7 +34,6 @@
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-svg": "^2.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "sirv-cli": "^1.0.0",
     "svelte": "^3.0.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
