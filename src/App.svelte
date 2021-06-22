@@ -8,9 +8,7 @@
     import TreeComponent from "./Components/Tree";
     import PropertiesComponent from "./Components/Properties";
 
-    import {NumberFieldControl} from "./Controls";
-
-    import {CurrentTheme, CurrentProject, CurrentTime, CurrentMaxTime} from "./Stores";
+    import {CurrentTheme, CurrentProject} from "./Stores";
 
     let hidden = false;
 
@@ -24,10 +22,6 @@
     </div>
     <div class="menubar">
         <ProjectStateComponent />
-        <div>
-            {$CurrentTime}
-            <NumberFieldControl quiet hide-stepper style="width: 64px" bind:value={$CurrentTime} min={0} max={100000} step={0.01} />
-        </div>
         <div>
             <sp-button size="s" on:click={CurrentTheme.toggle}>Change theme</sp-button>
             <sp-button size="s" on:click={() => hidden = !hidden}>Toggle visibility</sp-button>

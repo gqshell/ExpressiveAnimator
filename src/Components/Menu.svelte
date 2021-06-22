@@ -1,6 +1,6 @@
 <overlay-trigger placement="right-start" type="inline">
     <div slot="trigger" class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 110.6">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 110.6" width="32" height="32">
             <title>Expressive Animator</title>
             <g>
                 <rect y="14.6" width="96" height="96" rx="20" fill="#6e25f2"/>
