@@ -26,7 +26,7 @@
     }
     function onKeyDown(e: KeyboardEvent) {
         if (focused) {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' || e.key === 'Enter') {
                 e.preventDefault();
                 (e.target as HTMLElement).blur();
             } else if (e.key.indexOf('Arrow') === 0) {

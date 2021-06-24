@@ -1,6 +1,6 @@
 <script lang="ts">
     import "@spectrum-css/slider/dist/index-vars.css";
-    import {mergeClasses, getPercentage, getPercentValue, clampStep, getXYPercent, dragAction, nextId} from "./utils";
+    import {mergeClasses, getPercentage, getPercentValue, clampStep, getXYPercent, dragAction, nextId, formatNumber} from "./utils";
     import {createEventDispatcher} from "svelte";
 
     const dispatch = createEventDispatcher();
@@ -13,6 +13,7 @@
     export let max: number = 100;
     export let step: number = 1;
     export let round: number = null;
+    export let digits: number = 4;
 
     export let fill: 'none' | 'start' | 'middle' | 'ramp' = 'none';
     export let ticks: number | string[] = 0;
@@ -58,6 +59,7 @@
 
     let focused: number = 0;
     let dragged: number = 0;
+    let started: boolean = false;
 
     let surface: HTMLElement;
 
@@ -70,8 +72,12 @@
         dispatch('focus');
     }
 
-    function onBlur() {
+    function onSliderBlur() {
         focused = 0;
+        if (started) {
+            started = false;
+            dispatch('done');
+        }
         dispatch('blur');
     }
 
@@ -98,13 +104,13 @@
             return;
         }
 
-        dispatch('start', value);
         value = v;
-        dispatch('change', value);
-        dispatch('stop', value);
+        dispatch('start', 0);
+        dispatch('input', value);
+        dispatch('done');
     }
 
-    function onKeyDown(e: KeyboardEvent) {
+    function onSliderKeyDown(e: KeyboardEvent) {
         if (!focused) {
             return;
         }
@@ -147,11 +153,29 @@
             }
         }
 
-        dispatch('start', value);
+        if (!started) {
+            started = true;
+            dispatch('start', focused);
+        }
+
         value = v;
         dispatch('input', value);
-        dispatch('change', value);
-        dispatch('stop', value);
+    }
+
+
+    function onNumberInput(e) {
+        if (!started) {
+            started = true;
+            dispatch('start', focused);
+        }
+        let v = (e.target as HTMLInputElement).valueAsNumber;
+        if (Number.isNaN(v) || !Number.isFinite(v)) {
+            return;
+        }
+
+        v = clampStep(v, min, allowOverflow ? Number.POSITIVE_INFINITY : max, round ?? step);
+        value = v;
+        dispatch('input', value);
     }
 
     function onInputBlur(e: InputEvent) {
@@ -159,10 +183,13 @@
         v = clampStep(v, min, allowOverflow ? Number.POSITIVE_INFINITY : max, round ?? step);
         if (v !== value) {
             value = v;
-            dispatch('input', value);
             dispatch('change', value);
         }
         (e.target as HTMLInputElement).valueAsNumber = v;
+        if (started) {
+            started = false;
+            dispatch('done');
+        }
     }
 
     function onInputKeyDown(e: KeyboardEvent) {
@@ -181,7 +208,7 @@
 
     function onDragStart(index) {
         dragged = index;
-        dispatch('start', value);
+        dispatch('start', index);
     }
 
     function onDrag(v, index) {
@@ -212,7 +239,7 @@
         if (changed) {
             dispatch('change', computedValue);
         }
-        dispatch('stop', computedValue);
+        dispatch('done');
     }
 
     $: useTextbox = editable && !isRange;
@@ -232,7 +259,10 @@
         <div class="spectrum-Slider-labelContainer" role={isRange ? 'presentation' : undefined}>
             <label class="spectrum-Slider-label" id="{labelId}" for="{inputId}">{label}</label>
             {#if useTextbox}
-                <input value={allowOverflow ? value : computedValue} on:keydown|self={onInputKeyDown} on:blur={onInputBlur} tabindex="-1" class="spectrum-Textfield-input spectrum-Slider-value" type="number" min="{min}" max="{max}" step="{step}">
+                <input on:input={onNumberInput} value={formatNumber(allowOverflow ? value : computedValue, digits)}
+                       on:keydown|self={onInputKeyDown} on:blur={onInputBlur} tabindex="-1"
+                       class="spectrum-Textfield-input spectrum-Slider-value" type="number"
+                       min="{min}" max="{allowOverflow ? undefined : max}" step="{step}">
             {:else}
                 <div class="spectrum-Slider-value" role="textbox" aria-readonly="true" aria-labelledby="{labelId}">
                     {Array.isArray(computedValue) ? computedValue.join(' - ') : computedValue}
@@ -266,7 +296,7 @@
                  data-slider-name="left"
                  use:dragAction={{surface, move: v => onDrag(v.x, 1), start: () => onDragStart(1), end: onDragEnd}}
                  class:is-dragged={dragged === 1} class:is-focused={focused === 1} style={`left: ${percent[0]}%;`}>
-                <input on:focus={onFocus} on:blur={onBlur} on:keydown={onKeyDown}
+                <input on:focus={onFocus} on:blur={onSliderBlur} on:keydown={onSliderKeyDown}
                        id="{inputId}" type="range" class="spectrum-Slider-input"
                        disabled="{disabled}" value={computedValue[0]} step={step} min={min} max={max}>
             </div>
@@ -275,7 +305,7 @@
                  data-slider-name="right"
                  use:dragAction={{surface, move: v => onDrag(v.x, 2), start: () => onDragStart(2), end: onDragEnd}}
                  class:is-dragged={dragged === 2} class:is-focused={focused === 2} style={`left: ${percent[1]}%;`}>
-                <input on:focus={onFocus} on:blur={onBlur} on:keydown={onKeyDown}
+                <input on:focus={onFocus} on:blur={onSliderBlur} on:keydown={onSliderKeyDown}
                        id="{inputId + '-alt'}" type="range" class="spectrum-Slider-input"
                        disabled="{disabled}" value={computedValue[1]} step={step} min={min} max={max}>
             </div>
@@ -283,7 +313,7 @@
             <div class="spectrum-Slider-handle"
                  use:dragAction={{surface, move: v => onDrag(v.x, 1), start: () => onDragStart(1), end: onDragEnd}}
                  class:is-dragged={dragged !== 0} class:is-focused={focused !== 0} style={`left: ${percent}%;`}>
-                <input on:focus={onFocus} on:blur={onBlur} on:keydown={onKeyDown}
+                <input on:focus={onFocus} on:blur={onSliderBlur} on:keydown={onSliderKeyDown}
                        id="{inputId}" type="range" class="spectrum-Slider-input"
                        disabled="{disabled}" value={computedValue} step={step} min={min} max={max}>
             </div>

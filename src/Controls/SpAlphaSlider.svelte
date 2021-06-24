@@ -16,7 +16,7 @@
     }
 
 </script>
-<SpColorSliderBase bind:value on:focus on:blur on:input on:change on:start on:stop
+<SpColorSliderBase bind:value on:focus on:blur on:input on:change on:start on:done
                    vertical={vertical} invert={invert} small={small}
                    color={getColor(colorTemplate, value)} gradient={`${getColor(colorTemplate, 0)} 0%, ${getColor(colorTemplate, 1)} 100%`}
                    min={0} max={1} step={step}

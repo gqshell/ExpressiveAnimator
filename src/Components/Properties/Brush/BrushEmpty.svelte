@@ -4,6 +4,4 @@
     export let value: EmptyBrush;
     export let colorMode = undefined;
 </script>
-<div>
-    No paint
-</div>
+<p style="text-align: center; color: var(--spectrum-global-color-gray-700)">No paint</p>

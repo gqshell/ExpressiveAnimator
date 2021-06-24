@@ -41,7 +41,7 @@
 
     function onDragStart() {
         original = value;
-        dispatch('start', value);
+        dispatch('start');
     }
 
     function onDrag(v) {
@@ -60,9 +60,8 @@
     function onDragEnd() {
         if (original !== value) {
             dispatch('change', value);
-            colorHandle.blur();
         }
-        dispatch('stop', value);
+        colorHandle.blur();
     }
 
     function onArrow(e) {
@@ -89,7 +88,6 @@
         if (value !== v) {
             value = v;
             dispatch('input', v);
-            dispatch('change', v);
         }
     }
 
@@ -103,9 +101,15 @@
 
         if (value !== v) {
             value = v;
+            dispatch('start');
             dispatch('input', v);
-            dispatch('change', v);
+            dispatch('done');
         }
+    }
+
+    function onBlur() {
+        dispatch('done');
+        dispatch('blur');
     }
 
     $: computedClass = mergeClasses({
@@ -119,7 +123,7 @@
     <div class="spectrum-ColorSlider-checkerboard" role="presentation" on:click|self={onClick}>
         <div class="spectrum-ColorSlider-gradient" role="presentation" style={bg}></div>
     </div>
-    <SpColorHandle bind:element={colorHandle} on:arrow={onArrow} on:focus on:blur
+    <SpColorHandle bind:element={colorHandle} on:arrow={onArrow} on:focus on:blur={onBlur}
                    dragOptions={{surface, start: onDragStart, end: onDragEnd, move: onDrag}}
                    style={vertical ? `top: ${percent}%` : `left: ${percent}%;`}
                    tabindex="0"

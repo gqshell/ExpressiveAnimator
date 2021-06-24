@@ -1,8 +1,9 @@
 <script lang="ts">
     import SpSlider from "../../../Controls/SpSlider.svelte";
-    import {BrushType} from "@zindex/canvas-engine";
+    import {BrushType, VectorElement} from "@zindex/canvas-engine";
     import type {Brush, GradientBrush, SolidBrush} from "@zindex/canvas-engine";
     import {createEventDispatcher} from "svelte";
+    import {AnimationProject} from "../../../Core";
 
     const dispatch = createEventDispatcher();
 
@@ -14,6 +15,9 @@
     };
 
     export let showFill: boolean = true;
+
+    let opacityProperty: string;
+    $: opacityProperty = showFill ? 'fillOpacity' : 'strokeOpacity';
 
     function getBackground(value: Brush, opacity: number): string {
         let picture: string;
@@ -46,26 +50,49 @@
         // the background property sets style="background: $picture"
         return `${picture}; opacity: ${opacity};`;
     }
+
+    function swap(project: AnimationProject, element: VectorElement): boolean {
+        if (!(element instanceof VectorElement)) {
+            return false;
+        }
+        return project.middleware.swapStrokeFill([element], true);
+    }
+
+    function copyStroke(project: AnimationProject, element: VectorElement): boolean {
+        if (!(element instanceof VectorElement)) {
+            return false;
+        }
+        return project.middleware.copyStrokeToFill([element], true);
+    }
+
+    function copyFill(project: AnimationProject, element: VectorElement): boolean {
+        if (!(element instanceof VectorElement)) {
+            return false;
+        }
+        return project.middleware.copyFillToStroke([element], true);
+    }
 </script>
 <div class="brush-switch">
     <div class="thumbnail-wrapper">
         <sp-thumbnail title="Fill" background="{getBackground(value.fill, value.fillOpacity)}" selected={showFill ? '' : undefined} on:click={() => showFill = true} class="fill"></sp-thumbnail>
         <sp-thumbnail title="Stroke" background="{getBackground(value.strokeBrush, value.strokeOpacity)}" selected={!showFill ? '' : undefined} on:click={() => showFill = false} class="stroke"></sp-thumbnail>
-        <div class="action-icon" on:click={() => dispatch('copy', !showFill)} title="{showFill ? 'Copy Stroke' : 'Copy Fill'}" style="bottom: 0; left: 0">
+        <div class="action-icon"
+             on:click={() => dispatch('action', {action: showFill ? copyStroke : copyFill, value: null})} title="{showFill ? 'Copy Stroke' : 'Copy Fill'}" style="bottom: 0; left: 0">
             <sp-icon name="{showFill ? 'expr:swap-arrow-up-left' : 'expr:swap-arrow-down-right'}" size="s"></sp-icon>
         </div>
-        <div class="action-icon" on:click={() => dispatch('swap')} title="Swap Fill & Stroke" style="top: 0; right: 0">
+        <div class="action-icon"
+             on:click={() => dispatch('action', {action: swap,value: null})} title="Swap Fill & Stroke" style="top: 0; right: 0">
             <sp-icon name="expr:swap-arrows" size="s"></sp-icon>
         </div>
     </div>
     <SpSlider label={showFill ? 'Fill opacity' : 'Stroke opacity'}
               ticks={3}
-              value={(showFill ? value.fillOpacity : value.strokeOpacity) * 100}
+              value={value[opacityProperty] * 100}
               style="flex: 1"
               fill="start"
-              on:start
-              on:stop
-              on:input={e => dispatch('opacity', e.detail)}
+              on:done
+              on:input={e => dispatch('update', {property: opacityProperty, value: e.detail / 100})}
+              on:start={() => dispatch('start', {property: opacityProperty, value: value[opacityProperty]})}
               editable/>
 </div>
 

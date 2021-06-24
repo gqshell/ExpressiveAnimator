@@ -20,6 +20,7 @@
     export let placeholder: string | undefined = undefined;
     export let name: string | undefined = undefined;
     export let autocomplete: string | undefined = undefined;
+    export let spellcheck: string | undefined = undefined;
 
     export let centerText: boolean = true;
     export let pattern: string | undefined = undefined;
@@ -55,32 +56,52 @@
     $: isNumberInput = !multiline && type === 'number';
     $: isSearchInput = !multiline && type === 'search';
 
+    let started: boolean = false;
+
     function onFocus() {
         focused = true;
         dispatch('focus', value);
     }
 
     function onBlur(e) {
+        focused = false;
+        started = false;
+
+        let changed: boolean = false;
+
         if (isNumberInput) {
             const original = e.target.valueAsNumber;
             value = clampStep(original, min, max, round || step);
             if (original !== value) {
                 e.target.valueAsNumber = value;
+                changed = true;
             }
+        } else {
+            changed = value.toString() !== e.target.value;
         }
-        focused = false;
-        if (value.toString() !== e.target.value) {
+
+        if (changed) {
+            //dispatch('input', value);
             dispatch('change', value);
         }
+
         dispatch('blur');
     }
 
     function onInput(e) {
         if (isNumberInput) {
             value = e.target.valueAsNumber;
+            if (Number.isNaN(value)) {
+                return;
+            }
         } else {
             value = e.target.value;
         }
+        if (!started) {
+            started = true;
+            dispatch('start');
+        }
+
         dispatch('input', value);
     }
 
@@ -88,7 +109,18 @@
         if (isNumberInput) {
             value = clampStep(e.target.valueAsNumber, min, max, round || step);
         }
+        if (!started) {
+            started = true;
+            dispatch('start');
+        }
+
         dispatch('change', value);
+    }
+
+    function onKeyUp(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === 'Escape') {
+            (e.target as HTMLElement).blur();
+        }
     }
 
     function onClear(e) {
@@ -137,13 +169,14 @@
         <textarea on:focus={onFocus} on:blur={onBlur} on:input={onInput} on:change={onChange}
                value={value} tabindex="{tabindex}"
                class="{computedInputClass}"
-               placeholder="{placeholder}" name="{name}"
+               placeholder="{placeholder}" name="{name}" spellcheck="{spellcheck}"
                disabled="{disabled}" {...attributes}></textarea>
     {:else}
         <input on:focus={onFocus} on:blur={onBlur} on:input={onInput} on:change={onChange}
+               on:keyup={onKeyUp}
                value={isNumberInput ? formatNumber(value, digits) : value} tabindex="{tabindex}"
                class="{computedInputClass}"
-               type="{type}" placeholder="{placeholder}" autocomplete="{autocomplete}"
+               type="{type}" placeholder="{placeholder}" autocomplete="{autocomplete}" spellcheck="{spellcheck}"
                name="{name}" disabled="{disabled}" {...attributes}>
     {/if}
     {#if clearable && !focused}

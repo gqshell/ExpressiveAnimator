@@ -9,8 +9,12 @@
     export let value: SolidBrush;
     export let colorMode = undefined;
 
-    function onInput(e: CustomEvent<Color>) {
-        dispatch('input', new SolidBrush(e.detail));
+    function onUpdate(e: CustomEvent<Color>) {
+        dispatch('update', value.withColor(e.detail));
     }
 </script>
-<ColorControl on:input={onInput} bind:colorMode={colorMode} on:start on:stop value={value.color} />
+<ColorControl
+        on:update={onUpdate}
+        on:start
+        on:done
+        value={value.color} bind:colorMode={colorMode} />

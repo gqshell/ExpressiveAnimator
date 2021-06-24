@@ -33,28 +33,27 @@
             return;
         }
 
-        hsva.h = hsv.h;
-        hsva.s = hsv.s;
-        hsva.v = hsv.v;
+        hsva.h = Math.round(hsv.h);
+        hsva.s = Math.round(hsv.s * 100) / 100;
+        hsva.v = Math.round(hsv.v * 100) / 100;
     }
 
     function onChange() {
-        if (value.toRgbString() !== currentColor.toRgbString()) {
-            dispatch('input', currentColor);
+        const color = new TinyColor(hsva, {format: 'rgb'});
+        if (value.toRgbString() !== color.toRgbString()) {
+            dispatch('input', color);
         }
     }
 
     function onColorInput(e) {
         const color = parseColor(e.detail);
         if (color.ok) {
-            dispatch('start');
             const hsv = rgbToHsv(color.r, color.g, color.b);
             hsva.a = color.a ?? 1;
             hsva.h = hsv.h * 360;
             hsva.s = hsv.s;
             hsva.v = hsv.v;
             onChange();
-            dispatch('stop');
         }
     }
 
@@ -81,11 +80,11 @@
 </script>
 <div class="color-control">
     <div class="color-control-wheel" style={`--color-control-slider-size: ${size - 2 * 16}px;`}>
-        <SpColorWheel on:start on:stop on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>
-            <SpColorArea on:start on:stop on:input={onChange} bind:hue={hsva.h} bind:saturation={hsva.s} bind:value={hsva.v}
+        <SpColorWheel on:start on:done on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>
+            <SpColorArea on:start on:done on:input={onChange} bind:hue={hsva.h} bind:saturation={hsva.s} bind:value={hsva.v}
                          loupe={loupe}/>
         </SpColorWheel>
-        <SpAlphaSlider on:start on:stop vertical invert on:input={onChange} bind:value={hsva.a} colorTemplate={alphaTemplate} small/>
+        <SpAlphaSlider on:start on:done on:input={onChange} vertical invert bind:value={hsva.a} colorTemplate={alphaTemplate} small/>
     </div>
     {#if details}
         <div class="color-control-details">

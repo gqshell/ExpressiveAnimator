@@ -26,16 +26,15 @@
     function onDragStart() {
         dragged = true;
         original = value;
-        dispatch('start', value);
+        dispatch('start');
     }
 
     function onDragEnd() {
         dragged = false;
         if (value !== original) {
-            dispatch('change', value);
-            colorHandle.blur();
+            dispatch('input', value);
         }
-        dispatch('stop', value);
+        colorHandle.blur();
     }
 
     function getAngle(x: number, y: number, bbox: DOMRect) {
@@ -82,24 +81,30 @@
         v = clampStep(v, 0, 360, step);
 
         if (value !== v) {
-            dispatch('start', value);
             value = v;
             dispatch('input', value);
-            dispatch('change', value);
-            dispatch('stop', value);
         }
     }
 
     function onClick(e: MouseEvent) {
         const v = clampStep(getAngle(e.clientX, e.clientY, surface.getBoundingClientRect()), 0, 360, step);
-
         if (value !== v) {
-            dispatch('start', value);
             value = v;
+            dispatch('start');
             dispatch('input', v);
-            dispatch('change', v);
-            dispatch('stop', value);
+            dispatch('done');
         }
+    }
+
+    function onFocus() {
+        focused = true;
+        dispatch('focus');
+    }
+
+    function onBlur() {
+        focused = false;
+        dispatch('done');
+        dispatch('blur');
     }
 
     let transform: string, clipPath: string;
@@ -130,7 +135,7 @@
                    bind:element={colorHandle}
                    dragOptions={{surface, start: onDragStart, move: onDrag, end: onDragEnd, raw: true}}
                    on:arrow={onArrow}
-                   on:focus={() => focused = true} on:blur={() => focused = false}
+                   on:focus={onFocus} on:blur={onBlur}
                    loupe={loupe} disabled={disabled} />
 </div>
 <style global>

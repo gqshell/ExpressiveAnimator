@@ -1,6 +1,6 @@
 <script lang="ts">
     import "@spectrum-css/colorarea/dist/index-vars.css";
-    import {mergeClasses, clampStep, getXYPercent} from "./utils";
+    import {mergeClasses, getXYPercent} from "./utils";
     import {createEventDispatcher, onMount} from "svelte";
     import SpColorHandle from "./SpColorHandle.svelte";
 
@@ -19,7 +19,13 @@
     let sat, light, color;
 
     function clamp(value: number): number {
-        return clampStep(value, 0, 1, step);
+        if (value <= 0) {
+            return 0;
+        }
+        if (value >= 1) {
+            return 1;
+        }
+        return Math.round(value * 100) / 100;
     }
 
     $: {
@@ -58,8 +64,8 @@
         const value = getXYPercent(e, colorArea.getBoundingClientRect());
         if (changeValue(value.x, value.y)) {
             dispatch('start');
-            dispatchValue('input', 'change');
-            dispatch('stop');
+            dispatchValue('input');
+            dispatch('done');
         }
     }
 
@@ -86,18 +92,14 @@
         if (x) {
             const v = clamp(saturation + x * step * 2);
             if (v !== saturation) {
-                dispatch('start');
                 saturation = v;
-                dispatchValue('input', 'change');
-                dispatch('stop');
+                dispatchValue('input');
             }
         } else if (y) {
             const v = clamp(value + y * step * 2);
             if (v !== value) {
-                dispatch('start');
                 value = v;
-                dispatchValue('input', 'change');
-                dispatch('stop');
+                dispatchValue('input');
             }
         }
     }
@@ -115,9 +117,8 @@
     function onDragEnd(changed) {
         if (changed) {
             dispatchValue('change');
-            colorHandle.blur();
         }
-        dispatch('stop');
+        colorHandle.blur();
     }
 
     let focused: boolean = false;
@@ -127,6 +128,7 @@
     }
     function onBlur() {
         focused = false;
+        dispatch('done');
         dispatch('blur');
     }
 

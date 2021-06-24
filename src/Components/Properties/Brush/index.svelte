@@ -8,6 +8,7 @@
     import BrushLinearGradient from "./BrushLinearGradient.svelte";
     import BrushRadialGradient from "./BrushRadialGradient.svelte";
     import BrushTwoPointConicalGradient from "./BrushTwoPointConicalGradient.svelte";
+    import IconSwitch from "../../../Controls/IconSwitch.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -42,47 +43,52 @@
         }
     }
 
-    let last: Brush = null;
-
-    function onStart() {
-        dispatch('start', value);
-        last = value;
-    }
-
-    function onStop() {
-        dispatch('stop', {start: last, stop: value});
-        last = null;
-    }
+    const items = [
+        {
+            value: BrushType.None,
+            title: 'None',
+            icon: 'expr:fill-none'
+        },
+        {
+            value: BrushType.Solid,
+            title: 'Solid',
+            icon: 'expr:fill-solid'
+        },
+        {
+            value: BrushType.LinearGradient,
+            title: 'Linear gradient',
+            icon: 'expr:fill-linear-gradient'
+        },
+        {
+            value: BrushType.RadialGradient,
+            title: 'Radial gradient',
+            icon: 'expr:fill-radial-gradient'
+        },
+        {
+            value: BrushType.TwoPointGradient,
+            title: 'Radial gradient with focal point',
+            icon: 'expr:fill-radial-focal-gradient'
+        },
+        {
+            value: BrushType.ConicalGradient,
+            title: 'Sweep gradient',
+            icon: 'expr:fill-conical-gradient'
+        },
+        {
+            value: BrushType.Pattern,
+            title: 'Pattern',
+            icon: 'expr:fill-pattern'
+        },
+    ];
 </script>
 
 <div class="brush-control">
-    <sp-action-group compact emphasized>
-        <sp-action-button selected={value.type === BrushType.None} title="None">
-            <sp-icon name="expr:fill-none" slot="icon"></sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.Solid} title="Solid">
-            <sp-icon name="expr:fill-solid" slot="icon"></sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.LinearGradient} title="Linear gradient">
-            <sp-icon name="expr:fill-linear-gradient" slot="icon"></sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.RadialGradient} title="Radial gradient">
-            <sp-icon name="expr:fill-radial-gradient" slot="icon"></sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.TwoPointGradient} title="Radial gradient with focal point">
-            <sp-icon name="expr:fill-radial-focal-gradient" slot="icon">
-            </sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.ConicalGradient} title="Sweep gradient">
-            <sp-icon name="expr:fill-conical-gradient" slot="icon"></sp-icon>
-        </sp-action-button>
-        <sp-action-button selected={value.type === BrushType.Pattern} title="Pattern">
-            <sp-icon name="expr:fill-pattern" slot="icon"></sp-icon>
-        </sp-action-button>
-    </sp-action-group>
+    <IconSwitch on:change={e => dispatch('change', e.detail)} value={value.type} items={items} />
 </div>
 <div class="brush-control-value">
-    <svelte:component this={component} value={value} bind:colorMode={colorMode} on:input on:start={onStart} on:stop={onStop} />
+    <svelte:component this={component} value={value} bind:colorMode={colorMode}
+                      on:start on:done on:update on:action
+    />
 </div>
 <style>
     .brush-control {

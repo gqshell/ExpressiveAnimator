@@ -4267,11 +4267,16 @@ var app = (function (canvasEngine) {
         }
         manageAnchor() {
             if (this.href && this.href.length > 0) {
-                this.removeAttribute('role');
+                if (this.getAttribute('role') === 'button') {
+                    this.setAttribute('role', 'link');
+                }
                 this.removeEventListener('click', this.shouldProxyClick);
             }
-            else if (!this.hasAttribute('role')) {
-                this.setAttribute('role', 'button');
+            else {
+                if (!this.hasAttribute('role') ||
+                    this.getAttribute('role') === 'link') {
+                    this.setAttribute('role', 'button');
+                }
                 this.addEventListener('click', this.shouldProxyClick);
             }
         }
@@ -11203,7 +11208,7 @@ var(--spectrum-global-animation-duration-300)))}:host([open]){transition:opacity
     governing permissions and limitations under the License.
     */
     const styles$l = css `
-:host{position:fixed;left:0;top:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100vw;height:100vh;height:-webkit-fill-available;height:fill-available;visibility:hidden;pointer-events:none;z-index:2;transition:visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s)}:host([open]){visibility:visible}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]){width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0;margin-top:0}}.modal{visibility:hidden;opacity:0;transition:transform var(--spectrum-global-animation-duration-100,.13s) ease-in-out,opacity var(--spectrum-global-animation-duration-100,.13s) ease-in-out,visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s);pointer-events:none}:host([open]) .modal{visibility:visible;opacity:1;transition-delay:0ms;pointer-events:auto}:host{--spectrum-dialog-confirm-exit-animation-delay:0ms;--spectrum-dialog-fullscreen-margin:32px;--spectrum-dialog-max-height:90vh}.modal{transform:translateY(var(--spectrum-dialog-confirm-entry-animation-distance,var(--spectrum-global-dimension-size-250)));z-index:2;max-height:var(--spectrum-dialog-max-height);border-radius:var(--spectrum-dialog-confirm-border-radius,var(--spectrum-global-dimension-size-50));overflow:hidden;outline:none;pointer-events:auto;transition:opacity var(--spectrum-dialog-confirm-exit-animation-duration,var(--spectrum-global-animation-duration-100)) cubic-bezier(.5,0,1,1) var(--spectrum-dialog-confirm-exit-animation-delay,0ms),visibility 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
+:host{position:fixed;left:0;top:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100vw;height:100vh;height:-webkit-fill-available;height:fill-available;visibility:hidden;pointer-events:none;z-index:2;transition:visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s)}:host([open]){visibility:visible}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]){width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0}:host([responsive]){margin-top:0}}.modal{visibility:hidden;opacity:0;transition:transform var(--spectrum-global-animation-duration-100,.13s) ease-in-out,opacity var(--spectrum-global-animation-duration-100,.13s) ease-in-out,visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s);pointer-events:none}:host([open]) .modal{visibility:visible;opacity:1;transition-delay:0ms;pointer-events:auto}:host{--spectrum-dialog-confirm-exit-animation-delay:0ms;--spectrum-dialog-fullscreen-margin:32px;--spectrum-dialog-max-height:90vh}.modal{transform:translateY(var(--spectrum-dialog-confirm-entry-animation-distance,var(--spectrum-global-dimension-size-250)));z-index:2;max-height:var(--spectrum-dialog-max-height);border-radius:var(--spectrum-dialog-confirm-border-radius,var(--spectrum-global-dimension-size-50));overflow:hidden;outline:none;pointer-events:auto;transition:opacity var(--spectrum-dialog-confirm-exit-animation-duration,var(--spectrum-global-animation-duration-100)) cubic-bezier(.5,0,1,1) var(--spectrum-dialog-confirm-exit-animation-delay,0ms),visibility 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
 var(--spectrum-global-animation-duration-100))),transform 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
 var(--spectrum-global-animation-duration-100)))}:host([open]) .modal{transition:transform var(--spectrum-dialog-confirm-entry-animation-duration,var(--spectrum-global-animation-duration-500)) cubic-bezier(0,0,.4,1) var(--spectrum-dialog-confirm-entry-animation-delay,var(--spectrum-global-animation-duration-200)),opacity var(--spectrum-dialog-confirm-entry-animation-duration,var(--spectrum-global-animation-duration-500)) cubic-bezier(0,0,.4,1) var(--spectrum-dialog-confirm-entry-animation-delay,var(--spectrum-global-animation-duration-200));transform:translateY(0)}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]) .modal{width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0}}.fullscreen{left:var(--spectrum-dialog-fullscreen-margin);top:var(--spectrum-dialog-fullscreen-margin);right:var(--spectrum-dialog-fullscreen-margin);bottom:var(--spectrum-dialog-fullscreen-margin)}.fullscreen,.fullscreenTakeover{position:fixed;max-width:none;max-height:none}.fullscreenTakeover{left:0;right:0;top:0;bottom:0;box-sizing:border-box;border:none;border-radius:0}.fullscreenTakeover,:host([open]) .fullscreenTakeover{transform:none}.modal{background:var(--spectrum-dialog-confirm-background-color,var(--spectrum-alias-background-color-default))}:host{width:calc(100vw - var(--swc-body-margins-inline, 0 * 1px));height:calc(100vh - var(--swc-body-margins-block, 0 * 1px))}
 `;
@@ -12550,7 +12555,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
           throw new Error('unit option must be provided with style: "unit"');
         }
 
-        if (!((_UNITS$unit2 = $fe87f22deac4debf3eab2ca6a89602ab$var$UNITS[unit]) == null ? void 0 : _UNITS$unit2[unitDisplay])) {
+        if (!((_UNITS$unit2 = $fe87f22deac4debf3eab2ca6a89602ab$var$UNITS[unit]) != null && _UNITS$unit2[unitDisplay])) {
           throw new Error("Unsupported unit " + unit + " with unitDisplay = " + unitDisplay);
         }
 
@@ -13405,7 +13410,6 @@ var(--spectrum-global-dimension-size-100))/2);--spectrum-stepper-quiet-button-wi
             this.keyboardFocused = false;
         }
         onChange() {
-            console.log('onchange');
             const value = this.convertValueToNumber(this.inputElement.value);
             this.value = value;
             super.onChange();
@@ -16652,8 +16656,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         return list;
     }
     function interpolateBrush(from, to, percent = 0.5) {
-        // TODO: implement different brush interpolation
-        return interpolateDiscrete(from, to, percent).clone();
+        if (from.type !== to.type) {
+            return interpolateDiscrete(from, to, percent);
+        }
+        switch (from.type) {
+            case canvasEngine.BrushType.Solid:
+                return new canvasEngine.SolidBrush(from.color.interpolate(to.color, percent));
+            // TODO: ...
+        }
+        return interpolateDiscrete(from, to, percent);
     }
     function interpolateDashArray(from, to, percent = 0.5) {
         // TODO:
@@ -18983,13 +18994,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    const IsFillSelected = writable(false);
+    const IsFillSelected = writable(true);
     const CurrentColorMode = writable('HEX');
+    const ProportionalScale = writable(false);
 
     /* src/Components/Tools/SubTools.svelte generated by Svelte v3.38.2 */
     const file$H = "src/Components/Tools/SubTools.svelte";
 
-    function get_each_context$6(ctx, list, i) {
+    function get_each_context$7(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[10] = list[i];
     	return child_ctx;
@@ -19067,7 +19079,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (29:12) {#each buttons as button (button.tool)}
-    function create_each_block$6(key_1, ctx) {
+    function create_each_block$7(key_1, ctx) {
     	let first;
     	let if_block_anchor;
     	let if_block = /*current*/ ctx[4] !== /*button*/ ctx[10] && create_if_block$e(ctx);
@@ -19111,7 +19123,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$6.name,
+    		id: create_each_block$7.name,
     		type: "each",
     		source: "(29:12) {#each buttons as button (button.tool)}",
     		ctx
@@ -19120,7 +19132,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$M(ctx) {
+    function create_fragment$N(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -19138,12 +19150,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = /*buttons*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*button*/ ctx[10].tool;
-    	validate_each_keys(ctx, each_value, get_each_context$6, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$7, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$6(ctx, each_value, i);
+    		let child_ctx = get_each_context$7(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$6(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$7(key, child_ctx));
     	}
 
     	const block = {
@@ -19231,8 +19243,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (dirty & /*buttons, selectTool, current*/ 82) {
     				each_value = /*buttons*/ ctx[1];
     				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$6, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$6, null, get_each_context$6);
+    				validate_each_keys(ctx, each_value, get_each_context$7, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$7, null, get_each_context$7);
     			}
 
     			if (dirty & /*placement*/ 4) {
@@ -19259,7 +19271,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$M.name,
+    		id: create_fragment$N.name,
     		type: "component",
     		source: "",
     		ctx
@@ -19272,7 +19284,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return buttons.find(v => v.tool === name) || buttons[0];
     }
 
-    function instance$M($$self, $$props, $$invalidate) {
+    function instance$N($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(3, $CurrentTool = $$value));
@@ -19354,13 +19366,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SubTools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$M, create_fragment$M, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
+    		init(this, options, instance$N, create_fragment$N, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SubTools",
     			options,
-    			id: create_fragment$M.name
+    			id: create_fragment$N.name
     		});
     	}
 
@@ -19512,7 +19524,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Tools/index.svelte generated by Svelte v3.38.2 */
     const file$G = "src/Components/Tools/index.svelte";
 
-    function get_each_context$5(ctx, list, i) {
+    function get_each_context$6(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[3] = list[i];
     	return child_ctx;
@@ -19634,7 +19646,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (10:4) {#each buttons as button}
-    function create_each_block$5(ctx) {
+    function create_each_block$6(ctx) {
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
@@ -19680,7 +19692,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$5.name,
+    		id: create_each_block$6.name,
     		type: "each",
     		source: "(10:4) {#each buttons as button}",
     		ctx
@@ -19689,7 +19701,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$L(ctx) {
+    function create_fragment$M(ctx) {
     	let sp_action_group;
     	let current;
     	let each_value = buttons;
@@ -19697,7 +19709,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$6(get_each_context$6(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -19736,13 +19748,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$5(ctx, each_value, i);
+    					const child_ctx = get_each_context$6(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$5(child_ctx);
+    						each_blocks[i] = create_each_block$6(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(sp_action_group, null);
@@ -19784,7 +19796,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$L.name,
+    		id: create_fragment$M.name,
     		type: "component",
     		source: "",
     		ctx
@@ -19793,7 +19805,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$L($$self, $$props, $$invalidate) {
+    function instance$M($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(1, $CurrentTool = $$value));
@@ -19838,13 +19850,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Tools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { disabled: 0 });
+    		init(this, options, instance$M, create_fragment$M, safe_not_equal, { disabled: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Tools",
     			options,
-    			id: create_fragment$L.name
+    			id: create_fragment$M.name
     		});
     	}
 
@@ -19859,11 +19871,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Canvas.svelte generated by Svelte v3.38.2 */
 
-    const { console: console_1$2 } = globals;
+    const { console: console_1$1 } = globals;
 
     const file$F = "src/Components/Canvas.svelte";
 
-    // (147:4) {#if hidden}
+    // (151:4) {#if hidden}
     function create_if_block$c(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[30].default;
@@ -19905,14 +19917,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$c.name,
     		type: "if",
-    		source: "(147:4) {#if hidden}",
+    		source: "(151:4) {#if hidden}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$K(ctx) {
+    function create_fragment$L(ctx) {
     	let div;
     	let canvas_engine;
     	let t;
@@ -19929,10 +19941,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			set_custom_element_data(canvas_engine, "class", "svelte-r55jhx");
     			toggle_class(canvas_engine, "hidden", /*hidden*/ ctx[0]);
-    			add_location(canvas_engine, file$F, 131, 4, 4373);
+    			add_location(canvas_engine, file$F, 135, 4, 4428);
     			attr_dev(div, "class", "canvas-wrapper svelte-r55jhx");
     			attr_dev(div, "tabindex", "0");
-    			add_location(div, file$F, 130, 0, 4327);
+    			add_location(div, file$F, 134, 0, 4382);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20011,7 +20023,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$K.name,
+    		id: create_fragment$L.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20020,7 +20032,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$K($$self, $$props, $$invalidate) {
+    function instance$L($$self, $$props, $$invalidate) {
     	let $CurrentTheme;
     	let $CurrentTool;
     	let $showRuler;
@@ -20208,7 +20220,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	const writable_props = ["hidden"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<Canvas> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<Canvas> was created with unknown prop '${key}'`);
     	});
 
     	function canvas_engine_binding($$value) {
@@ -20327,7 +20339,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		}
 
     		if ($$self.$$.dirty[0] & /*canvas, $CurrentProject, $CurrentTime*/ 402653186) {
-    			if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) canvas.invalidate();
+    			{
+    				if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) {
+    					notifyPropertiesChanged();
+    					canvas.invalidate();
+    				}
+    			}
     		}
     	};
 
@@ -20370,13 +20387,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Canvas extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$K, create_fragment$K, safe_not_equal, { hidden: 0 }, [-1, -1]);
+    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { hidden: 0 }, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Canvas",
     			options,
-    			id: create_fragment$K.name
+    			id: create_fragment$L.name
     		});
     	}
 
@@ -20392,7 +20409,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Timeline/TimelineControls.svelte generated by Svelte v3.38.2 */
     const file$E = "src/Components/Timeline/TimelineControls.svelte";
 
-    function create_fragment$J(ctx) {
+    function create_fragment$K(ctx) {
     	let div2;
     	let div1;
     	let sp_action_group;
@@ -20545,7 +20562,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$J.name,
+    		id: create_fragment$K.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20565,7 +20582,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return `${time}:${m > 9 ? m : "0" + m}:${s > 9 ? s : "0" + s}:${k > 99 ? k : "0" + (k > 9 ? k : "0" + k)}`;
     }
 
-    function instance$J($$self, $$props, $$invalidate) {
+    function instance$K($$self, $$props, $$invalidate) {
     	let isRecording;
     	let isPlaying;
     	let playerTime;
@@ -20693,13 +20710,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineControls extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$J, create_fragment$J, safe_not_equal, {});
+    		init(this, options, instance$K, create_fragment$K, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineControls",
     			options,
-    			id: create_fragment$J.name
+    			id: create_fragment$K.name
     		});
     	}
     }
@@ -20737,7 +20754,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$I(ctx) {
+    function create_fragment$J(ctx) {
     	let div;
     	let t;
     	let current;
@@ -20819,7 +20836,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$I.name,
+    		id: create_fragment$J.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20828,7 +20845,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$I($$self, $$props, $$invalidate) {
+    function instance$J($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineItem", slots, ['default']);
     	let { disabled = false } = $$props;
@@ -20865,13 +20882,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineItem extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { disabled: 0, selected: 1, keyframes: 2 });
+    		init(this, options, instance$J, create_fragment$J, safe_not_equal, { disabled: 0, selected: 1, keyframes: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineItem",
     			options,
-    			id: create_fragment$I.name
+    			id: create_fragment$J.name
     		});
     	}
 
@@ -20904,7 +20921,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const file$C = "src/Components/Timeline/Keyframe.svelte";
 
-    function create_fragment$H(ctx) {
+    function create_fragment$I(ctx) {
     	let div;
     	let div_style_value;
     	let mounted;
@@ -20953,7 +20970,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$H.name,
+    		id: create_fragment$I.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20962,7 +20979,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$H($$self, $$props, $$invalidate) {
+    function instance$I($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Keyframe", slots, []);
     	let { offset } = $$props;
@@ -21003,13 +21020,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Keyframe extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$H, create_fragment$H, safe_not_equal, { offset: 0, selected: 1 });
+    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { offset: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Keyframe",
     			options,
-    			id: create_fragment$H.name
+    			id: create_fragment$I.name
     		});
 
     		const { ctx } = this.$$;
@@ -21096,7 +21113,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$G(ctx) {
+    function create_fragment$H(ctx) {
     	let if_block_anchor;
     	let if_block = /*end*/ ctx[0] != null && create_if_block$a(ctx);
 
@@ -21136,7 +21153,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$G.name,
+    		id: create_fragment$H.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21145,7 +21162,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$G($$self, $$props, $$invalidate) {
+    function instance$H($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Easing", slots, []);
     	let { start = 0 } = $$props;
@@ -21219,13 +21236,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Easing extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$G, create_fragment$G, safe_not_equal, { start: 4, end: 0, selected: 1 });
+    		init(this, options, instance$H, create_fragment$H, safe_not_equal, { start: 4, end: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Easing",
     			options,
-    			id: create_fragment$G.name
+    			id: create_fragment$H.name
     		});
     	}
 
@@ -21275,7 +21292,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Timeline/Element.svelte generated by Svelte v3.38.2 */
     const file$A = "src/Components/Timeline/Element.svelte";
 
-    function create_fragment$F(ctx) {
+    function create_fragment$G(ctx) {
     	let div;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -21334,7 +21351,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$F.name,
+    		id: create_fragment$G.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21343,7 +21360,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$F($$self, $$props, $$invalidate) {
+    function instance$G($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Element", slots, []);
     	let { type } = $$props;
@@ -21391,7 +21408,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$F, create_fragment$F, safe_not_equal, {
+    		init(this, options, instance$G, create_fragment$G, safe_not_equal, {
     			type: 0,
     			title: 1,
     			disabled: 2,
@@ -21402,7 +21419,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "Element",
     			options,
-    			id: create_fragment$F.name
+    			id: create_fragment$G.name
     		});
 
     		const { ctx } = this.$$;
@@ -21450,7 +21467,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const file$z = "src/Components/Timeline/Property.svelte";
 
-    function create_fragment$E(ctx) {
+    function create_fragment$F(ctx) {
     	let div;
     	let span;
     	let t;
@@ -21489,7 +21506,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$E.name,
+    		id: create_fragment$F.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21498,7 +21515,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$E($$self, $$props, $$invalidate) {
+    function instance$F($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Property", slots, []);
     	let { title } = $$props;
@@ -21534,13 +21551,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Property extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$E, create_fragment$E, safe_not_equal, { title: 0, property: 2, disabled: 1 });
+    		init(this, options, instance$F, create_fragment$F, safe_not_equal, { title: 0, property: 2, disabled: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Property",
     			options,
-    			id: create_fragment$E.name
+    			id: create_fragment$F.name
     		});
 
     		const { ctx } = this.$$;
@@ -21585,7 +21602,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const { Object: Object_1 } = globals;
     const file$y = "src/Components/Timeline/Timeline.svelte";
 
-    function get_each_context$4(ctx, list, i) {
+    function get_each_context$5(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[12] = list[i];
     	return child_ctx;
@@ -22017,7 +22034,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (67:12) {#each animatedElements as animated}
-    function create_each_block$4(ctx) {
+    function create_each_block$5(ctx) {
     	let timelineitem;
     	let t;
     	let each_1_anchor;
@@ -22116,7 +22133,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$4.name,
+    		id: create_each_block$5.name,
     		type: "each",
     		source: "(67:12) {#each animatedElements as animated}",
     		ctx
@@ -22125,7 +22142,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$D(ctx) {
+    function create_fragment$E(ctx) {
     	let div4;
     	let div0;
     	let t0;
@@ -22153,7 +22170,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$4(get_each_context$4(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
     	}
 
     	const out_1 = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -22260,13 +22277,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$4(ctx, each_value, i);
+    					const child_ctx = get_each_context$5(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$4(child_ctx);
+    						each_blocks[i] = create_each_block$5(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(div1, null);
@@ -22323,7 +22340,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$D.name,
+    		id: create_fragment$E.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22360,7 +22377,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return list;
     }
 
-    function instance$D($$self, $$props, $$invalidate) {
+    function instance$E($$self, $$props, $$invalidate) {
     	let animatedElements;
     	let $CurrentProject;
     	let $CurrentDocumentAnimation;
@@ -22484,13 +22501,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Timeline extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$D, create_fragment$D, safe_not_equal, { scrollTop: 4, scrollLeft: 5 });
+    		init(this, options, instance$E, create_fragment$E, safe_not_equal, { scrollTop: 4, scrollLeft: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Timeline",
     			options,
-    			id: create_fragment$D.name
+    			id: create_fragment$E.name
     		});
     	}
 
@@ -22514,7 +22531,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Timeline/TimelineRuler.svelte generated by Svelte v3.38.2 */
     const file$x = "src/Components/Timeline/TimelineRuler.svelte";
 
-    function create_fragment$C(ctx) {
+    function create_fragment$D(ctx) {
     	let div1;
     	let canvas_1;
     	let t;
@@ -22555,7 +22572,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$C.name,
+    		id: create_fragment$D.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22564,7 +22581,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$C($$self, $$props, $$invalidate) {
+    function instance$D($$self, $$props, $$invalidate) {
     	let $CurrentTime;
     	let $CurrentTheme;
     	let $CurrentMaxTime;
@@ -22855,7 +22872,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$C, create_fragment$C, safe_not_equal, {
+    		init(this, options, instance$D, create_fragment$D, safe_not_equal, {
     			zoom: 2,
     			scroll: 3,
     			divisions: 4,
@@ -22867,7 +22884,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "TimelineRuler",
     			options,
-    			id: create_fragment$C.name
+    			id: create_fragment$D.name
     		});
     	}
 
@@ -22915,7 +22932,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Timeline/index.svelte generated by Svelte v3.38.2 */
     const file$w = "src/Components/Timeline/index.svelte";
 
-    function create_fragment$B(ctx) {
+    function create_fragment$C(ctx) {
     	let div2;
     	let div0;
     	let timelinecontrols;
@@ -23059,7 +23076,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$B.name,
+    		id: create_fragment$C.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23068,7 +23085,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$B($$self, $$props, $$invalidate) {
+    function instance$C($$self, $$props, $$invalidate) {
     	let unit;
     	let style;
     	let $CurrentTime;
@@ -23168,13 +23185,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Timeline_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$B, create_fragment$B, safe_not_equal, { zoom: 0 });
+    		init(this, options, instance$C, create_fragment$C, safe_not_equal, { zoom: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Timeline_1",
     			options,
-    			id: create_fragment$B.name
+    			id: create_fragment$C.name
     		});
     	}
 
@@ -23191,7 +23208,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const file$v = "src/Components/Menu.svelte";
 
-    function create_fragment$A(ctx) {
+    function create_fragment$B(ctx) {
     	let overlay_trigger;
     	let div;
     	let svg;
@@ -23370,7 +23387,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$A.name,
+    		id: create_fragment$B.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23379,7 +23396,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$A($$self, $$props) {
+    function instance$B($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Menu", slots, []);
     	const writable_props = [];
@@ -23394,13 +23411,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Menu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$A, create_fragment$A, safe_not_equal, {});
+    		init(this, options, instance$B, create_fragment$B, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Menu",
     			options,
-    			id: create_fragment$A.name
+    			id: create_fragment$B.name
     		});
     	}
     }
@@ -23408,7 +23425,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/MenuBar/ProjectState.svelte generated by Svelte v3.38.2 */
     const file$u = "src/Components/MenuBar/ProjectState.svelte";
 
-    function create_fragment$z(ctx) {
+    function create_fragment$A(ctx) {
     	let sp_action_group;
     	let sp_action_button0;
     	let sp_icon0;
@@ -23516,7 +23533,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$z.name,
+    		id: create_fragment$A.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23525,7 +23542,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$z($$self, $$props, $$invalidate) {
+    function instance$A($$self, $$props, $$invalidate) {
     	let $CurrentProject;
     	let $CurrentProjectState;
     	validate_store(CurrentProject, "CurrentProject");
@@ -23572,13 +23589,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class ProjectState extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$z, create_fragment$z, safe_not_equal, {});
+    		init(this, options, instance$A, create_fragment$A, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ProjectState",
     			options,
-    			id: create_fragment$z.name
+    			id: create_fragment$A.name
     		});
     	}
     }
@@ -23586,7 +23603,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/MenuBar/AlignSelection.svelte generated by Svelte v3.38.2 */
     const file$t = "src/Components/MenuBar/AlignSelection.svelte";
 
-    function create_fragment$y(ctx) {
+    function create_fragment$z(ctx) {
     	let sp_action_group;
     	let sp_action_button0;
     	let sp_icon0;
@@ -23809,7 +23826,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$y.name,
+    		id: create_fragment$z.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23822,7 +23839,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	
     }
 
-    function instance$y($$self, $$props, $$invalidate) {
+    function instance$z($$self, $$props, $$invalidate) {
     	let $CurrentSelection;
     	let $CurrentProject;
     	validate_store(CurrentSelection, "CurrentSelection");
@@ -23904,13 +23921,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class AlignSelection extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$y, create_fragment$y, safe_not_equal, {});
+    		init(this, options, instance$z, create_fragment$z, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "AlignSelection",
     			options,
-    			id: create_fragment$y.name
+    			id: create_fragment$z.name
     		});
     	}
     }
@@ -23918,7 +23935,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Tree/DropIndicator/index.svelte generated by Svelte v3.38.2 */
     const file$s = "src/Components/Tree/DropIndicator/index.svelte";
 
-    function create_fragment$x(ctx) {
+    function create_fragment$y(ctx) {
     	let div;
     	let div_class_value;
 
@@ -23948,7 +23965,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$x.name,
+    		id: create_fragment$y.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23957,7 +23974,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$x($$self, $$props, $$invalidate) {
+    function instance$y($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("DropIndicator", slots, []);
     	let { vertical = false } = $$props;
@@ -23987,13 +24004,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class DropIndicator extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$x, create_fragment$x, safe_not_equal, { vertical: 0 });
+    		init(this, options, instance$y, create_fragment$y, safe_not_equal, { vertical: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "DropIndicator",
     			options,
-    			id: create_fragment$x.name
+    			id: create_fragment$y.name
     		});
     	}
 
@@ -24009,7 +24026,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Tree/TreeItem.svelte generated by Svelte v3.38.2 */
     const file$r = "src/Components/Tree/TreeItem.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[17] = list[i];
     	return child_ctx;
@@ -24352,12 +24369,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = Array.from(/*element*/ ctx[1].children(/*reverse*/ ctx[4]));
     	validate_each_argument(each_value);
     	const get_key = ctx => /*child*/ ctx[17].id;
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$4, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
+    		let child_ctx = get_each_context$4(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$4(key, child_ctx));
     	}
 
     	const block = {
@@ -24381,8 +24398,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				each_value = Array.from(/*element*/ ctx[1].children(/*reverse*/ ctx[4]));
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$3, each_1_anchor, get_each_context$3);
+    				validate_each_keys(ctx, each_value, get_each_context$4, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$4, each_1_anchor, get_each_context$4);
     				check_outros();
     			}
     		},
@@ -24423,7 +24440,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (48:4) {#each Array.from(element.children(reverse)) as child (child.id)}
-    function create_each_block$3(key_1, ctx) {
+    function create_each_block$4(key_1, ctx) {
     	let first;
     	let treeitem;
     	let current;
@@ -24487,7 +24504,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$3.name,
+    		id: create_each_block$4.name,
     		type: "each",
     		source: "(48:4) {#each Array.from(element.children(reverse)) as child (child.id)}",
     		ctx
@@ -24496,7 +24513,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$w(ctx) {
+    function create_fragment$x(ctx) {
     	let t;
     	let if_block1_anchor;
     	let current;
@@ -24588,7 +24605,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$w.name,
+    		id: create_fragment$x.name,
     		type: "component",
     		source: "",
     		ctx
@@ -24597,7 +24614,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$w($$self, $$props, $$invalidate) {
+    function instance$x($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TreeItem", slots, []);
     	
@@ -24731,7 +24748,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$w, create_fragment$w, safe_not_equal, {
+    		init(this, options, instance$x, create_fragment$x, safe_not_equal, {
     			element: 1,
     			selection: 2,
     			indent: 3,
@@ -24746,7 +24763,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "TreeItem",
     			options,
-    			id: create_fragment$w.name
+    			id: create_fragment$x.name
     		});
 
     		const { ctx } = this.$$;
@@ -24829,7 +24846,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Tree/index.svelte generated by Svelte v3.38.2 */
     const file$q = "src/Components/Tree/index.svelte";
 
-    function get_each_context$2(ctx, list, i) {
+    function get_each_context$3(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[13] = list[i];
     	return child_ctx;
@@ -24966,12 +24983,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = Array.from(/*$CurrentDocument*/ ctx[4].children(/*reverse*/ ctx[0]));
     	validate_each_argument(each_value);
     	const get_key = ctx => /*child*/ ctx[13].id;
-    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$2(ctx, each_value, i);
+    		let child_ctx = get_each_context$3(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
     	}
 
     	const block = {
@@ -25008,8 +25025,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				each_value = Array.from(/*$CurrentDocument*/ ctx[4].children(/*reverse*/ ctx[0]));
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, outro_and_destroy_block, create_each_block$2, null, get_each_context$2);
+    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
     				check_outros();
     			}
     		},
@@ -25053,7 +25070,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (132:16) {#each Array.from($CurrentDocument.children(reverse)) as child (child.id)}
-    function create_each_block$2(key_1, ctx) {
+    function create_each_block$3(key_1, ctx) {
     	let first;
     	let treeitem;
     	let current;
@@ -25115,7 +25132,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$2.name,
+    		id: create_each_block$3.name,
     		type: "each",
     		source: "(132:16) {#each Array.from($CurrentDocument.children(reverse)) as child (child.id)}",
     		ctx
@@ -25124,7 +25141,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$v(ctx) {
+    function create_fragment$w(ctx) {
     	let div1;
     	let div0;
     	let t;
@@ -25210,7 +25227,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$v.name,
+    		id: create_fragment$w.name,
     		type: "component",
     		source: "",
     		ctx
@@ -25222,7 +25239,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const ONE_PIXEL = new Image();
     ONE_PIXEL.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
-    function instance$v($$self, $$props, $$invalidate) {
+    function instance$w($$self, $$props, $$invalidate) {
     	let $CurrentDocument;
     	let $CurrentSelection;
     	let $CurrentProject;
@@ -25468,13 +25485,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Tree extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$v, create_fragment$v, safe_not_equal, { reverse: 0 });
+    		init(this, options, instance$w, create_fragment$w, safe_not_equal, { reverse: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Tree",
     			options,
-    			id: create_fragment$v.name
+    			id: create_fragment$w.name
     		});
     	}
 
@@ -25503,6 +25520,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
      * limitations under the License.
      */
     function formatNumber(value, digits) {
+        if (Number.isNaN(value) || !Number.isFinite(value)) {
+            return '';
+        }
         if (Number.isInteger(value)) {
             return value.toFixed(0);
         }
@@ -25651,7 +25671,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Controls/SpClearButton.svelte generated by Svelte v3.38.2 */
     const file$p = "src/Controls/SpClearButton.svelte";
 
-    function create_fragment$u(ctx) {
+    function create_fragment$v(ctx) {
     	let button;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -25726,7 +25746,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$u.name,
+    		id: create_fragment$v.name,
     		type: "component",
     		source: "",
     		ctx
@@ -25735,7 +25755,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$u($$self, $$props, $$invalidate) {
+    function instance$v($$self, $$props, $$invalidate) {
     	let iconSize;
     	let computedClass;
     	const omit_props_names = ["disabled","variant","small"];
@@ -25831,13 +25851,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpClearButton extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$u, create_fragment$u, safe_not_equal, { disabled: 0, variant: 4, small: 5 });
+    		init(this, options, instance$v, create_fragment$v, safe_not_equal, { disabled: 0, variant: 4, small: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpClearButton",
     			options,
-    			id: create_fragment$u.name
+    			id: create_fragment$v.name
     		});
     	}
 
@@ -25869,7 +25889,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Controls/SpTextField.svelte generated by Svelte v3.38.2 */
     const file$o = "src/Controls/SpTextField.svelte";
 
-    // (105:4) {#if icon}
+    // (130:4) {#if icon}
     function create_if_block_4$1(ctx) {
     	let sp_icon;
 
@@ -25879,7 +25899,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", /*size*/ ctx[4]);
     			set_custom_element_data(sp_icon, "name", /*icon*/ ctx[2]);
     			set_custom_element_data(sp_icon, "class", "spectrum-Textfield-icon");
-    			add_location(sp_icon, file$o, 105, 8, 3027);
+    			add_location(sp_icon, file$o, 130, 8, 3562);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -25902,14 +25922,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_4$1.name,
     		type: "if",
-    		source: "(105:4) {#if icon}",
+    		source: "(130:4) {#if icon}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (108:4) {#if status === 'valid'}
+    // (133:4) {#if status === 'valid'}
     function create_if_block_3$1(ctx) {
     	let sp_icon;
 
@@ -25918,7 +25938,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", "spectrum-css-icon-Checkmark100");
     			set_custom_element_data(sp_icon, "class", "spectrum-UIIcon-Checkmark100 spectrum-Textfield-validationIcon");
-    			add_location(sp_icon, file$o, 108, 8, 3144);
+    			add_location(sp_icon, file$o, 133, 8, 3679);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -25932,14 +25952,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(108:4) {#if status === 'valid'}",
+    		source: "(133:4) {#if status === 'valid'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (111:4) {#if status === 'invalid'}
+    // (136:4) {#if status === 'invalid'}
     function create_if_block_2$1(ctx) {
     	let sp_icon;
 
@@ -25948,7 +25968,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", "spectrum-icon-18-Alert");
     			set_custom_element_data(sp_icon, "class", "spectrum-Textfield-validationIcon");
-    			add_location(sp_icon, file$o, 111, 8, 3313);
+    			add_location(sp_icon, file$o, 136, 8, 3848);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -25962,14 +25982,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(111:4) {#if status === 'invalid'}",
+    		source: "(136:4) {#if status === 'invalid'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (120:4) {:else}
+    // (145:4) {:else}
     function create_else_block$3(ctx) {
     	let input;
     	let input_value_value;
@@ -25978,18 +25998,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	let input_levels = [
     		{
-    			value: input_value_value = /*isNumberInput*/ ctx[15]
-    			? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[11])
+    			value: input_value_value = /*isNumberInput*/ ctx[16]
+    			? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[12])
     			: /*value*/ ctx[1]
     		},
-    		{ tabindex: /*tabindex*/ ctx[13] },
-    		{ class: /*computedInputClass*/ ctx[17] },
+    		{ tabindex: /*tabindex*/ ctx[14] },
+    		{ class: /*computedInputClass*/ ctx[18] },
     		{ type: /*type*/ ctx[5] },
     		{ placeholder: /*placeholder*/ ctx[8] },
     		{ autocomplete: /*autocomplete*/ ctx[10] },
+    		{ spellcheck: /*spellcheck*/ ctx[11] },
     		{ name: /*name*/ ctx[9] },
-    		{ disabled: /*disabled*/ ctx[12] },
-    		/*attributes*/ ctx[18]
+    		{ disabled: /*disabled*/ ctx[13] },
+    		/*attributes*/ ctx[19]
     	];
 
     	let input_data = {};
@@ -26002,7 +26023,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			input = element("input");
     			set_attributes(input, input_data);
-    			add_location(input, file$o, 120, 8, 3757);
+    			add_location(input, file$o, 145, 8, 4318);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -26010,10 +26031,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "focus", /*onFocus*/ ctx[19], false, false, false),
-    					listen_dev(input, "blur", /*onBlur*/ ctx[20], false, false, false),
-    					listen_dev(input, "input", /*onInput*/ ctx[21], false, false, false),
-    					listen_dev(input, "change", /*onChange*/ ctx[22], false, false, false)
+    					listen_dev(input, "focus", /*onFocus*/ ctx[20], false, false, false),
+    					listen_dev(input, "blur", /*onBlur*/ ctx[21], false, false, false),
+    					listen_dev(input, "input", /*onInput*/ ctx[22], false, false, false),
+    					listen_dev(input, "change", /*onChange*/ ctx[23], false, false, false),
+    					listen_dev(input, "keyup", onKeyUp, false, false, false)
     				];
 
     				mounted = true;
@@ -26021,17 +26043,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			set_attributes(input, input_data = get_spread_update(input_levels, [
-    				dirty[0] & /*isNumberInput, value, digits*/ 34818 && input_value_value !== (input_value_value = /*isNumberInput*/ ctx[15]
-    				? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[11])
+    				dirty[0] & /*isNumberInput, value, digits*/ 69634 && input_value_value !== (input_value_value = /*isNumberInput*/ ctx[16]
+    				? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[12])
     				: /*value*/ ctx[1]) && input.value !== input_value_value && { value: input_value_value },
-    				dirty[0] & /*tabindex*/ 8192 && { tabindex: /*tabindex*/ ctx[13] },
-    				dirty[0] & /*computedInputClass*/ 131072 && { class: /*computedInputClass*/ ctx[17] },
+    				dirty[0] & /*tabindex*/ 16384 && { tabindex: /*tabindex*/ ctx[14] },
+    				dirty[0] & /*computedInputClass*/ 262144 && { class: /*computedInputClass*/ ctx[18] },
     				dirty[0] & /*type*/ 32 && { type: /*type*/ ctx[5] },
     				dirty[0] & /*placeholder*/ 256 && { placeholder: /*placeholder*/ ctx[8] },
     				dirty[0] & /*autocomplete*/ 1024 && { autocomplete: /*autocomplete*/ ctx[10] },
+    				dirty[0] & /*spellcheck*/ 2048 && { spellcheck: /*spellcheck*/ ctx[11] },
     				dirty[0] & /*name*/ 512 && { name: /*name*/ ctx[9] },
-    				dirty[0] & /*disabled*/ 4096 && { disabled: /*disabled*/ ctx[12] },
-    				dirty[0] & /*attributes*/ 262144 && /*attributes*/ ctx[18]
+    				dirty[0] & /*disabled*/ 8192 && { disabled: /*disabled*/ ctx[13] },
+    				dirty[0] & /*attributes*/ 524288 && /*attributes*/ ctx[19]
     			]));
 
     			if ("value" in input_data) {
@@ -26049,14 +26072,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(120:4) {:else}",
+    		source: "(145:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (114:4) {#if multiline}
+    // (139:4) {#if multiline}
     function create_if_block_1$2(ctx) {
     	let textarea;
     	let mounted;
@@ -26064,12 +26087,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	let textarea_levels = [
     		{ value: /*value*/ ctx[1] },
-    		{ tabindex: /*tabindex*/ ctx[13] },
-    		{ class: /*computedInputClass*/ ctx[17] },
+    		{ tabindex: /*tabindex*/ ctx[14] },
+    		{ class: /*computedInputClass*/ ctx[18] },
     		{ placeholder: /*placeholder*/ ctx[8] },
     		{ name: /*name*/ ctx[9] },
-    		{ disabled: /*disabled*/ ctx[12] },
-    		/*attributes*/ ctx[18]
+    		{ spellcheck: /*spellcheck*/ ctx[11] },
+    		{ disabled: /*disabled*/ ctx[13] },
+    		/*attributes*/ ctx[19]
     	];
 
     	let textarea_data = {};
@@ -26082,17 +26106,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			textarea = element("textarea");
     			set_attributes(textarea, textarea_data);
-    			add_location(textarea, file$o, 114, 8, 3434);
+    			add_location(textarea, file$o, 139, 8, 3969);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, textarea, anchor);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(textarea, "focus", /*onFocus*/ ctx[19], false, false, false),
-    					listen_dev(textarea, "blur", /*onBlur*/ ctx[20], false, false, false),
-    					listen_dev(textarea, "input", /*onInput*/ ctx[21], false, false, false),
-    					listen_dev(textarea, "change", /*onChange*/ ctx[22], false, false, false)
+    					listen_dev(textarea, "focus", /*onFocus*/ ctx[20], false, false, false),
+    					listen_dev(textarea, "blur", /*onBlur*/ ctx[21], false, false, false),
+    					listen_dev(textarea, "input", /*onInput*/ ctx[22], false, false, false),
+    					listen_dev(textarea, "change", /*onChange*/ ctx[23], false, false, false)
     				];
 
     				mounted = true;
@@ -26101,12 +26125,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, dirty) {
     			set_attributes(textarea, textarea_data = get_spread_update(textarea_levels, [
     				dirty[0] & /*value*/ 2 && { value: /*value*/ ctx[1] },
-    				dirty[0] & /*tabindex*/ 8192 && { tabindex: /*tabindex*/ ctx[13] },
-    				dirty[0] & /*computedInputClass*/ 131072 && { class: /*computedInputClass*/ ctx[17] },
+    				dirty[0] & /*tabindex*/ 16384 && { tabindex: /*tabindex*/ ctx[14] },
+    				dirty[0] & /*computedInputClass*/ 262144 && { class: /*computedInputClass*/ ctx[18] },
     				dirty[0] & /*placeholder*/ 256 && { placeholder: /*placeholder*/ ctx[8] },
     				dirty[0] & /*name*/ 512 && { name: /*name*/ ctx[9] },
-    				dirty[0] & /*disabled*/ 4096 && { disabled: /*disabled*/ ctx[12] },
-    				dirty[0] & /*attributes*/ 262144 && /*attributes*/ ctx[18]
+    				dirty[0] & /*spellcheck*/ 2048 && { spellcheck: /*spellcheck*/ ctx[11] },
+    				dirty[0] & /*disabled*/ 8192 && { disabled: /*disabled*/ ctx[13] },
+    				dirty[0] & /*attributes*/ 524288 && /*attributes*/ ctx[19]
     			]));
     		},
     		d: function destroy(detaching) {
@@ -26120,27 +26145,27 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(114:4) {#if multiline}",
+    		source: "(139:4) {#if multiline}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (127:4) {#if clearable && !focused}
+    // (153:4) {#if clearable && !focused}
     function create_if_block$7(ctx) {
     	let spclearbutton;
     	let current;
 
     	spclearbutton = new SpClearButton({
     			props: {
-    				disabled: /*disabled*/ ctx[12],
-    				class: /*clearClass*/ ctx[14]
+    				disabled: /*disabled*/ ctx[13],
+    				class: /*clearClass*/ ctx[15]
     			},
     			$$inline: true
     		});
 
-    	spclearbutton.$on("click", /*onClear*/ ctx[23]);
+    	spclearbutton.$on("click", /*onClear*/ ctx[24]);
 
     	const block = {
     		c: function create() {
@@ -26152,8 +26177,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const spclearbutton_changes = {};
-    			if (dirty[0] & /*disabled*/ 4096) spclearbutton_changes.disabled = /*disabled*/ ctx[12];
-    			if (dirty[0] & /*clearClass*/ 16384) spclearbutton_changes.class = /*clearClass*/ ctx[14];
+    			if (dirty[0] & /*disabled*/ 8192) spclearbutton_changes.disabled = /*disabled*/ ctx[13];
+    			if (dirty[0] & /*clearClass*/ 32768) spclearbutton_changes.class = /*clearClass*/ ctx[15];
     			spclearbutton.$set(spclearbutton_changes);
     		},
     		i: function intro(local) {
@@ -26174,14 +26199,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$7.name,
     		type: "if",
-    		source: "(127:4) {#if clearable && !focused}",
+    		source: "(153:4) {#if clearable && !focused}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$t(ctx) {
+    function create_fragment$u(ctx) {
     	let div;
     	let t0;
     	let t1;
@@ -26200,7 +26225,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current_block_type = select_block_type(ctx);
     	let if_block3 = current_block_type(ctx);
     	let if_block4 = /*clearable*/ ctx[7] && !/*focused*/ ctx[0] && create_if_block$7(ctx);
-    	let div_levels = [/*$$restProps*/ ctx[24], { class: /*computedClass*/ ctx[16] }];
+    	let div_levels = [/*$$restProps*/ ctx[25], { class: /*computedClass*/ ctx[17] }];
     	let div_data = {};
 
     	for (let i = 0; i < div_levels.length; i += 1) {
@@ -26220,7 +26245,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t3 = space();
     			if (if_block4) if_block4.c();
     			set_attributes(div, div_data);
-    			add_location(div, file$o, 103, 0, 2959);
+    			add_location(div, file$o, 128, 0, 3494);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26310,8 +26335,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			set_attributes(div, div_data = get_spread_update(div_levels, [
-    				dirty[0] & /*$$restProps*/ 16777216 && /*$$restProps*/ ctx[24],
-    				(!current || dirty[0] & /*computedClass*/ 65536) && { class: /*computedClass*/ ctx[16] }
+    				dirty[0] & /*$$restProps*/ 33554432 && /*$$restProps*/ ctx[25],
+    				(!current || dirty[0] & /*computedClass*/ 131072) && { class: /*computedClass*/ ctx[17] }
     			]));
     		},
     		i: function intro(local) {
@@ -26335,7 +26360,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$t.name,
+    		id: create_fragment$u.name,
     		type: "component",
     		source: "",
     		ctx
@@ -26344,9 +26369,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$t($$self, $$props, $$invalidate) {
+    function onKeyUp(e) {
+    	if (e.key === "Enter" || e.key === "Escape") {
+    		e.target.blur();
+    	}
+    }
+
+    function instance$u($$self, $$props, $$invalidate) {
     	const omit_props_names = [
-    		"value","icon","status","size","type","multiline","clearable","placeholder","name","autocomplete","centerText","pattern","minlength","maxlength","min","max","step","round","digits","quiet","disabled","focused","kbFocused","tabindex","inputClass","clearClass"
+    		"value","icon","status","size","type","multiline","clearable","placeholder","name","autocomplete","spellcheck","centerText","pattern","minlength","maxlength","min","max","step","round","digits","quiet","disabled","focused","kbFocused","tabindex","inputClass","clearClass"
     	];
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -26365,6 +26396,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { placeholder = undefined } = $$props;
     	let { name = undefined } = $$props;
     	let { autocomplete = undefined } = $$props;
+    	let { spellcheck = undefined } = $$props;
     	let { centerText = true } = $$props;
     	let { pattern = undefined } = $$props;
     	let { minlength = undefined } = $$props;
@@ -26382,6 +26414,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { inputClass = undefined } = $$props;
     	let { clearClass = undefined } = $$props;
     	let computedClass, computedInputClass, isNumberInput, isSearchInput;
+    	let started = false;
 
     	function onFocus() {
     		$$invalidate(0, focused = true);
@@ -26389,18 +26422,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	function onBlur(e) {
+    		$$invalidate(0, focused = false);
+    		started = false;
+    		let changed = false;
+
     		if (isNumberInput) {
     			const original = e.target.valueAsNumber;
     			$$invalidate(1, value = clampStep(original, min, max, round || step));
 
     			if (original !== value) {
     				e.target.valueAsNumber = value;
+    				changed = true;
     			}
+    		} else {
+    			changed = value.toString() !== e.target.value;
     		}
 
-    		$$invalidate(0, focused = false);
-
-    		if (value.toString() !== e.target.value) {
+    		if (changed) {
+    			//dispatch('input', value);
     			dispatch("change", value);
     		}
 
@@ -26410,8 +26449,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	function onInput(e) {
     		if (isNumberInput) {
     			$$invalidate(1, value = e.target.valueAsNumber);
+
+    			if (Number.isNaN(value)) {
+    				return;
+    			}
     		} else {
     			$$invalidate(1, value = e.target.value);
+    		}
+
+    		if (!started) {
+    			started = true;
+    			dispatch("start");
     		}
 
     		dispatch("input", value);
@@ -26420,6 +26468,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	function onChange(e) {
     		if (isNumberInput) {
     			$$invalidate(1, value = clampStep(e.target.valueAsNumber, min, max, round || step));
+    		}
+
+    		if (!started) {
+    			started = true;
+    			dispatch("start");
     		}
 
     		dispatch("change", value);
@@ -26436,8 +26489,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let attributes;
 
     	$$self.$$set = $$new_props => {
-    		$$invalidate(39, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(24, $$restProps = compute_rest_props($$props, omit_props_names));
+    		$$invalidate(41, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(25, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("value" in $$new_props) $$invalidate(1, value = $$new_props.value);
     		if ("icon" in $$new_props) $$invalidate(2, icon = $$new_props.icon);
     		if ("status" in $$new_props) $$invalidate(3, status = $$new_props.status);
@@ -26448,22 +26501,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("placeholder" in $$new_props) $$invalidate(8, placeholder = $$new_props.placeholder);
     		if ("name" in $$new_props) $$invalidate(9, name = $$new_props.name);
     		if ("autocomplete" in $$new_props) $$invalidate(10, autocomplete = $$new_props.autocomplete);
-    		if ("centerText" in $$new_props) $$invalidate(25, centerText = $$new_props.centerText);
-    		if ("pattern" in $$new_props) $$invalidate(26, pattern = $$new_props.pattern);
-    		if ("minlength" in $$new_props) $$invalidate(27, minlength = $$new_props.minlength);
-    		if ("maxlength" in $$new_props) $$invalidate(28, maxlength = $$new_props.maxlength);
-    		if ("min" in $$new_props) $$invalidate(29, min = $$new_props.min);
-    		if ("max" in $$new_props) $$invalidate(30, max = $$new_props.max);
-    		if ("step" in $$new_props) $$invalidate(31, step = $$new_props.step);
-    		if ("round" in $$new_props) $$invalidate(32, round = $$new_props.round);
-    		if ("digits" in $$new_props) $$invalidate(11, digits = $$new_props.digits);
-    		if ("quiet" in $$new_props) $$invalidate(33, quiet = $$new_props.quiet);
-    		if ("disabled" in $$new_props) $$invalidate(12, disabled = $$new_props.disabled);
+    		if ("spellcheck" in $$new_props) $$invalidate(11, spellcheck = $$new_props.spellcheck);
+    		if ("centerText" in $$new_props) $$invalidate(26, centerText = $$new_props.centerText);
+    		if ("pattern" in $$new_props) $$invalidate(27, pattern = $$new_props.pattern);
+    		if ("minlength" in $$new_props) $$invalidate(28, minlength = $$new_props.minlength);
+    		if ("maxlength" in $$new_props) $$invalidate(29, maxlength = $$new_props.maxlength);
+    		if ("min" in $$new_props) $$invalidate(30, min = $$new_props.min);
+    		if ("max" in $$new_props) $$invalidate(31, max = $$new_props.max);
+    		if ("step" in $$new_props) $$invalidate(32, step = $$new_props.step);
+    		if ("round" in $$new_props) $$invalidate(33, round = $$new_props.round);
+    		if ("digits" in $$new_props) $$invalidate(12, digits = $$new_props.digits);
+    		if ("quiet" in $$new_props) $$invalidate(34, quiet = $$new_props.quiet);
+    		if ("disabled" in $$new_props) $$invalidate(13, disabled = $$new_props.disabled);
     		if ("focused" in $$new_props) $$invalidate(0, focused = $$new_props.focused);
-    		if ("kbFocused" in $$new_props) $$invalidate(34, kbFocused = $$new_props.kbFocused);
-    		if ("tabindex" in $$new_props) $$invalidate(13, tabindex = $$new_props.tabindex);
-    		if ("inputClass" in $$new_props) $$invalidate(35, inputClass = $$new_props.inputClass);
-    		if ("clearClass" in $$new_props) $$invalidate(14, clearClass = $$new_props.clearClass);
+    		if ("kbFocused" in $$new_props) $$invalidate(35, kbFocused = $$new_props.kbFocused);
+    		if ("tabindex" in $$new_props) $$invalidate(14, tabindex = $$new_props.tabindex);
+    		if ("inputClass" in $$new_props) $$invalidate(36, inputClass = $$new_props.inputClass);
+    		if ("clearClass" in $$new_props) $$invalidate(15, clearClass = $$new_props.clearClass);
     	};
 
     	$$self.$capture_state = () => ({
@@ -26485,6 +26539,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		placeholder,
     		name,
     		autocomplete,
+    		spellcheck,
     		centerText,
     		pattern,
     		minlength,
@@ -26505,16 +26560,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		computedInputClass,
     		isNumberInput,
     		isSearchInput,
+    		started,
     		onFocus,
     		onBlur,
     		onInput,
     		onChange,
+    		onKeyUp,
     		onClear,
     		attributes
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		$$invalidate(39, $$props = assign(assign({}, $$props), $$new_props));
+    		$$invalidate(41, $$props = assign(assign({}, $$props), $$new_props));
     		if ("value" in $$props) $$invalidate(1, value = $$new_props.value);
     		if ("icon" in $$props) $$invalidate(2, icon = $$new_props.icon);
     		if ("status" in $$props) $$invalidate(3, status = $$new_props.status);
@@ -26525,27 +26582,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("placeholder" in $$props) $$invalidate(8, placeholder = $$new_props.placeholder);
     		if ("name" in $$props) $$invalidate(9, name = $$new_props.name);
     		if ("autocomplete" in $$props) $$invalidate(10, autocomplete = $$new_props.autocomplete);
-    		if ("centerText" in $$props) $$invalidate(25, centerText = $$new_props.centerText);
-    		if ("pattern" in $$props) $$invalidate(26, pattern = $$new_props.pattern);
-    		if ("minlength" in $$props) $$invalidate(27, minlength = $$new_props.minlength);
-    		if ("maxlength" in $$props) $$invalidate(28, maxlength = $$new_props.maxlength);
-    		if ("min" in $$props) $$invalidate(29, min = $$new_props.min);
-    		if ("max" in $$props) $$invalidate(30, max = $$new_props.max);
-    		if ("step" in $$props) $$invalidate(31, step = $$new_props.step);
-    		if ("round" in $$props) $$invalidate(32, round = $$new_props.round);
-    		if ("digits" in $$props) $$invalidate(11, digits = $$new_props.digits);
-    		if ("quiet" in $$props) $$invalidate(33, quiet = $$new_props.quiet);
-    		if ("disabled" in $$props) $$invalidate(12, disabled = $$new_props.disabled);
+    		if ("spellcheck" in $$props) $$invalidate(11, spellcheck = $$new_props.spellcheck);
+    		if ("centerText" in $$props) $$invalidate(26, centerText = $$new_props.centerText);
+    		if ("pattern" in $$props) $$invalidate(27, pattern = $$new_props.pattern);
+    		if ("minlength" in $$props) $$invalidate(28, minlength = $$new_props.minlength);
+    		if ("maxlength" in $$props) $$invalidate(29, maxlength = $$new_props.maxlength);
+    		if ("min" in $$props) $$invalidate(30, min = $$new_props.min);
+    		if ("max" in $$props) $$invalidate(31, max = $$new_props.max);
+    		if ("step" in $$props) $$invalidate(32, step = $$new_props.step);
+    		if ("round" in $$props) $$invalidate(33, round = $$new_props.round);
+    		if ("digits" in $$props) $$invalidate(12, digits = $$new_props.digits);
+    		if ("quiet" in $$props) $$invalidate(34, quiet = $$new_props.quiet);
+    		if ("disabled" in $$props) $$invalidate(13, disabled = $$new_props.disabled);
     		if ("focused" in $$props) $$invalidate(0, focused = $$new_props.focused);
-    		if ("kbFocused" in $$props) $$invalidate(34, kbFocused = $$new_props.kbFocused);
-    		if ("tabindex" in $$props) $$invalidate(13, tabindex = $$new_props.tabindex);
-    		if ("inputClass" in $$props) $$invalidate(35, inputClass = $$new_props.inputClass);
-    		if ("clearClass" in $$props) $$invalidate(14, clearClass = $$new_props.clearClass);
-    		if ("computedClass" in $$props) $$invalidate(16, computedClass = $$new_props.computedClass);
-    		if ("computedInputClass" in $$props) $$invalidate(17, computedInputClass = $$new_props.computedInputClass);
-    		if ("isNumberInput" in $$props) $$invalidate(15, isNumberInput = $$new_props.isNumberInput);
+    		if ("kbFocused" in $$props) $$invalidate(35, kbFocused = $$new_props.kbFocused);
+    		if ("tabindex" in $$props) $$invalidate(14, tabindex = $$new_props.tabindex);
+    		if ("inputClass" in $$props) $$invalidate(36, inputClass = $$new_props.inputClass);
+    		if ("clearClass" in $$props) $$invalidate(15, clearClass = $$new_props.clearClass);
+    		if ("computedClass" in $$props) $$invalidate(17, computedClass = $$new_props.computedClass);
+    		if ("computedInputClass" in $$props) $$invalidate(18, computedInputClass = $$new_props.computedInputClass);
+    		if ("isNumberInput" in $$props) $$invalidate(16, isNumberInput = $$new_props.isNumberInput);
     		if ("isSearchInput" in $$props) isSearchInput = $$new_props.isSearchInput;
-    		if ("attributes" in $$props) $$invalidate(18, attributes = $$new_props.attributes);
+    		if ("started" in $$props) started = $$new_props.started;
+    		if ("attributes" in $$props) $$invalidate(19, attributes = $$new_props.attributes);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -26553,8 +26612,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[1] & /*inputClass*/ 16) {
-    			$$invalidate(17, computedInputClass = mergeClasses(
+    		if ($$self.$$.dirty[1] & /*inputClass*/ 32) {
+    			$$invalidate(18, computedInputClass = mergeClasses(
     				{
     					"spectrum-Textfield-input": true,
     					"spectrum-InputGroup-input": inputGroup
@@ -26564,24 +26623,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		}
 
     		if ($$self.$$.dirty[0] & /*multiline, type*/ 96) {
-    			$$invalidate(15, isNumberInput = !multiline && type === "number");
+    			$$invalidate(16, isNumberInput = !multiline && type === "number");
     		}
 
     		if ($$self.$$.dirty[0] & /*multiline, type*/ 96) {
     			isSearchInput = !multiline && type === "search";
     		}
 
-    		if ($$self.$$.dirty[0] & /*isNumberInput, pattern, min, max, minlength, maxlength*/ 2080407552 | $$self.$$.dirty[1] & /*step*/ 1) {
+    		if ($$self.$$.dirty[0] & /*isNumberInput, pattern, min, minlength, maxlength*/ 2013331456 | $$self.$$.dirty[1] & /*max, step*/ 3) {
     			{
     				if (isNumberInput) {
-    					$$invalidate(18, attributes = { pattern, min, max, step });
+    					$$invalidate(19, attributes = { pattern, min, max, step });
     				} else {
-    					$$invalidate(18, attributes = { pattern, minlength, maxlength });
+    					$$invalidate(19, attributes = { pattern, minlength, maxlength });
     				}
     			}
     		}
 
-    		$$invalidate(16, computedClass = mergeClasses(
+    		$$invalidate(17, computedClass = mergeClasses(
     			{
     				"spectrum-Textfield": true,
     				"spectrum-Textfield--size": size,
@@ -26613,6 +26672,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		placeholder,
     		name,
     		autocomplete,
+    		spellcheck,
     		digits,
     		disabled,
     		tabindex,
@@ -26648,8 +26708,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		init(
     			this,
     			options,
-    			instance$t,
-    			create_fragment$t,
+    			instance$u,
+    			create_fragment$u,
     			safe_not_equal,
     			{
     				value: 1,
@@ -26662,22 +26722,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				placeholder: 8,
     				name: 9,
     				autocomplete: 10,
-    				centerText: 25,
-    				pattern: 26,
-    				minlength: 27,
-    				maxlength: 28,
-    				min: 29,
-    				max: 30,
-    				step: 31,
-    				round: 32,
-    				digits: 11,
-    				quiet: 33,
-    				disabled: 12,
+    				spellcheck: 11,
+    				centerText: 26,
+    				pattern: 27,
+    				minlength: 28,
+    				maxlength: 29,
+    				min: 30,
+    				max: 31,
+    				step: 32,
+    				round: 33,
+    				digits: 12,
+    				quiet: 34,
+    				disabled: 13,
     				focused: 0,
-    				kbFocused: 34,
-    				tabindex: 13,
-    				inputClass: 35,
-    				clearClass: 14
+    				kbFocused: 35,
+    				tabindex: 14,
+    				inputClass: 36,
+    				clearClass: 15
     			},
     			[-1, -1]
     		);
@@ -26686,7 +26747,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpTextField",
     			options,
-    			id: create_fragment$t.name
+    			id: create_fragment$u.name
     		});
     	}
 
@@ -26767,6 +26828,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	set autocomplete(value) {
+    		throw new Error("<SpTextField>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get spellcheck() {
+    		throw new Error("<SpTextField>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set spellcheck(value) {
     		throw new Error("<SpTextField>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -26902,7 +26971,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Properties/NumberPair.svelte generated by Svelte v3.38.2 */
     const file$n = "src/Components/Properties/NumberPair.svelte";
 
-    // (55:4) {:else}
+    // (53:4) {:else}
     function create_else_block$2(ctx) {
     	let div;
 
@@ -26910,7 +26979,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "action-wrapper svelte-1gmpf9x");
-    			add_location(div, file$n, 55, 8, 1800);
+    			add_location(div, file$n, 53, 8, 1785);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26927,14 +26996,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block$2.name,
     		type: "else",
-    		source: "(55:4) {:else}",
+    		source: "(53:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (53:4) {#if $$slots.default}
+    // (51:4) {#if $$slots.default}
     function create_if_block$6(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[13].default;
@@ -26976,14 +27045,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$6.name,
     		type: "if",
-    		source: "(53:4) {#if $$slots.default}",
+    		source: "(51:4) {#if $$slots.default}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$s(ctx) {
+    function create_fragment$t(ctx) {
     	let div1;
     	let sp_field_label;
     	let t0;
@@ -27001,9 +27070,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			props: {
     				type: "number",
     				size: "S",
-    				style: "width: var(--spectrum-global-dimension-size-800)",
+    				style: "width: var(--small-control-size)",
     				title: /*xTitle*/ ctx[2],
-    				value: /*value*/ ctx[0].x,
+    				value: /*value*/ ctx[1].x,
     				min: /*min*/ ctx[4],
     				max: /*max*/ ctx[5],
     				step: /*step*/ ctx[6],
@@ -27013,15 +27082,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		});
 
     	sptextfield0.$on("input", /*input_handler*/ ctx[14]);
-    	sptextfield0.$on("change", /*change_handler*/ ctx[15]);
+    	sptextfield0.$on("blur", /*blur_handler*/ ctx[15]);
+    	sptextfield0.$on("start", /*start_handler*/ ctx[16]);
 
     	sptextfield1 = new SpTextField({
     			props: {
     				type: "number",
     				size: "S",
-    				style: "width: var(--spectrum-global-dimension-size-800)",
+    				style: "width: var(--small-control-size)",
     				title: /*yTitle*/ ctx[3],
-    				value: /*value*/ ctx[0].y,
+    				value: /*value*/ ctx[1].y,
     				min: /*min*/ ctx[4],
     				max: /*max*/ ctx[5],
     				step: /*step*/ ctx[6],
@@ -27030,8 +27100,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	sptextfield1.$on("input", /*input_handler_1*/ ctx[16]);
-    	sptextfield1.$on("change", /*change_handler_1*/ ctx[17]);
+    	sptextfield1.$on("input", /*input_handler_1*/ ctx[17]);
+    	sptextfield1.$on("blur", /*blur_handler_1*/ ctx[18]);
+    	sptextfield1.$on("start", /*start_handler_1*/ ctx[19]);
     	const if_block_creators = [create_if_block$6, create_else_block$2];
     	const if_blocks = [];
 
@@ -27047,7 +27118,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			div1 = element("div");
     			sp_field_label = element("sp-field-label");
-    			t0 = text(/*label*/ ctx[1]);
+    			t0 = text(/*label*/ ctx[0]);
     			t1 = space();
     			div0 = element("div");
     			create_component(sptextfield0.$$.fragment);
@@ -27056,11 +27127,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t3 = space();
     			if_block.c();
     			set_custom_element_data(sp_field_label, "class", "svelte-1gmpf9x");
-    			add_location(sp_field_label, file$n, 33, 4, 925);
+    			add_location(sp_field_label, file$n, 29, 4, 836);
     			attr_dev(div0, "class", "number-pair svelte-1gmpf9x");
-    			add_location(div0, file$n, 34, 4, 970);
+    			add_location(div0, file$n, 30, 4, 881);
     			attr_dev(div1, "class", "number-pair-wrapper svelte-1gmpf9x");
-    			add_location(div1, file$n, 32, 0, 887);
+    			add_location(div1, file$n, 28, 0, 798);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -27079,10 +27150,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*label*/ 2) set_data_dev(t0, /*label*/ ctx[1]);
+    			if (!current || dirty & /*label*/ 1) set_data_dev(t0, /*label*/ ctx[0]);
     			const sptextfield0_changes = {};
     			if (dirty & /*xTitle*/ 4) sptextfield0_changes.title = /*xTitle*/ ctx[2];
-    			if (dirty & /*value*/ 1) sptextfield0_changes.value = /*value*/ ctx[0].x;
+    			if (dirty & /*value*/ 2) sptextfield0_changes.value = /*value*/ ctx[1].x;
     			if (dirty & /*min*/ 16) sptextfield0_changes.min = /*min*/ ctx[4];
     			if (dirty & /*max*/ 32) sptextfield0_changes.max = /*max*/ ctx[5];
     			if (dirty & /*step*/ 64) sptextfield0_changes.step = /*step*/ ctx[6];
@@ -27090,7 +27161,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sptextfield0.$set(sptextfield0_changes);
     			const sptextfield1_changes = {};
     			if (dirty & /*yTitle*/ 8) sptextfield1_changes.title = /*yTitle*/ ctx[3];
-    			if (dirty & /*value*/ 1) sptextfield1_changes.value = /*value*/ ctx[0].y;
+    			if (dirty & /*value*/ 2) sptextfield1_changes.value = /*value*/ ctx[1].y;
     			if (dirty & /*min*/ 16) sptextfield1_changes.min = /*min*/ ctx[4];
     			if (dirty & /*max*/ 32) sptextfield1_changes.max = /*max*/ ctx[5];
     			if (dirty & /*step*/ 64) sptextfield1_changes.step = /*step*/ ctx[6];
@@ -27145,7 +27216,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$s.name,
+    		id: create_fragment$t.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27154,7 +27225,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$s($$self, $$props, $$invalidate) {
+    function instance$t($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("NumberPair", slots, ['default']);
     	const $$slots = compute_slots(slots);
@@ -27186,12 +27257,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	function onInput(item, input) {
-    		$$invalidate(0, value = getData(item, input));
-    	}
-
-    	function onChange(item, input) {
-    		$$invalidate(0, value = getData(item, input));
-    		dispatch("change", value);
+    		dispatch("input", getData(item, input));
     	}
 
     	const writable_props = [
@@ -27211,13 +27277,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	});
 
     	const input_handler = e => onInput("x", e.detail);
-    	const change_handler = e => onChange("x", e.detail);
+    	const blur_handler = () => dispatch("done", "x");
+    	const start_handler = () => dispatch("start", "x");
     	const input_handler_1 = e => onInput("y", e.detail);
-    	const change_handler_1 = e => onChange("y", e.detail);
+    	const blur_handler_1 = () => dispatch("done", "y");
+    	const start_handler_1 = () => dispatch("start", "y");
 
     	$$self.$$set = $$props => {
-    		if ("label" in $$props) $$invalidate(1, label = $$props.label);
-    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("label" in $$props) $$invalidate(0, label = $$props.label);
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
     		if ("proportions" in $$props) $$invalidate(11, proportions = $$props.proportions);
     		if ("xTitle" in $$props) $$invalidate(2, xTitle = $$props.xTitle);
     		if ("yTitle" in $$props) $$invalidate(3, yTitle = $$props.yTitle);
@@ -27242,13 +27310,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		step,
     		round,
     		getData,
-    		onInput,
-    		onChange
+    		onInput
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("label" in $$props) $$invalidate(1, label = $$props.label);
-    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("label" in $$props) $$invalidate(0, label = $$props.label);
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
     		if ("proportions" in $$props) $$invalidate(11, proportions = $$props.proportions);
     		if ("xTitle" in $$props) $$invalidate(2, xTitle = $$props.xTitle);
     		if ("yTitle" in $$props) $$invalidate(3, yTitle = $$props.yTitle);
@@ -27263,24 +27330,26 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	return [
-    		value,
     		label,
+    		value,
     		xTitle,
     		yTitle,
     		min,
     		max,
     		step,
     		round,
+    		dispatch,
     		onInput,
-    		onChange,
     		$$slots,
     		proportions,
     		$$scope,
     		slots,
     		input_handler,
-    		change_handler,
+    		blur_handler,
+    		start_handler,
     		input_handler_1,
-    		change_handler_1
+    		blur_handler_1,
+    		start_handler_1
     	];
     }
 
@@ -27288,9 +27357,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$s, create_fragment$s, safe_not_equal, {
-    			label: 1,
-    			value: 0,
+    		init(this, options, instance$t, create_fragment$t, safe_not_equal, {
+    			label: 0,
+    			value: 1,
     			proportions: 11,
     			xTitle: 2,
     			yTitle: 3,
@@ -27304,13 +27373,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "NumberPair",
     			options,
-    			id: create_fragment$s.name
+    			id: create_fragment$t.name
     		});
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*value*/ ctx[0] === undefined && !("value" in props)) {
+    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
     			console.warn("<NumberPair> was created without expected prop 'value'");
     		}
     	}
@@ -27401,8 +27470,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			div = element("div");
     			t = text(/*title*/ ctx[0]);
-    			attr_dev(div, "class", "property-title svelte-l4ycw4");
-    			add_location(div, file$m, 4, 8, 88);
+    			attr_dev(div, "class", "property-title svelte-xrqic6");
+    			add_location(div, file$m, 4, 8, 111);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -27427,7 +27496,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$r(ctx) {
+    function create_fragment$s(ctx) {
     	let div1;
     	let t;
     	let div0;
@@ -27443,8 +27512,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t = space();
     			div0 = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div0, "class", "properties svelte-l4ycw4");
-    			add_location(div0, file$m, 6, 4, 144);
+    			attr_dev(div0, "class", "properties svelte-xrqic6");
+    			add_location(div0, file$m, 6, 4, 167);
+    			attr_dev(div1, "class", "property-group svelte-xrqic6");
     			add_location(div1, file$m, 2, 0, 51);
     		},
     		l: function claim(nodes) {
@@ -27500,7 +27570,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$r.name,
+    		id: create_fragment$s.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27509,7 +27579,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$r($$self, $$props, $$invalidate) {
+    function instance$s($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("PropertyGroup", slots, ['default']);
     	let { title = "" } = $$props;
@@ -27540,13 +27610,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class PropertyGroup extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$r, create_fragment$r, safe_not_equal, { title: 0 });
+    		init(this, options, instance$s, create_fragment$s, safe_not_equal, { title: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "PropertyGroup",
     			options,
-    			id: create_fragment$r.name
+    			id: create_fragment$s.name
     		});
     	}
 
@@ -27562,7 +27632,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Properties/SidePosition.svelte generated by Svelte v3.38.2 */
     const file$l = "src/Components/Properties/SidePosition.svelte";
 
-    function get_each_context$1(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[10] = list[i];
     	return child_ctx;
@@ -27637,7 +27707,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (22:12) {#each positions as x}
-    function create_each_block$1(ctx) {
+    function create_each_block$2(ctx) {
     	let each_1_anchor;
     	let each_value_1 = /*positions*/ ctx[5];
     	validate_each_argument(each_value_1);
@@ -27695,7 +27765,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$1.name,
+    		id: create_each_block$2.name,
     		type: "each",
     		source: "(22:12) {#each positions as x}",
     		ctx
@@ -27704,7 +27774,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$q(ctx) {
+    function create_fragment$r(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -27722,7 +27792,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
     	}
 
     	const block = {
@@ -27804,12 +27874,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i] = create_each_block$2(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(svg, null);
     					}
@@ -27845,7 +27915,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$q.name,
+    		id: create_fragment$r.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27854,7 +27924,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$q($$self, $$props, $$invalidate) {
+    function instance$r($$self, $$props, $$invalidate) {
     	let half;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SidePosition", slots, []);
@@ -27938,13 +28008,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SidePosition extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$q, create_fragment$q, safe_not_equal, { icon: 0, size: 1, radius: 2 });
+    		init(this, options, instance$r, create_fragment$r, safe_not_equal, { icon: 0, size: 1, radius: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SidePosition",
     			options,
-    			id: create_fragment$q.name
+    			id: create_fragment$r.name
     		});
 
     		const { ctx } = this.$$;
@@ -27981,9 +28051,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/Transform.svelte generated by Svelte v3.38.2 */
+    const file$k = "src/Components/Properties/Transform.svelte";
 
-    // (75:4) <NumberPair on:change={changePosition} value={element.position} label="Position" xTitle="X" yTitle="Y">
-    function create_default_slot_2$2(ctx) {
+    // (26:4) <NumberPair on:done                 on:start={() => onStart('position')}                 on:input={e => onUpdate('position', Point.fromObject(e.detail))}                 value={element.position} label="Position" xTitle="X" yTitle="Y">
+    function create_default_slot_4$1(ctx) {
     	let sideposition;
     	let current;
 
@@ -27992,7 +28063,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	sideposition.$on("input", /*alignOrigin*/ ctx[4]);
+    	sideposition.$on("input", /*input_handler*/ ctx[6]);
 
     	const block = {
     		c: function create() {
@@ -28019,17 +28090,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2$2.name,
+    		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(75:4) <NumberPair on:change={changePosition} value={element.position} label=\\\"Position\\\" xTitle=\\\"X\\\" yTitle=\\\"Y\\\">",
+    		source: "(26:4) <NumberPair on:done                 on:start={() => onStart('position')}                 on:input={e => onUpdate('position', Point.fromObject(e.detail))}                 value={element.position} label=\\\"Position\\\" xTitle=\\\"X\\\" yTitle=\\\"Y\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:4) <NumberPair on:change={e => setPointProperty("anchor", e.detail)} value={element.anchor} label="Anchor" xTitle="X" yTitle="Y">
-    function create_default_slot_1$3(ctx) {
+    // (34:4) <NumberPair on:done                 on:start={() => onStart('anchor')}                 on:input={e => onUpdate('anchor', Point.fromObject(e.detail))}                 value={element.anchor} label="Anchor" xTitle="X" yTitle="Y">
+    function create_default_slot_3$1(ctx) {
     	let sideposition;
     	let current;
 
@@ -28038,7 +28109,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	sideposition.$on("input", /*alignAnchor*/ ctx[3]);
+    	sideposition.$on("input", /*input_handler_2*/ ctx[10]);
 
     	const block = {
     		c: function create() {
@@ -28065,16 +28136,136 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1$3.name,
+    		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(78:4) <NumberPair on:change={e => setPointProperty(\\\"anchor\\\", e.detail)} value={element.anchor} label=\\\"Anchor\\\" xTitle=\\\"X\\\" yTitle=\\\"Y\\\">",
+    		source: "(34:4) <NumberPair on:done                 on:start={() => onStart('anchor')}                 on:input={e => onUpdate('anchor', Point.fromObject(e.detail))}                 value={element.anchor} label=\\\"Anchor\\\" xTitle=\\\"X\\\" yTitle=\\\"Y\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (74:0) <PropertyGroup title="Transform">
+    // (42:4) <NumberPair on:done                 on:start={() => onStart('rotate')}                 on:input={e => onUpdate('rotate', e.detail.x * 360 + e.detail.y)}                 value={{x: Math.trunc(element.rotate / 360), y: element.rotate % 360}} label="Rotate" xTitle="Turns" yTitle="Degrees">
+    function create_default_slot_2$2(ctx) {
+    	let sp_action_button;
+    	let sp_icon;
+    	let sp_action_button_selected_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			set_custom_element_data(sp_icon, "name", "expr:rotate");
+    			set_custom_element_data(sp_icon, "size", "s");
+    			add_location(sp_icon, file$k, 49, 12, 2323);
+    			set_custom_element_data(sp_action_button, "title", "Auto rotate");
+    			set_custom_element_data(sp_action_button, "size", "s");
+    			set_custom_element_data(sp_action_button, "emphasized", "");
+    			set_custom_element_data(sp_action_button, "quiet", "");
+    			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*element*/ ctx[1].orientation !== canvasEngine.Orientation.None);
+    			add_location(sp_action_button, file$k, 45, 8, 2025);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_action_button, anchor);
+    			append_dev(sp_action_button, sp_icon);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_action_button, "click", /*click_handler*/ ctx[14], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*element*/ 2 && sp_action_button_selected_value !== (sp_action_button_selected_value = /*element*/ ctx[1].orientation !== canvasEngine.Orientation.None)) {
+    				set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_action_button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$2.name,
+    		type: "slot",
+    		source: "(42:4) <NumberPair on:done                 on:start={() => onStart('rotate')}                 on:input={e => onUpdate('rotate', e.detail.x * 360 + e.detail.y)}                 value={{x: Math.trunc(element.rotate / 360), y: element.rotate % 360}} label=\\\"Rotate\\\" xTitle=\\\"Turns\\\" yTitle=\\\"Degrees\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (53:4) <NumberPair on:done                 on:start={() => onStart('scale')}                 on:input={e => onUpdate('scale', Point.fromObject(e.detail))}                 proportions={proportionalScale}                 value={element.scale} label="Scale" xTitle="X" yTitle="Y">
+    function create_default_slot_1$3(ctx) {
+    	let sp_action_button;
+    	let sp_icon;
+    	let sp_icon_name_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			set_custom_element_data(sp_icon, "slot", "icon");
+
+    			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*proportionalScale*/ ctx[0]
+    			? "expr:maintain-checked"
+    			: "expr:maintain-unchecked");
+
+    			set_custom_element_data(sp_icon, "size", "s");
+    			add_location(sp_icon, file$k, 58, 12, 2881);
+    			set_custom_element_data(sp_action_button, "title", "Proportional scale");
+    			set_custom_element_data(sp_action_button, "size", "s");
+    			set_custom_element_data(sp_action_button, "emphasized", "");
+    			set_custom_element_data(sp_action_button, "quiet", "");
+    			set_custom_element_data(sp_action_button, "selected", /*proportionalScale*/ ctx[0]);
+    			add_location(sp_action_button, file$k, 57, 8, 2712);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_action_button, anchor);
+    			append_dev(sp_action_button, sp_icon);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_action_button, "click", /*click_handler_1*/ ctx[18], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*proportionalScale*/ 1 && sp_icon_name_value !== (sp_icon_name_value = /*proportionalScale*/ ctx[0]
+    			? "expr:maintain-checked"
+    			: "expr:maintain-unchecked")) {
+    				set_custom_element_data(sp_icon, "name", sp_icon_name_value);
+    			}
+
+    			if (dirty & /*proportionalScale*/ 1) {
+    				set_custom_element_data(sp_action_button, "selected", /*proportionalScale*/ ctx[0]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_action_button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$3.name,
+    		type: "slot",
+    		source: "(53:4) <NumberPair on:done                 on:start={() => onStart('scale')}                 on:input={e => onUpdate('scale', Point.fromObject(e.detail))}                 proportions={proportionalScale}                 value={element.scale} label=\\\"Scale\\\" xTitle=\\\"X\\\" yTitle=\\\"Y\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (25:0) <PropertyGroup title="Transform">
     function create_default_slot$5(ctx) {
     	let numberpair0;
     	let t0;
@@ -28089,22 +28280,60 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	numberpair0 = new NumberPair({
     			props: {
-    				value: /*element*/ ctx[0].position,
+    				value: /*element*/ ctx[1].position,
     				label: "Position",
     				xTitle: "X",
     				yTitle: "Y",
+    				$$slots: { default: [create_default_slot_4$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	numberpair0.$on("done", /*done_handler*/ ctx[7]);
+    	numberpair0.$on("start", /*start_handler*/ ctx[8]);
+    	numberpair0.$on("input", /*input_handler_1*/ ctx[9]);
+
+    	numberpair1 = new NumberPair({
+    			props: {
+    				value: /*element*/ ctx[1].anchor,
+    				label: "Anchor",
+    				xTitle: "X",
+    				yTitle: "Y",
+    				$$slots: { default: [create_default_slot_3$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	numberpair1.$on("done", /*done_handler_1*/ ctx[11]);
+    	numberpair1.$on("start", /*start_handler_1*/ ctx[12]);
+    	numberpair1.$on("input", /*input_handler_3*/ ctx[13]);
+
+    	numberpair2 = new NumberPair({
+    			props: {
+    				value: {
+    					x: Math.trunc(/*element*/ ctx[1].rotate / 360),
+    					y: /*element*/ ctx[1].rotate % 360
+    				},
+    				label: "Rotate",
+    				xTitle: "Turns",
+    				yTitle: "Degrees",
     				$$slots: { default: [create_default_slot_2$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	numberpair0.$on("change", /*changePosition*/ ctx[1]);
+    	numberpair2.$on("done", /*done_handler_2*/ ctx[15]);
+    	numberpair2.$on("start", /*start_handler_2*/ ctx[16]);
+    	numberpair2.$on("input", /*input_handler_4*/ ctx[17]);
 
-    	numberpair1 = new NumberPair({
+    	numberpair3 = new NumberPair({
     			props: {
-    				value: /*element*/ ctx[0].anchor,
-    				label: "Anchor",
+    				proportions: /*proportionalScale*/ ctx[0],
+    				value: /*element*/ ctx[1].scale,
+    				label: "Scale",
     				xTitle: "X",
     				yTitle: "Y",
     				$$slots: { default: [create_default_slot_1$3] },
@@ -28113,40 +28342,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	numberpair1.$on("change", /*change_handler*/ ctx[7]);
-
-    	numberpair2 = new NumberPair({
-    			props: {
-    				value: {
-    					x: Math.trunc(/*element*/ ctx[0].rotate / 360),
-    					y: /*element*/ ctx[0].rotate % 360
-    				},
-    				label: "Rotate",
-    				xTitle: "Turns",
-    				yTitle: "Degrees"
-    			},
-    			$$inline: true
-    		});
-
-    	numberpair2.$on("change", /*changeRotate*/ ctx[6]);
-
-    	numberpair3 = new NumberPair({
-    			props: {
-    				value: /*element*/ ctx[0].scale,
-    				label: "Scale",
-    				xTitle: "X",
-    				yTitle: "Y"
-    			},
-    			$$inline: true
-    		});
-
-    	numberpair3.$on("change", /*change_handler_1*/ ctx[8]);
+    	numberpair3.$on("done", /*done_handler_3*/ ctx[19]);
+    	numberpair3.$on("start", /*start_handler_3*/ ctx[20]);
+    	numberpair3.$on("input", /*input_handler_5*/ ctx[21]);
 
     	numberpair4 = new NumberPair({
     			props: {
     				value: {
-    					x: /*element*/ ctx[0].skewAngle,
-    					y: /*element*/ ctx[0].skewAxis
+    					x: /*element*/ ctx[1].skewAngle,
+    					y: /*element*/ ctx[1].skewAxis
     				},
     				label: "Skew",
     				xTitle: "Angle",
@@ -28155,7 +28359,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	numberpair4.$on("change", /*changeSkew*/ ctx[5]);
+    	numberpair4.$on("done", /*done_handler_4*/ ctx[22]);
+    	numberpair4.$on("start", /*start_handler_4*/ ctx[23]);
+    	numberpair4.$on("input", /*input_handler_6*/ ctx[24]);
 
     	const block = {
     		c: function create() {
@@ -28183,37 +28389,47 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const numberpair0_changes = {};
-    			if (dirty & /*element*/ 1) numberpair0_changes.value = /*element*/ ctx[0].position;
+    			if (dirty & /*element*/ 2) numberpair0_changes.value = /*element*/ ctx[1].position;
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 33554432) {
     				numberpair0_changes.$$scope = { dirty, ctx };
     			}
 
     			numberpair0.$set(numberpair0_changes);
     			const numberpair1_changes = {};
-    			if (dirty & /*element*/ 1) numberpair1_changes.value = /*element*/ ctx[0].anchor;
+    			if (dirty & /*element*/ 2) numberpair1_changes.value = /*element*/ ctx[1].anchor;
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 33554432) {
     				numberpair1_changes.$$scope = { dirty, ctx };
     			}
 
     			numberpair1.$set(numberpair1_changes);
     			const numberpair2_changes = {};
 
-    			if (dirty & /*element*/ 1) numberpair2_changes.value = {
-    				x: Math.trunc(/*element*/ ctx[0].rotate / 360),
-    				y: /*element*/ ctx[0].rotate % 360
+    			if (dirty & /*element*/ 2) numberpair2_changes.value = {
+    				x: Math.trunc(/*element*/ ctx[1].rotate / 360),
+    				y: /*element*/ ctx[1].rotate % 360
     			};
+
+    			if (dirty & /*$$scope, element*/ 33554434) {
+    				numberpair2_changes.$$scope = { dirty, ctx };
+    			}
 
     			numberpair2.$set(numberpair2_changes);
     			const numberpair3_changes = {};
-    			if (dirty & /*element*/ 1) numberpair3_changes.value = /*element*/ ctx[0].scale;
+    			if (dirty & /*proportionalScale*/ 1) numberpair3_changes.proportions = /*proportionalScale*/ ctx[0];
+    			if (dirty & /*element*/ 2) numberpair3_changes.value = /*element*/ ctx[1].scale;
+
+    			if (dirty & /*$$scope, proportionalScale*/ 33554433) {
+    				numberpair3_changes.$$scope = { dirty, ctx };
+    			}
+
     			numberpair3.$set(numberpair3_changes);
     			const numberpair4_changes = {};
 
-    			if (dirty & /*element*/ 1) numberpair4_changes.value = {
-    				x: /*element*/ ctx[0].skewAngle,
-    				y: /*element*/ ctx[0].skewAxis
+    			if (dirty & /*element*/ 2) numberpair4_changes.value = {
+    				x: /*element*/ ctx[1].skewAngle,
+    				y: /*element*/ ctx[1].skewAxis
     			};
 
     			numberpair4.$set(numberpair4_changes);
@@ -28252,14 +28468,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot$5.name,
     		type: "slot",
-    		source: "(74:0) <PropertyGroup title=\\\"Transform\\\">",
+    		source: "(25:0) <PropertyGroup title=\\\"Transform\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$p(ctx) {
+    function create_fragment$q(ctx) {
     	let propertygroup;
     	let current;
 
@@ -28286,7 +28502,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, [dirty]) {
     			const propertygroup_changes = {};
 
-    			if (dirty & /*$$scope, element*/ 1025) {
+    			if (dirty & /*$$scope, element, currentSkew, proportionalScale*/ 33554439) {
     				propertygroup_changes.$$scope = { dirty, ctx };
     			}
 
@@ -28308,7 +28524,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$p.name,
+    		id: create_fragment$q.name,
     		type: "component",
     		source: "",
     		ctx
@@ -28317,131 +28533,111 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function doSnapshot(project) {
-    	var _a;
-    	project.state.snapshot();
-
-    	(_a = project.engine) === null || _a === void 0
-    	? void 0
-    	: _a.invalidate();
+    function alignAnchor(project, element, value) {
+    	return project.middleware.alignElementToOrigin(element, value.x, value.y);
     }
 
-    function instance$p($$self, $$props, $$invalidate) {
-    	let $CurrentProject;
-    	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(9, $CurrentProject = $$value));
+    function alignOrigin(project, element, value) {
+    	return project.middleware.alignOriginToElement(element, value.x, value.y);
+    }
+
+    function instance$q($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Transform", slots, []);
     	
     	
+    	const dispatch = createEventDispatcher();
     	let { element } = $$props;
+    	let { proportionalScale = false } = $$props;
 
-    	function changePosition(e) {
-    		const project = $CurrentProject;
-    		const position = canvasEngine.Point.fromObject(e.detail);
-    		let changed = false;
-
-    		for (const el of project.selection) {
-    			if (project.middleware.setElementPosition(el, position)) {
-    				changed = true;
-    			}
-    		}
-
-    		if (changed) {
-    			doSnapshot(project);
-    		}
+    	function onStart(property) {
+    		dispatch("start", { property, value: element[property] });
     	}
 
-    	function setPointProperty(property, value) {
-    		const project = $CurrentProject;
-
-    		if (project.middleware.setElementsProperty(project.selection, property, canvasEngine.Point.fromObject(value))) {
-    			doSnapshot(project);
-    		}
+    	function onUpdate(property, value) {
+    		dispatch("update", { property, value });
     	}
 
-    	function alignAnchor(e) {
-    		const project = $CurrentProject;
-
-    		if (project.middleware.alignElementToOrigin(element, e.detail.x, e.detail.y)) {
-    			doSnapshot(project);
-    		}
-    	}
-
-    	function alignOrigin(e) {
-    		const project = $CurrentProject;
-
-    		if (project.middleware.alignOriginToElement(element, e.detail.x, e.detail.y)) {
-    			doSnapshot(project);
-    		}
-    	}
-
-    	function changeSkew(e) {
-    		let property, value;
-
-    		if (element.skewAngle !== e.detail.x) {
-    			property = "skewAngle";
-    			value = e.detail.x;
-    		} else if (element.skewAxis !== e.detail.y) {
-    			property = "skewAxis";
-    			value = e.detail.y;
-    		} else {
-    			return;
-    		}
-
-    		const project = $CurrentProject;
-
-    		if (project.middleware.setElementsProperty(project.selection, property, value)) {
-    			doSnapshot(project);
-    		}
-    	}
-
-    	function changeRotate(e) {
-    		const rotate = e.detail.x * 360 + e.detail.y;
-
-    		if (rotate === element.rotate) {
-    			return;
-    		}
-
-    		const project = $CurrentProject;
-
-    		if (project.middleware.setElementsProperty(project.selection, "rotate", rotate)) {
-    			doSnapshot(project);
-    		}
-    	}
-
-    	const writable_props = ["element"];
+    	let currentSkew = "skewAngle";
+    	const writable_props = ["element", "proportionalScale"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Transform> was created with unknown prop '${key}'`);
     	});
 
-    	const change_handler = e => setPointProperty("anchor", e.detail);
-    	const change_handler_1 = e => setPointProperty("scale", e.detail);
+    	const input_handler = e => dispatch("action", { action: alignOrigin, value: e.detail });
+
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler = () => onStart("position");
+    	const input_handler_1 = e => onUpdate("position", canvasEngine.Point.fromObject(e.detail));
+    	const input_handler_2 = e => dispatch("action", { action: alignAnchor, value: e.detail });
+
+    	function done_handler_1(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler_1 = () => onStart("anchor");
+    	const input_handler_3 = e => onUpdate("anchor", canvasEngine.Point.fromObject(e.detail));
+
+    	const click_handler = () => onUpdate("orientation", element.orientation === canvasEngine.Orientation.None
+    	? canvasEngine.Orientation.Auto
+    	: canvasEngine.Orientation.None);
+
+    	function done_handler_2(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler_2 = () => onStart("rotate");
+    	const input_handler_4 = e => onUpdate("rotate", e.detail.x * 360 + e.detail.y);
+    	const click_handler_1 = () => $$invalidate(0, proportionalScale = !proportionalScale);
+
+    	function done_handler_3(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler_3 = () => onStart("scale");
+    	const input_handler_5 = e => onUpdate("scale", canvasEngine.Point.fromObject(e.detail));
+
+    	function done_handler_4(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler_4 = e => {
+    		$$invalidate(2, currentSkew = e.detail === "x" ? "skewAngle" : "skewAxis");
+    		onStart(currentSkew);
+    	};
+
+    	const input_handler_6 = e => onUpdate(currentSkew, currentSkew === "skewAngle" ? e.detail.x : e.detail.y);
 
     	$$self.$$set = $$props => {
-    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    		if ("element" in $$props) $$invalidate(1, element = $$props.element);
+    		if ("proportionalScale" in $$props) $$invalidate(0, proportionalScale = $$props.proportionalScale);
     	};
 
     	$$self.$capture_state = () => ({
     		Point: canvasEngine.Point,
+    		Orientation: canvasEngine.Orientation,
     		NumberPair,
     		PropertyGroup,
-    		CurrentProject,
     		SidePosition,
+    		createEventDispatcher,
+    		dispatch,
     		element,
-    		changePosition,
-    		setPointProperty,
+    		proportionalScale,
     		alignAnchor,
     		alignOrigin,
-    		changeSkew,
-    		changeRotate,
-    		doSnapshot,
-    		$CurrentProject
+    		onStart,
+    		onUpdate,
+    		currentSkew
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    		if ("element" in $$props) $$invalidate(1, element = $$props.element);
+    		if ("proportionalScale" in $$props) $$invalidate(0, proportionalScale = $$props.proportionalScale);
+    		if ("currentSkew" in $$props) $$invalidate(2, currentSkew = $$props.currentSkew);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -28449,34 +28645,50 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	return [
+    		proportionalScale,
     		element,
-    		changePosition,
-    		setPointProperty,
-    		alignAnchor,
-    		alignOrigin,
-    		changeSkew,
-    		changeRotate,
-    		change_handler,
-    		change_handler_1
+    		currentSkew,
+    		dispatch,
+    		onStart,
+    		onUpdate,
+    		input_handler,
+    		done_handler,
+    		start_handler,
+    		input_handler_1,
+    		input_handler_2,
+    		done_handler_1,
+    		start_handler_1,
+    		input_handler_3,
+    		click_handler,
+    		done_handler_2,
+    		start_handler_2,
+    		input_handler_4,
+    		click_handler_1,
+    		done_handler_3,
+    		start_handler_3,
+    		input_handler_5,
+    		done_handler_4,
+    		start_handler_4,
+    		input_handler_6
     	];
     }
 
     class Transform extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$p, create_fragment$p, safe_not_equal, { element: 0 });
+    		init(this, options, instance$q, create_fragment$q, safe_not_equal, { element: 1, proportionalScale: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Transform",
     			options,
-    			id: create_fragment$p.name
+    			id: create_fragment$q.name
     		});
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*element*/ ctx[0] === undefined && !("element" in props)) {
+    		if (/*element*/ ctx[1] === undefined && !("element" in props)) {
     			console.warn("<Transform> was created without expected prop 'element'");
     		}
     	}
@@ -28488,32 +28700,1736 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	set element(value) {
     		throw new Error("<Transform>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get proportionalScale() {
+    		throw new Error("<Transform>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set proportionalScale(value) {
+    		throw new Error("<Transform>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
-    /* src/Components/Properties/Brush/BrushEmpty.svelte generated by Svelte v3.38.2 */
+    /* src/Controls/SpSlider.svelte generated by Svelte v3.38.2 */
+    const file$j = "src/Controls/SpSlider.svelte";
 
-    const file$k = "src/Components/Properties/Brush/BrushEmpty.svelte";
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[48] = list[i];
+    	return child_ctx;
+    }
 
-    function create_fragment$o(ctx) {
+    // (226:4) {#if useTextbox || label}
+    function create_if_block_6(ctx) {
     	let div;
+    	let label_1;
+    	let t0;
+    	let t1;
+    	let div_role_value;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*useTextbox*/ ctx[19]) return create_if_block_7;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "No paint";
-    			add_location(div, file$k, 4, 0, 82);
+    			label_1 = element("label");
+    			t0 = text(/*label*/ ctx[1]);
+    			t1 = space();
+    			if_block.c();
+    			attr_dev(label_1, "class", "spectrum-Slider-label");
+    			attr_dev(label_1, "id", /*labelId*/ ctx[21]);
+    			attr_dev(label_1, "for", /*inputId*/ ctx[22]);
+    			add_location(label_1, file$j, 227, 12, 6782);
+    			attr_dev(div, "class", "spectrum-Slider-labelContainer");
+    			attr_dev(div, "role", div_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
+    			add_location(div, file$j, 226, 8, 6681);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, label_1);
+    			append_dev(label_1, t0);
+    			append_dev(div, t1);
+    			if_block.m(div, null);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*label*/ 2) set_data_dev(t0, /*label*/ ctx[1]);
+
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*isRange*/ 2048 && div_role_value !== (div_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined)) {
+    				attr_dev(div, "role", div_role_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_6.name,
+    		type: "if",
+    		source: "(226:4) {#if useTextbox || label}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (234:12) {:else}
+    function create_else_block_2(ctx) {
+    	let div;
+
+    	let t_value = (Array.isArray(/*computedValue*/ ctx[12])
+    	? /*computedValue*/ ctx[12].join(" - ")
+    	: /*computedValue*/ ctx[12]) + "";
+
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text(t_value);
+    			attr_dev(div, "class", "spectrum-Slider-value");
+    			attr_dev(div, "role", "textbox");
+    			attr_dev(div, "aria-readonly", "true");
+    			attr_dev(div, "aria-labelledby", /*labelId*/ ctx[21]);
+    			add_location(div, file$j, 234, 16, 7321);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*computedValue*/ 4096 && t_value !== (t_value = (Array.isArray(/*computedValue*/ ctx[12])
+    			? /*computedValue*/ ctx[12].join(" - ")
+    			: /*computedValue*/ ctx[12]) + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(234:12) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (229:12) {#if useTextbox}
+    function create_if_block_7(ctx) {
+    	let input;
+    	let input_value_value;
+    	let input_max_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			input = element("input");
+
+    			input.value = input_value_value = formatNumber(
+    				/*allowOverflow*/ ctx[8]
+    				? /*value*/ ctx[0]
+    				: /*computedValue*/ ctx[12],
+    				/*digits*/ ctx[5]
+    			);
+
+    			attr_dev(input, "tabindex", "-1");
+    			attr_dev(input, "class", "spectrum-Textfield-input spectrum-Slider-value");
+    			attr_dev(input, "type", "number");
+    			attr_dev(input, "min", /*min*/ ctx[2]);
+    			attr_dev(input, "max", input_max_value = /*allowOverflow*/ ctx[8] ? undefined : /*max*/ ctx[3]);
+    			attr_dev(input, "step", /*step*/ ctx[4]);
+    			add_location(input, file$j, 229, 16, 6911);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, input, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input, "input", /*onNumberInput*/ ctx[27], false, false, false),
+    					listen_dev(input, "keydown", self$1(onInputKeyDown), false, false, false),
+    					listen_dev(input, "blur", /*onInputBlur*/ ctx[28], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*allowOverflow, value, computedValue, digits*/ 4385 && input_value_value !== (input_value_value = formatNumber(
+    				/*allowOverflow*/ ctx[8]
+    				? /*value*/ ctx[0]
+    				: /*computedValue*/ ctx[12],
+    				/*digits*/ ctx[5]
+    			))) {
+    				prop_dev(input, "value", input_value_value);
+    			}
+
+    			if (dirty[0] & /*min*/ 4) {
+    				attr_dev(input, "min", /*min*/ ctx[2]);
+    			}
+
+    			if (dirty[0] & /*allowOverflow, max*/ 264 && input_max_value !== (input_max_value = /*allowOverflow*/ ctx[8] ? undefined : /*max*/ ctx[3])) {
+    				attr_dev(input, "max", input_max_value);
+    			}
+
+    			if (dirty[0] & /*step*/ 16) {
+    				attr_dev(input, "step", /*step*/ ctx[4]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(input);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_7.name,
+    		type: "if",
+    		source: "(229:12) {#if useTextbox}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (248:8) {:else}
+    function create_else_block_1(ctx) {
+    	let div;
+    	let div_style_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "spectrum-Slider-track");
+    			attr_dev(div, "style", div_style_value = `width: ${/*track1*/ ctx[14]}%;`);
+    			add_location(div, file$j, 248, 12, 8090);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*track1*/ 16384 && div_style_value !== (div_style_value = `width: ${/*track1*/ ctx[14]}%;`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(248:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (242:8) {#if !isRange && fill === 'ramp'}
+    function create_if_block_5(ctx) {
+    	let div;
+    	let svg;
+    	let path;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			svg = svg_element("svg");
+    			path = svg_element("path");
+    			attr_dev(path, "d", "M240,4v8c0,2.3-1.9,4.1-4.2,4L1,9C0.4,9,0,8.5,0,8c0-0.5,0.4-1,1-1l234.8-7C238.1-0.1,240,1.7,240,4z");
+    			add_location(path, file$j, 244, 20, 7904);
+    			attr_dev(svg, "viewBox", "0 0 240 16");
+    			attr_dev(svg, "preserveAspectRatio", "none");
+    			attr_dev(svg, "aria-hidden", "true");
+    			attr_dev(svg, "focusable", "false");
+    			add_location(svg, file$j, 243, 16, 7793);
+    			attr_dev(div, "class", "spectrum-Slider-ramp");
+    			add_location(div, file$j, 242, 12, 7742);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, svg);
+    			append_dev(svg, path);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(242:8) {#if !isRange && fill === 'ramp'}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (251:8) {#if hasTicks}
+    function create_if_block_3(ctx) {
+    	let div;
+    	let each_value = /*tickLabels*/ ctx[9];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			attr_dev(div, "class", "spectrum-Slider-ticks");
+    			add_location(div, file$j, 251, 12, 8210);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*tickLabels*/ 512) {
+    				each_value = /*tickLabels*/ ctx[9];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(251:8) {#if hasTicks}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (255:24) {#if tick != null}
+    function create_if_block_4(ctx) {
+    	let div;
+    	let t_value = /*tick*/ ctx[48] + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = text(t_value);
+    			attr_dev(div, "class", "spectrum-Slider-tickLabel");
+    			add_location(div, file$j, 255, 28, 8415);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*tickLabels*/ 512 && t_value !== (t_value = /*tick*/ ctx[48] + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(255:24) {#if tick != null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (253:16) {#each tickLabels as tick}
+    function create_each_block$1(ctx) {
+    	let div;
+    	let t;
+    	let if_block = /*tick*/ ctx[48] != null && create_if_block_4(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			t = space();
+    			attr_dev(div, "class", "spectrum-Slider-tick");
+    			add_location(div, file$j, 253, 20, 8309);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    			append_dev(div, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*tick*/ ctx[48] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_4(ctx);
+    					if_block.c();
+    					if_block.m(div, t);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(253:16) {#each tickLabels as tick}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (280:8) {:else}
+    function create_else_block$1(ctx) {
+    	let div;
+    	let input;
+    	let div_style_value;
+    	let dragAction_action;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			input = element("input");
+    			attr_dev(input, "id", /*inputId*/ ctx[22]);
+    			attr_dev(input, "type", "range");
+    			attr_dev(input, "class", "spectrum-Slider-input");
+    			input.disabled = /*disabled*/ ctx[7];
+    			input.value = /*computedValue*/ ctx[12];
+    			attr_dev(input, "step", /*step*/ ctx[4]);
+    			attr_dev(input, "min", /*min*/ ctx[2]);
+    			attr_dev(input, "max", /*max*/ ctx[3]);
+    			add_location(input, file$j, 283, 16, 10299);
+    			attr_dev(div, "class", "spectrum-Slider-handle");
+    			attr_dev(div, "style", div_style_value = `left: ${/*percent*/ ctx[10]}%;`);
+    			toggle_class(div, "is-dragged", /*dragged*/ ctx[17] !== 0);
+    			toggle_class(div, "is-focused", /*focused*/ ctx[16] !== 0);
+    			add_location(div, file$j, 280, 12, 10018);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, input);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input, "focus", /*onFocus*/ ctx[23], false, false, false),
+    					listen_dev(input, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
+    					listen_dev(input, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					action_destroyer(dragAction_action = dragAction.call(null, div, {
+    						surface: /*surface*/ ctx[18],
+    						move: /*dragAction_function_4*/ ctx[40],
+    						start: /*dragAction_function_5*/ ctx[41],
+    						end: /*onDragEnd*/ ctx[31]
+    					}))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*disabled*/ 128) {
+    				prop_dev(input, "disabled", /*disabled*/ ctx[7]);
+    			}
+
+    			if (dirty[0] & /*computedValue*/ 4096) {
+    				prop_dev(input, "value", /*computedValue*/ ctx[12]);
+    			}
+
+    			if (dirty[0] & /*step*/ 16) {
+    				attr_dev(input, "step", /*step*/ ctx[4]);
+    			}
+
+    			if (dirty[0] & /*min*/ 4) {
+    				attr_dev(input, "min", /*min*/ ctx[2]);
+    			}
+
+    			if (dirty[0] & /*max*/ 8) {
+    				attr_dev(input, "max", /*max*/ ctx[3]);
+    			}
+
+    			if (dirty[0] & /*percent*/ 1024 && div_style_value !== (div_style_value = `left: ${/*percent*/ ctx[10]}%;`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+
+    			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 262144) dragAction_action.update.call(null, {
+    				surface: /*surface*/ ctx[18],
+    				move: /*dragAction_function_4*/ ctx[40],
+    				start: /*dragAction_function_5*/ ctx[41],
+    				end: /*onDragEnd*/ ctx[31]
+    			});
+
+    			if (dirty[0] & /*dragged*/ 131072) {
+    				toggle_class(div, "is-dragged", /*dragged*/ ctx[17] !== 0);
+    			}
+
+    			if (dirty[0] & /*focused*/ 65536) {
+    				toggle_class(div, "is-focused", /*focused*/ ctx[16] !== 0);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$1.name,
+    		type: "else",
+    		source: "(280:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (262:8) {#if isRange}
+    function create_if_block_2(ctx) {
+    	let div0;
+    	let input0;
+    	let input0_value_value;
+    	let div0_style_value;
+    	let dragAction_action;
+    	let t0;
+    	let div1;
+    	let div1_style_value;
+    	let t1;
+    	let div2;
+    	let input1;
+    	let input1_value_value;
+    	let div2_style_value;
+    	let dragAction_action_1;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			input0 = element("input");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = space();
+    			div2 = element("div");
+    			input1 = element("input");
+    			attr_dev(input0, "id", /*inputId*/ ctx[22]);
+    			attr_dev(input0, "type", "range");
+    			attr_dev(input0, "class", "spectrum-Slider-input");
+    			input0.disabled = /*disabled*/ ctx[7];
+    			input0.value = input0_value_value = /*computedValue*/ ctx[12][0];
+    			attr_dev(input0, "step", /*step*/ ctx[4]);
+    			attr_dev(input0, "min", /*min*/ ctx[2]);
+    			attr_dev(input0, "max", /*max*/ ctx[3]);
+    			add_location(input0, file$j, 266, 16, 8960);
+    			attr_dev(div0, "class", "spectrum-Slider-handle");
+    			attr_dev(div0, "role", "presentation");
+    			attr_dev(div0, "data-slider-name", "left");
+    			attr_dev(div0, "style", div0_style_value = `left: ${/*percent*/ ctx[10][0]}%;`);
+    			toggle_class(div0, "is-dragged", /*dragged*/ ctx[17] === 1);
+    			toggle_class(div0, "is-focused", /*focused*/ ctx[16] === 1);
+    			add_location(div0, file$j, 262, 12, 8615);
+    			attr_dev(div1, "class", "spectrum-Slider-track");
+    			attr_dev(div1, "style", div1_style_value = `left: ${/*track1*/ ctx[14]}%; right: ${/*track2*/ ctx[15]}%;`);
+    			add_location(div1, file$j, 270, 12, 9253);
+    			attr_dev(input1, "id", /*inputId*/ ctx[22] + "-alt");
+    			attr_dev(input1, "type", "range");
+    			attr_dev(input1, "class", "spectrum-Slider-input");
+    			input1.disabled = /*disabled*/ ctx[7];
+    			input1.value = input1_value_value = /*computedValue*/ ctx[12][1];
+    			attr_dev(input1, "step", /*step*/ ctx[4]);
+    			attr_dev(input1, "min", /*min*/ ctx[2]);
+    			attr_dev(input1, "max", /*max*/ ctx[3]);
+    			add_location(input1, file$j, 275, 16, 9700);
+    			attr_dev(div2, "class", "spectrum-Slider-handle");
+    			attr_dev(div2, "role", "presentation");
+    			attr_dev(div2, "data-slider-name", "right");
+    			attr_dev(div2, "style", div2_style_value = `left: ${/*percent*/ ctx[10][1]}%;`);
+    			toggle_class(div2, "is-dragged", /*dragged*/ ctx[17] === 2);
+    			toggle_class(div2, "is-focused", /*focused*/ ctx[16] === 2);
+    			add_location(div2, file$j, 271, 12, 9354);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, input0);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, input1);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input0, "focus", /*onFocus*/ ctx[23], false, false, false),
+    					listen_dev(input0, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
+    					listen_dev(input0, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					action_destroyer(dragAction_action = dragAction.call(null, div0, {
+    						surface: /*surface*/ ctx[18],
+    						move: /*dragAction_function*/ ctx[36],
+    						start: /*dragAction_function_1*/ ctx[37],
+    						end: /*onDragEnd*/ ctx[31]
+    					})),
+    					listen_dev(input1, "focus", /*onFocus*/ ctx[23], false, false, false),
+    					listen_dev(input1, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
+    					listen_dev(input1, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					action_destroyer(dragAction_action_1 = dragAction.call(null, div2, {
+    						surface: /*surface*/ ctx[18],
+    						move: /*dragAction_function_2*/ ctx[38],
+    						start: /*dragAction_function_3*/ ctx[39],
+    						end: /*onDragEnd*/ ctx[31]
+    					}))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*disabled*/ 128) {
+    				prop_dev(input0, "disabled", /*disabled*/ ctx[7]);
+    			}
+
+    			if (dirty[0] & /*computedValue*/ 4096 && input0_value_value !== (input0_value_value = /*computedValue*/ ctx[12][0])) {
+    				prop_dev(input0, "value", input0_value_value);
+    			}
+
+    			if (dirty[0] & /*step*/ 16) {
+    				attr_dev(input0, "step", /*step*/ ctx[4]);
+    			}
+
+    			if (dirty[0] & /*min*/ 4) {
+    				attr_dev(input0, "min", /*min*/ ctx[2]);
+    			}
+
+    			if (dirty[0] & /*max*/ 8) {
+    				attr_dev(input0, "max", /*max*/ ctx[3]);
+    			}
+
+    			if (dirty[0] & /*percent*/ 1024 && div0_style_value !== (div0_style_value = `left: ${/*percent*/ ctx[10][0]}%;`)) {
+    				attr_dev(div0, "style", div0_style_value);
+    			}
+
+    			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 262144) dragAction_action.update.call(null, {
+    				surface: /*surface*/ ctx[18],
+    				move: /*dragAction_function*/ ctx[36],
+    				start: /*dragAction_function_1*/ ctx[37],
+    				end: /*onDragEnd*/ ctx[31]
+    			});
+
+    			if (dirty[0] & /*dragged*/ 131072) {
+    				toggle_class(div0, "is-dragged", /*dragged*/ ctx[17] === 1);
+    			}
+
+    			if (dirty[0] & /*focused*/ 65536) {
+    				toggle_class(div0, "is-focused", /*focused*/ ctx[16] === 1);
+    			}
+
+    			if (dirty[0] & /*track1, track2*/ 49152 && div1_style_value !== (div1_style_value = `left: ${/*track1*/ ctx[14]}%; right: ${/*track2*/ ctx[15]}%;`)) {
+    				attr_dev(div1, "style", div1_style_value);
+    			}
+
+    			if (dirty[0] & /*disabled*/ 128) {
+    				prop_dev(input1, "disabled", /*disabled*/ ctx[7]);
+    			}
+
+    			if (dirty[0] & /*computedValue*/ 4096 && input1_value_value !== (input1_value_value = /*computedValue*/ ctx[12][1])) {
+    				prop_dev(input1, "value", input1_value_value);
+    			}
+
+    			if (dirty[0] & /*step*/ 16) {
+    				attr_dev(input1, "step", /*step*/ ctx[4]);
+    			}
+
+    			if (dirty[0] & /*min*/ 4) {
+    				attr_dev(input1, "min", /*min*/ ctx[2]);
+    			}
+
+    			if (dirty[0] & /*max*/ 8) {
+    				attr_dev(input1, "max", /*max*/ ctx[3]);
+    			}
+
+    			if (dirty[0] & /*percent*/ 1024 && div2_style_value !== (div2_style_value = `left: ${/*percent*/ ctx[10][1]}%;`)) {
+    				attr_dev(div2, "style", div2_style_value);
+    			}
+
+    			if (dragAction_action_1 && is_function(dragAction_action_1.update) && dirty[0] & /*surface*/ 262144) dragAction_action_1.update.call(null, {
+    				surface: /*surface*/ ctx[18],
+    				move: /*dragAction_function_2*/ ctx[38],
+    				start: /*dragAction_function_3*/ ctx[39],
+    				end: /*onDragEnd*/ ctx[31]
+    			});
+
+    			if (dirty[0] & /*dragged*/ 131072) {
+    				toggle_class(div2, "is-dragged", /*dragged*/ ctx[17] === 2);
+    			}
+
+    			if (dirty[0] & /*focused*/ 65536) {
+    				toggle_class(div2, "is-focused", /*focused*/ ctx[16] === 2);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div2);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(262:8) {#if isRange}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (289:8) {#if isRange || fill !== 'ramp'}
+    function create_if_block_1$1(ctx) {
+    	let div;
+    	let div_style_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "spectrum-Slider-track");
+    			attr_dev(div, "style", div_style_value = `width: ${/*track2*/ ctx[15]}%;`);
+    			add_location(div, file$j, 289, 12, 10644);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*track2*/ 32768 && div_style_value !== (div_style_value = `width: ${/*track2*/ ctx[15]}%;`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(289:8) {#if isRange || fill !== 'ramp'}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (292:8) {#if !isRange && fill === 'middle'}
+    function create_if_block$4(ctx) {
+    	let div;
+    	let div_style_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "spectrum-Slider-fill");
+
+    			attr_dev(div, "style", div_style_value = /*percent*/ ctx[10] === 50
+    			? undefined
+    			: /*percent*/ ctx[10] < 50
+    				? `left: ${/*percent*/ ctx[10]}%; width: ${50 - /*percent*/ ctx[10]}%`
+    				: `left: 50%; width: ${/*percent*/ ctx[10] - 50}%`);
+
+    			toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > 50);
+    			add_location(div, file$j, 292, 12, 10785);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*percent*/ 1024 && div_style_value !== (div_style_value = /*percent*/ ctx[10] === 50
+    			? undefined
+    			: /*percent*/ ctx[10] < 50
+    				? `left: ${/*percent*/ ctx[10]}%; width: ${50 - /*percent*/ ctx[10]}%`
+    				: `left: 50%; width: ${/*percent*/ ctx[10] - 50}%`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+
+    			if (dirty[0] & /*percent*/ 1024) {
+    				toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > 50);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$4.name,
+    		type: "if",
+    		source: "(292:8) {#if !isRange && fill === 'middle'}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$p(ctx) {
+    	let div1;
+    	let t0;
+    	let div0;
+    	let t1;
+    	let t2;
+    	let t3;
+    	let t4;
+    	let div0_role_value;
+    	let div1_role_value;
+    	let div1_aria_labelledby_value;
+    	let mounted;
+    	let dispose;
+    	let if_block0 = (/*useTextbox*/ ctx[19] || /*label*/ ctx[1]) && create_if_block_6(ctx);
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (!/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "ramp") return create_if_block_5;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type_1(ctx);
+    	let if_block1 = current_block_type(ctx);
+    	let if_block2 = /*hasTicks*/ ctx[13] && create_if_block_3(ctx);
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (/*isRange*/ ctx[11]) return create_if_block_2;
+    		return create_else_block$1;
+    	}
+
+    	let current_block_type_1 = select_block_type_2(ctx);
+    	let if_block3 = current_block_type_1(ctx);
+    	let if_block4 = (/*isRange*/ ctx[11] || /*fill*/ ctx[6] !== "ramp") && create_if_block_1$1(ctx);
+    	let if_block5 = !/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "middle" && create_if_block$4(ctx);
+
+    	let div1_levels = [
+    		/*$$restProps*/ ctx[32],
+    		{ class: /*computedClass*/ ctx[20] },
+    		{
+    			role: div1_role_value = /*isRange*/ ctx[11] ? "group" : undefined
+    		},
+    		{
+    			"aria-labelledby": div1_aria_labelledby_value = /*isRange*/ ctx[11] && /*label*/ ctx[1]
+    			? /*labelId*/ ctx[21]
+    			: undefined
+    		}
+    	];
+
+    	let div1_data = {};
+
+    	for (let i = 0; i < div1_levels.length; i += 1) {
+    		div1_data = assign(div1_data, div1_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			if (if_block0) if_block0.c();
+    			t0 = space();
+    			div0 = element("div");
+    			if_block1.c();
+    			t1 = space();
+    			if (if_block2) if_block2.c();
+    			t2 = space();
+    			if_block3.c();
+    			t3 = space();
+    			if (if_block4) if_block4.c();
+    			t4 = space();
+    			if (if_block5) if_block5.c();
+    			attr_dev(div0, "class", "spectrum-Slider-controls");
+    			attr_dev(div0, "role", div0_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
+    			add_location(div0, file$j, 240, 4, 7586);
+    			set_attributes(div1, div1_data);
+    			add_location(div1, file$j, 222, 0, 6474);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			if (if_block0) if_block0.m(div1, null);
+    			append_dev(div1, t0);
+    			append_dev(div1, div0);
+    			if_block1.m(div0, null);
+    			append_dev(div0, t1);
+    			if (if_block2) if_block2.m(div0, null);
+    			append_dev(div0, t2);
+    			if_block3.m(div0, null);
+    			append_dev(div0, t3);
+    			if (if_block4) if_block4.m(div0, null);
+    			append_dev(div0, t4);
+    			if (if_block5) if_block5.m(div0, null);
+    			/*div1_binding*/ ctx[42](div1);
+
+    			if (!mounted) {
+    				dispose = listen_dev(div0, "click", /*onClick*/ ctx[25], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*useTextbox*/ ctx[19] || /*label*/ ctx[1]) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_6(ctx);
+    					if_block0.c();
+    					if_block0.m(div1, t0);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div0, t1);
+    				}
+    			}
+
+    			if (/*hasTicks*/ ctx[13]) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block_3(ctx);
+    					if_block2.c();
+    					if_block2.m(div0, t2);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_2(ctx)) && if_block3) {
+    				if_block3.p(ctx, dirty);
+    			} else {
+    				if_block3.d(1);
+    				if_block3 = current_block_type_1(ctx);
+
+    				if (if_block3) {
+    					if_block3.c();
+    					if_block3.m(div0, t3);
+    				}
+    			}
+
+    			if (/*isRange*/ ctx[11] || /*fill*/ ctx[6] !== "ramp") {
+    				if (if_block4) {
+    					if_block4.p(ctx, dirty);
+    				} else {
+    					if_block4 = create_if_block_1$1(ctx);
+    					if_block4.c();
+    					if_block4.m(div0, t4);
+    				}
+    			} else if (if_block4) {
+    				if_block4.d(1);
+    				if_block4 = null;
+    			}
+
+    			if (!/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "middle") {
+    				if (if_block5) {
+    					if_block5.p(ctx, dirty);
+    				} else {
+    					if_block5 = create_if_block$4(ctx);
+    					if_block5.c();
+    					if_block5.m(div0, null);
+    				}
+    			} else if (if_block5) {
+    				if_block5.d(1);
+    				if_block5 = null;
+    			}
+
+    			if (dirty[0] & /*isRange*/ 2048 && div0_role_value !== (div0_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined)) {
+    				attr_dev(div0, "role", div0_role_value);
+    			}
+
+    			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
+    				dirty[1] & /*$$restProps*/ 2 && /*$$restProps*/ ctx[32],
+    				dirty[0] & /*computedClass*/ 1048576 && { class: /*computedClass*/ ctx[20] },
+    				dirty[0] & /*isRange*/ 2048 && div1_role_value !== (div1_role_value = /*isRange*/ ctx[11] ? "group" : undefined) && { role: div1_role_value },
+    				dirty[0] & /*isRange, label*/ 2050 && div1_aria_labelledby_value !== (div1_aria_labelledby_value = /*isRange*/ ctx[11] && /*label*/ ctx[1]
+    				? /*labelId*/ ctx[21]
+    				: undefined) && {
+    					"aria-labelledby": div1_aria_labelledby_value
+    				}
+    			]));
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if (if_block0) if_block0.d();
+    			if_block1.d();
+    			if (if_block2) if_block2.d();
+    			if_block3.d();
+    			if (if_block4) if_block4.d();
+    			if (if_block5) if_block5.d();
+    			/*div1_binding*/ ctx[42](null);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$p.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function onInputKeyDown(e) {
+    	if (e.key === "Enter" || e.key === "Escape") {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		e.target.blur();
+    	}
+    }
+
+    function instance$p($$self, $$props, $$invalidate) {
+    	let isRange;
+    	let computedValue;
+    	let hasTicks;
+    	let useTextbox;
+    	let computedClass;
+
+    	const omit_props_names = [
+    		"label","value","min","max","step","round","digits","fill","ticks","disabled","editable","allowOverflow"
+    	];
+
+    	let $$restProps = compute_rest_props($$props, omit_props_names);
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("SpSlider", slots, []);
+    	const dispatch = createEventDispatcher();
+    	let { label = undefined } = $$props;
+    	let { value = 0 } = $$props;
+    	let { min = 0 } = $$props;
+    	let { max = 100 } = $$props;
+    	let { step = 1 } = $$props;
+    	let { round = null } = $$props;
+    	let { digits = 4 } = $$props;
+    	let { fill = "none" } = $$props;
+    	let { ticks = 0 } = $$props;
+    	let { disabled = false } = $$props;
+    	let { editable = false } = $$props;
+    	let { allowOverflow = false } = $$props;
+    	const genId = nextId();
+    	const labelId = `spectrum-slider-label-${genId}`;
+    	const inputId = `spectrum-slider-input-${genId}`;
+    	let tickLabels;
+    	let track1, track2, percent;
+    	let focused = 0;
+    	let dragged = 0;
+    	let started = false;
+    	let surface;
+
+    	function onFocus(e) {
+    		if (isRange) {
+    			$$invalidate(16, focused = e.target.closest(".spectrum-Slider-handle").dataset.sliderName === "left"
+    			? 1
+    			: 2);
+    		} else {
+    			$$invalidate(16, focused = 1);
+    		}
+
+    		dispatch("focus");
+    	}
+
+    	function onSliderBlur() {
+    		$$invalidate(16, focused = 0);
+
+    		if (started) {
+    			started = false;
+    			dispatch("done");
+    		}
+
+    		dispatch("blur");
+    	}
+
+    	function onClick(e) {
+    		const list = e.target.classList;
+
+    		if (list.contains("spectrum-Slider-handle") || list.contains("spectrum-Slider-input")) {
+    			return;
+    		}
+
+    		let v = getXYPercent(e, surface.getBoundingClientRect()).x;
+    		v = clampStep(getPercentValue(v, min, max), min, max, round !== null && round !== void 0 ? round : step);
+
+    		if (isRange) {
+    			const index = Math.abs(v - computedValue[0]) <= Math.abs(v - computedValue[1])
+    			? 0
+    			: 1;
+
+    			if (computedValue[index] === v) {
+    				return;
+    			}
+
+    			const arr = [...computedValue];
+    			arr[index] = v;
+    			v = arr;
+    		} else if (v === value) {
+    			return;
+    		}
+
+    		$$invalidate(0, value = v);
+    		dispatch("start", 0);
+    		dispatch("input", value);
+    		dispatch("done");
+    	}
+
+    	function onSliderKeyDown(e) {
+    		if (!focused) {
+    			return;
+    		}
+
+    		let add = 0;
+
+    		switch (e.key) {
+    			case "ArrowDown":
+    			case "ArrowLeft":
+    				add = -step;
+    				break;
+    			case "ArrowUp":
+    			case "ArrowRight":
+    				add = +step;
+    				break;
+    			default:
+    				return;
+    		}
+
+    		let v;
+
+    		if (isRange) {
+    			if (focused === 1) {
+    				v = clampStep(computedValue[0] + add, min, computedValue[1], round !== null && round !== void 0 ? round : step);
+
+    				if (v === computedValue[0]) {
+    					return;
+    				}
+
+    				v = [v, computedValue[1]];
+    			} else {
+    				v = clampStep(computedValue[1] + add, computedValue[0], max, round !== null && round !== void 0 ? round : step);
+
+    				if (v === computedValue[1]) {
+    					return;
+    				}
+
+    				v = [computedValue[0], v];
+    			}
+    		} else {
+    			v = clampStep(computedValue + add, min, max, round !== null && round !== void 0 ? round : step);
+
+    			if (value === v) {
+    				return;
+    			}
+    		}
+
+    		if (!started) {
+    			started = true;
+    			dispatch("start", focused);
+    		}
+
+    		$$invalidate(0, value = v);
+    		dispatch("input", value);
+    	}
+
+    	function onNumberInput(e) {
+    		if (!started) {
+    			started = true;
+    			dispatch("start", focused);
+    		}
+
+    		let v = e.target.valueAsNumber;
+
+    		if (Number.isNaN(v) || !Number.isFinite(v)) {
+    			return;
+    		}
+
+    		v = clampStep(v, min, allowOverflow ? Number.POSITIVE_INFINITY : max, round !== null && round !== void 0 ? round : step);
+    		$$invalidate(0, value = v);
+    		dispatch("input", value);
+    	}
+
+    	function onInputBlur(e) {
+    		let v = e.target.valueAsNumber;
+    		v = clampStep(v, min, allowOverflow ? Number.POSITIVE_INFINITY : max, round !== null && round !== void 0 ? round : step);
+
+    		if (v !== value) {
+    			$$invalidate(0, value = v);
+    			dispatch("change", value);
+    		}
+
+    		e.target.valueAsNumber = v;
+
+    		if (started) {
+    			started = false;
+    			dispatch("done");
+    		}
+    	}
+
+    	function clampRange(value) {
+    		let a = clampStep(value[0], min, max, round !== null && round !== void 0 ? round : step);
+    		let b = clampStep(value[1], min, max, round !== null && round !== void 0 ? round : step);
+    		return a <= b ? [a, b] : [b, a];
+    	}
+
+    	function onDragStart(index) {
+    		$$invalidate(17, dragged = index);
+    		dispatch("start", index);
+    	}
+
+    	function onDrag(v, index) {
+    		v = getPercentValue(v, min, max);
+
+    		if (isRange) {
+    			index--;
+
+    			v = index === 0
+    			? clampStep(v, min, computedValue[1], round !== null && round !== void 0 ? round : step)
+    			: clampStep(v, computedValue[0], max, round !== null && round !== void 0 ? round : step);
+
+    			if (computedValue[index] === v) {
+    				return;
+    			}
+
+    			v = index === 0
+    			? [v, computedValue[1]]
+    			: [computedValue[0], v];
+    		} else {
+    			v = clampStep(v, min, max, round !== null && round !== void 0 ? round : step);
+
+    			if (computedValue === v) {
+    				return;
+    			}
+    		}
+
+    		$$invalidate(0, value = v);
+    		dispatch("input", v);
+    	}
+
+    	function onDragEnd(changed) {
+    		$$invalidate(17, dragged = 0);
+
+    		if (changed) {
+    			dispatch("change", computedValue);
+    		}
+
+    		dispatch("done");
+    	}
+
+    	const dragAction_function = v => onDrag(v.x, 1);
+    	const dragAction_function_1 = () => onDragStart(1);
+    	const dragAction_function_2 = v => onDrag(v.x, 2);
+    	const dragAction_function_3 = () => onDragStart(2);
+    	const dragAction_function_4 = v => onDrag(v.x, 1);
+    	const dragAction_function_5 = () => onDragStart(1);
+
+    	function div1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			surface = $$value;
+    			$$invalidate(18, surface);
+    		});
+    	}
+
+    	$$self.$$set = $$new_props => {
+    		$$invalidate(47, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(32, $$restProps = compute_rest_props($$props, omit_props_names));
+    		if ("label" in $$new_props) $$invalidate(1, label = $$new_props.label);
+    		if ("value" in $$new_props) $$invalidate(0, value = $$new_props.value);
+    		if ("min" in $$new_props) $$invalidate(2, min = $$new_props.min);
+    		if ("max" in $$new_props) $$invalidate(3, max = $$new_props.max);
+    		if ("step" in $$new_props) $$invalidate(4, step = $$new_props.step);
+    		if ("round" in $$new_props) $$invalidate(33, round = $$new_props.round);
+    		if ("digits" in $$new_props) $$invalidate(5, digits = $$new_props.digits);
+    		if ("fill" in $$new_props) $$invalidate(6, fill = $$new_props.fill);
+    		if ("ticks" in $$new_props) $$invalidate(34, ticks = $$new_props.ticks);
+    		if ("disabled" in $$new_props) $$invalidate(7, disabled = $$new_props.disabled);
+    		if ("editable" in $$new_props) $$invalidate(35, editable = $$new_props.editable);
+    		if ("allowOverflow" in $$new_props) $$invalidate(8, allowOverflow = $$new_props.allowOverflow);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		mergeClasses,
+    		getPercentage,
+    		getPercentValue,
+    		clampStep,
+    		getXYPercent,
+    		dragAction,
+    		nextId,
+    		formatNumber,
+    		createEventDispatcher,
+    		dispatch,
+    		label,
+    		value,
+    		min,
+    		max,
+    		step,
+    		round,
+    		digits,
+    		fill,
+    		ticks,
+    		disabled,
+    		editable,
+    		allowOverflow,
+    		genId,
+    		labelId,
+    		inputId,
+    		tickLabels,
+    		track1,
+    		track2,
+    		percent,
+    		focused,
+    		dragged,
+    		started,
+    		surface,
+    		onFocus,
+    		onSliderBlur,
+    		onClick,
+    		onSliderKeyDown,
+    		onNumberInput,
+    		onInputBlur,
+    		onInputKeyDown,
+    		clampRange,
+    		onDragStart,
+    		onDrag,
+    		onDragEnd,
+    		isRange,
+    		computedValue,
+    		hasTicks,
+    		useTextbox,
+    		computedClass
+    	});
+
+    	$$self.$inject_state = $$new_props => {
+    		$$invalidate(47, $$props = assign(assign({}, $$props), $$new_props));
+    		if ("label" in $$props) $$invalidate(1, label = $$new_props.label);
+    		if ("value" in $$props) $$invalidate(0, value = $$new_props.value);
+    		if ("min" in $$props) $$invalidate(2, min = $$new_props.min);
+    		if ("max" in $$props) $$invalidate(3, max = $$new_props.max);
+    		if ("step" in $$props) $$invalidate(4, step = $$new_props.step);
+    		if ("round" in $$props) $$invalidate(33, round = $$new_props.round);
+    		if ("digits" in $$props) $$invalidate(5, digits = $$new_props.digits);
+    		if ("fill" in $$props) $$invalidate(6, fill = $$new_props.fill);
+    		if ("ticks" in $$props) $$invalidate(34, ticks = $$new_props.ticks);
+    		if ("disabled" in $$props) $$invalidate(7, disabled = $$new_props.disabled);
+    		if ("editable" in $$props) $$invalidate(35, editable = $$new_props.editable);
+    		if ("allowOverflow" in $$props) $$invalidate(8, allowOverflow = $$new_props.allowOverflow);
+    		if ("tickLabels" in $$props) $$invalidate(9, tickLabels = $$new_props.tickLabels);
+    		if ("track1" in $$props) $$invalidate(14, track1 = $$new_props.track1);
+    		if ("track2" in $$props) $$invalidate(15, track2 = $$new_props.track2);
+    		if ("percent" in $$props) $$invalidate(10, percent = $$new_props.percent);
+    		if ("focused" in $$props) $$invalidate(16, focused = $$new_props.focused);
+    		if ("dragged" in $$props) $$invalidate(17, dragged = $$new_props.dragged);
+    		if ("started" in $$props) started = $$new_props.started;
+    		if ("surface" in $$props) $$invalidate(18, surface = $$new_props.surface);
+    		if ("isRange" in $$props) $$invalidate(11, isRange = $$new_props.isRange);
+    		if ("computedValue" in $$props) $$invalidate(12, computedValue = $$new_props.computedValue);
+    		if ("hasTicks" in $$props) $$invalidate(13, hasTicks = $$new_props.hasTicks);
+    		if ("useTextbox" in $$props) $$invalidate(19, useTextbox = $$new_props.useTextbox);
+    		if ("computedClass" in $$props) $$invalidate(20, computedClass = $$new_props.computedClass);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*value*/ 1) {
+    			$$invalidate(11, isRange = Array.isArray(value));
+    		}
+
+    		if ($$self.$$.dirty[0] & /*isRange, value, min, max, step*/ 2077 | $$self.$$.dirty[1] & /*round*/ 4) {
+    			$$invalidate(12, computedValue = isRange
+    			? clampRange(value)
+    			: clampStep(value, min, max, round !== null && round !== void 0 ? round : step));
+    		}
+
+    		if ($$self.$$.dirty[1] & /*ticks*/ 8) {
+    			$$invalidate(13, hasTicks = Array.isArray(ticks) ? ticks.length > 0 : ticks > 0);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*tickLabels*/ 512 | $$self.$$.dirty[1] & /*ticks*/ 8) {
+    			{
+    				if (Array.isArray(ticks)) {
+    					$$invalidate(9, tickLabels = ticks);
+    				} else {
+    					$$invalidate(9, tickLabels = []);
+
+    					for (let i = 0; i < ticks; i++) {
+    						tickLabels.push(null);
+    					}
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*isRange, computedValue, min, max, percent*/ 7180) {
+    			{
+    				if (isRange) {
+    					$$invalidate(10, percent = [
+    						getPercentage(computedValue[0], min, max),
+    						getPercentage(computedValue[1], min, max)
+    					]);
+
+    					$$invalidate(14, track1 = percent[0]);
+    					$$invalidate(15, track2 = 100 - percent[1]);
+    				} else {
+    					$$invalidate(10, percent = getPercentage(computedValue, min, max));
+    					$$invalidate(14, track1 = percent);
+    					$$invalidate(15, track2 = 100 - percent);
+    				}
+    			}
+    		}
+
+    		if ($$self.$$.dirty[0] & /*isRange*/ 2048 | $$self.$$.dirty[1] & /*editable*/ 16) {
+    			$$invalidate(19, useTextbox = editable && !isRange);
+    		}
+
+    		$$invalidate(20, computedClass = mergeClasses(
+    			{
+    				"spectrum-Slider": true,
+    				"spectrum-Slider--filled": fill === "start",
+    				"spectrum-Slider--ramp": fill === "ramp",
+    				"spectrum-Slider--range": isRange,
+    				"spectrum-Slider--tick": hasTicks && typeof ticks === "number",
+    				"is-disabled": disabled
+    			},
+    			$$props.class
+    		));
+    	};
+
+    	$$props = exclude_internal_props($$props);
+
+    	return [
+    		value,
+    		label,
+    		min,
+    		max,
+    		step,
+    		digits,
+    		fill,
+    		disabled,
+    		allowOverflow,
+    		tickLabels,
+    		percent,
+    		isRange,
+    		computedValue,
+    		hasTicks,
+    		track1,
+    		track2,
+    		focused,
+    		dragged,
+    		surface,
+    		useTextbox,
+    		computedClass,
+    		labelId,
+    		inputId,
+    		onFocus,
+    		onSliderBlur,
+    		onClick,
+    		onSliderKeyDown,
+    		onNumberInput,
+    		onInputBlur,
+    		onDragStart,
+    		onDrag,
+    		onDragEnd,
+    		$$restProps,
+    		round,
+    		ticks,
+    		editable,
+    		dragAction_function,
+    		dragAction_function_1,
+    		dragAction_function_2,
+    		dragAction_function_3,
+    		dragAction_function_4,
+    		dragAction_function_5,
+    		div1_binding
+    	];
+    }
+
+    class SpSlider extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance$p,
+    			create_fragment$p,
+    			safe_not_equal,
+    			{
+    				label: 1,
+    				value: 0,
+    				min: 2,
+    				max: 3,
+    				step: 4,
+    				round: 33,
+    				digits: 5,
+    				fill: 6,
+    				ticks: 34,
+    				disabled: 7,
+    				editable: 35,
+    				allowOverflow: 8
+    			},
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SpSlider",
+    			options,
+    			id: create_fragment$p.name
+    		});
+    	}
+
+    	get label() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set label(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get value() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get min() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set min(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get max() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set max(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get step() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set step(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get round() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set round(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get digits() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set digits(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get fill() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set fill(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get ticks() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set ticks(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get editable() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set editable(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get allowOverflow() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set allowOverflow(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Properties/PropertyItem.svelte generated by Svelte v3.38.2 */
+
+    const file$i = "src/Components/Properties/PropertyItem.svelte";
+
+    function create_fragment$o(ctx) {
+    	let div;
+    	let sp_field_label;
+    	let t0;
+    	let t1;
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[2].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			sp_field_label = element("sp-field-label");
+    			t0 = text(/*title*/ ctx[0]);
+    			t1 = space();
+    			if (default_slot) default_slot.c();
+    			set_custom_element_data(sp_field_label, "class", "svelte-bnpazb");
+    			add_location(sp_field_label, file$i, 3, 4, 78);
+    			attr_dev(div, "class", "property-item svelte-bnpazb");
+    			add_location(div, file$i, 2, 0, 46);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
+    			append_dev(div, sp_field_label);
+    			append_dev(sp_field_label, t0);
+    			append_dev(div, t1);
+
+    			if (default_slot) {
+    				default_slot.m(div, null);
+    			}
+
+    			current = true;
     		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*title*/ 1) set_data_dev(t0, /*title*/ ctx[0]);
+
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[1], dirty, null, null);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
+    			if (default_slot) default_slot.d(detaching);
     		}
     	};
 
@@ -28529,6 +30445,1063 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     function instance$o($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("PropertyItem", slots, ['default']);
+    	let { title } = $$props;
+    	const writable_props = ["title"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<PropertyItem> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
+    		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({ title });
+
+    	$$self.$inject_state = $$props => {
+    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [title, $$scope, slots];
+    }
+
+    class PropertyItem extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$o, create_fragment$o, safe_not_equal, { title: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "PropertyItem",
+    			options,
+    			id: create_fragment$o.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*title*/ ctx[0] === undefined && !("title" in props)) {
+    			console.warn("<PropertyItem> was created without expected prop 'title'");
+    		}
+    	}
+
+    	get title() {
+    		throw new Error("<PropertyItem>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set title(value) {
+    		throw new Error("<PropertyItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Properties/Compositing.svelte generated by Svelte v3.38.2 */
+    const file$h = "src/Components/Properties/Compositing.svelte";
+
+    // (16:4) <PropertyItem title="Blend">
+    function create_default_slot_2$1(ctx) {
+    	let sp_picker;
+    	let sp_menu_item0;
+    	let t0;
+    	let t1;
+    	let sp_menu_divider0;
+    	let t2;
+    	let sp_menu_item1;
+    	let t3;
+    	let t4;
+    	let sp_menu_item2;
+    	let t5;
+    	let t6;
+    	let sp_menu_item3;
+    	let t7;
+    	let t8;
+    	let sp_menu_divider1;
+    	let t9;
+    	let sp_menu_item4;
+    	let t10;
+    	let t11;
+    	let sp_menu_item5;
+    	let t12;
+    	let t13;
+    	let sp_menu_divider2;
+    	let t14;
+    	let sp_menu_item6;
+    	let t15;
+    	let t16;
+    	let sp_menu_item7;
+    	let t17;
+    	let t18;
+    	let sp_menu_item8;
+    	let t19;
+    	let t20;
+    	let sp_menu_divider3;
+    	let t21;
+    	let sp_menu_item9;
+    	let t22;
+    	let t23;
+    	let sp_menu_item10;
+    	let t24;
+    	let t25;
+    	let sp_menu_divider4;
+    	let t26;
+    	let sp_menu_item11;
+    	let t27;
+    	let t28;
+    	let sp_menu_item12;
+    	let t29;
+    	let t30;
+    	let sp_menu_item13;
+    	let t31;
+    	let t32;
+    	let sp_menu_divider5;
+    	let t33;
+    	let sp_menu_item14;
+    	let t34;
+    	let t35;
+    	let sp_menu_item15;
+    	let t36;
+    	let sp_picker_value_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			sp_picker = element("sp-picker");
+    			sp_menu_item0 = element("sp-menu-item");
+    			t0 = text("Normal");
+    			t1 = space();
+    			sp_menu_divider0 = element("sp-menu-divider");
+    			t2 = space();
+    			sp_menu_item1 = element("sp-menu-item");
+    			t3 = text("Color");
+    			t4 = space();
+    			sp_menu_item2 = element("sp-menu-item");
+    			t5 = text("Color burn");
+    			t6 = space();
+    			sp_menu_item3 = element("sp-menu-item");
+    			t7 = text("Color dodge");
+    			t8 = space();
+    			sp_menu_divider1 = element("sp-menu-divider");
+    			t9 = space();
+    			sp_menu_item4 = element("sp-menu-item");
+    			t10 = text("Darken");
+    			t11 = space();
+    			sp_menu_item5 = element("sp-menu-item");
+    			t12 = text("Lighten");
+    			t13 = space();
+    			sp_menu_divider2 = element("sp-menu-divider");
+    			t14 = space();
+    			sp_menu_item6 = element("sp-menu-item");
+    			t15 = text("Difference");
+    			t16 = space();
+    			sp_menu_item7 = element("sp-menu-item");
+    			t17 = text("Exclusion");
+    			t18 = space();
+    			sp_menu_item8 = element("sp-menu-item");
+    			t19 = text("Multiply");
+    			t20 = space();
+    			sp_menu_divider3 = element("sp-menu-divider");
+    			t21 = space();
+    			sp_menu_item9 = element("sp-menu-item");
+    			t22 = text("SoftLight");
+    			t23 = space();
+    			sp_menu_item10 = element("sp-menu-item");
+    			t24 = text("HardLight");
+    			t25 = space();
+    			sp_menu_divider4 = element("sp-menu-divider");
+    			t26 = space();
+    			sp_menu_item11 = element("sp-menu-item");
+    			t27 = text("Hue");
+    			t28 = space();
+    			sp_menu_item12 = element("sp-menu-item");
+    			t29 = text("Saturation");
+    			t30 = space();
+    			sp_menu_item13 = element("sp-menu-item");
+    			t31 = text("Luminosity");
+    			t32 = space();
+    			sp_menu_divider5 = element("sp-menu-divider");
+    			t33 = space();
+    			sp_menu_item14 = element("sp-menu-item");
+    			t34 = text("Overlay");
+    			t35 = space();
+    			sp_menu_item15 = element("sp-menu-item");
+    			t36 = text("Screen");
+    			set_custom_element_data(sp_menu_item0, "value", canvasEngine.BlendMode.Normal.toString());
+    			add_location(sp_menu_item0, file$h, 18, 12, 930);
+    			add_location(sp_menu_divider0, file$h, 19, 12, 1014);
+    			set_custom_element_data(sp_menu_item1, "value", canvasEngine.BlendMode.Color.toString());
+    			add_location(sp_menu_item1, file$h, 20, 12, 1062);
+    			set_custom_element_data(sp_menu_item2, "value", canvasEngine.BlendMode.ColorBurn.toString());
+    			add_location(sp_menu_item2, file$h, 21, 12, 1144);
+    			set_custom_element_data(sp_menu_item3, "value", canvasEngine.BlendMode.ColorDodge.toString());
+    			add_location(sp_menu_item3, file$h, 22, 12, 1235);
+    			add_location(sp_menu_divider1, file$h, 23, 12, 1328);
+    			set_custom_element_data(sp_menu_item4, "value", canvasEngine.BlendMode.Darken.toString());
+    			add_location(sp_menu_item4, file$h, 24, 12, 1376);
+    			set_custom_element_data(sp_menu_item5, "value", canvasEngine.BlendMode.Lighten.toString());
+    			add_location(sp_menu_item5, file$h, 25, 12, 1460);
+    			add_location(sp_menu_divider2, file$h, 26, 12, 1546);
+    			set_custom_element_data(sp_menu_item6, "value", canvasEngine.BlendMode.Difference.toString());
+    			add_location(sp_menu_item6, file$h, 27, 12, 1594);
+    			set_custom_element_data(sp_menu_item7, "value", canvasEngine.BlendMode.Exclusion.toString());
+    			add_location(sp_menu_item7, file$h, 28, 12, 1686);
+    			set_custom_element_data(sp_menu_item8, "value", canvasEngine.BlendMode.Multiply.toString());
+    			add_location(sp_menu_item8, file$h, 29, 12, 1776);
+    			add_location(sp_menu_divider3, file$h, 30, 12, 1864);
+    			set_custom_element_data(sp_menu_item9, "value", canvasEngine.BlendMode.SoftLight.toString());
+    			add_location(sp_menu_item9, file$h, 31, 12, 1912);
+    			set_custom_element_data(sp_menu_item10, "value", canvasEngine.BlendMode.HardLight.toString());
+    			add_location(sp_menu_item10, file$h, 32, 12, 2002);
+    			add_location(sp_menu_divider4, file$h, 33, 12, 2092);
+    			set_custom_element_data(sp_menu_item11, "value", canvasEngine.BlendMode.Hue.toString());
+    			add_location(sp_menu_item11, file$h, 34, 12, 2140);
+    			set_custom_element_data(sp_menu_item12, "value", canvasEngine.BlendMode.Saturation.toString());
+    			add_location(sp_menu_item12, file$h, 35, 12, 2218);
+    			set_custom_element_data(sp_menu_item13, "value", canvasEngine.BlendMode.Luminosity.toString());
+    			add_location(sp_menu_item13, file$h, 36, 12, 2310);
+    			add_location(sp_menu_divider5, file$h, 37, 12, 2402);
+    			set_custom_element_data(sp_menu_item14, "value", canvasEngine.BlendMode.Overlay.toString());
+    			add_location(sp_menu_item14, file$h, 38, 12, 2450);
+    			set_custom_element_data(sp_menu_item15, "value", canvasEngine.BlendMode.Screen.toString());
+    			add_location(sp_menu_item15, file$h, 39, 12, 2536);
+    			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*element*/ ctx[0].blend.toString());
+    			set_style(sp_picker, "flex", "1");
+    			set_custom_element_data(sp_picker, "size", "s");
+    			add_location(sp_picker, file$h, 16, 8, 739);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_picker, anchor);
+    			append_dev(sp_picker, sp_menu_item0);
+    			append_dev(sp_menu_item0, t0);
+    			append_dev(sp_picker, t1);
+    			append_dev(sp_picker, sp_menu_divider0);
+    			append_dev(sp_picker, t2);
+    			append_dev(sp_picker, sp_menu_item1);
+    			append_dev(sp_menu_item1, t3);
+    			append_dev(sp_picker, t4);
+    			append_dev(sp_picker, sp_menu_item2);
+    			append_dev(sp_menu_item2, t5);
+    			append_dev(sp_picker, t6);
+    			append_dev(sp_picker, sp_menu_item3);
+    			append_dev(sp_menu_item3, t7);
+    			append_dev(sp_picker, t8);
+    			append_dev(sp_picker, sp_menu_divider1);
+    			append_dev(sp_picker, t9);
+    			append_dev(sp_picker, sp_menu_item4);
+    			append_dev(sp_menu_item4, t10);
+    			append_dev(sp_picker, t11);
+    			append_dev(sp_picker, sp_menu_item5);
+    			append_dev(sp_menu_item5, t12);
+    			append_dev(sp_picker, t13);
+    			append_dev(sp_picker, sp_menu_divider2);
+    			append_dev(sp_picker, t14);
+    			append_dev(sp_picker, sp_menu_item6);
+    			append_dev(sp_menu_item6, t15);
+    			append_dev(sp_picker, t16);
+    			append_dev(sp_picker, sp_menu_item7);
+    			append_dev(sp_menu_item7, t17);
+    			append_dev(sp_picker, t18);
+    			append_dev(sp_picker, sp_menu_item8);
+    			append_dev(sp_menu_item8, t19);
+    			append_dev(sp_picker, t20);
+    			append_dev(sp_picker, sp_menu_divider3);
+    			append_dev(sp_picker, t21);
+    			append_dev(sp_picker, sp_menu_item9);
+    			append_dev(sp_menu_item9, t22);
+    			append_dev(sp_picker, t23);
+    			append_dev(sp_picker, sp_menu_item10);
+    			append_dev(sp_menu_item10, t24);
+    			append_dev(sp_picker, t25);
+    			append_dev(sp_picker, sp_menu_divider4);
+    			append_dev(sp_picker, t26);
+    			append_dev(sp_picker, sp_menu_item11);
+    			append_dev(sp_menu_item11, t27);
+    			append_dev(sp_picker, t28);
+    			append_dev(sp_picker, sp_menu_item12);
+    			append_dev(sp_menu_item12, t29);
+    			append_dev(sp_picker, t30);
+    			append_dev(sp_picker, sp_menu_item13);
+    			append_dev(sp_menu_item13, t31);
+    			append_dev(sp_picker, t32);
+    			append_dev(sp_picker, sp_menu_divider5);
+    			append_dev(sp_picker, t33);
+    			append_dev(sp_picker, sp_menu_item14);
+    			append_dev(sp_menu_item14, t34);
+    			append_dev(sp_picker, t35);
+    			append_dev(sp_picker, sp_menu_item15);
+    			append_dev(sp_menu_item15, t36);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_picker, "change", /*change_handler*/ ctx[5], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*element*/ 1 && sp_picker_value_value !== (sp_picker_value_value = /*element*/ ctx[0].blend.toString())) {
+    				set_custom_element_data(sp_picker, "value", sp_picker_value_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_picker);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$1.name,
+    		type: "slot",
+    		source: "(16:4) <PropertyItem title=\\\"Blend\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (43:4) <PropertyItem title="Isolate">
+    function create_default_slot_1$2(ctx) {
+    	let sp_switch;
+    	let sp_switch_checked_value;
+    	let t;
+    	let div;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			sp_switch = element("sp-switch");
+    			t = space();
+    			div = element("div");
+    			set_custom_element_data(sp_switch, "checked", sp_switch_checked_value = /*element*/ ctx[0].isolate);
+    			set_style(sp_switch, "width", "var(--spectrum-switch-track-width)");
+    			add_location(sp_switch, file$h, 43, 8, 2692);
+    			set_style(div, "flex", "1");
+    			add_location(div, file$h, 46, 8, 2922);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_switch, anchor);
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, div, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_switch, "change", /*change_handler_1*/ ctx[6], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*element*/ 1 && sp_switch_checked_value !== (sp_switch_checked_value = /*element*/ ctx[0].isolate)) {
+    				set_custom_element_data(sp_switch, "checked", sp_switch_checked_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_switch);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1$2.name,
+    		type: "slot",
+    		source: "(43:4) <PropertyItem title=\\\"Isolate\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (10:0) <PropertyGroup title="Compositing">
+    function create_default_slot$4(ctx) {
+    	let spslider;
+    	let t0;
+    	let propertyitem0;
+    	let t1;
+    	let propertyitem1;
+    	let current;
+
+    	spslider = new SpSlider({
+    			props: {
+    				label: "Opacity",
+    				ticks: 3,
+    				value: /*element*/ ctx[0].opacity * 100,
+    				fill: "start",
+    				editable: true
+    			},
+    			$$inline: true
+    		});
+
+    	spslider.$on("done", /*done_handler*/ ctx[2]);
+    	spslider.$on("start", /*start_handler*/ ctx[3]);
+    	spslider.$on("input", /*input_handler*/ ctx[4]);
+
+    	propertyitem0 = new PropertyItem({
+    			props: {
+    				title: "Blend",
+    				$$slots: { default: [create_default_slot_2$1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	propertyitem1 = new PropertyItem({
+    			props: {
+    				title: "Isolate",
+    				$$slots: { default: [create_default_slot_1$2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(spslider.$$.fragment);
+    			t0 = space();
+    			create_component(propertyitem0.$$.fragment);
+    			t1 = space();
+    			create_component(propertyitem1.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(spslider, target, anchor);
+    			insert_dev(target, t0, anchor);
+    			mount_component(propertyitem0, target, anchor);
+    			insert_dev(target, t1, anchor);
+    			mount_component(propertyitem1, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const spslider_changes = {};
+    			if (dirty & /*element*/ 1) spslider_changes.value = /*element*/ ctx[0].opacity * 100;
+    			spslider.$set(spslider_changes);
+    			const propertyitem0_changes = {};
+
+    			if (dirty & /*$$scope, element*/ 129) {
+    				propertyitem0_changes.$$scope = { dirty, ctx };
+    			}
+
+    			propertyitem0.$set(propertyitem0_changes);
+    			const propertyitem1_changes = {};
+
+    			if (dirty & /*$$scope, element*/ 129) {
+    				propertyitem1_changes.$$scope = { dirty, ctx };
+    			}
+
+    			propertyitem1.$set(propertyitem1_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(spslider.$$.fragment, local);
+    			transition_in(propertyitem0.$$.fragment, local);
+    			transition_in(propertyitem1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(spslider.$$.fragment, local);
+    			transition_out(propertyitem0.$$.fragment, local);
+    			transition_out(propertyitem1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(spslider, detaching);
+    			if (detaching) detach_dev(t0);
+    			destroy_component(propertyitem0, detaching);
+    			if (detaching) detach_dev(t1);
+    			destroy_component(propertyitem1, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$4.name,
+    		type: "slot",
+    		source: "(10:0) <PropertyGroup title=\\\"Compositing\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$n(ctx) {
+    	let propertygroup;
+    	let current;
+
+    	propertygroup = new PropertyGroup({
+    			props: {
+    				title: "Compositing",
+    				$$slots: { default: [create_default_slot$4] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(propertygroup.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(propertygroup, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const propertygroup_changes = {};
+
+    			if (dirty & /*$$scope, element*/ 129) {
+    				propertygroup_changes.$$scope = { dirty, ctx };
+    			}
+
+    			propertygroup.$set(propertygroup_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(propertygroup.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(propertygroup.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(propertygroup, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$n.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$n($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Compositing", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { element } = $$props;
+    	const writable_props = ["element"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Compositing> was created with unknown prop '${key}'`);
+    	});
+
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	const start_handler = () => dispatch("start", {
+    		property: "opacity",
+    		value: element.opacity
+    	});
+
+    	const input_handler = e => dispatch("update", {
+    		property: "opacity",
+    		value: e.detail / 100
+    	});
+
+    	const change_handler = e => dispatch("update", {
+    		property: "blend",
+    		value: parseInt(e.target.value)
+    	});
+
+    	const change_handler_1 = e => dispatch("update", {
+    		property: "isolate",
+    		value: e.target.checked
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		PropertyGroup,
+    		SpSlider,
+    		BlendMode: canvasEngine.BlendMode,
+    		PropertyItem,
+    		createEventDispatcher,
+    		dispatch,
+    		element
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		element,
+    		dispatch,
+    		done_handler,
+    		start_handler,
+    		input_handler,
+    		change_handler,
+    		change_handler_1
+    	];
+    }
+
+    class Compositing extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$n, create_fragment$n, safe_not_equal, { element: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Compositing",
+    			options,
+    			id: create_fragment$n.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*element*/ ctx[0] === undefined && !("element" in props)) {
+    			console.warn("<Compositing> was created without expected prop 'element'");
+    		}
+    	}
+
+    	get element() {
+    		throw new Error("<Compositing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set element(value) {
+    		throw new Error("<Compositing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Properties/FillAndStroke/BrushSwitch.svelte generated by Svelte v3.38.2 */
+    const file$g = "src/Components/Properties/FillAndStroke/BrushSwitch.svelte";
+
+    function create_fragment$m(ctx) {
+    	let div3;
+    	let div2;
+    	let sp_thumbnail0;
+    	let sp_thumbnail0_background_value;
+    	let sp_thumbnail0_selected_value;
+    	let t0;
+    	let sp_thumbnail1;
+    	let sp_thumbnail1_background_value;
+    	let sp_thumbnail1_selected_value;
+    	let t1;
+    	let div0;
+    	let sp_icon0;
+    	let sp_icon0_name_value;
+    	let div0_title_value;
+    	let t2;
+    	let div1;
+    	let sp_icon1;
+    	let t3;
+    	let spslider;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	spslider = new SpSlider({
+    			props: {
+    				label: /*showFill*/ ctx[0] ? "Fill opacity" : "Stroke opacity",
+    				ticks: 3,
+    				value: /*value*/ ctx[1][/*opacityProperty*/ ctx[2]] * 100,
+    				style: "flex: 1",
+    				fill: "start",
+    				editable: true
+    			},
+    			$$inline: true
+    		});
+
+    	spslider.$on("done", /*done_handler*/ ctx[12]);
+    	spslider.$on("input", /*input_handler*/ ctx[13]);
+    	spslider.$on("start", /*start_handler*/ ctx[14]);
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div2 = element("div");
+    			sp_thumbnail0 = element("sp-thumbnail");
+    			t0 = space();
+    			sp_thumbnail1 = element("sp-thumbnail");
+    			t1 = space();
+    			div0 = element("div");
+    			sp_icon0 = element("sp-icon");
+    			t2 = space();
+    			div1 = element("div");
+    			sp_icon1 = element("sp-icon");
+    			t3 = space();
+    			create_component(spslider.$$.fragment);
+    			set_custom_element_data(sp_thumbnail0, "title", "Fill");
+    			set_custom_element_data(sp_thumbnail0, "background", sp_thumbnail0_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].fill, /*value*/ ctx[1].fillOpacity));
+    			set_custom_element_data(sp_thumbnail0, "selected", sp_thumbnail0_selected_value = /*showFill*/ ctx[0] ? "" : undefined);
+    			set_custom_element_data(sp_thumbnail0, "class", "fill svelte-mm4k7e");
+    			add_location(sp_thumbnail0, file$g, 61, 8, 2279);
+    			set_custom_element_data(sp_thumbnail1, "title", "Stroke");
+    			set_custom_element_data(sp_thumbnail1, "background", sp_thumbnail1_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].strokeBrush, /*value*/ ctx[1].strokeOpacity));
+    			set_custom_element_data(sp_thumbnail1, "selected", sp_thumbnail1_selected_value = !/*showFill*/ ctx[0] ? "" : undefined);
+    			set_custom_element_data(sp_thumbnail1, "class", "stroke svelte-mm4k7e");
+    			add_location(sp_thumbnail1, file$g, 62, 8, 2473);
+
+    			set_custom_element_data(sp_icon0, "name", sp_icon0_name_value = /*showFill*/ ctx[0]
+    			? "expr:swap-arrow-up-left"
+    			: "expr:swap-arrow-down-right");
+
+    			set_custom_element_data(sp_icon0, "size", "s");
+    			set_custom_element_data(sp_icon0, "class", "svelte-mm4k7e");
+    			add_location(sp_icon0, file$g, 65, 12, 2902);
+    			attr_dev(div0, "class", "action-icon svelte-mm4k7e");
+    			attr_dev(div0, "title", div0_title_value = /*showFill*/ ctx[0] ? "Copy Stroke" : "Copy Fill");
+    			set_style(div0, "bottom", "0");
+    			set_style(div0, "left", "0");
+    			add_location(div0, file$g, 63, 8, 2682);
+    			set_custom_element_data(sp_icon1, "name", "expr:swap-arrows");
+    			set_custom_element_data(sp_icon1, "size", "s");
+    			set_custom_element_data(sp_icon1, "class", "svelte-mm4k7e");
+    			add_location(sp_icon1, file$g, 69, 12, 3198);
+    			attr_dev(div1, "class", "action-icon svelte-mm4k7e");
+    			attr_dev(div1, "title", "Swap Fill & Stroke");
+    			set_style(div1, "top", "0");
+    			set_style(div1, "right", "0");
+    			add_location(div1, file$g, 67, 8, 3031);
+    			attr_dev(div2, "class", "thumbnail-wrapper svelte-mm4k7e");
+    			add_location(div2, file$g, 60, 4, 2239);
+    			attr_dev(div3, "class", "brush-switch svelte-mm4k7e");
+    			add_location(div3, file$g, 59, 0, 2208);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div2, sp_thumbnail0);
+    			append_dev(div2, t0);
+    			append_dev(div2, sp_thumbnail1);
+    			append_dev(div2, t1);
+    			append_dev(div2, div0);
+    			append_dev(div0, sp_icon0);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, sp_icon1);
+    			append_dev(div3, t3);
+    			mount_component(spslider, div3, null);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_thumbnail0, "click", /*click_handler*/ ctx[8], false, false, false),
+    					listen_dev(sp_thumbnail1, "click", /*click_handler_1*/ ctx[9], false, false, false),
+    					listen_dev(div0, "click", /*click_handler_2*/ ctx[10], false, false, false),
+    					listen_dev(div1, "click", /*click_handler_3*/ ctx[11], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*value*/ 2 && sp_thumbnail0_background_value !== (sp_thumbnail0_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].fill, /*value*/ ctx[1].fillOpacity))) {
+    				set_custom_element_data(sp_thumbnail0, "background", sp_thumbnail0_background_value);
+    			}
+
+    			if (!current || dirty & /*showFill*/ 1 && sp_thumbnail0_selected_value !== (sp_thumbnail0_selected_value = /*showFill*/ ctx[0] ? "" : undefined)) {
+    				set_custom_element_data(sp_thumbnail0, "selected", sp_thumbnail0_selected_value);
+    			}
+
+    			if (!current || dirty & /*value*/ 2 && sp_thumbnail1_background_value !== (sp_thumbnail1_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].strokeBrush, /*value*/ ctx[1].strokeOpacity))) {
+    				set_custom_element_data(sp_thumbnail1, "background", sp_thumbnail1_background_value);
+    			}
+
+    			if (!current || dirty & /*showFill*/ 1 && sp_thumbnail1_selected_value !== (sp_thumbnail1_selected_value = !/*showFill*/ ctx[0] ? "" : undefined)) {
+    				set_custom_element_data(sp_thumbnail1, "selected", sp_thumbnail1_selected_value);
+    			}
+
+    			if (!current || dirty & /*showFill*/ 1 && sp_icon0_name_value !== (sp_icon0_name_value = /*showFill*/ ctx[0]
+    			? "expr:swap-arrow-up-left"
+    			: "expr:swap-arrow-down-right")) {
+    				set_custom_element_data(sp_icon0, "name", sp_icon0_name_value);
+    			}
+
+    			if (!current || dirty & /*showFill*/ 1 && div0_title_value !== (div0_title_value = /*showFill*/ ctx[0] ? "Copy Stroke" : "Copy Fill")) {
+    				attr_dev(div0, "title", div0_title_value);
+    			}
+
+    			const spslider_changes = {};
+    			if (dirty & /*showFill*/ 1) spslider_changes.label = /*showFill*/ ctx[0] ? "Fill opacity" : "Stroke opacity";
+    			if (dirty & /*value, opacityProperty*/ 6) spslider_changes.value = /*value*/ ctx[1][/*opacityProperty*/ ctx[2]] * 100;
+    			spslider.$set(spslider_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(spslider.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(spslider.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			destroy_component(spslider);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$m.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$m($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("BrushSwitch", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { value } = $$props;
+    	let { showFill = true } = $$props;
+    	let opacityProperty;
+
+    	function getBackground(value, opacity) {
+    		let picture;
+
+    		switch (value.type) {
+    			case canvasEngine.BrushType.None:
+    				picture = "linear-gradient(-45deg, transparent 0%, transparent 47.5%, #f00 47.5%, #f00 52.5%, transparent 52.5%, transparent 100%)";
+    				break;
+    			case canvasEngine.BrushType.Solid:
+    				picture = value.color.toString();
+    				break;
+    			case canvasEngine.BrushType.LinearGradient:
+    				picture = `linear-gradient(${value.stopColors.toString()})`;
+    				break;
+    			case canvasEngine.BrushType.RadialGradient:
+    			case canvasEngine.BrushType.TwoPointGradient:
+    				// same picture as radial
+    				picture = `radial-gradient(${value.stopColors.toString()})`;
+    				break;
+    			case canvasEngine.BrushType.ConicalGradient:
+    				picture = `conic-gradient(${value.stopColors.toString()})`;
+    				break;
+    			case canvasEngine.BrushType.Pattern:
+    				picture = "repeating-linear-gradient(transparent, #808080 20%), repeating-linear-gradient(90deg, #fff, #000 20%)";
+    				break;
+    			default:
+    				picture = "transparent";
+    				break;
+    		}
+
+    		// this is a trick to also set opacity
+    		// the background property sets style="background: $picture"
+    		return `${picture}; opacity: ${opacity};`;
+    	}
+
+    	function swap(project, element) {
+    		if (!(element instanceof canvasEngine.VectorElement)) {
+    			return false;
+    		}
+
+    		return project.middleware.swapStrokeFill([element], true);
+    	}
+
+    	function copyStroke(project, element) {
+    		if (!(element instanceof canvasEngine.VectorElement)) {
+    			return false;
+    		}
+
+    		return project.middleware.copyStrokeToFill([element], true);
+    	}
+
+    	function copyFill(project, element) {
+    		if (!(element instanceof canvasEngine.VectorElement)) {
+    			return false;
+    		}
+
+    		return project.middleware.copyFillToStroke([element], true);
+    	}
+
+    	const writable_props = ["value", "showFill"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<BrushSwitch> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = () => $$invalidate(0, showFill = true);
+    	const click_handler_1 = () => $$invalidate(0, showFill = false);
+
+    	const click_handler_2 = () => dispatch("action", {
+    		action: showFill ? copyStroke : copyFill,
+    		value: null
+    	});
+
+    	const click_handler_3 = () => dispatch("action", { action: swap, value: null });
+
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	const input_handler = e => dispatch("update", {
+    		property: opacityProperty,
+    		value: e.detail / 100
+    	});
+
+    	const start_handler = () => dispatch("start", {
+    		property: opacityProperty,
+    		value: value[opacityProperty]
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
+    		if ("showFill" in $$props) $$invalidate(0, showFill = $$props.showFill);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		SpSlider,
+    		BrushType: canvasEngine.BrushType,
+    		VectorElement: canvasEngine.VectorElement,
+    		createEventDispatcher,
+    		AnimationProject,
+    		dispatch,
+    		value,
+    		showFill,
+    		opacityProperty,
+    		getBackground,
+    		swap,
+    		copyStroke,
+    		copyFill
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
+    		if ("showFill" in $$props) $$invalidate(0, showFill = $$props.showFill);
+    		if ("opacityProperty" in $$props) $$invalidate(2, opacityProperty = $$props.opacityProperty);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*showFill*/ 1) {
+    			$$invalidate(2, opacityProperty = showFill ? "fillOpacity" : "strokeOpacity");
+    		}
+    	};
+
+    	return [
+    		showFill,
+    		value,
+    		opacityProperty,
+    		dispatch,
+    		getBackground,
+    		swap,
+    		copyStroke,
+    		copyFill,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2,
+    		click_handler_3,
+    		done_handler,
+    		input_handler,
+    		start_handler
+    	];
+    }
+
+    class BrushSwitch extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$m, create_fragment$m, safe_not_equal, { value: 1, showFill: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "BrushSwitch",
+    			options,
+    			id: create_fragment$m.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
+    			console.warn("<BrushSwitch> was created without expected prop 'value'");
+    		}
+    	}
+
+    	get value() {
+    		throw new Error("<BrushSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<BrushSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showFill() {
+    		throw new Error("<BrushSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showFill(value) {
+    		throw new Error("<BrushSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Properties/Brush/BrushEmpty.svelte generated by Svelte v3.38.2 */
+
+    const file$f = "src/Components/Properties/Brush/BrushEmpty.svelte";
+
+    function create_fragment$l(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "No paint";
+    			set_style(p, "text-align", "center");
+    			set_style(p, "color", "var(--spectrum-global-color-gray-700)");
+    			add_location(p, file$f, 4, 0, 82);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$l.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$l($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushEmpty", slots, []);
     	
@@ -28562,13 +31535,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushEmpty extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$o, create_fragment$o, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$l, create_fragment$l, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushEmpty",
     			options,
-    			id: create_fragment$o.name
+    			id: create_fragment$l.name
     		});
 
     		const { ctx } = this.$$;
@@ -29714,9 +32687,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }());
 
     /* src/Controls/SpColorLoupe.svelte generated by Svelte v3.38.2 */
-    const file$j = "src/Controls/SpColorLoupe.svelte";
+    const file$e = "src/Controls/SpColorLoupe.svelte";
 
-    function create_fragment$n(ctx) {
+    function create_fragment$k(ctx) {
     	let svg;
     	let g;
     	let path0;
@@ -29737,14 +32710,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(path0, "fill", /*color*/ ctx[0]);
     			attr_dev(path0, "class", "spectrum-ColorLoupe-inner");
     			attr_dev(path0, "d", "M24,0A24,24,0,0,1,48,24c0,16.255-24,40-24,40S0,40.255,0,24A24,24,0,0,1,24,0Z");
-    			add_location(path0, file$j, 11, 8, 377);
+    			add_location(path0, file$e, 11, 8, 377);
     			attr_dev(path1, "class", "spectrum-ColorLoupe-outer");
     			attr_dev(path1, "d", "M24,2A21.98,21.98,0,0,0,2,24c0,6.2,4,14.794,11.568,24.853A144.233,144.233,0,0,0,24,61.132,144.085,144.085,0,0,0,34.4,48.893C41.99,38.816,46,30.209,46,24A21.98,21.98,0,0,0,24,2m0-2A24,24,0,0,1,48,24c0,16.255-24,40-24,40S0,40.255,0,24A24,24,0,0,1,24,0Z");
-    			add_location(path1, file$j, 12, 8, 522);
+    			add_location(path1, file$e, 12, 8, 522);
     			attr_dev(g, "transform", "translate(1 1)");
-    			add_location(g, file$j, 10, 4, 338);
+    			add_location(g, file$e, 10, 4, 338);
     			set_svg_attributes(svg, svg_data);
-    			add_location(svg, file$j, 9, 0, 289);
+    			add_location(svg, file$e, 9, 0, 289);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -29774,7 +32747,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$n.name,
+    		id: create_fragment$k.name,
     		type: "component",
     		source: "",
     		ctx
@@ -29783,7 +32756,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$n($$self, $$props, $$invalidate) {
+    function instance$k($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["open","color"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -29829,13 +32802,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpColorLoupe extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$n, create_fragment$n, safe_not_equal, { open: 3, color: 0 });
+    		init(this, options, instance$k, create_fragment$k, safe_not_equal, { open: 3, color: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpColorLoupe",
     			options,
-    			id: create_fragment$n.name
+    			id: create_fragment$k.name
     		});
     	}
 
@@ -29857,10 +32830,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorHandle.svelte generated by Svelte v3.38.2 */
-    const file$i = "src/Controls/SpColorHandle.svelte";
+    const file$d = "src/Controls/SpColorHandle.svelte";
 
     // (42:4) {#if loupe && !disabled}
-    function create_if_block$4(ctx) {
+    function create_if_block$3(ctx) {
     	let div;
     	let spcolorloupe;
     	let current;
@@ -29878,7 +32851,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			create_component(spcolorloupe.$$.fragment);
     			attr_dev(div, "class", "spectrum-ColorLoupe--wrapper");
-    			add_location(div, file$i, 42, 8, 1340);
+    			add_location(div, file$d, 42, 8, 1361);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -29908,7 +32881,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(42:4) {#if loupe && !disabled}",
     		ctx
@@ -29917,7 +32890,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$m(ctx) {
+    function create_fragment$j(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -29926,7 +32899,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*loupe*/ ctx[3] && !/*disabled*/ ctx[1] && create_if_block$4(ctx);
+    	let if_block = /*loupe*/ ctx[3] && !/*disabled*/ ctx[1] && create_if_block$3(ctx);
     	let div1_levels = [/*$$restProps*/ ctx[11], { class: /*computedClass*/ ctx[7] }];
     	let div1_data = {};
 
@@ -29942,9 +32915,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "spectrum-ColorHandle-color");
     			attr_dev(div0, "style", div0_style_value = `background-color: ${/*color*/ ctx[4]};`);
-    			add_location(div0, file$i, 40, 4, 1218);
+    			add_location(div0, file$d, 40, 4, 1239);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$i, 38, 0, 1041);
+    			add_location(div1, file$d, 38, 0, 1062);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -29982,7 +32955,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$4(ctx);
+    					if_block = create_if_block$3(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -30024,7 +32997,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$m.name,
+    		id: create_fragment$j.name,
     		type: "component",
     		source: "",
     		ctx
@@ -30033,7 +33006,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$m($$self, $$props, $$invalidate) {
+    function instance$j($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["disabled","open","loupe","color","dragOptions","element"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -30060,7 +33033,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	function onKeyDown(e) {
     		if (focused) {
-    			if (e.key === "Escape") {
+    			if (e.key === "Escape" || e.key === "Enter") {
     				e.preventDefault();
     				e.target.blur();
     			} else if (e.key.indexOf("Arrow") === 0) {
@@ -30162,7 +33135,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$m, create_fragment$m, safe_not_equal, {
+    		init(this, options, instance$j, create_fragment$j, safe_not_equal, {
     			disabled: 1,
     			open: 2,
     			loupe: 3,
@@ -30175,7 +33148,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorHandle",
     			options,
-    			id: create_fragment$m.name
+    			id: create_fragment$j.name
     		});
     	}
 
@@ -30229,9 +33202,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorWheel.svelte generated by Svelte v3.38.2 */
-    const file$h = "src/Controls/SpColorWheel.svelte";
+    const file$c = "src/Controls/SpColorWheel.svelte";
 
-    function create_fragment$l(ctx) {
+    function create_fragment$i(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -30243,31 +33216,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current;
     	let mounted;
     	let dispose;
-    	const default_slot_template = /*#slots*/ ctx[22].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[21], null);
+    	const default_slot_template = /*#slots*/ ctx[24].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[23], null);
 
     	function spcolorhandle_element_binding(value) {
-    		/*spcolorhandle_element_binding*/ ctx[23](value);
+    		/*spcolorhandle_element_binding*/ ctx[25](value);
     	}
 
     	let spcolorhandle_props = {
     		class: "spectrum-ColorWheel-handle",
     		tabindex: "0",
     		color: `hsl(${/*value*/ ctx[0]}, 100%, 50%)`,
-    		style: /*transform*/ ctx[7],
+    		style: /*transform*/ ctx[6],
     		dragOptions: {
-    			surface: /*surface*/ ctx[6],
-    			start: /*onDragStart*/ ctx[10],
-    			move: /*onDrag*/ ctx[12],
-    			end: /*onDragEnd*/ ctx[11],
+    			surface: /*surface*/ ctx[5],
+    			start: /*onDragStart*/ ctx[9],
+    			move: /*onDrag*/ ctx[11],
+    			end: /*onDragEnd*/ ctx[10],
     			raw: true
     		},
     		loupe: /*loupe*/ ctx[3],
     		disabled: /*disabled*/ ctx[2]
     	};
 
-    	if (/*colorHandle*/ ctx[5] !== void 0) {
-    		spcolorhandle_props.element = /*colorHandle*/ ctx[5];
+    	if (/*colorHandle*/ ctx[4] !== void 0) {
+    		spcolorhandle_props.element = /*colorHandle*/ ctx[4];
     	}
 
     	spcolorhandle = new SpColorHandle({
@@ -30276,13 +33249,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		});
 
     	binding_callbacks.push(() => bind(spcolorhandle, "element", spcolorhandle_element_binding));
-    	spcolorhandle.$on("arrow", /*onArrow*/ ctx[13]);
-    	spcolorhandle.$on("focus", /*focus_handler*/ ctx[24]);
-    	spcolorhandle.$on("blur", /*blur_handler*/ ctx[25]);
+    	spcolorhandle.$on("arrow", /*onArrow*/ ctx[12]);
+    	spcolorhandle.$on("focus", /*onFocus*/ ctx[14]);
+    	spcolorhandle.$on("blur", /*onBlur*/ ctx[15]);
 
     	let div1_levels = [
-    		/*$$restProps*/ ctx[15],
-    		{ class: /*computedClass*/ ctx[9] },
+    		/*$$restProps*/ ctx[16],
+    		{ class: /*computedClass*/ ctx[8] },
     		{
     			style: div1_style_value = `--spectrum-colorwheel-width: ${/*size*/ ctx[1]}px; --spectrum-colorwheel-height: ${/*size*/ ctx[1]}px;`
     		}
@@ -30303,10 +33276,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t1 = space();
     			create_component(spcolorhandle.$$.fragment);
     			attr_dev(div0, "class", "spectrum-ColorWheel-gradient");
-    			attr_dev(div0, "style", div0_style_value = `clip-path: path(evenodd, "${/*clipPath*/ ctx[8]}");`);
-    			add_location(div0, file$h, 98, 4, 3003);
+    			attr_dev(div0, "style", div0_style_value = `clip-path: path(evenodd, "${/*clipPath*/ ctx[7]}");`);
+    			add_location(div0, file$c, 102, 4, 2968);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$h, 97, 0, 2843);
+    			add_location(div1, file$c, 101, 0, 2808);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30326,47 +33299,47 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(div0, "click", self$1(/*onClick*/ ctx[14]), false, false, false);
+    				dispose = listen_dev(div0, "click", self$1(/*onClick*/ ctx[13]), false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*clipPath*/ 256 && div0_style_value !== (div0_style_value = `clip-path: path(evenodd, "${/*clipPath*/ ctx[8]}");`)) {
+    			if (!current || dirty & /*clipPath*/ 128 && div0_style_value !== (div0_style_value = `clip-path: path(evenodd, "${/*clipPath*/ ctx[7]}");`)) {
     				attr_dev(div0, "style", div0_style_value);
     			}
 
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2097152)) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[21], dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 8388608)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[23], dirty, null, null);
     				}
     			}
 
     			const spcolorhandle_changes = {};
     			if (dirty & /*value*/ 1) spcolorhandle_changes.color = `hsl(${/*value*/ ctx[0]}, 100%, 50%)`;
-    			if (dirty & /*transform*/ 128) spcolorhandle_changes.style = /*transform*/ ctx[7];
+    			if (dirty & /*transform*/ 64) spcolorhandle_changes.style = /*transform*/ ctx[6];
 
-    			if (dirty & /*surface*/ 64) spcolorhandle_changes.dragOptions = {
-    				surface: /*surface*/ ctx[6],
-    				start: /*onDragStart*/ ctx[10],
-    				move: /*onDrag*/ ctx[12],
-    				end: /*onDragEnd*/ ctx[11],
+    			if (dirty & /*surface*/ 32) spcolorhandle_changes.dragOptions = {
+    				surface: /*surface*/ ctx[5],
+    				start: /*onDragStart*/ ctx[9],
+    				move: /*onDrag*/ ctx[11],
+    				end: /*onDragEnd*/ ctx[10],
     				raw: true
     			};
 
     			if (dirty & /*loupe*/ 8) spcolorhandle_changes.loupe = /*loupe*/ ctx[3];
     			if (dirty & /*disabled*/ 4) spcolorhandle_changes.disabled = /*disabled*/ ctx[2];
 
-    			if (!updating_element && dirty & /*colorHandle*/ 32) {
+    			if (!updating_element && dirty & /*colorHandle*/ 16) {
     				updating_element = true;
-    				spcolorhandle_changes.element = /*colorHandle*/ ctx[5];
+    				spcolorhandle_changes.element = /*colorHandle*/ ctx[4];
     				add_flush_callback(() => updating_element = false);
     			}
 
     			spcolorhandle.$set(spcolorhandle_changes);
 
     			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
-    				dirty & /*$$restProps*/ 32768 && /*$$restProps*/ ctx[15],
-    				(!current || dirty & /*computedClass*/ 512) && { class: /*computedClass*/ ctx[9] },
+    				dirty & /*$$restProps*/ 65536 && /*$$restProps*/ ctx[16],
+    				(!current || dirty & /*computedClass*/ 256) && { class: /*computedClass*/ ctx[8] },
     				(!current || dirty & /*size*/ 2 && div1_style_value !== (div1_style_value = `--spectrum-colorwheel-width: ${/*size*/ ctx[1]}px; --spectrum-colorwheel-height: ${/*size*/ ctx[1]}px;`)) && { style: div1_style_value }
     			]));
     		},
@@ -30393,7 +33366,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$l.name,
+    		id: create_fragment$i.name,
     		type: "component",
     		source: "",
     		ctx
@@ -30402,7 +33375,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$l($$self, $$props, $$invalidate) {
+    function instance$i($$self, $$props, $$invalidate) {
     	let handlerSize;
     	let radius;
     	let computedClass;
@@ -30421,20 +33394,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let colorHandle, surface, original;
 
     	function onDragStart() {
-    		$$invalidate(18, dragged = true);
+    		$$invalidate(19, dragged = true);
     		original = value;
-    		dispatch("start", value);
+    		dispatch("start");
     	}
 
     	function onDragEnd() {
-    		$$invalidate(18, dragged = false);
+    		$$invalidate(19, dragged = false);
 
     		if (value !== original) {
-    			dispatch("change", value);
-    			colorHandle.blur();
+    			dispatch("input", value);
     		}
 
-    		dispatch("stop", value);
+    		colorHandle.blur();
     	}
 
     	function getAngle(x, y, bbox) {
@@ -30480,11 +33452,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		v = clampStep(v, 0, 360, step);
 
     		if (value !== v) {
-    			dispatch("start", value);
     			$$invalidate(0, value = v);
     			dispatch("input", value);
-    			dispatch("change", value);
-    			dispatch("stop", value);
     		}
     	}
 
@@ -30492,41 +33461,48 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const v = clampStep(getAngle(e.clientX, e.clientY, surface.getBoundingClientRect()), 0, 360, step);
 
     		if (value !== v) {
-    			dispatch("start", value);
     			$$invalidate(0, value = v);
+    			dispatch("start");
     			dispatch("input", v);
-    			dispatch("change", v);
-    			dispatch("stop", value);
+    			dispatch("done");
     		}
+    	}
+
+    	function onFocus() {
+    		$$invalidate(20, focused = true);
+    		dispatch("focus");
+    	}
+
+    	function onBlur() {
+    		$$invalidate(20, focused = false);
+    		dispatch("done");
+    		dispatch("blur");
     	}
 
     	let transform, clipPath;
 
     	function spcolorhandle_element_binding(value) {
     		colorHandle = value;
-    		$$invalidate(5, colorHandle);
+    		$$invalidate(4, colorHandle);
     	}
-
-    	const focus_handler = () => $$invalidate(4, focused = true);
-    	const blur_handler = () => $$invalidate(4, focused = false);
 
     	function div1_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			surface = $$value;
-    			$$invalidate(6, surface);
+    			$$invalidate(5, surface);
     		});
     	}
 
     	$$self.$$set = $$new_props => {
     		$$invalidate(30, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(15, $$restProps = compute_rest_props($$props, omit_props_names));
+    		$$invalidate(16, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("value" in $$new_props) $$invalidate(0, value = $$new_props.value);
-    		if ("step" in $$new_props) $$invalidate(16, step = $$new_props.step);
+    		if ("step" in $$new_props) $$invalidate(17, step = $$new_props.step);
     		if ("size" in $$new_props) $$invalidate(1, size = $$new_props.size);
     		if ("disabled" in $$new_props) $$invalidate(2, disabled = $$new_props.disabled);
     		if ("loupe" in $$new_props) $$invalidate(3, loupe = $$new_props.loupe);
-    		if ("small" in $$new_props) $$invalidate(17, small = $$new_props.small);
-    		if ("$$scope" in $$new_props) $$invalidate(21, $$scope = $$new_props.$$scope);
+    		if ("small" in $$new_props) $$invalidate(18, small = $$new_props.small);
+    		if ("$$scope" in $$new_props) $$invalidate(23, $$scope = $$new_props.$$scope);
     	};
 
     	$$self.$capture_state = () => ({
@@ -30552,6 +33528,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		onDrag,
     		onArrow,
     		onClick,
+    		onFocus,
+    		onBlur,
     		transform,
     		clipPath,
     		handlerSize,
@@ -30562,21 +33540,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	$$self.$inject_state = $$new_props => {
     		$$invalidate(30, $$props = assign(assign({}, $$props), $$new_props));
     		if ("value" in $$props) $$invalidate(0, value = $$new_props.value);
-    		if ("step" in $$props) $$invalidate(16, step = $$new_props.step);
+    		if ("step" in $$props) $$invalidate(17, step = $$new_props.step);
     		if ("size" in $$props) $$invalidate(1, size = $$new_props.size);
     		if ("disabled" in $$props) $$invalidate(2, disabled = $$new_props.disabled);
     		if ("loupe" in $$props) $$invalidate(3, loupe = $$new_props.loupe);
-    		if ("small" in $$props) $$invalidate(17, small = $$new_props.small);
-    		if ("dragged" in $$props) $$invalidate(18, dragged = $$new_props.dragged);
-    		if ("focused" in $$props) $$invalidate(4, focused = $$new_props.focused);
-    		if ("colorHandle" in $$props) $$invalidate(5, colorHandle = $$new_props.colorHandle);
-    		if ("surface" in $$props) $$invalidate(6, surface = $$new_props.surface);
+    		if ("small" in $$props) $$invalidate(18, small = $$new_props.small);
+    		if ("dragged" in $$props) $$invalidate(19, dragged = $$new_props.dragged);
+    		if ("focused" in $$props) $$invalidate(20, focused = $$new_props.focused);
+    		if ("colorHandle" in $$props) $$invalidate(4, colorHandle = $$new_props.colorHandle);
+    		if ("surface" in $$props) $$invalidate(5, surface = $$new_props.surface);
     		if ("original" in $$props) original = $$new_props.original;
-    		if ("transform" in $$props) $$invalidate(7, transform = $$new_props.transform);
-    		if ("clipPath" in $$props) $$invalidate(8, clipPath = $$new_props.clipPath);
-    		if ("handlerSize" in $$props) $$invalidate(19, handlerSize = $$new_props.handlerSize);
-    		if ("radius" in $$props) $$invalidate(20, radius = $$new_props.radius);
-    		if ("computedClass" in $$props) $$invalidate(9, computedClass = $$new_props.computedClass);
+    		if ("transform" in $$props) $$invalidate(6, transform = $$new_props.transform);
+    		if ("clipPath" in $$props) $$invalidate(7, clipPath = $$new_props.clipPath);
+    		if ("handlerSize" in $$props) $$invalidate(21, handlerSize = $$new_props.handlerSize);
+    		if ("radius" in $$props) $$invalidate(22, radius = $$new_props.radius);
+    		if ("computedClass" in $$props) $$invalidate(8, computedClass = $$new_props.computedClass);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -30584,26 +33562,26 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*small*/ 131072) {
-    			$$invalidate(19, handlerSize = small ? 16 : 24);
+    		if ($$self.$$.dirty & /*small*/ 262144) {
+    			$$invalidate(21, handlerSize = small ? 16 : 24);
     		}
 
-    		if ($$self.$$.dirty & /*size, handlerSize*/ 524290) {
-    			$$invalidate(20, radius = (size - handlerSize) / 2);
+    		if ($$self.$$.dirty & /*size, handlerSize*/ 2097154) {
+    			$$invalidate(22, radius = (size - handlerSize) / 2);
     		}
 
-    		if ($$self.$$.dirty & /*value, radius, size, handlerSize*/ 1572867) {
+    		if ($$self.$$.dirty & /*value, radius, size, handlerSize*/ 6291459) {
     			{
     				const rad = value * Math.PI / 180;
-    				$$invalidate(7, transform = `transform: translate(${radius * Math.cos(rad)}px, ${radius * Math.sin(rad)}px);`);
+    				$$invalidate(6, transform = `transform: translate(${radius * Math.cos(rad)}px, ${radius * Math.sin(rad)}px);`);
     				const hSz = size / 2;
     				const hCh = hSz - handlerSize;
     				const dCh = size - 2 * handlerSize;
-    				$$invalidate(8, clipPath = `M ${hSz} ${hSz} m -${hSz} 0 a ${hSz} ${hSz} 0 1 0 ${size} 0 a ${hSz} ${hSz} 0 1 0 -${size} 0 M ${hSz} ${hSz} m -${hCh} 0 a ${hCh} ${hCh} 0 1 0 ${dCh} 0 a ${hCh} ${hCh} 0 1 0 -${dCh} 0`);
+    				$$invalidate(7, clipPath = `M ${hSz} ${hSz} m -${hSz} 0 a ${hSz} ${hSz} 0 1 0 ${size} 0 a ${hSz} ${hSz} 0 1 0 -${size} 0 M ${hSz} ${hSz} m -${hCh} 0 a ${hCh} ${hCh} 0 1 0 ${dCh} 0 a ${hCh} ${hCh} 0 1 0 -${dCh} 0`);
     			}
     		}
 
-    		$$invalidate(9, computedClass = mergeClasses(
+    		$$invalidate(8, computedClass = mergeClasses(
     			{
     				"spectrum-ColorWheel": true,
     				"is-disabled": disabled,
@@ -30621,7 +33599,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		size,
     		disabled,
     		loupe,
-    		focused,
     		colorHandle,
     		surface,
     		transform,
@@ -30632,17 +33609,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		onDrag,
     		onArrow,
     		onClick,
+    		onFocus,
+    		onBlur,
     		$$restProps,
     		step,
     		small,
     		dragged,
+    		focused,
     		handlerSize,
     		radius,
     		$$scope,
     		slots,
     		spcolorhandle_element_binding,
-    		focus_handler,
-    		blur_handler,
     		div1_binding
     	];
     }
@@ -30651,20 +33629,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$l, create_fragment$l, safe_not_equal, {
+    		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
     			value: 0,
-    			step: 16,
+    			step: 17,
     			size: 1,
     			disabled: 2,
     			loupe: 3,
-    			small: 17
+    			small: 18
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpColorWheel",
     			options,
-    			id: create_fragment$l.name
+    			id: create_fragment$i.name
     		});
     	}
 
@@ -30718,9 +33696,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorArea.svelte generated by Svelte v3.38.2 */
-    const file$g = "src/Controls/SpColorArea.svelte";
+    const file$b = "src/Controls/SpColorArea.svelte";
 
-    function create_fragment$k(ctx) {
+    function create_fragment$h(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -30781,7 +33759,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			input1 = element("input");
     			attr_dev(div0, "class", "spectrum-ColorArea-gradient");
     			attr_dev(div0, "style", div0_style_value = `background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(to right, white 0%, rgba(0, 0, 0, 0) 100%), hsl(${/*hue*/ ctx[2]}, 100%, 50%);`);
-    			add_location(div0, file$g, 126, 4, 3129);
+    			add_location(div0, file$b, 128, 4, 3055);
     			attr_dev(input0, "tabindex", "-1");
     			input0.value = /*saturation*/ ctx[0];
     			attr_dev(input0, "type", "range");
@@ -30791,7 +33769,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input0, "min", "0");
     			attr_dev(input0, "max", "1");
     			attr_dev(input0, "step", "0.01");
-    			add_location(input0, file$g, 131, 4, 3681);
+    			add_location(input0, file$b, 133, 4, 3607);
     			attr_dev(input1, "tabindex", "-1");
     			input1.value = /*value*/ ctx[1];
     			attr_dev(input1, "type", "range");
@@ -30801,9 +33779,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input1, "min", "0");
     			attr_dev(input1, "max", "1");
     			attr_dev(input1, "step", "0.01");
-    			add_location(input1, file$g, 132, 4, 3844);
+    			add_location(input1, file$b, 134, 4, 3770);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$g, 125, 0, 3034);
+    			add_location(div1, file$b, 127, 0, 2960);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30878,7 +33856,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$k.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -30889,7 +33867,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const step = 0.01;
 
-    function instance$k($$self, $$props, $$invalidate) {
+    function clamp(value) {
+    	if (value <= 0) {
+    		return 0;
+    	}
+
+    	if (value >= 1) {
+    		return 1;
+    	}
+
+    	return Math.round(value * 100) / 100;
+    }
+
+    function instance$h($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["hue","saturation","value","disabled","loupe"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -30903,10 +33893,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { loupe = false } = $$props;
     	let colorArea, colorHandle;
     	let sat, light, color;
-
-    	function clamp(value) {
-    		return clampStep(value, 0, 1, step);
-    	}
 
     	function dispatchValue(...events) {
     		const v = { x: saturation, y: value };
@@ -30939,8 +33925,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     		if (changeValue(value.x, value.y)) {
     			dispatch("start");
-    			dispatchValue("input", "change");
-    			dispatch("stop");
+    			dispatchValue("input");
+    			dispatch("done");
     		}
     	}
 
@@ -30968,19 +33954,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			const v = clamp(saturation + x * step * 2);
 
     			if (v !== saturation) {
-    				dispatch("start");
     				$$invalidate(0, saturation = v);
-    				dispatchValue("input", "change");
-    				dispatch("stop");
+    				dispatchValue("input");
     			}
     		} else if (y) {
     			const v = clamp(value + y * step * 2);
 
     			if (v !== value) {
-    				dispatch("start");
     				$$invalidate(1, value = v);
-    				dispatchValue("input", "change");
-    				dispatch("stop");
+    				dispatchValue("input");
     			}
     		}
     	}
@@ -30998,10 +33980,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	function onDragEnd(changed) {
     		if (changed) {
     			dispatchValue("change");
-    			colorHandle.blur();
     		}
 
-    		dispatch("stop");
+    		colorHandle.blur();
     	}
 
     	let focused = false;
@@ -31013,6 +33994,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	function onBlur() {
     		$$invalidate(17, focused = false);
+    		dispatch("done");
     		dispatch("blur");
     	}
 
@@ -31040,7 +34022,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$set = $$new_props => {
-    		$$invalidate(27, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(26, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
     		$$invalidate(14, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("hue" in $$new_props) $$invalidate(2, hue = $$new_props.hue);
     		if ("saturation" in $$new_props) $$invalidate(0, saturation = $$new_props.saturation);
@@ -31051,7 +34033,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	$$self.$capture_state = () => ({
     		mergeClasses,
-    		clampStep,
     		getXYPercent,
     		createEventDispatcher,
     		onMount,
@@ -31084,7 +34065,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		$$invalidate(27, $$props = assign(assign({}, $$props), $$new_props));
+    		$$invalidate(26, $$props = assign(assign({}, $$props), $$new_props));
     		if ("hue" in $$props) $$invalidate(2, hue = $$new_props.hue);
     		if ("saturation" in $$props) $$invalidate(0, saturation = $$new_props.saturation);
     		if ("value" in $$props) $$invalidate(1, value = $$new_props.value);
@@ -31157,7 +34138,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
+    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {
     			hue: 2,
     			saturation: 0,
     			value: 1,
@@ -31169,7 +34150,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorArea",
     			options,
-    			id: create_fragment$k.name
+    			id: create_fragment$h.name
     		});
     	}
 
@@ -31215,9 +34196,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorSliderBase.svelte generated by Svelte v3.38.2 */
-    const file$f = "src/Controls/SpColorSliderBase.svelte";
+    const file$a = "src/Controls/SpColorSliderBase.svelte";
 
-    function create_fragment$j(ctx) {
+    function create_fragment$g(ctx) {
     	let div2;
     	let div1;
     	let div0;
@@ -31231,7 +34212,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let dispose;
 
     	function spcolorhandle_element_binding(value) {
-    		/*spcolorhandle_element_binding*/ ctx[22](value);
+    		/*spcolorhandle_element_binding*/ ctx[23](value);
     	}
 
     	let spcolorhandle_props = {
@@ -31262,9 +34243,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	binding_callbacks.push(() => bind(spcolorhandle, "element", spcolorhandle_element_binding));
     	spcolorhandle.$on("arrow", /*onArrow*/ ctx[16]);
-    	spcolorhandle.$on("focus", /*focus_handler*/ ctx[23]);
-    	spcolorhandle.$on("blur", /*blur_handler*/ ctx[24]);
-    	let div2_levels = [/*$$restProps*/ ctx[18], { class: /*computedClass*/ ctx[12] }];
+    	spcolorhandle.$on("focus", /*focus_handler*/ ctx[24]);
+    	spcolorhandle.$on("blur", /*onBlur*/ ctx[18]);
+    	let div2_levels = [/*$$restProps*/ ctx[19], { class: /*computedClass*/ ctx[12] }];
     	let div2_data = {};
 
     	for (let i = 0; i < div2_levels.length; i += 1) {
@@ -31283,10 +34264,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div0, "class", "spectrum-ColorSlider-gradient");
     			attr_dev(div0, "role", "presentation");
     			attr_dev(div0, "style", /*bg*/ ctx[8]);
-    			add_location(div0, file$f, 99, 8, 2666);
+    			add_location(div0, file$a, 102, 8, 2683);
     			attr_dev(div1, "class", "spectrum-ColorSlider-checkerboard");
     			attr_dev(div1, "role", "presentation");
-    			add_location(div1, file$f, 98, 4, 2566);
+    			add_location(div1, file$a, 101, 4, 2583);
     			attr_dev(input, "tabindex", "-1");
     			attr_dev(input, "type", "range");
     			attr_dev(input, "class", "spectrum-ColorSlider-slider");
@@ -31294,9 +34275,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "min", /*min*/ ctx[4]);
     			attr_dev(input, "max", /*max*/ ctx[5]);
     			attr_dev(input, "step", /*step*/ ctx[6]);
-    			add_location(input, file$f, 106, 4, 3157);
+    			add_location(input, file$a, 109, 4, 3183);
     			set_attributes(div2, div2_data);
-    			add_location(div2, file$f, 97, 0, 2497);
+    			add_location(div2, file$a, 100, 0, 2514);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -31364,7 +34345,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			set_attributes(div2, div2_data = get_spread_update(div2_levels, [
-    				dirty & /*$$restProps*/ 262144 && /*$$restProps*/ ctx[18],
+    				dirty & /*$$restProps*/ 524288 && /*$$restProps*/ ctx[19],
     				(!current || dirty & /*computedClass*/ 4096) && { class: /*computedClass*/ ctx[12] }
     			]));
     		},
@@ -31388,7 +34369,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$j.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -31397,7 +34378,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$j($$self, $$props, $$invalidate) {
+    function instance$g($$self, $$props, $$invalidate) {
     	let computedClass;
 
     	const omit_props_names = [
@@ -31424,7 +34405,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	function onDragStart() {
     		original = value;
-    		dispatch("start", value);
+    		dispatch("start");
     	}
 
     	function onDrag(v) {
@@ -31445,10 +34426,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	function onDragEnd() {
     		if (original !== value) {
     			dispatch("change", value);
-    			colorHandle.blur();
     		}
 
-    		dispatch("stop", value);
+    		colorHandle.blur();
     	}
 
     	function onArrow(e) {
@@ -31476,7 +34456,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if (value !== v) {
     			$$invalidate(0, value = v);
     			dispatch("input", v);
-    			dispatch("change", v);
     		}
     	}
 
@@ -31492,9 +34471,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     		if (value !== v) {
     			$$invalidate(0, value = v);
+    			dispatch("start");
     			dispatch("input", v);
-    			dispatch("change", v);
+    			dispatch("done");
     		}
+    	}
+
+    	function onBlur() {
+    		dispatch("done");
+    		dispatch("blur");
     	}
 
     	function spcolorhandle_element_binding(value) {
@@ -31503,10 +34488,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	function focus_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	function blur_handler(event) {
     		bubble($$self, event);
     	}
 
@@ -31519,18 +34500,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	$$self.$$set = $$new_props => {
     		$$invalidate(28, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(18, $$restProps = compute_rest_props($$props, omit_props_names));
+    		$$invalidate(19, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("vertical" in $$new_props) $$invalidate(1, vertical = $$new_props.vertical);
-    		if ("invert" in $$new_props) $$invalidate(19, invert = $$new_props.invert);
+    		if ("invert" in $$new_props) $$invalidate(20, invert = $$new_props.invert);
     		if ("disabled" in $$new_props) $$invalidate(2, disabled = $$new_props.disabled);
     		if ("loupe" in $$new_props) $$invalidate(3, loupe = $$new_props.loupe);
     		if ("value" in $$new_props) $$invalidate(0, value = $$new_props.value);
     		if ("min" in $$new_props) $$invalidate(4, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(5, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(6, step = $$new_props.step);
-    		if ("small" in $$new_props) $$invalidate(20, small = $$new_props.small);
+    		if ("small" in $$new_props) $$invalidate(21, small = $$new_props.small);
     		if ("color" in $$new_props) $$invalidate(7, color = $$new_props.color);
-    		if ("gradient" in $$new_props) $$invalidate(21, gradient = $$new_props.gradient);
+    		if ("gradient" in $$new_props) $$invalidate(22, gradient = $$new_props.gradient);
     	};
 
     	$$self.$capture_state = () => ({
@@ -31563,22 +34544,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		onDragEnd,
     		onArrow,
     		onClick,
+    		onBlur,
     		computedClass
     	});
 
     	$$self.$inject_state = $$new_props => {
     		$$invalidate(28, $$props = assign(assign({}, $$props), $$new_props));
     		if ("vertical" in $$props) $$invalidate(1, vertical = $$new_props.vertical);
-    		if ("invert" in $$props) $$invalidate(19, invert = $$new_props.invert);
+    		if ("invert" in $$props) $$invalidate(20, invert = $$new_props.invert);
     		if ("disabled" in $$props) $$invalidate(2, disabled = $$new_props.disabled);
     		if ("loupe" in $$props) $$invalidate(3, loupe = $$new_props.loupe);
     		if ("value" in $$props) $$invalidate(0, value = $$new_props.value);
     		if ("min" in $$props) $$invalidate(4, min = $$new_props.min);
     		if ("max" in $$props) $$invalidate(5, max = $$new_props.max);
     		if ("step" in $$props) $$invalidate(6, step = $$new_props.step);
-    		if ("small" in $$props) $$invalidate(20, small = $$new_props.small);
+    		if ("small" in $$props) $$invalidate(21, small = $$new_props.small);
     		if ("color" in $$props) $$invalidate(7, color = $$new_props.color);
-    		if ("gradient" in $$props) $$invalidate(21, gradient = $$new_props.gradient);
+    		if ("gradient" in $$props) $$invalidate(22, gradient = $$new_props.gradient);
     		if ("surface" in $$props) $$invalidate(10, surface = $$new_props.surface);
     		if ("colorHandle" in $$props) $$invalidate(11, colorHandle = $$new_props.colorHandle);
     		if ("bg" in $$props) $$invalidate(8, bg = $$new_props.bg);
@@ -31592,7 +34574,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value, min, max, invert, percent, vertical, bg, gradient*/ 2622259) {
+    		if ($$self.$$.dirty & /*value, min, max, invert, percent, vertical, bg, gradient*/ 5243699) {
     			{
     				$$invalidate(9, percent = getPercentage(value, min, max));
 
@@ -31642,13 +34624,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		onDragEnd,
     		onArrow,
     		onClick,
+    		onBlur,
     		$$restProps,
     		invert,
     		small,
     		gradient,
     		spcolorhandle_element_binding,
     		focus_handler,
-    		blur_handler,
     		div2_binding
     	];
     }
@@ -31657,25 +34639,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$j, create_fragment$j, safe_not_equal, {
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
     			vertical: 1,
-    			invert: 19,
+    			invert: 20,
     			disabled: 2,
     			loupe: 3,
     			value: 0,
     			min: 4,
     			max: 5,
     			step: 6,
-    			small: 20,
+    			small: 21,
     			color: 7,
-    			gradient: 21
+    			gradient: 22
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpColorSliderBase",
     			options,
-    			id: create_fragment$j.name
+    			id: create_fragment$g.name
     		});
     	}
 
@@ -31770,7 +34752,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Controls/SpAlphaSlider.svelte generated by Svelte v3.38.2 */
 
-    function create_fragment$i(ctx) {
+    function create_fragment$f(ctx) {
     	let spcolorsliderbase;
     	let updating_value;
     	let current;
@@ -31806,7 +34788,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	spcolorsliderbase.$on("input", /*input_handler*/ ctx[10]);
     	spcolorsliderbase.$on("change", /*change_handler*/ ctx[11]);
     	spcolorsliderbase.$on("start", /*start_handler*/ ctx[12]);
-    	spcolorsliderbase.$on("stop", /*stop_handler*/ ctx[13]);
+    	spcolorsliderbase.$on("done", /*done_handler*/ ctx[13]);
 
     	const block = {
     		c: function create() {
@@ -31853,7 +34835,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$i.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -31866,7 +34848,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return template.replace("%alpha", alpha.toString());
     }
 
-    function instance$i($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SpAlphaSlider", slots, []);
     	let { value = 0 } = $$props;
@@ -31907,7 +34889,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		bubble($$self, event);
     	}
 
-    	function stop_handler(event) {
+    	function done_handler(event) {
     		bubble($$self, event);
     	}
 
@@ -31961,7 +34943,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		input_handler,
     		change_handler,
     		start_handler,
-    		stop_handler
+    		done_handler
     	];
     }
 
@@ -31969,7 +34951,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {
     			value: 0,
     			step: 1,
     			small: 2,
@@ -31983,7 +34965,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpAlphaSlider",
     			options,
-    			id: create_fragment$i.name
+    			id: create_fragment$f.name
     		});
     	}
 
@@ -32045,10 +35027,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/ColorControl.svelte generated by Svelte v3.38.2 */
-    const file$e = "src/Controls/ColorControl.svelte";
+    const file$9 = "src/Controls/ColorControl.svelte";
 
-    // (72:8) <SpColorWheel on:start on:stop on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>
-    function create_default_slot$4(ctx) {
+    // (71:8) <SpColorWheel on:start on:done on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>
+    function create_default_slot$3(ctx) {
     	let spcolorarea;
     	let updating_hue;
     	let updating_saturation;
@@ -32086,7 +35068,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	binding_callbacks.push(() => bind(spcolorarea, "saturation", spcolorarea_saturation_binding));
     	binding_callbacks.push(() => bind(spcolorarea, "value", spcolorarea_value_binding));
     	spcolorarea.$on("start", /*start_handler_1*/ ctx[14]);
-    	spcolorarea.$on("stop", /*stop_handler_1*/ ctx[15]);
+    	spcolorarea.$on("done", /*done_handler_1*/ ctx[15]);
     	spcolorarea.$on("input", /*onChange*/ ctx[7]);
 
     	const block = {
@@ -32137,17 +35119,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$4.name,
+    		id: create_default_slot$3.name,
     		type: "slot",
-    		source: "(72:8) <SpColorWheel on:start on:stop on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>",
+    		source: "(71:8) <SpColorWheel on:start on:done on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:4) {#if details}
-    function create_if_block$3(ctx) {
+    // (77:4) {#if details}
+    function create_if_block$2(ctx) {
     	let div;
     	let sptextfield;
     	let t0;
@@ -32193,19 +35175,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_menu_item3 = element("sp-menu-item");
     			sp_menu_item3.textContent = "HSL";
     			set_custom_element_data(sp_menu_item0, "value", "HEX");
-    			add_location(sp_menu_item0, file$e, 86, 16, 3001);
+    			add_location(sp_menu_item0, file$9, 85, 16, 3052);
     			set_custom_element_data(sp_menu_item1, "value", "RGB");
-    			add_location(sp_menu_item1, file$e, 87, 16, 3062);
+    			add_location(sp_menu_item1, file$9, 86, 16, 3113);
     			set_custom_element_data(sp_menu_item2, "value", "HSV");
-    			add_location(sp_menu_item2, file$e, 88, 16, 3123);
+    			add_location(sp_menu_item2, file$9, 87, 16, 3174);
     			set_custom_element_data(sp_menu_item3, "value", "HSL");
-    			add_location(sp_menu_item3, file$e, 89, 16, 3184);
+    			add_location(sp_menu_item3, file$9, 88, 16, 3235);
     			set_custom_element_data(sp_picker, "value", /*mode*/ ctx[0]);
     			set_custom_element_data(sp_picker, "size", "s");
     			set_custom_element_data(sp_picker, "class", "svelte-pvdbx0");
-    			add_location(sp_picker, file$e, 85, 12, 2910);
+    			add_location(sp_picker, file$9, 84, 12, 2961);
     			attr_dev(div, "class", "color-control-details svelte-pvdbx0");
-    			add_location(div, file$e, 78, 8, 2650);
+    			add_location(div, file$9, 77, 8, 2701);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -32254,16 +35236,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$2.name,
     		type: "if",
-    		source: "(78:4) {#if details}",
+    		source: "(77:4) {#if details}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$h(ctx) {
+    function create_fragment$e(ctx) {
     	let div1;
     	let div0;
     	let spcolorwheel;
@@ -32284,7 +35266,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		size: /*size*/ ctx[1],
     		loupe: /*loupe*/ ctx[3],
     		small: true,
-    		$$slots: { default: [create_default_slot$4] },
+    		$$slots: { default: [create_default_slot$3] },
     		$$scope: { ctx }
     	};
 
@@ -32299,7 +35281,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	binding_callbacks.push(() => bind(spcolorwheel, "value", spcolorwheel_value_binding));
     	spcolorwheel.$on("start", /*start_handler*/ ctx[17]);
-    	spcolorwheel.$on("stop", /*stop_handler*/ ctx[18]);
+    	spcolorwheel.$on("done", /*done_handler*/ ctx[18]);
     	spcolorwheel.$on("input", /*onChange*/ ctx[7]);
 
     	function spalphaslider_value_binding(value) {
@@ -32324,9 +35306,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	binding_callbacks.push(() => bind(spalphaslider, "value", spalphaslider_value_binding));
     	spalphaslider.$on("start", /*start_handler_2*/ ctx[20]);
-    	spalphaslider.$on("stop", /*stop_handler_2*/ ctx[21]);
+    	spalphaslider.$on("done", /*done_handler_2*/ ctx[21]);
     	spalphaslider.$on("input", /*onChange*/ ctx[7]);
-    	let if_block = /*details*/ ctx[2] && create_if_block$3(ctx);
+    	let if_block = /*details*/ ctx[2] && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -32339,9 +35321,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "color-control-wheel svelte-pvdbx0");
     			attr_dev(div0, "style", div0_style_value = `--color-control-slider-size: ${/*size*/ ctx[1] - 2 * 16}px;`);
-    			add_location(div0, file$e, 70, 4, 2075);
+    			add_location(div0, file$9, 69, 4, 2126);
     			attr_dev(div1, "class", "color-control svelte-pvdbx0");
-    			add_location(div1, file$e, 69, 0, 2043);
+    			add_location(div1, file$9, 68, 0, 2094);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -32395,7 +35377,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$3(ctx);
+    					if_block = create_if_block$2(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -32433,7 +35415,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$h.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32457,7 +35439,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    function instance$h($$self, $$props, $$invalidate) {
+    function instance$e($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ColorControl", slots, []);
     	const dispatch = createEventDispatcher();
@@ -32483,14 +35465,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			return;
     		}
 
-    		$$invalidate(4, hsva.h = hsv.h, hsva);
-    		$$invalidate(4, hsva.s = hsv.s, hsva);
-    		$$invalidate(4, hsva.v = hsv.v, hsva);
+    		$$invalidate(4, hsva.h = Math.round(hsv.h), hsva);
+    		$$invalidate(4, hsva.s = Math.round(hsv.s * 100) / 100, hsva);
+    		$$invalidate(4, hsva.v = Math.round(hsv.v * 100) / 100, hsva);
     	}
 
     	function onChange() {
-    		if (value.toRgbString() !== currentColor.toRgbString()) {
-    			dispatch("input", currentColor);
+    		const color = new TinyColor(hsva, { format: "rgb" });
+
+    		if (value.toRgbString() !== color.toRgbString()) {
+    			dispatch("input", color);
     		}
     	}
 
@@ -32499,14 +35483,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const color = canvasEngine.parseColor(e.detail);
 
     		if (color.ok) {
-    			dispatch("start");
     			const hsv = rgbToHsv(color.r, color.g, color.b);
     			$$invalidate(4, hsva.a = (_a = color.a) !== null && _a !== void 0 ? _a : 1, hsva);
     			$$invalidate(4, hsva.h = hsv.h * 360, hsva);
     			$$invalidate(4, hsva.s = hsv.s, hsva);
     			$$invalidate(4, hsva.v = hsv.v, hsva);
     			onChange();
-    			dispatch("stop");
     		}
     	}
 
@@ -32541,7 +35523,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		bubble($$self, event);
     	}
 
-    	function stop_handler_1(event) {
+    	function done_handler_1(event) {
     		bubble($$self, event);
     	}
 
@@ -32556,7 +35538,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		bubble($$self, event);
     	}
 
-    	function stop_handler(event) {
+    	function done_handler(event) {
     		bubble($$self, event);
     	}
 
@@ -32571,7 +35553,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		bubble($$self, event);
     	}
 
-    	function stop_handler_2(event) {
+    	function done_handler_2(event) {
     		bubble($$self, event);
     	}
 
@@ -32663,13 +35645,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		spcolorarea_saturation_binding,
     		spcolorarea_value_binding,
     		start_handler_1,
-    		stop_handler_1,
+    		done_handler_1,
     		spcolorwheel_value_binding,
     		start_handler,
-    		stop_handler,
+    		done_handler,
     		spalphaslider_value_binding,
     		start_handler_2,
-    		stop_handler_2,
+    		done_handler_2,
     		change_handler
     	];
     }
@@ -32678,7 +35660,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {
     			value: 9,
     			size: 1,
     			details: 2,
@@ -32690,7 +35672,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "ColorControl",
     			options,
-    			id: create_fragment$h.name
+    			id: create_fragment$e.name
     		});
 
     		const { ctx } = this.$$;
@@ -32744,13 +35726,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/Color.svelte generated by Svelte v3.38.2 */
 
-    function create_fragment$g(ctx) {
+    function create_fragment$d(ctx) {
     	let colorcontrol;
     	let updating_mode;
     	let current;
 
     	function colorcontrol_mode_binding(value) {
-    		/*colorcontrol_mode_binding*/ ctx[3](value);
+    		/*colorcontrol_mode_binding*/ ctx[5](value);
     	}
 
     	let colorcontrol_props = { value: new TinyColor(/*value*/ ctx[1]) };
@@ -32765,9 +35747,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		});
 
     	binding_callbacks.push(() => bind(colorcontrol, "mode", colorcontrol_mode_binding));
-    	colorcontrol.$on("input", /*input_handler*/ ctx[4]);
-    	colorcontrol.$on("start", /*start_handler*/ ctx[5]);
-    	colorcontrol.$on("stop", /*stop_handler*/ ctx[6]);
+    	colorcontrol.$on("start", /*onStart*/ ctx[3]);
+    	colorcontrol.$on("done", /*onDone*/ ctx[4]);
+    	colorcontrol.$on("input", /*onInput*/ ctx[2]);
 
     	const block = {
     		c: function create() {
@@ -32808,7 +35790,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$g.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32817,12 +35799,37 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$g($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Color", slots, []);
     	const dispatch = createEventDispatcher();
     	let { value } = $$props;
     	let { colorMode = undefined } = $$props;
+    	let started = false;
+
+    	function onInput(e) {
+    		if (!started) {
+    			started = true;
+    			dispatch("start");
+    		}
+
+    		dispatch("update", new canvasEngine.Color(e.detail.r, e.detail.g, e.detail.b, e.detail.a));
+    	}
+
+    	function onStart() {
+    		if (started) {
+    			return;
+    		}
+
+    		started = true;
+    		dispatch("start");
+    	}
+
+    	function onDone() {
+    		started = false;
+    		dispatch("done");
+    	}
+
     	const writable_props = ["value", "colorMode"];
 
     	Object.keys($$props).forEach(key => {
@@ -32832,16 +35839,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	function colorcontrol_mode_binding(value) {
     		colorMode = value;
     		$$invalidate(0, colorMode);
-    	}
-
-    	const input_handler = e => dispatch("input", canvasEngine.Color.parse(e.detail));
-
-    	function start_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	function stop_handler(event) {
-    		bubble($$self, event);
     	}
 
     	$$self.$$set = $$props => {
@@ -32856,39 +35853,36 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		createEventDispatcher,
     		dispatch,
     		value,
-    		colorMode
+    		colorMode,
+    		started,
+    		onInput,
+    		onStart,
+    		onDone
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("value" in $$props) $$invalidate(1, value = $$props.value);
     		if ("colorMode" in $$props) $$invalidate(0, colorMode = $$props.colorMode);
+    		if ("started" in $$props) started = $$props.started;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [
-    		colorMode,
-    		value,
-    		dispatch,
-    		colorcontrol_mode_binding,
-    		input_handler,
-    		start_handler,
-    		stop_handler
-    	];
+    	return [colorMode, value, onInput, onStart, onDone, colorcontrol_mode_binding];
     }
 
     class Color_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Color_1",
     			options,
-    			id: create_fragment$g.name
+    			id: create_fragment$d.name
     		});
 
     		const { ctx } = this.$$;
@@ -32918,7 +35912,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushSolid.svelte generated by Svelte v3.38.2 */
 
-    function create_fragment$f(ctx) {
+    function create_fragment$c(ctx) {
     	let colorcontrol;
     	let updating_colorMode;
     	let current;
@@ -32939,9 +35933,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		});
 
     	binding_callbacks.push(() => bind(colorcontrol, "colorMode", colorcontrol_colorMode_binding));
-    	colorcontrol.$on("input", /*onInput*/ ctx[2]);
+    	colorcontrol.$on("update", /*onUpdate*/ ctx[2]);
     	colorcontrol.$on("start", /*start_handler*/ ctx[4]);
-    	colorcontrol.$on("stop", /*stop_handler*/ ctx[5]);
+    	colorcontrol.$on("done", /*done_handler*/ ctx[5]);
 
     	const block = {
     		c: function create() {
@@ -32982,7 +35976,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$f.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32991,7 +35985,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$f($$self, $$props, $$invalidate) {
+    function instance$c($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushSolid", slots, []);
     	
@@ -32999,8 +35993,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { value } = $$props;
     	let { colorMode = undefined } = $$props;
 
-    	function onInput(e) {
-    		dispatch("input", new canvasEngine.SolidBrush(e.detail));
+    	function onUpdate(e) {
+    		dispatch("update", value.withColor(e.detail));
     	}
 
     	const writable_props = ["value", "colorMode"];
@@ -33018,7 +36012,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		bubble($$self, event);
     	}
 
-    	function stop_handler(event) {
+    	function done_handler(event) {
     		bubble($$self, event);
     	}
 
@@ -33034,7 +36028,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		dispatch,
     		value,
     		colorMode,
-    		onInput
+    		onUpdate
     	});
 
     	$$self.$inject_state = $$props => {
@@ -33049,23 +36043,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return [
     		colorMode,
     		value,
-    		onInput,
+    		onUpdate,
     		colorcontrol_colorMode_binding,
     		start_handler,
-    		stop_handler
+    		done_handler
     	];
     }
 
     class BrushSolid extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushSolid",
     			options,
-    			id: create_fragment$f.name
+    			id: create_fragment$c.name
     		});
 
     		const { ctx } = this.$$;
@@ -33095,16 +36089,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushPattern.svelte generated by Svelte v3.38.2 */
 
-    const file$d = "src/Components/Properties/Brush/BrushPattern.svelte";
+    const file$8 = "src/Components/Properties/Brush/BrushPattern.svelte";
 
-    function create_fragment$e(ctx) {
+    function create_fragment$b(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Pattern brush";
-    			add_location(div, file$d, 4, 0, 82);
+    			add_location(div, file$8, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33122,7 +36116,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$e.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33131,7 +36125,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$e($$self, $$props, $$invalidate) {
+    function instance$b($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushPattern", slots, []);
     	
@@ -33165,13 +36159,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushPattern extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushPattern",
     			options,
-    			id: create_fragment$e.name
+    			id: create_fragment$b.name
     		});
 
     		const { ctx } = this.$$;
@@ -33201,16 +36195,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushConicalGradient.svelte generated by Svelte v3.38.2 */
 
-    const file$c = "src/Components/Properties/Brush/BrushConicalGradient.svelte";
+    const file$7 = "src/Components/Properties/Brush/BrushConicalGradient.svelte";
 
-    function create_fragment$d(ctx) {
+    function create_fragment$a(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Conical gradient";
-    			add_location(div, file$c, 4, 0, 82);
+    			add_location(div, file$7, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33228,7 +36222,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$d.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33237,7 +36231,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$d($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushConicalGradient", slots, []);
     	
@@ -33271,13 +36265,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushConicalGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushConicalGradient",
     			options,
-    			id: create_fragment$d.name
+    			id: create_fragment$a.name
     		});
 
     		const { ctx } = this.$$;
@@ -33307,16 +36301,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushLinearGradient.svelte generated by Svelte v3.38.2 */
 
-    const file$b = "src/Components/Properties/Brush/BrushLinearGradient.svelte";
+    const file$6 = "src/Components/Properties/Brush/BrushLinearGradient.svelte";
 
-    function create_fragment$c(ctx) {
+    function create_fragment$9(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Linear gradient";
-    			add_location(div, file$b, 4, 0, 82);
+    			add_location(div, file$6, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33334,7 +36328,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$9.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33343,7 +36337,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$c($$self, $$props, $$invalidate) {
+    function instance$9($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushLinearGradient", slots, []);
     	
@@ -33377,13 +36371,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushLinearGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushLinearGradient",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$9.name
     		});
 
     		const { ctx } = this.$$;
@@ -33413,16 +36407,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushRadialGradient.svelte generated by Svelte v3.38.2 */
 
-    const file$a = "src/Components/Properties/Brush/BrushRadialGradient.svelte";
+    const file$5 = "src/Components/Properties/Brush/BrushRadialGradient.svelte";
 
-    function create_fragment$b(ctx) {
+    function create_fragment$8(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Radial gradient";
-    			add_location(div, file$a, 4, 0, 82);
+    			add_location(div, file$5, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33440,7 +36434,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33449,7 +36443,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushRadialGradient", slots, []);
     	
@@ -33483,13 +36477,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushRadialGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushRadialGradient",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$8.name
     		});
 
     		const { ctx } = this.$$;
@@ -33519,16 +36513,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte generated by Svelte v3.38.2 */
 
-    const file$9 = "src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte";
+    const file$4 = "src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte";
 
-    function create_fragment$a(ctx) {
+    function create_fragment$7(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Two point conical gradient";
-    			add_location(div, file$9, 4, 0, 82);
+    			add_location(div, file$4, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33546,7 +36540,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33555,7 +36549,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushTwoPointConicalGradient", slots, []);
     	
@@ -33589,13 +36583,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushTwoPointConicalGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushTwoPointConicalGradient",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$7.name
     		});
 
     		const { ctx } = this.$$;
@@ -33623,47 +36617,291 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    /* src/Components/Properties/Brush/index.svelte generated by Svelte v3.38.2 */
-    const file$8 = "src/Components/Properties/Brush/index.svelte";
+    /* src/Controls/IconSwitch.svelte generated by Svelte v3.38.2 */
+    const file$3 = "src/Controls/IconSwitch.svelte";
 
-    function create_fragment$9(ctx) {
-    	let div0;
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	return child_ctx;
+    }
+
+    // (15:4) {#each items as item (item.value)}
+    function create_each_block(key_1, ctx) {
+    	let sp_action_button;
+    	let sp_icon;
+    	let sp_icon_name_value;
+    	let t;
+    	let sp_action_button_selected_value;
+    	let sp_action_button_title_value;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[4](/*item*/ ctx[6]);
+    	}
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			t = space();
+    			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*item*/ ctx[6].icon);
+    			set_custom_element_data(sp_icon, "size", /*size*/ ctx[2]);
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			add_location(sp_icon, file$3, 16, 12, 517);
+    			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*item*/ ctx[6].value === /*value*/ ctx[0]);
+    			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*item*/ ctx[6].title);
+    			set_custom_element_data(sp_action_button, "size", /*size*/ ctx[2]);
+    			add_location(sp_action_button, file$3, 15, 8, 382);
+    			this.first = sp_action_button;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_action_button, anchor);
+    			append_dev(sp_action_button, sp_icon);
+    			append_dev(sp_action_button, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_action_button, "click", click_handler, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*items*/ 2 && sp_icon_name_value !== (sp_icon_name_value = /*item*/ ctx[6].icon)) {
+    				set_custom_element_data(sp_icon, "name", sp_icon_name_value);
+    			}
+
+    			if (dirty & /*size*/ 4) {
+    				set_custom_element_data(sp_icon, "size", /*size*/ ctx[2]);
+    			}
+
+    			if (dirty & /*items, value*/ 3 && sp_action_button_selected_value !== (sp_action_button_selected_value = /*item*/ ctx[6].value === /*value*/ ctx[0])) {
+    				set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value);
+    			}
+
+    			if (dirty & /*items*/ 2 && sp_action_button_title_value !== (sp_action_button_title_value = /*item*/ ctx[6].title)) {
+    				set_custom_element_data(sp_action_button, "title", sp_action_button_title_value);
+    			}
+
+    			if (dirty & /*size*/ 4) {
+    				set_custom_element_data(sp_action_button, "size", /*size*/ ctx[2]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_action_button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(15:4) {#each items as item (item.value)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$6(ctx) {
     	let sp_action_group;
-    	let sp_action_button0;
-    	let sp_icon0;
-    	let sp_action_button0_selected_value;
-    	let t0;
-    	let sp_action_button1;
-    	let sp_icon1;
-    	let sp_action_button1_selected_value;
-    	let t1;
-    	let sp_action_button2;
-    	let sp_icon2;
-    	let sp_action_button2_selected_value;
-    	let t2;
-    	let sp_action_button3;
-    	let sp_icon3;
-    	let sp_action_button3_selected_value;
-    	let t3;
-    	let sp_action_button4;
-    	let sp_icon4;
-    	let sp_action_button4_selected_value;
-    	let t4;
-    	let sp_action_button5;
-    	let sp_icon5;
-    	let sp_action_button5_selected_value;
-    	let t5;
-    	let sp_action_button6;
-    	let sp_icon6;
-    	let sp_action_button6_selected_value;
-    	let t6;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_value = /*items*/ ctx[1];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*item*/ ctx[6].value;
+    	validate_each_keys(ctx, each_value, get_each_context, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			sp_action_group = element("sp-action-group");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			set_custom_element_data(sp_action_group, "compact", "");
+    			set_custom_element_data(sp_action_group, "emphasized", "");
+    			add_location(sp_action_group, file$3, 13, 0, 298);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_action_group, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(sp_action_group, null);
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*items, value, size, onClick*/ 15) {
+    				each_value = /*items*/ ctx[1];
+    				validate_each_argument(each_value);
+    				validate_each_keys(ctx, each_value, get_each_context, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block, null, get_each_context);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_action_group);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$6.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$6($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("IconSwitch", slots, []);
+    	let { items } = $$props;
+    	let { value } = $$props;
+    	let { size = "m" } = $$props;
+    	const dispatch = createEventDispatcher();
+
+    	function onClick(val) {
+    		if (value === val) {
+    			return;
+    		}
+
+    		$$invalidate(0, value = val);
+    		dispatch("change", value);
+    	}
+
+    	const writable_props = ["items", "value", "size"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<IconSwitch> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = item => onClick(item.value);
+
+    	$$self.$$set = $$props => {
+    		if ("items" in $$props) $$invalidate(1, items = $$props.items);
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("size" in $$props) $$invalidate(2, size = $$props.size);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		createEventDispatcher,
+    		items,
+    		value,
+    		size,
+    		dispatch,
+    		onClick
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("items" in $$props) $$invalidate(1, items = $$props.items);
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("size" in $$props) $$invalidate(2, size = $$props.size);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [value, items, size, onClick, click_handler];
+    }
+
+    class IconSwitch extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { items: 1, value: 0, size: 2 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "IconSwitch",
+    			options,
+    			id: create_fragment$6.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*items*/ ctx[1] === undefined && !("items" in props)) {
+    			console.warn("<IconSwitch> was created without expected prop 'items'");
+    		}
+
+    		if (/*value*/ ctx[0] === undefined && !("value" in props)) {
+    			console.warn("<IconSwitch> was created without expected prop 'value'");
+    		}
+    	}
+
+    	get items() {
+    		throw new Error("<IconSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set items(value) {
+    		throw new Error("<IconSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get value() {
+    		throw new Error("<IconSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<IconSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get size() {
+    		throw new Error("<IconSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set size(value) {
+    		throw new Error("<IconSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Properties/Brush/index.svelte generated by Svelte v3.38.2 */
+    const file$2 = "src/Components/Properties/Brush/index.svelte";
+
+    function create_fragment$5(ctx) {
+    	let div0;
+    	let iconswitch;
+    	let t;
     	let div1;
     	let switch_instance;
     	let updating_colorMode;
     	let current;
 
+    	iconswitch = new IconSwitch({
+    			props: {
+    				value: /*value*/ ctx[1].type,
+    				items: /*items*/ ctx[4]
+    			},
+    			$$inline: true
+    		});
+
+    	iconswitch.$on("change", /*change_handler*/ ctx[5]);
+
     	function switch_instance_colorMode_binding(value) {
-    		/*switch_instance_colorMode_binding*/ ctx[5](value);
+    		/*switch_instance_colorMode_binding*/ ctx[6](value);
     	}
 
     	var switch_value = /*component*/ ctx[2];
@@ -33684,116 +36922,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	if (switch_value) {
     		switch_instance = new switch_value(switch_props(ctx));
     		binding_callbacks.push(() => bind(switch_instance, "colorMode", switch_instance_colorMode_binding));
-    		switch_instance.$on("input", /*input_handler*/ ctx[6]);
-    		switch_instance.$on("start", /*onStart*/ ctx[3]);
-    		switch_instance.$on("stop", /*onStop*/ ctx[4]);
+    		switch_instance.$on("start", /*start_handler*/ ctx[7]);
+    		switch_instance.$on("done", /*done_handler*/ ctx[8]);
+    		switch_instance.$on("update", /*update_handler*/ ctx[9]);
+    		switch_instance.$on("action", /*action_handler*/ ctx[10]);
     	}
 
     	const block = {
     		c: function create() {
     			div0 = element("div");
-    			sp_action_group = element("sp-action-group");
-    			sp_action_button0 = element("sp-action-button");
-    			sp_icon0 = element("sp-icon");
-    			t0 = space();
-    			sp_action_button1 = element("sp-action-button");
-    			sp_icon1 = element("sp-icon");
-    			t1 = space();
-    			sp_action_button2 = element("sp-action-button");
-    			sp_icon2 = element("sp-icon");
-    			t2 = space();
-    			sp_action_button3 = element("sp-action-button");
-    			sp_icon3 = element("sp-icon");
-    			t3 = space();
-    			sp_action_button4 = element("sp-action-button");
-    			sp_icon4 = element("sp-icon");
-    			t4 = space();
-    			sp_action_button5 = element("sp-action-button");
-    			sp_icon5 = element("sp-icon");
-    			t5 = space();
-    			sp_action_button6 = element("sp-action-button");
-    			sp_icon6 = element("sp-icon");
-    			t6 = space();
+    			create_component(iconswitch.$$.fragment);
+    			t = space();
     			div1 = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			set_custom_element_data(sp_icon0, "name", "expr:fill-none");
-    			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$8, 52, 12, 1713);
-    			set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.None);
-    			set_custom_element_data(sp_action_button0, "title", "None");
-    			add_location(sp_action_button0, file$8, 51, 8, 1628);
-    			set_custom_element_data(sp_icon1, "name", "expr:fill-solid");
-    			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$8, 55, 12, 1890);
-    			set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.Solid);
-    			set_custom_element_data(sp_action_button1, "title", "Solid");
-    			add_location(sp_action_button1, file$8, 54, 8, 1803);
-    			set_custom_element_data(sp_icon2, "name", "expr:fill-linear-gradient");
-    			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$8, 58, 12, 2087);
-    			set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.LinearGradient);
-    			set_custom_element_data(sp_action_button2, "title", "Linear gradient");
-    			add_location(sp_action_button2, file$8, 57, 8, 1981);
-    			set_custom_element_data(sp_icon3, "name", "expr:fill-radial-gradient");
-    			set_custom_element_data(sp_icon3, "slot", "icon");
-    			add_location(sp_icon3, file$8, 61, 12, 2294);
-    			set_custom_element_data(sp_action_button3, "selected", sp_action_button3_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.RadialGradient);
-    			set_custom_element_data(sp_action_button3, "title", "Radial gradient");
-    			add_location(sp_action_button3, file$8, 60, 8, 2188);
-    			set_custom_element_data(sp_icon4, "name", "expr:fill-radial-focal-gradient");
-    			set_custom_element_data(sp_icon4, "slot", "icon");
-    			add_location(sp_icon4, file$8, 64, 12, 2520);
-    			set_custom_element_data(sp_action_button4, "selected", sp_action_button4_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.TwoPointGradient);
-    			set_custom_element_data(sp_action_button4, "title", "Radial gradient with focal point");
-    			add_location(sp_action_button4, file$8, 63, 8, 2395);
-    			set_custom_element_data(sp_icon5, "name", "expr:fill-conical-gradient");
-    			set_custom_element_data(sp_icon5, "slot", "icon");
-    			add_location(sp_icon5, file$8, 68, 12, 2746);
-    			set_custom_element_data(sp_action_button5, "selected", sp_action_button5_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.ConicalGradient);
-    			set_custom_element_data(sp_action_button5, "title", "Sweep gradient");
-    			add_location(sp_action_button5, file$8, 67, 8, 2640);
-    			set_custom_element_data(sp_icon6, "name", "expr:fill-pattern");
-    			set_custom_element_data(sp_icon6, "slot", "icon");
-    			add_location(sp_icon6, file$8, 71, 12, 2939);
-    			set_custom_element_data(sp_action_button6, "selected", sp_action_button6_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.Pattern);
-    			set_custom_element_data(sp_action_button6, "title", "Pattern");
-    			add_location(sp_action_button6, file$8, 70, 8, 2848);
-    			set_custom_element_data(sp_action_group, "compact", "");
-    			set_custom_element_data(sp_action_group, "emphasized", "");
-    			set_custom_element_data(sp_action_group, "class", "svelte-ph2hre");
-    			add_location(sp_action_group, file$8, 50, 4, 1583);
     			attr_dev(div0, "class", "brush-control svelte-ph2hre");
-    			add_location(div0, file$8, 49, 0, 1551);
+    			add_location(div0, file$2, 78, 0, 2305);
     			attr_dev(div1, "class", "brush-control-value svelte-ph2hre");
-    			add_location(div1, file$8, 75, 0, 3054);
+    			add_location(div1, file$2, 81, 0, 2438);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
-    			append_dev(div0, sp_action_group);
-    			append_dev(sp_action_group, sp_action_button0);
-    			append_dev(sp_action_button0, sp_icon0);
-    			append_dev(sp_action_group, t0);
-    			append_dev(sp_action_group, sp_action_button1);
-    			append_dev(sp_action_button1, sp_icon1);
-    			append_dev(sp_action_group, t1);
-    			append_dev(sp_action_group, sp_action_button2);
-    			append_dev(sp_action_button2, sp_icon2);
-    			append_dev(sp_action_group, t2);
-    			append_dev(sp_action_group, sp_action_button3);
-    			append_dev(sp_action_button3, sp_icon3);
-    			append_dev(sp_action_group, t3);
-    			append_dev(sp_action_group, sp_action_button4);
-    			append_dev(sp_action_button4, sp_icon4);
-    			append_dev(sp_action_group, t4);
-    			append_dev(sp_action_group, sp_action_button5);
-    			append_dev(sp_action_button5, sp_icon5);
-    			append_dev(sp_action_group, t5);
-    			append_dev(sp_action_group, sp_action_button6);
-    			append_dev(sp_action_button6, sp_icon6);
-    			insert_dev(target, t6, anchor);
+    			mount_component(iconswitch, div0, null);
+    			insert_dev(target, t, anchor);
     			insert_dev(target, div1, anchor);
 
     			if (switch_instance) {
@@ -33803,34 +36956,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*value*/ 2 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.None)) {
-    				set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.Solid)) {
-    				set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button2_selected_value !== (sp_action_button2_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.LinearGradient)) {
-    				set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button3_selected_value !== (sp_action_button3_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.RadialGradient)) {
-    				set_custom_element_data(sp_action_button3, "selected", sp_action_button3_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button4_selected_value !== (sp_action_button4_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.TwoPointGradient)) {
-    				set_custom_element_data(sp_action_button4, "selected", sp_action_button4_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button5_selected_value !== (sp_action_button5_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.ConicalGradient)) {
-    				set_custom_element_data(sp_action_button5, "selected", sp_action_button5_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_action_button6_selected_value !== (sp_action_button6_selected_value = /*value*/ ctx[1].type === canvasEngine.BrushType.Pattern)) {
-    				set_custom_element_data(sp_action_button6, "selected", sp_action_button6_selected_value);
-    			}
-
+    			const iconswitch_changes = {};
+    			if (dirty & /*value*/ 2) iconswitch_changes.value = /*value*/ ctx[1].type;
+    			iconswitch.$set(iconswitch_changes);
     			const switch_instance_changes = {};
     			if (dirty & /*value*/ 2) switch_instance_changes.value = /*value*/ ctx[1];
 
@@ -33855,9 +36983,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (switch_value) {
     					switch_instance = new switch_value(switch_props(ctx));
     					binding_callbacks.push(() => bind(switch_instance, "colorMode", switch_instance_colorMode_binding));
-    					switch_instance.$on("input", /*input_handler*/ ctx[6]);
-    					switch_instance.$on("start", /*onStart*/ ctx[3]);
-    					switch_instance.$on("stop", /*onStop*/ ctx[4]);
+    					switch_instance.$on("start", /*start_handler*/ ctx[7]);
+    					switch_instance.$on("done", /*done_handler*/ ctx[8]);
+    					switch_instance.$on("update", /*update_handler*/ ctx[9]);
+    					switch_instance.$on("action", /*action_handler*/ ctx[10]);
     					create_component(switch_instance.$$.fragment);
     					transition_in(switch_instance.$$.fragment, 1);
     					mount_component(switch_instance, div1, null);
@@ -33870,16 +36999,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(iconswitch.$$.fragment, local);
     			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(iconswitch.$$.fragment, local);
     			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div0);
-    			if (detaching) detach_dev(t6);
+    			destroy_component(iconswitch);
+    			if (detaching) detach_dev(t);
     			if (detaching) detach_dev(div1);
     			if (switch_instance) destroy_component(switch_instance);
     		}
@@ -33887,7 +37019,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$5.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33896,24 +37028,51 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Brush", slots, []);
     	const dispatch = createEventDispatcher();
     	let { value } = $$props;
     	let { colorMode = undefined } = $$props;
     	let component;
-    	let last = null;
 
-    	function onStart() {
-    		dispatch("start", value);
-    		last = value;
-    	}
-
-    	function onStop() {
-    		dispatch("stop", { start: last, stop: value });
-    		last = null;
-    	}
+    	const items = [
+    		{
+    			value: canvasEngine.BrushType.None,
+    			title: "None",
+    			icon: "expr:fill-none"
+    		},
+    		{
+    			value: canvasEngine.BrushType.Solid,
+    			title: "Solid",
+    			icon: "expr:fill-solid"
+    		},
+    		{
+    			value: canvasEngine.BrushType.LinearGradient,
+    			title: "Linear gradient",
+    			icon: "expr:fill-linear-gradient"
+    		},
+    		{
+    			value: canvasEngine.BrushType.RadialGradient,
+    			title: "Radial gradient",
+    			icon: "expr:fill-radial-gradient"
+    		},
+    		{
+    			value: canvasEngine.BrushType.TwoPointGradient,
+    			title: "Radial gradient with focal point",
+    			icon: "expr:fill-radial-focal-gradient"
+    		},
+    		{
+    			value: canvasEngine.BrushType.ConicalGradient,
+    			title: "Sweep gradient",
+    			icon: "expr:fill-conical-gradient"
+    		},
+    		{
+    			value: canvasEngine.BrushType.Pattern,
+    			title: "Pattern",
+    			icon: "expr:fill-pattern"
+    		}
+    	];
 
     	const writable_props = ["value", "colorMode"];
 
@@ -33921,12 +37080,26 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Brush> was created with unknown prop '${key}'`);
     	});
 
+    	const change_handler = e => dispatch("change", e.detail);
+
     	function switch_instance_colorMode_binding(value) {
     		colorMode = value;
     		$$invalidate(0, colorMode);
     	}
 
-    	function input_handler(event) {
+    	function start_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function update_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function action_handler(event) {
     		bubble($$self, event);
     	}
 
@@ -33946,20 +37119,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		BrushLinearGradient,
     		BrushRadialGradient,
     		BrushTwoPointConicalGradient,
+    		IconSwitch,
     		dispatch,
     		value,
     		colorMode,
     		component,
-    		last,
-    		onStart,
-    		onStop
+    		items
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("value" in $$props) $$invalidate(1, value = $$props.value);
     		if ("colorMode" in $$props) $$invalidate(0, colorMode = $$props.colorMode);
     		if ("component" in $$props) $$invalidate(2, component = $$props.component);
-    		if ("last" in $$props) last = $$props.last;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -34000,23 +37171,27 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		colorMode,
     		value,
     		component,
-    		onStart,
-    		onStop,
+    		dispatch,
+    		items,
+    		change_handler,
     		switch_instance_colorMode_binding,
-    		input_handler
+    		start_handler,
+    		done_handler,
+    		update_handler,
+    		action_handler
     	];
     }
 
     class Brush_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Brush_1",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$5.name
     		});
 
     		const { ctx } = this.$$;
@@ -34044,2518 +37219,48 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    /* src/Controls/SpSlider.svelte generated by Svelte v3.38.2 */
-    const file$7 = "src/Controls/SpSlider.svelte";
-
-    function get_each_context(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[45] = list[i];
-    	return child_ctx;
-    }
-
-    // (203:4) {#if useTextbox || label}
-    function create_if_block_6(ctx) {
-    	let div;
-    	let label_1;
-    	let t0;
-    	let t1;
-    	let div_role_value;
-
-    	function select_block_type(ctx, dirty) {
-    		if (/*useTextbox*/ ctx[18]) return create_if_block_7;
-    		return create_else_block_2;
-    	}
-
-    	let current_block_type = select_block_type(ctx);
-    	let if_block = current_block_type(ctx);
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			label_1 = element("label");
-    			t0 = text(/*label*/ ctx[1]);
-    			t1 = space();
-    			if_block.c();
-    			attr_dev(label_1, "class", "spectrum-Slider-label");
-    			attr_dev(label_1, "id", /*labelId*/ ctx[20]);
-    			attr_dev(label_1, "for", /*inputId*/ ctx[21]);
-    			add_location(label_1, file$7, 204, 12, 6230);
-    			attr_dev(div, "class", "spectrum-Slider-labelContainer");
-    			attr_dev(div, "role", div_role_value = /*isRange*/ ctx[10] ? "presentation" : undefined);
-    			add_location(div, file$7, 203, 8, 6129);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, label_1);
-    			append_dev(label_1, t0);
-    			append_dev(div, t1);
-    			if_block.m(div, null);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*label*/ 2) set_data_dev(t0, /*label*/ ctx[1]);
-
-    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-    				if_block.p(ctx, dirty);
-    			} else {
-    				if_block.d(1);
-    				if_block = current_block_type(ctx);
-
-    				if (if_block) {
-    					if_block.c();
-    					if_block.m(div, null);
-    				}
-    			}
-
-    			if (dirty[0] & /*isRange*/ 1024 && div_role_value !== (div_role_value = /*isRange*/ ctx[10] ? "presentation" : undefined)) {
-    				attr_dev(div, "role", div_role_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_6.name,
-    		type: "if",
-    		source: "(203:4) {#if useTextbox || label}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (208:12) {:else}
-    function create_else_block_2(ctx) {
-    	let div;
-
-    	let t_value = (Array.isArray(/*computedValue*/ ctx[11])
-    	? /*computedValue*/ ctx[11].join(" - ")
-    	: /*computedValue*/ ctx[11]) + "";
-
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			t = text(t_value);
-    			attr_dev(div, "class", "spectrum-Slider-value");
-    			attr_dev(div, "role", "textbox");
-    			attr_dev(div, "aria-readonly", "true");
-    			attr_dev(div, "aria-labelledby", /*labelId*/ ctx[20]);
-    			add_location(div, file$7, 208, 16, 6625);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*computedValue*/ 2048 && t_value !== (t_value = (Array.isArray(/*computedValue*/ ctx[11])
-    			? /*computedValue*/ ctx[11].join(" - ")
-    			: /*computedValue*/ ctx[11]) + "")) set_data_dev(t, t_value);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_else_block_2.name,
-    		type: "else",
-    		source: "(208:12) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (206:12) {#if useTextbox}
-    function create_if_block_7(ctx) {
-    	let input;
-    	let input_value_value;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			input = element("input");
-
-    			input.value = input_value_value = /*allowOverflow*/ ctx[7]
-    			? /*value*/ ctx[0]
-    			: /*computedValue*/ ctx[11];
-
-    			attr_dev(input, "tabindex", "-1");
-    			attr_dev(input, "class", "spectrum-Textfield-input spectrum-Slider-value");
-    			attr_dev(input, "type", "number");
-    			attr_dev(input, "min", /*min*/ ctx[2]);
-    			attr_dev(input, "max", /*max*/ ctx[3]);
-    			attr_dev(input, "step", /*step*/ ctx[4]);
-    			add_location(input, file$7, 206, 16, 6359);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, input, anchor);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(input, "keydown", self$1(onInputKeyDown), false, false, false),
-    					listen_dev(input, "blur", /*onInputBlur*/ ctx[26], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*allowOverflow, value, computedValue*/ 2177 && input_value_value !== (input_value_value = /*allowOverflow*/ ctx[7]
-    			? /*value*/ ctx[0]
-    			: /*computedValue*/ ctx[11])) {
-    				prop_dev(input, "value", input_value_value);
-    			}
-
-    			if (dirty[0] & /*min*/ 4) {
-    				attr_dev(input, "min", /*min*/ ctx[2]);
-    			}
-
-    			if (dirty[0] & /*max*/ 8) {
-    				attr_dev(input, "max", /*max*/ ctx[3]);
-    			}
-
-    			if (dirty[0] & /*step*/ 16) {
-    				attr_dev(input, "step", /*step*/ ctx[4]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(input);
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_7.name,
-    		type: "if",
-    		source: "(206:12) {#if useTextbox}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (222:8) {:else}
-    function create_else_block_1(ctx) {
-    	let div;
-    	let div_style_value;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			attr_dev(div, "class", "spectrum-Slider-track");
-    			attr_dev(div, "style", div_style_value = `width: ${/*track1*/ ctx[13]}%;`);
-    			add_location(div, file$7, 222, 12, 7394);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*track1*/ 8192 && div_style_value !== (div_style_value = `width: ${/*track1*/ ctx[13]}%;`)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_else_block_1.name,
-    		type: "else",
-    		source: "(222:8) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (216:8) {#if !isRange && fill === 'ramp'}
-    function create_if_block_5(ctx) {
-    	let div;
-    	let svg;
-    	let path;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			svg = svg_element("svg");
-    			path = svg_element("path");
-    			attr_dev(path, "d", "M240,4v8c0,2.3-1.9,4.1-4.2,4L1,9C0.4,9,0,8.5,0,8c0-0.5,0.4-1,1-1l234.8-7C238.1-0.1,240,1.7,240,4z");
-    			add_location(path, file$7, 218, 20, 7208);
-    			attr_dev(svg, "viewBox", "0 0 240 16");
-    			attr_dev(svg, "preserveAspectRatio", "none");
-    			attr_dev(svg, "aria-hidden", "true");
-    			attr_dev(svg, "focusable", "false");
-    			add_location(svg, file$7, 217, 16, 7097);
-    			attr_dev(div, "class", "spectrum-Slider-ramp");
-    			add_location(div, file$7, 216, 12, 7046);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, svg);
-    			append_dev(svg, path);
-    		},
-    		p: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_5.name,
-    		type: "if",
-    		source: "(216:8) {#if !isRange && fill === 'ramp'}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (225:8) {#if hasTicks}
-    function create_if_block_3(ctx) {
-    	let div;
-    	let each_value = /*tickLabels*/ ctx[8];
-    	validate_each_argument(each_value);
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			attr_dev(div, "class", "spectrum-Slider-ticks");
-    			add_location(div, file$7, 225, 12, 7514);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*tickLabels*/ 256) {
-    				each_value = /*tickLabels*/ ctx[8];
-    				validate_each_argument(each_value);
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(div, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			destroy_each(each_blocks, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_3.name,
-    		type: "if",
-    		source: "(225:8) {#if hasTicks}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (229:24) {#if tick != null}
-    function create_if_block_4(ctx) {
-    	let div;
-    	let t_value = /*tick*/ ctx[45] + "";
-    	let t;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			t = text(t_value);
-    			attr_dev(div, "class", "spectrum-Slider-tickLabel");
-    			add_location(div, file$7, 229, 28, 7719);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*tickLabels*/ 256 && t_value !== (t_value = /*tick*/ ctx[45] + "")) set_data_dev(t, t_value);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_4.name,
-    		type: "if",
-    		source: "(229:24) {#if tick != null}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (227:16) {#each tickLabels as tick}
-    function create_each_block(ctx) {
-    	let div;
-    	let t;
-    	let if_block = /*tick*/ ctx[45] != null && create_if_block_4(ctx);
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			if (if_block) if_block.c();
-    			t = space();
-    			attr_dev(div, "class", "spectrum-Slider-tick");
-    			add_location(div, file$7, 227, 20, 7613);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			if (if_block) if_block.m(div, null);
-    			append_dev(div, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (/*tick*/ ctx[45] != null) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_4(ctx);
-    					if_block.c();
-    					if_block.m(div, t);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if (if_block) if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block.name,
-    		type: "each",
-    		source: "(227:16) {#each tickLabels as tick}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (254:8) {:else}
-    function create_else_block$1(ctx) {
-    	let div;
-    	let input;
-    	let div_style_value;
-    	let dragAction_action;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			input = element("input");
-    			attr_dev(input, "id", /*inputId*/ ctx[21]);
-    			attr_dev(input, "type", "range");
-    			attr_dev(input, "class", "spectrum-Slider-input");
-    			input.disabled = /*disabled*/ ctx[6];
-    			input.value = /*computedValue*/ ctx[11];
-    			attr_dev(input, "step", /*step*/ ctx[4]);
-    			attr_dev(input, "min", /*min*/ ctx[2]);
-    			attr_dev(input, "max", /*max*/ ctx[3]);
-    			add_location(input, file$7, 257, 16, 9579);
-    			attr_dev(div, "class", "spectrum-Slider-handle");
-    			attr_dev(div, "style", div_style_value = `left: ${/*percent*/ ctx[9]}%;`);
-    			toggle_class(div, "is-dragged", /*dragged*/ ctx[16] !== 0);
-    			toggle_class(div, "is-focused", /*focused*/ ctx[15] !== 0);
-    			add_location(div, file$7, 254, 12, 9298);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, input);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(input, "focus", /*onFocus*/ ctx[22], false, false, false),
-    					listen_dev(input, "blur", /*onBlur*/ ctx[23], false, false, false),
-    					listen_dev(input, "keydown", /*onKeyDown*/ ctx[25], false, false, false),
-    					action_destroyer(dragAction_action = dragAction.call(null, div, {
-    						surface: /*surface*/ ctx[17],
-    						move: /*dragAction_function_4*/ ctx[38],
-    						start: /*dragAction_function_5*/ ctx[39],
-    						end: /*onDragEnd*/ ctx[29]
-    					}))
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*disabled*/ 64) {
-    				prop_dev(input, "disabled", /*disabled*/ ctx[6]);
-    			}
-
-    			if (dirty[0] & /*computedValue*/ 2048) {
-    				prop_dev(input, "value", /*computedValue*/ ctx[11]);
-    			}
-
-    			if (dirty[0] & /*step*/ 16) {
-    				attr_dev(input, "step", /*step*/ ctx[4]);
-    			}
-
-    			if (dirty[0] & /*min*/ 4) {
-    				attr_dev(input, "min", /*min*/ ctx[2]);
-    			}
-
-    			if (dirty[0] & /*max*/ 8) {
-    				attr_dev(input, "max", /*max*/ ctx[3]);
-    			}
-
-    			if (dirty[0] & /*percent*/ 512 && div_style_value !== (div_style_value = `left: ${/*percent*/ ctx[9]}%;`)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-
-    			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 131072) dragAction_action.update.call(null, {
-    				surface: /*surface*/ ctx[17],
-    				move: /*dragAction_function_4*/ ctx[38],
-    				start: /*dragAction_function_5*/ ctx[39],
-    				end: /*onDragEnd*/ ctx[29]
-    			});
-
-    			if (dirty[0] & /*dragged*/ 65536) {
-    				toggle_class(div, "is-dragged", /*dragged*/ ctx[16] !== 0);
-    			}
-
-    			if (dirty[0] & /*focused*/ 32768) {
-    				toggle_class(div, "is-focused", /*focused*/ ctx[15] !== 0);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_else_block$1.name,
-    		type: "else",
-    		source: "(254:8) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (236:8) {#if isRange}
-    function create_if_block_2(ctx) {
-    	let div0;
-    	let input0;
-    	let input0_value_value;
-    	let div0_style_value;
-    	let dragAction_action;
-    	let t0;
-    	let div1;
-    	let div1_style_value;
-    	let t1;
-    	let div2;
-    	let input1;
-    	let input1_value_value;
-    	let div2_style_value;
-    	let dragAction_action_1;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			div0 = element("div");
-    			input0 = element("input");
-    			t0 = space();
-    			div1 = element("div");
-    			t1 = space();
-    			div2 = element("div");
-    			input1 = element("input");
-    			attr_dev(input0, "id", /*inputId*/ ctx[21]);
-    			attr_dev(input0, "type", "range");
-    			attr_dev(input0, "class", "spectrum-Slider-input");
-    			input0.disabled = /*disabled*/ ctx[6];
-    			input0.value = input0_value_value = /*computedValue*/ ctx[11][0];
-    			attr_dev(input0, "step", /*step*/ ctx[4]);
-    			attr_dev(input0, "min", /*min*/ ctx[2]);
-    			attr_dev(input0, "max", /*max*/ ctx[3]);
-    			add_location(input0, file$7, 240, 16, 8264);
-    			attr_dev(div0, "class", "spectrum-Slider-handle");
-    			attr_dev(div0, "role", "presentation");
-    			attr_dev(div0, "data-slider-name", "left");
-    			attr_dev(div0, "style", div0_style_value = `left: ${/*percent*/ ctx[9][0]}%;`);
-    			toggle_class(div0, "is-dragged", /*dragged*/ ctx[16] === 1);
-    			toggle_class(div0, "is-focused", /*focused*/ ctx[15] === 1);
-    			add_location(div0, file$7, 236, 12, 7919);
-    			attr_dev(div1, "class", "spectrum-Slider-track");
-    			attr_dev(div1, "style", div1_style_value = `left: ${/*track1*/ ctx[13]}%; right: ${/*track2*/ ctx[14]}%;`);
-    			add_location(div1, file$7, 244, 12, 8545);
-    			attr_dev(input1, "id", /*inputId*/ ctx[21] + "-alt");
-    			attr_dev(input1, "type", "range");
-    			attr_dev(input1, "class", "spectrum-Slider-input");
-    			input1.disabled = /*disabled*/ ctx[6];
-    			input1.value = input1_value_value = /*computedValue*/ ctx[11][1];
-    			attr_dev(input1, "step", /*step*/ ctx[4]);
-    			attr_dev(input1, "min", /*min*/ ctx[2]);
-    			attr_dev(input1, "max", /*max*/ ctx[3]);
-    			add_location(input1, file$7, 249, 16, 8992);
-    			attr_dev(div2, "class", "spectrum-Slider-handle");
-    			attr_dev(div2, "role", "presentation");
-    			attr_dev(div2, "data-slider-name", "right");
-    			attr_dev(div2, "style", div2_style_value = `left: ${/*percent*/ ctx[9][1]}%;`);
-    			toggle_class(div2, "is-dragged", /*dragged*/ ctx[16] === 2);
-    			toggle_class(div2, "is-focused", /*focused*/ ctx[15] === 2);
-    			add_location(div2, file$7, 245, 12, 8646);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div0, anchor);
-    			append_dev(div0, input0);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, div1, anchor);
-    			insert_dev(target, t1, anchor);
-    			insert_dev(target, div2, anchor);
-    			append_dev(div2, input1);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(input0, "focus", /*onFocus*/ ctx[22], false, false, false),
-    					listen_dev(input0, "blur", /*onBlur*/ ctx[23], false, false, false),
-    					listen_dev(input0, "keydown", /*onKeyDown*/ ctx[25], false, false, false),
-    					action_destroyer(dragAction_action = dragAction.call(null, div0, {
-    						surface: /*surface*/ ctx[17],
-    						move: /*dragAction_function*/ ctx[34],
-    						start: /*dragAction_function_1*/ ctx[35],
-    						end: /*onDragEnd*/ ctx[29]
-    					})),
-    					listen_dev(input1, "focus", /*onFocus*/ ctx[22], false, false, false),
-    					listen_dev(input1, "blur", /*onBlur*/ ctx[23], false, false, false),
-    					listen_dev(input1, "keydown", /*onKeyDown*/ ctx[25], false, false, false),
-    					action_destroyer(dragAction_action_1 = dragAction.call(null, div2, {
-    						surface: /*surface*/ ctx[17],
-    						move: /*dragAction_function_2*/ ctx[36],
-    						start: /*dragAction_function_3*/ ctx[37],
-    						end: /*onDragEnd*/ ctx[29]
-    					}))
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*disabled*/ 64) {
-    				prop_dev(input0, "disabled", /*disabled*/ ctx[6]);
-    			}
-
-    			if (dirty[0] & /*computedValue*/ 2048 && input0_value_value !== (input0_value_value = /*computedValue*/ ctx[11][0])) {
-    				prop_dev(input0, "value", input0_value_value);
-    			}
-
-    			if (dirty[0] & /*step*/ 16) {
-    				attr_dev(input0, "step", /*step*/ ctx[4]);
-    			}
-
-    			if (dirty[0] & /*min*/ 4) {
-    				attr_dev(input0, "min", /*min*/ ctx[2]);
-    			}
-
-    			if (dirty[0] & /*max*/ 8) {
-    				attr_dev(input0, "max", /*max*/ ctx[3]);
-    			}
-
-    			if (dirty[0] & /*percent*/ 512 && div0_style_value !== (div0_style_value = `left: ${/*percent*/ ctx[9][0]}%;`)) {
-    				attr_dev(div0, "style", div0_style_value);
-    			}
-
-    			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 131072) dragAction_action.update.call(null, {
-    				surface: /*surface*/ ctx[17],
-    				move: /*dragAction_function*/ ctx[34],
-    				start: /*dragAction_function_1*/ ctx[35],
-    				end: /*onDragEnd*/ ctx[29]
-    			});
-
-    			if (dirty[0] & /*dragged*/ 65536) {
-    				toggle_class(div0, "is-dragged", /*dragged*/ ctx[16] === 1);
-    			}
-
-    			if (dirty[0] & /*focused*/ 32768) {
-    				toggle_class(div0, "is-focused", /*focused*/ ctx[15] === 1);
-    			}
-
-    			if (dirty[0] & /*track1, track2*/ 24576 && div1_style_value !== (div1_style_value = `left: ${/*track1*/ ctx[13]}%; right: ${/*track2*/ ctx[14]}%;`)) {
-    				attr_dev(div1, "style", div1_style_value);
-    			}
-
-    			if (dirty[0] & /*disabled*/ 64) {
-    				prop_dev(input1, "disabled", /*disabled*/ ctx[6]);
-    			}
-
-    			if (dirty[0] & /*computedValue*/ 2048 && input1_value_value !== (input1_value_value = /*computedValue*/ ctx[11][1])) {
-    				prop_dev(input1, "value", input1_value_value);
-    			}
-
-    			if (dirty[0] & /*step*/ 16) {
-    				attr_dev(input1, "step", /*step*/ ctx[4]);
-    			}
-
-    			if (dirty[0] & /*min*/ 4) {
-    				attr_dev(input1, "min", /*min*/ ctx[2]);
-    			}
-
-    			if (dirty[0] & /*max*/ 8) {
-    				attr_dev(input1, "max", /*max*/ ctx[3]);
-    			}
-
-    			if (dirty[0] & /*percent*/ 512 && div2_style_value !== (div2_style_value = `left: ${/*percent*/ ctx[9][1]}%;`)) {
-    				attr_dev(div2, "style", div2_style_value);
-    			}
-
-    			if (dragAction_action_1 && is_function(dragAction_action_1.update) && dirty[0] & /*surface*/ 131072) dragAction_action_1.update.call(null, {
-    				surface: /*surface*/ ctx[17],
-    				move: /*dragAction_function_2*/ ctx[36],
-    				start: /*dragAction_function_3*/ ctx[37],
-    				end: /*onDragEnd*/ ctx[29]
-    			});
-
-    			if (dirty[0] & /*dragged*/ 65536) {
-    				toggle_class(div2, "is-dragged", /*dragged*/ ctx[16] === 2);
-    			}
-
-    			if (dirty[0] & /*focused*/ 32768) {
-    				toggle_class(div2, "is-focused", /*focused*/ ctx[15] === 2);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div0);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(div1);
-    			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(div2);
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_2.name,
-    		type: "if",
-    		source: "(236:8) {#if isRange}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (263:8) {#if isRange || fill !== 'ramp'}
-    function create_if_block_1$1(ctx) {
-    	let div;
-    	let div_style_value;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			attr_dev(div, "class", "spectrum-Slider-track");
-    			attr_dev(div, "style", div_style_value = `width: ${/*track2*/ ctx[14]}%;`);
-    			add_location(div, file$7, 263, 12, 9912);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*track2*/ 16384 && div_style_value !== (div_style_value = `width: ${/*track2*/ ctx[14]}%;`)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1$1.name,
-    		type: "if",
-    		source: "(263:8) {#if isRange || fill !== 'ramp'}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (266:8) {#if !isRange && fill === 'middle'}
-    function create_if_block$2(ctx) {
-    	let div;
-    	let div_style_value;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			attr_dev(div, "class", "spectrum-Slider-fill");
-
-    			attr_dev(div, "style", div_style_value = /*percent*/ ctx[9] === 50
-    			? undefined
-    			: /*percent*/ ctx[9] < 50
-    				? `left: ${/*percent*/ ctx[9]}%; width: ${50 - /*percent*/ ctx[9]}%`
-    				: `left: 50%; width: ${/*percent*/ ctx[9] - 50}%`);
-
-    			toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[9] > 50);
-    			add_location(div, file$7, 266, 12, 10053);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*percent*/ 512 && div_style_value !== (div_style_value = /*percent*/ ctx[9] === 50
-    			? undefined
-    			: /*percent*/ ctx[9] < 50
-    				? `left: ${/*percent*/ ctx[9]}%; width: ${50 - /*percent*/ ctx[9]}%`
-    				: `left: 50%; width: ${/*percent*/ ctx[9] - 50}%`)) {
-    				attr_dev(div, "style", div_style_value);
-    			}
-
-    			if (dirty[0] & /*percent*/ 512) {
-    				toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[9] > 50);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$2.name,
-    		type: "if",
-    		source: "(266:8) {#if !isRange && fill === 'middle'}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$8(ctx) {
-    	let div1;
-    	let t0;
-    	let div0;
-    	let t1;
-    	let t2;
-    	let t3;
-    	let t4;
-    	let div0_role_value;
-    	let div1_role_value;
-    	let div1_aria_labelledby_value;
-    	let mounted;
-    	let dispose;
-    	let if_block0 = (/*useTextbox*/ ctx[18] || /*label*/ ctx[1]) && create_if_block_6(ctx);
-
-    	function select_block_type_1(ctx, dirty) {
-    		if (!/*isRange*/ ctx[10] && /*fill*/ ctx[5] === "ramp") return create_if_block_5;
-    		return create_else_block_1;
-    	}
-
-    	let current_block_type = select_block_type_1(ctx);
-    	let if_block1 = current_block_type(ctx);
-    	let if_block2 = /*hasTicks*/ ctx[12] && create_if_block_3(ctx);
-
-    	function select_block_type_2(ctx, dirty) {
-    		if (/*isRange*/ ctx[10]) return create_if_block_2;
-    		return create_else_block$1;
-    	}
-
-    	let current_block_type_1 = select_block_type_2(ctx);
-    	let if_block3 = current_block_type_1(ctx);
-    	let if_block4 = (/*isRange*/ ctx[10] || /*fill*/ ctx[5] !== "ramp") && create_if_block_1$1(ctx);
-    	let if_block5 = !/*isRange*/ ctx[10] && /*fill*/ ctx[5] === "middle" && create_if_block$2(ctx);
-
-    	let div1_levels = [
-    		/*$$restProps*/ ctx[30],
-    		{ class: /*computedClass*/ ctx[19] },
-    		{
-    			role: div1_role_value = /*isRange*/ ctx[10] ? "group" : undefined
-    		},
-    		{
-    			"aria-labelledby": div1_aria_labelledby_value = /*isRange*/ ctx[10] && /*label*/ ctx[1]
-    			? /*labelId*/ ctx[20]
-    			: undefined
-    		}
-    	];
-
-    	let div1_data = {};
-
-    	for (let i = 0; i < div1_levels.length; i += 1) {
-    		div1_data = assign(div1_data, div1_levels[i]);
-    	}
-
-    	const block = {
-    		c: function create() {
-    			div1 = element("div");
-    			if (if_block0) if_block0.c();
-    			t0 = space();
-    			div0 = element("div");
-    			if_block1.c();
-    			t1 = space();
-    			if (if_block2) if_block2.c();
-    			t2 = space();
-    			if_block3.c();
-    			t3 = space();
-    			if (if_block4) if_block4.c();
-    			t4 = space();
-    			if (if_block5) if_block5.c();
-    			attr_dev(div0, "class", "spectrum-Slider-controls");
-    			attr_dev(div0, "role", div0_role_value = /*isRange*/ ctx[10] ? "presentation" : undefined);
-    			add_location(div0, file$7, 214, 4, 6890);
-    			set_attributes(div1, div1_data);
-    			add_location(div1, file$7, 199, 0, 5922);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			if (if_block0) if_block0.m(div1, null);
-    			append_dev(div1, t0);
-    			append_dev(div1, div0);
-    			if_block1.m(div0, null);
-    			append_dev(div0, t1);
-    			if (if_block2) if_block2.m(div0, null);
-    			append_dev(div0, t2);
-    			if_block3.m(div0, null);
-    			append_dev(div0, t3);
-    			if (if_block4) if_block4.m(div0, null);
-    			append_dev(div0, t4);
-    			if (if_block5) if_block5.m(div0, null);
-    			/*div1_binding*/ ctx[40](div1);
-
-    			if (!mounted) {
-    				dispose = listen_dev(div0, "click", /*onClick*/ ctx[24], false, false, false);
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (/*useTextbox*/ ctx[18] || /*label*/ ctx[1]) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    				} else {
-    					if_block0 = create_if_block_6(ctx);
-    					if_block0.c();
-    					if_block0.m(div1, t0);
-    				}
-    			} else if (if_block0) {
-    				if_block0.d(1);
-    				if_block0 = null;
-    			}
-
-    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block1) {
-    				if_block1.p(ctx, dirty);
-    			} else {
-    				if_block1.d(1);
-    				if_block1 = current_block_type(ctx);
-
-    				if (if_block1) {
-    					if_block1.c();
-    					if_block1.m(div0, t1);
-    				}
-    			}
-
-    			if (/*hasTicks*/ ctx[12]) {
-    				if (if_block2) {
-    					if_block2.p(ctx, dirty);
-    				} else {
-    					if_block2 = create_if_block_3(ctx);
-    					if_block2.c();
-    					if_block2.m(div0, t2);
-    				}
-    			} else if (if_block2) {
-    				if_block2.d(1);
-    				if_block2 = null;
-    			}
-
-    			if (current_block_type_1 === (current_block_type_1 = select_block_type_2(ctx)) && if_block3) {
-    				if_block3.p(ctx, dirty);
-    			} else {
-    				if_block3.d(1);
-    				if_block3 = current_block_type_1(ctx);
-
-    				if (if_block3) {
-    					if_block3.c();
-    					if_block3.m(div0, t3);
-    				}
-    			}
-
-    			if (/*isRange*/ ctx[10] || /*fill*/ ctx[5] !== "ramp") {
-    				if (if_block4) {
-    					if_block4.p(ctx, dirty);
-    				} else {
-    					if_block4 = create_if_block_1$1(ctx);
-    					if_block4.c();
-    					if_block4.m(div0, t4);
-    				}
-    			} else if (if_block4) {
-    				if_block4.d(1);
-    				if_block4 = null;
-    			}
-
-    			if (!/*isRange*/ ctx[10] && /*fill*/ ctx[5] === "middle") {
-    				if (if_block5) {
-    					if_block5.p(ctx, dirty);
-    				} else {
-    					if_block5 = create_if_block$2(ctx);
-    					if_block5.c();
-    					if_block5.m(div0, null);
-    				}
-    			} else if (if_block5) {
-    				if_block5.d(1);
-    				if_block5 = null;
-    			}
-
-    			if (dirty[0] & /*isRange*/ 1024 && div0_role_value !== (div0_role_value = /*isRange*/ ctx[10] ? "presentation" : undefined)) {
-    				attr_dev(div0, "role", div0_role_value);
-    			}
-
-    			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
-    				dirty[0] & /*$$restProps*/ 1073741824 && /*$$restProps*/ ctx[30],
-    				dirty[0] & /*computedClass*/ 524288 && { class: /*computedClass*/ ctx[19] },
-    				dirty[0] & /*isRange*/ 1024 && div1_role_value !== (div1_role_value = /*isRange*/ ctx[10] ? "group" : undefined) && { role: div1_role_value },
-    				dirty[0] & /*isRange, label*/ 1026 && div1_aria_labelledby_value !== (div1_aria_labelledby_value = /*isRange*/ ctx[10] && /*label*/ ctx[1]
-    				? /*labelId*/ ctx[20]
-    				: undefined) && {
-    					"aria-labelledby": div1_aria_labelledby_value
-    				}
-    			]));
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
-    			if (if_block0) if_block0.d();
-    			if_block1.d();
-    			if (if_block2) if_block2.d();
-    			if_block3.d();
-    			if (if_block4) if_block4.d();
-    			if (if_block5) if_block5.d();
-    			/*div1_binding*/ ctx[40](null);
-    			mounted = false;
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$8.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function onInputKeyDown(e) {
-    	if (e.key === "Enter" || e.key === "Escape") {
-    		e.preventDefault();
-    		e.stopPropagation();
-    		e.target.blur();
-    	}
-    }
-
-    function instance$8($$self, $$props, $$invalidate) {
-    	let isRange;
-    	let computedValue;
-    	let hasTicks;
-    	let useTextbox;
-    	let computedClass;
-
-    	const omit_props_names = [
-    		"label","value","min","max","step","round","fill","ticks","disabled","editable","allowOverflow"
-    	];
-
-    	let $$restProps = compute_rest_props($$props, omit_props_names);
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("SpSlider", slots, []);
-    	const dispatch = createEventDispatcher();
-    	let { label = undefined } = $$props;
-    	let { value = 0 } = $$props;
-    	let { min = 0 } = $$props;
-    	let { max = 100 } = $$props;
-    	let { step = 1 } = $$props;
-    	let { round = null } = $$props;
-    	let { fill = "none" } = $$props;
-    	let { ticks = 0 } = $$props;
-    	let { disabled = false } = $$props;
-    	let { editable = false } = $$props;
-    	let { allowOverflow = false } = $$props;
-    	const genId = nextId();
-    	const labelId = `spectrum-slider-label-${genId}`;
-    	const inputId = `spectrum-slider-input-${genId}`;
-    	let tickLabels;
-    	let track1, track2, percent;
-    	let focused = 0;
-    	let dragged = 0;
-    	let surface;
-
-    	function onFocus(e) {
-    		if (isRange) {
-    			$$invalidate(15, focused = e.target.closest(".spectrum-Slider-handle").dataset.sliderName === "left"
-    			? 1
-    			: 2);
-    		} else {
-    			$$invalidate(15, focused = 1);
-    		}
-
-    		dispatch("focus");
-    	}
-
-    	function onBlur() {
-    		$$invalidate(15, focused = 0);
-    		dispatch("blur");
-    	}
-
-    	function onClick(e) {
-    		const list = e.target.classList;
-
-    		if (list.contains("spectrum-Slider-handle") || list.contains("spectrum-Slider-input")) {
-    			return;
-    		}
-
-    		let v = getXYPercent(e, surface.getBoundingClientRect()).x;
-    		v = clampStep(getPercentValue(v, min, max), min, max, round !== null && round !== void 0 ? round : step);
-
-    		if (isRange) {
-    			const index = Math.abs(v - computedValue[0]) <= Math.abs(v - computedValue[1])
-    			? 0
-    			: 1;
-
-    			if (computedValue[index] === v) {
-    				return;
-    			}
-
-    			const arr = [...computedValue];
-    			arr[index] = v;
-    			v = arr;
-    		} else if (v === value) {
-    			return;
-    		}
-
-    		dispatch("start", value);
-    		$$invalidate(0, value = v);
-    		dispatch("change", value);
-    		dispatch("stop", value);
-    	}
-
-    	function onKeyDown(e) {
-    		if (!focused) {
-    			return;
-    		}
-
-    		let add = 0;
-
-    		switch (e.key) {
-    			case "ArrowDown":
-    			case "ArrowLeft":
-    				add = -step;
-    				break;
-    			case "ArrowUp":
-    			case "ArrowRight":
-    				add = +step;
-    				break;
-    			default:
-    				return;
-    		}
-
-    		let v;
-
-    		if (isRange) {
-    			if (focused === 1) {
-    				v = clampStep(computedValue[0] + add, min, computedValue[1], round !== null && round !== void 0 ? round : step);
-
-    				if (v === computedValue[0]) {
-    					return;
-    				}
-
-    				v = [v, computedValue[1]];
-    			} else {
-    				v = clampStep(computedValue[1] + add, computedValue[0], max, round !== null && round !== void 0 ? round : step);
-
-    				if (v === computedValue[1]) {
-    					return;
-    				}
-
-    				v = [computedValue[0], v];
-    			}
-    		} else {
-    			v = clampStep(computedValue + add, min, max, round !== null && round !== void 0 ? round : step);
-
-    			if (value === v) {
-    				return;
-    			}
-    		}
-
-    		dispatch("start", value);
-    		$$invalidate(0, value = v);
-    		dispatch("input", value);
-    		dispatch("change", value);
-    		dispatch("stop", value);
-    	}
-
-    	function onInputBlur(e) {
-    		let v = e.target.valueAsNumber;
-    		v = clampStep(v, min, allowOverflow ? Number.POSITIVE_INFINITY : max, round !== null && round !== void 0 ? round : step);
-
-    		if (v !== value) {
-    			$$invalidate(0, value = v);
-    			dispatch("input", value);
-    			dispatch("change", value);
-    		}
-
-    		e.target.valueAsNumber = v;
-    	}
-
-    	function clampRange(value) {
-    		let a = clampStep(value[0], min, max, round !== null && round !== void 0 ? round : step);
-    		let b = clampStep(value[1], min, max, round !== null && round !== void 0 ? round : step);
-    		return a <= b ? [a, b] : [b, a];
-    	}
-
-    	function onDragStart(index) {
-    		$$invalidate(16, dragged = index);
-    		dispatch("start", value);
-    	}
-
-    	function onDrag(v, index) {
-    		v = getPercentValue(v, min, max);
-
-    		if (isRange) {
-    			index--;
-
-    			v = index === 0
-    			? clampStep(v, min, computedValue[1], round !== null && round !== void 0 ? round : step)
-    			: clampStep(v, computedValue[0], max, round !== null && round !== void 0 ? round : step);
-
-    			if (computedValue[index] === v) {
-    				return;
-    			}
-
-    			v = index === 0
-    			? [v, computedValue[1]]
-    			: [computedValue[0], v];
-    		} else {
-    			v = clampStep(v, min, max, round !== null && round !== void 0 ? round : step);
-
-    			if (computedValue === v) {
-    				return;
-    			}
-    		}
-
-    		$$invalidate(0, value = v);
-    		dispatch("input", v);
-    	}
-
-    	function onDragEnd(changed) {
-    		$$invalidate(16, dragged = 0);
-
-    		if (changed) {
-    			dispatch("change", computedValue);
-    		}
-
-    		dispatch("stop", computedValue);
-    	}
-
-    	const dragAction_function = v => onDrag(v.x, 1);
-    	const dragAction_function_1 = () => onDragStart(1);
-    	const dragAction_function_2 = v => onDrag(v.x, 2);
-    	const dragAction_function_3 = () => onDragStart(2);
-    	const dragAction_function_4 = v => onDrag(v.x, 1);
-    	const dragAction_function_5 = () => onDragStart(1);
-
-    	function div1_binding($$value) {
-    		binding_callbacks[$$value ? "unshift" : "push"](() => {
-    			surface = $$value;
-    			$$invalidate(17, surface);
-    		});
-    	}
-
-    	$$self.$$set = $$new_props => {
-    		$$invalidate(44, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(30, $$restProps = compute_rest_props($$props, omit_props_names));
-    		if ("label" in $$new_props) $$invalidate(1, label = $$new_props.label);
-    		if ("value" in $$new_props) $$invalidate(0, value = $$new_props.value);
-    		if ("min" in $$new_props) $$invalidate(2, min = $$new_props.min);
-    		if ("max" in $$new_props) $$invalidate(3, max = $$new_props.max);
-    		if ("step" in $$new_props) $$invalidate(4, step = $$new_props.step);
-    		if ("round" in $$new_props) $$invalidate(31, round = $$new_props.round);
-    		if ("fill" in $$new_props) $$invalidate(5, fill = $$new_props.fill);
-    		if ("ticks" in $$new_props) $$invalidate(32, ticks = $$new_props.ticks);
-    		if ("disabled" in $$new_props) $$invalidate(6, disabled = $$new_props.disabled);
-    		if ("editable" in $$new_props) $$invalidate(33, editable = $$new_props.editable);
-    		if ("allowOverflow" in $$new_props) $$invalidate(7, allowOverflow = $$new_props.allowOverflow);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		mergeClasses,
-    		getPercentage,
-    		getPercentValue,
-    		clampStep,
-    		getXYPercent,
-    		dragAction,
-    		nextId,
-    		createEventDispatcher,
-    		dispatch,
-    		label,
-    		value,
-    		min,
-    		max,
-    		step,
-    		round,
-    		fill,
-    		ticks,
-    		disabled,
-    		editable,
-    		allowOverflow,
-    		genId,
-    		labelId,
-    		inputId,
-    		tickLabels,
-    		track1,
-    		track2,
-    		percent,
-    		focused,
-    		dragged,
-    		surface,
-    		onFocus,
-    		onBlur,
-    		onClick,
-    		onKeyDown,
-    		onInputBlur,
-    		onInputKeyDown,
-    		clampRange,
-    		onDragStart,
-    		onDrag,
-    		onDragEnd,
-    		isRange,
-    		computedValue,
-    		hasTicks,
-    		useTextbox,
-    		computedClass
-    	});
-
-    	$$self.$inject_state = $$new_props => {
-    		$$invalidate(44, $$props = assign(assign({}, $$props), $$new_props));
-    		if ("label" in $$props) $$invalidate(1, label = $$new_props.label);
-    		if ("value" in $$props) $$invalidate(0, value = $$new_props.value);
-    		if ("min" in $$props) $$invalidate(2, min = $$new_props.min);
-    		if ("max" in $$props) $$invalidate(3, max = $$new_props.max);
-    		if ("step" in $$props) $$invalidate(4, step = $$new_props.step);
-    		if ("round" in $$props) $$invalidate(31, round = $$new_props.round);
-    		if ("fill" in $$props) $$invalidate(5, fill = $$new_props.fill);
-    		if ("ticks" in $$props) $$invalidate(32, ticks = $$new_props.ticks);
-    		if ("disabled" in $$props) $$invalidate(6, disabled = $$new_props.disabled);
-    		if ("editable" in $$props) $$invalidate(33, editable = $$new_props.editable);
-    		if ("allowOverflow" in $$props) $$invalidate(7, allowOverflow = $$new_props.allowOverflow);
-    		if ("tickLabels" in $$props) $$invalidate(8, tickLabels = $$new_props.tickLabels);
-    		if ("track1" in $$props) $$invalidate(13, track1 = $$new_props.track1);
-    		if ("track2" in $$props) $$invalidate(14, track2 = $$new_props.track2);
-    		if ("percent" in $$props) $$invalidate(9, percent = $$new_props.percent);
-    		if ("focused" in $$props) $$invalidate(15, focused = $$new_props.focused);
-    		if ("dragged" in $$props) $$invalidate(16, dragged = $$new_props.dragged);
-    		if ("surface" in $$props) $$invalidate(17, surface = $$new_props.surface);
-    		if ("isRange" in $$props) $$invalidate(10, isRange = $$new_props.isRange);
-    		if ("computedValue" in $$props) $$invalidate(11, computedValue = $$new_props.computedValue);
-    		if ("hasTicks" in $$props) $$invalidate(12, hasTicks = $$new_props.hasTicks);
-    		if ("useTextbox" in $$props) $$invalidate(18, useTextbox = $$new_props.useTextbox);
-    		if ("computedClass" in $$props) $$invalidate(19, computedClass = $$new_props.computedClass);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[0] & /*value*/ 1) {
-    			$$invalidate(10, isRange = Array.isArray(value));
-    		}
-
-    		if ($$self.$$.dirty[0] & /*isRange, value, min, max, step*/ 1053 | $$self.$$.dirty[1] & /*round*/ 1) {
-    			$$invalidate(11, computedValue = isRange
-    			? clampRange(value)
-    			: clampStep(value, min, max, round !== null && round !== void 0 ? round : step));
-    		}
-
-    		if ($$self.$$.dirty[1] & /*ticks*/ 2) {
-    			$$invalidate(12, hasTicks = Array.isArray(ticks) ? ticks.length > 0 : ticks > 0);
-    		}
-
-    		if ($$self.$$.dirty[0] & /*tickLabels*/ 256 | $$self.$$.dirty[1] & /*ticks*/ 2) {
-    			{
-    				if (Array.isArray(ticks)) {
-    					$$invalidate(8, tickLabels = ticks);
-    				} else {
-    					$$invalidate(8, tickLabels = []);
-
-    					for (let i = 0; i < ticks; i++) {
-    						tickLabels.push(null);
-    					}
-    				}
-    			}
-    		}
-
-    		if ($$self.$$.dirty[0] & /*isRange, computedValue, min, max, percent*/ 3596) {
-    			{
-    				if (isRange) {
-    					$$invalidate(9, percent = [
-    						getPercentage(computedValue[0], min, max),
-    						getPercentage(computedValue[1], min, max)
-    					]);
-
-    					$$invalidate(13, track1 = percent[0]);
-    					$$invalidate(14, track2 = 100 - percent[1]);
-    				} else {
-    					$$invalidate(9, percent = getPercentage(computedValue, min, max));
-    					$$invalidate(13, track1 = percent);
-    					$$invalidate(14, track2 = 100 - percent);
-    				}
-    			}
-    		}
-
-    		if ($$self.$$.dirty[0] & /*isRange*/ 1024 | $$self.$$.dirty[1] & /*editable*/ 4) {
-    			$$invalidate(18, useTextbox = editable && !isRange);
-    		}
-
-    		$$invalidate(19, computedClass = mergeClasses(
-    			{
-    				"spectrum-Slider": true,
-    				"spectrum-Slider--filled": fill === "start",
-    				"spectrum-Slider--ramp": fill === "ramp",
-    				"spectrum-Slider--range": isRange,
-    				"spectrum-Slider--tick": hasTicks && typeof ticks === "number",
-    				"is-disabled": disabled
-    			},
-    			$$props.class
-    		));
-    	};
-
-    	$$props = exclude_internal_props($$props);
-
-    	return [
-    		value,
-    		label,
-    		min,
-    		max,
-    		step,
-    		fill,
-    		disabled,
-    		allowOverflow,
-    		tickLabels,
-    		percent,
-    		isRange,
-    		computedValue,
-    		hasTicks,
-    		track1,
-    		track2,
-    		focused,
-    		dragged,
-    		surface,
-    		useTextbox,
-    		computedClass,
-    		labelId,
-    		inputId,
-    		onFocus,
-    		onBlur,
-    		onClick,
-    		onKeyDown,
-    		onInputBlur,
-    		onDragStart,
-    		onDrag,
-    		onDragEnd,
-    		$$restProps,
-    		round,
-    		ticks,
-    		editable,
-    		dragAction_function,
-    		dragAction_function_1,
-    		dragAction_function_2,
-    		dragAction_function_3,
-    		dragAction_function_4,
-    		dragAction_function_5,
-    		div1_binding
-    	];
-    }
-
-    class SpSlider extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(
-    			this,
-    			options,
-    			instance$8,
-    			create_fragment$8,
-    			safe_not_equal,
-    			{
-    				label: 1,
-    				value: 0,
-    				min: 2,
-    				max: 3,
-    				step: 4,
-    				round: 31,
-    				fill: 5,
-    				ticks: 32,
-    				disabled: 6,
-    				editable: 33,
-    				allowOverflow: 7
-    			},
-    			[-1, -1]
-    		);
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "SpSlider",
-    			options,
-    			id: create_fragment$8.name
-    		});
-    	}
-
-    	get label() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set label(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get min() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set min(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get max() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set max(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get step() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set step(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get round() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set round(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get fill() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set fill(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get ticks() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set ticks(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get disabled() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set disabled(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get editable() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set editable(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get allowOverflow() {
-    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set allowOverflow(value) {
-    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/Components/Properties/PropertyItem.svelte generated by Svelte v3.38.2 */
-
-    const file$6 = "src/Components/Properties/PropertyItem.svelte";
-
-    function create_fragment$7(ctx) {
-    	let div;
-    	let sp_field_label;
-    	let t0;
-    	let t1;
-    	let current;
-    	const default_slot_template = /*#slots*/ ctx[2].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			sp_field_label = element("sp-field-label");
-    			t0 = text(/*title*/ ctx[0]);
-    			t1 = space();
-    			if (default_slot) default_slot.c();
-    			set_custom_element_data(sp_field_label, "class", "svelte-bnpazb");
-    			add_location(sp_field_label, file$6, 3, 4, 78);
-    			attr_dev(div, "class", "property-item svelte-bnpazb");
-    			add_location(div, file$6, 2, 0, 46);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, sp_field_label);
-    			append_dev(sp_field_label, t0);
-    			append_dev(div, t1);
-
-    			if (default_slot) {
-    				default_slot.m(div, null);
-    			}
-
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*title*/ 1) set_data_dev(t0, /*title*/ ctx[0]);
-
-    			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2)) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[1], dirty, null, null);
-    				}
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(default_slot, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(default_slot, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if (default_slot) default_slot.d(detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$7.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$7($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("PropertyItem", slots, ['default']);
-    	let { title } = $$props;
-    	const writable_props = ["title"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<PropertyItem> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
-    		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
-    	};
-
-    	$$self.$capture_state = () => ({ title });
-
-    	$$self.$inject_state = $$props => {
-    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [title, $$scope, slots];
-    }
-
-    class PropertyItem extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { title: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "PropertyItem",
-    			options,
-    			id: create_fragment$7.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*title*/ ctx[0] === undefined && !("title" in props)) {
-    			console.warn("<PropertyItem> was created without expected prop 'title'");
-    		}
-    	}
-
-    	get title() {
-    		throw new Error("<PropertyItem>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set title(value) {
-    		throw new Error("<PropertyItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/Components/Properties/Compositing.svelte generated by Svelte v3.38.2 */
-    const file$5 = "src/Components/Properties/Compositing.svelte";
-
-    // (24:4) <PropertyItem title="Blend">
-    function create_default_slot_2$1(ctx) {
-    	let sp_picker;
-    	let sp_menu_item0;
-    	let t0;
-    	let t1;
-    	let sp_menu_item1;
-    	let t2;
-    	let sp_picker_value_value;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			sp_picker = element("sp-picker");
-    			sp_menu_item0 = element("sp-menu-item");
-    			t0 = text("Normal");
-    			t1 = space();
-    			sp_menu_item1 = element("sp-menu-item");
-    			t2 = text("Color");
-    			set_custom_element_data(sp_menu_item0, "value", canvasEngine.BlendMode.Normal.toString());
-    			add_location(sp_menu_item0, file$5, 25, 12, 1144);
-    			set_custom_element_data(sp_menu_item1, "value", canvasEngine.BlendMode.Color.toString());
-    			add_location(sp_menu_item1, file$5, 26, 12, 1228);
-    			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*element*/ ctx[0].blend + "");
-    			set_style(sp_picker, "flex", "1");
-    			set_custom_element_data(sp_picker, "size", "s");
-    			add_location(sp_picker, file$5, 24, 8, 993);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, sp_picker, anchor);
-    			append_dev(sp_picker, sp_menu_item0);
-    			append_dev(sp_menu_item0, t0);
-    			append_dev(sp_picker, t1);
-    			append_dev(sp_picker, sp_menu_item1);
-    			append_dev(sp_menu_item1, t2);
-
-    			if (!mounted) {
-    				dispose = listen_dev(sp_picker, "change", /*change_handler_1*/ ctx[4], false, false, false);
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*element*/ 1 && sp_picker_value_value !== (sp_picker_value_value = /*element*/ ctx[0].blend + "")) {
-    				set_custom_element_data(sp_picker, "value", sp_picker_value_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_picker);
-    			mounted = false;
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_2$1.name,
-    		type: "slot",
-    		source: "(24:4) <PropertyItem title=\\\"Blend\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (30:4) <PropertyItem title="Isolate">
-    function create_default_slot_1$2(ctx) {
-    	let sp_switch;
-    	let sp_switch_checked_value;
-    	let t;
-    	let div;
-    	let mounted;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			sp_switch = element("sp-switch");
-    			t = space();
-    			div = element("div");
-    			set_custom_element_data(sp_switch, "checked", sp_switch_checked_value = /*element*/ ctx[0].isolate);
-    			set_style(sp_switch, "width", "var(--spectrum-switch-track-width)");
-    			add_location(sp_switch, file$5, 30, 8, 1382);
-    			set_style(div, "flex", "1");
-    			add_location(div, file$5, 33, 8, 1597);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, sp_switch, anchor);
-    			insert_dev(target, t, anchor);
-    			insert_dev(target, div, anchor);
-
-    			if (!mounted) {
-    				dispose = listen_dev(sp_switch, "change", /*change_handler_2*/ ctx[5], false, false, false);
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*element*/ 1 && sp_switch_checked_value !== (sp_switch_checked_value = /*element*/ ctx[0].isolate)) {
-    				set_custom_element_data(sp_switch, "checked", sp_switch_checked_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_switch);
-    			if (detaching) detach_dev(t);
-    			if (detaching) detach_dev(div);
-    			mounted = false;
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_1$2.name,
-    		type: "slot",
-    		source: "(30:4) <PropertyItem title=\\\"Isolate\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (19:0) <PropertyGroup title="Compositing">
-    function create_default_slot$3(ctx) {
-    	let spslider;
-    	let t0;
-    	let propertyitem0;
-    	let t1;
-    	let propertyitem1;
-    	let current;
-
-    	spslider = new SpSlider({
-    			props: {
-    				label: "Opacity",
-    				ticks: 3,
-    				value: /*element*/ ctx[0].opacity * 100,
-    				fill: "start",
-    				editable: true
-    			},
-    			$$inline: true
-    		});
-
-    	spslider.$on("change", /*change_handler*/ ctx[2]);
-    	spslider.$on("input", /*input_handler*/ ctx[3]);
-
-    	propertyitem0 = new PropertyItem({
-    			props: {
-    				title: "Blend",
-    				$$slots: { default: [create_default_slot_2$1] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	propertyitem1 = new PropertyItem({
-    			props: {
-    				title: "Isolate",
-    				$$slots: { default: [create_default_slot_1$2] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(spslider.$$.fragment);
-    			t0 = space();
-    			create_component(propertyitem0.$$.fragment);
-    			t1 = space();
-    			create_component(propertyitem1.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(spslider, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			mount_component(propertyitem0, target, anchor);
-    			insert_dev(target, t1, anchor);
-    			mount_component(propertyitem1, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const spslider_changes = {};
-    			if (dirty & /*element*/ 1) spslider_changes.value = /*element*/ ctx[0].opacity * 100;
-    			spslider.$set(spslider_changes);
-    			const propertyitem0_changes = {};
-
-    			if (dirty & /*$$scope, element*/ 129) {
-    				propertyitem0_changes.$$scope = { dirty, ctx };
-    			}
-
-    			propertyitem0.$set(propertyitem0_changes);
-    			const propertyitem1_changes = {};
-
-    			if (dirty & /*$$scope, element*/ 129) {
-    				propertyitem1_changes.$$scope = { dirty, ctx };
-    			}
-
-    			propertyitem1.$set(propertyitem1_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(spslider.$$.fragment, local);
-    			transition_in(propertyitem0.$$.fragment, local);
-    			transition_in(propertyitem1.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(spslider.$$.fragment, local);
-    			transition_out(propertyitem0.$$.fragment, local);
-    			transition_out(propertyitem1.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(spslider, detaching);
-    			if (detaching) detach_dev(t0);
-    			destroy_component(propertyitem0, detaching);
-    			if (detaching) detach_dev(t1);
-    			destroy_component(propertyitem1, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot$3.name,
-    		type: "slot",
-    		source: "(19:0) <PropertyGroup title=\\\"Compositing\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$6(ctx) {
-    	let propertygroup;
-    	let current;
-
-    	propertygroup = new PropertyGroup({
-    			props: {
-    				title: "Compositing",
-    				$$slots: { default: [create_default_slot$3] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(propertygroup.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(propertygroup, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const propertygroup_changes = {};
-
-    			if (dirty & /*$$scope, element*/ 129) {
-    				propertygroup_changes.$$scope = { dirty, ctx };
-    			}
-
-    			propertygroup.$set(propertygroup_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(propertygroup.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(propertygroup.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(propertygroup, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$6.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$6($$self, $$props, $$invalidate) {
-    	let $CurrentProject;
-    	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(6, $CurrentProject = $$value));
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Compositing", slots, []);
-    	
-    	let { element } = $$props;
-
-    	function setPropertyValue(property, value, save) {
-    		var _a;
-    		const project = $CurrentProject;
-
-    		if (project.middleware.setElementsProperty(project.selection, property, value)) {
-    			if (save) {
-    				project.state.snapshot();
-    			}
-
-    			(_a = project.engine) === null || _a === void 0
-    			? void 0
-    			: _a.invalidate();
-    		}
-    	}
-
-    	const writable_props = ["element"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Compositing> was created with unknown prop '${key}'`);
-    	});
-
-    	const change_handler = e => setPropertyValue("opacity", e.detail / 100, true);
-    	const input_handler = e => setPropertyValue("opacity", e.detail / 100, false);
-    	const change_handler_1 = e => setPropertyValue("blend", parseInt(e.target.value), true);
-    	const change_handler_2 = e => setPropertyValue("isolate", e.target.checked, true);
-
-    	$$self.$$set = $$props => {
-    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		PropertyGroup,
-    		SpSlider,
-    		BlendMode: canvasEngine.BlendMode,
-    		PropertyItem,
-    		CurrentProject,
-    		element,
-    		setPropertyValue,
-    		$CurrentProject
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [
-    		element,
-    		setPropertyValue,
-    		change_handler,
-    		input_handler,
-    		change_handler_1,
-    		change_handler_2
-    	];
-    }
-
-    class Compositing extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { element: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Compositing",
-    			options,
-    			id: create_fragment$6.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*element*/ ctx[0] === undefined && !("element" in props)) {
-    			console.warn("<Compositing> was created without expected prop 'element'");
-    		}
-    	}
-
-    	get element() {
-    		throw new Error("<Compositing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set element(value) {
-    		throw new Error("<Compositing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/Components/Properties/FillAndStroke/BrushSwitch.svelte generated by Svelte v3.38.2 */
-    const file$4 = "src/Components/Properties/FillAndStroke/BrushSwitch.svelte";
-
-    function create_fragment$5(ctx) {
-    	let div3;
-    	let div2;
-    	let sp_thumbnail0;
-    	let sp_thumbnail0_background_value;
-    	let sp_thumbnail0_selected_value;
-    	let t0;
-    	let sp_thumbnail1;
-    	let sp_thumbnail1_background_value;
-    	let sp_thumbnail1_selected_value;
-    	let t1;
-    	let div0;
-    	let sp_icon0;
-    	let sp_icon0_name_value;
-    	let div0_title_value;
-    	let t2;
-    	let div1;
-    	let sp_icon1;
-    	let t3;
-    	let spslider;
-    	let current;
-    	let mounted;
-    	let dispose;
-
-    	spslider = new SpSlider({
-    			props: {
-    				label: /*showFill*/ ctx[0] ? "Fill opacity" : "Stroke opacity",
-    				ticks: 3,
-    				value: (/*showFill*/ ctx[0]
-    				? /*value*/ ctx[1].fillOpacity
-    				: /*value*/ ctx[1].strokeOpacity) * 100,
-    				style: "flex: 1",
-    				fill: "start",
-    				editable: true
-    			},
-    			$$inline: true
-    		});
-
-    	spslider.$on("start", /*start_handler*/ ctx[8]);
-    	spslider.$on("stop", /*stop_handler*/ ctx[9]);
-    	spslider.$on("input", /*input_handler*/ ctx[10]);
-
-    	const block = {
-    		c: function create() {
-    			div3 = element("div");
-    			div2 = element("div");
-    			sp_thumbnail0 = element("sp-thumbnail");
-    			t0 = space();
-    			sp_thumbnail1 = element("sp-thumbnail");
-    			t1 = space();
-    			div0 = element("div");
-    			sp_icon0 = element("sp-icon");
-    			t2 = space();
-    			div1 = element("div");
-    			sp_icon1 = element("sp-icon");
-    			t3 = space();
-    			create_component(spslider.$$.fragment);
-    			set_custom_element_data(sp_thumbnail0, "title", "Fill");
-    			set_custom_element_data(sp_thumbnail0, "background", sp_thumbnail0_background_value = /*getBackground*/ ctx[3](/*value*/ ctx[1].fill, /*value*/ ctx[1].fillOpacity));
-    			set_custom_element_data(sp_thumbnail0, "selected", sp_thumbnail0_selected_value = /*showFill*/ ctx[0] ? "" : undefined);
-    			set_custom_element_data(sp_thumbnail0, "class", "fill svelte-mm4k7e");
-    			add_location(sp_thumbnail0, file$4, 40, 8, 1592);
-    			set_custom_element_data(sp_thumbnail1, "title", "Stroke");
-    			set_custom_element_data(sp_thumbnail1, "background", sp_thumbnail1_background_value = /*getBackground*/ ctx[3](/*value*/ ctx[1].strokeBrush, /*value*/ ctx[1].strokeOpacity));
-    			set_custom_element_data(sp_thumbnail1, "selected", sp_thumbnail1_selected_value = !/*showFill*/ ctx[0] ? "" : undefined);
-    			set_custom_element_data(sp_thumbnail1, "class", "stroke svelte-mm4k7e");
-    			add_location(sp_thumbnail1, file$4, 41, 8, 1786);
-
-    			set_custom_element_data(sp_icon0, "name", sp_icon0_name_value = /*showFill*/ ctx[0]
-    			? "expr:swap-arrow-up-left"
-    			: "expr:swap-arrow-down-right");
-
-    			set_custom_element_data(sp_icon0, "size", "s");
-    			set_custom_element_data(sp_icon0, "class", "svelte-mm4k7e");
-    			add_location(sp_icon0, file$4, 43, 12, 2154);
-    			attr_dev(div0, "class", "action-icon svelte-mm4k7e");
-    			attr_dev(div0, "title", div0_title_value = /*showFill*/ ctx[0] ? "Copy Stroke" : "Copy Fill");
-    			set_style(div0, "bottom", "0");
-    			set_style(div0, "left", "0");
-    			add_location(div0, file$4, 42, 8, 1995);
-    			set_custom_element_data(sp_icon1, "name", "expr:swap-arrows");
-    			set_custom_element_data(sp_icon1, "size", "s");
-    			set_custom_element_data(sp_icon1, "class", "svelte-mm4k7e");
-    			add_location(sp_icon1, file$4, 46, 12, 2407);
-    			attr_dev(div1, "class", "action-icon svelte-mm4k7e");
-    			attr_dev(div1, "title", "Swap Fill & Stroke");
-    			set_style(div1, "top", "0");
-    			set_style(div1, "right", "0");
-    			add_location(div1, file$4, 45, 8, 2283);
-    			attr_dev(div2, "class", "thumbnail-wrapper svelte-mm4k7e");
-    			add_location(div2, file$4, 39, 4, 1552);
-    			attr_dev(div3, "class", "brush-switch svelte-mm4k7e");
-    			add_location(div3, file$4, 38, 0, 1521);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, div2);
-    			append_dev(div2, sp_thumbnail0);
-    			append_dev(div2, t0);
-    			append_dev(div2, sp_thumbnail1);
-    			append_dev(div2, t1);
-    			append_dev(div2, div0);
-    			append_dev(div0, sp_icon0);
-    			append_dev(div2, t2);
-    			append_dev(div2, div1);
-    			append_dev(div1, sp_icon1);
-    			append_dev(div3, t3);
-    			mount_component(spslider, div3, null);
-    			current = true;
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(sp_thumbnail0, "click", /*click_handler*/ ctx[4], false, false, false),
-    					listen_dev(sp_thumbnail1, "click", /*click_handler_1*/ ctx[5], false, false, false),
-    					listen_dev(div0, "click", /*click_handler_2*/ ctx[6], false, false, false),
-    					listen_dev(div1, "click", /*click_handler_3*/ ctx[7], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*value*/ 2 && sp_thumbnail0_background_value !== (sp_thumbnail0_background_value = /*getBackground*/ ctx[3](/*value*/ ctx[1].fill, /*value*/ ctx[1].fillOpacity))) {
-    				set_custom_element_data(sp_thumbnail0, "background", sp_thumbnail0_background_value);
-    			}
-
-    			if (!current || dirty & /*showFill*/ 1 && sp_thumbnail0_selected_value !== (sp_thumbnail0_selected_value = /*showFill*/ ctx[0] ? "" : undefined)) {
-    				set_custom_element_data(sp_thumbnail0, "selected", sp_thumbnail0_selected_value);
-    			}
-
-    			if (!current || dirty & /*value*/ 2 && sp_thumbnail1_background_value !== (sp_thumbnail1_background_value = /*getBackground*/ ctx[3](/*value*/ ctx[1].strokeBrush, /*value*/ ctx[1].strokeOpacity))) {
-    				set_custom_element_data(sp_thumbnail1, "background", sp_thumbnail1_background_value);
-    			}
-
-    			if (!current || dirty & /*showFill*/ 1 && sp_thumbnail1_selected_value !== (sp_thumbnail1_selected_value = !/*showFill*/ ctx[0] ? "" : undefined)) {
-    				set_custom_element_data(sp_thumbnail1, "selected", sp_thumbnail1_selected_value);
-    			}
-
-    			if (!current || dirty & /*showFill*/ 1 && sp_icon0_name_value !== (sp_icon0_name_value = /*showFill*/ ctx[0]
-    			? "expr:swap-arrow-up-left"
-    			: "expr:swap-arrow-down-right")) {
-    				set_custom_element_data(sp_icon0, "name", sp_icon0_name_value);
-    			}
-
-    			if (!current || dirty & /*showFill*/ 1 && div0_title_value !== (div0_title_value = /*showFill*/ ctx[0] ? "Copy Stroke" : "Copy Fill")) {
-    				attr_dev(div0, "title", div0_title_value);
-    			}
-
-    			const spslider_changes = {};
-    			if (dirty & /*showFill*/ 1) spslider_changes.label = /*showFill*/ ctx[0] ? "Fill opacity" : "Stroke opacity";
-
-    			if (dirty & /*showFill, value*/ 3) spslider_changes.value = (/*showFill*/ ctx[0]
-    			? /*value*/ ctx[1].fillOpacity
-    			: /*value*/ ctx[1].strokeOpacity) * 100;
-
-    			spslider.$set(spslider_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(spslider.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(spslider.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
-    			destroy_component(spslider);
-    			mounted = false;
-    			run_all(dispose);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$5.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$5($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("BrushSwitch", slots, []);
-    	
-    	const dispatch = createEventDispatcher();
-    	let { value } = $$props;
-    	let { showFill = true } = $$props;
-
-    	function getBackground(value, opacity) {
-    		let picture;
-
-    		switch (value.type) {
-    			case canvasEngine.BrushType.None:
-    				picture = "linear-gradient(-45deg, transparent 0%, transparent 47.5%, #f00 47.5%, #f00 52.5%, transparent 52.5%, transparent 100%)";
-    				break;
-    			case canvasEngine.BrushType.Solid:
-    				picture = value.color.toString();
-    				break;
-    			case canvasEngine.BrushType.LinearGradient:
-    				picture = `linear-gradient(${value.stopColors.toString()})`;
-    				break;
-    			case canvasEngine.BrushType.RadialGradient:
-    			case canvasEngine.BrushType.TwoPointGradient:
-    				// same picture as radial
-    				picture = `radial-gradient(${value.stopColors.toString()})`;
-    				break;
-    			case canvasEngine.BrushType.ConicalGradient:
-    				picture = `conic-gradient(${value.stopColors.toString()})`;
-    				break;
-    			case canvasEngine.BrushType.Pattern:
-    				picture = "repeating-linear-gradient(transparent, #808080 20%), repeating-linear-gradient(90deg, #fff, #000 20%)";
-    				break;
-    			default:
-    				picture = "transparent";
-    				break;
-    		}
-
-    		// this is a trick to also set opacity
-    		// the background property sets style="background: $picture"
-    		return `${picture}; opacity: ${opacity};`;
-    	}
-
-    	const writable_props = ["value", "showFill"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<BrushSwitch> was created with unknown prop '${key}'`);
-    	});
-
-    	const click_handler = () => $$invalidate(0, showFill = true);
-    	const click_handler_1 = () => $$invalidate(0, showFill = false);
-    	const click_handler_2 = () => dispatch("copy", !showFill);
-    	const click_handler_3 = () => dispatch("swap");
-
-    	function start_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	function stop_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	const input_handler = e => dispatch("opacity", e.detail);
-
-    	$$self.$$set = $$props => {
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("showFill" in $$props) $$invalidate(0, showFill = $$props.showFill);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		SpSlider,
-    		BrushType: canvasEngine.BrushType,
-    		createEventDispatcher,
-    		dispatch,
-    		value,
-    		showFill,
-    		getBackground
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("showFill" in $$props) $$invalidate(0, showFill = $$props.showFill);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [
-    		showFill,
-    		value,
-    		dispatch,
-    		getBackground,
-    		click_handler,
-    		click_handler_1,
-    		click_handler_2,
-    		click_handler_3,
-    		start_handler,
-    		stop_handler,
-    		input_handler
-    	];
-    }
-
-    class BrushSwitch extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { value: 1, showFill: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "BrushSwitch",
-    			options,
-    			id: create_fragment$5.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<BrushSwitch> was created without expected prop 'value'");
-    		}
-    	}
-
-    	get value() {
-    		throw new Error("<BrushSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<BrushSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get showFill() {
-    		throw new Error("<BrushSwitch>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set showFill(value) {
-    		throw new Error("<BrushSwitch>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
     /* src/Components/Properties/FillAndStroke/Fill.svelte generated by Svelte v3.38.2 */
-    const file$3 = "src/Components/Properties/FillAndStroke/Fill.svelte";
 
-    // (7:4) <PropertyItem title="Fill rule">
+    // (25:4) <PropertyItem title="Fill rule">
     function create_default_slot_1$1(ctx) {
-    	let sp_action_group;
-    	let sp_action_button0;
-    	let sp_icon0;
-    	let sp_action_button0_selected_value;
-    	let t;
-    	let sp_action_button1;
-    	let sp_icon1;
-    	let sp_action_button1_selected_value;
+    	let iconswitch;
+    	let current;
+
+    	iconswitch = new IconSwitch({
+    			props: {
+    				size: "s",
+    				value: /*value*/ ctx[0].fillRule,
+    				items: /*fillRuleItems*/ ctx[2]
+    			},
+    			$$inline: true
+    		});
+
+    	iconswitch.$on("change", /*onFillRuleChange*/ ctx[1]);
 
     	const block = {
     		c: function create() {
-    			sp_action_group = element("sp-action-group");
-    			sp_action_button0 = element("sp-action-button");
-    			sp_icon0 = element("sp-icon");
-    			t = space();
-    			sp_action_button1 = element("sp-action-button");
-    			sp_icon1 = element("sp-icon");
-    			set_custom_element_data(sp_icon0, "name", "expr:fill-nonzero");
-    			set_custom_element_data(sp_icon0, "size", "s");
-    			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$3, 9, 16, 431);
-    			set_custom_element_data(sp_action_button0, "title", "Non-Zero");
-    			set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value = /*value*/ ctx[0].fillRule === canvasEngine.FillRule.NonZero);
-    			set_custom_element_data(sp_action_button0, "size", "s");
-    			add_location(sp_action_button0, file$3, 8, 12, 323);
-    			set_custom_element_data(sp_icon1, "name", "expr:fill-evenodd");
-    			set_custom_element_data(sp_icon1, "size", "s");
-    			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$3, 12, 16, 649);
-    			set_custom_element_data(sp_action_button1, "title", "Even-Odd");
-    			set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value = /*value*/ ctx[0].fillRule === canvasEngine.FillRule.EvenOdd);
-    			set_custom_element_data(sp_action_button1, "size", "s");
-    			add_location(sp_action_button1, file$3, 11, 12, 541);
-    			set_custom_element_data(sp_action_group, "compact", "");
-    			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$3, 7, 8, 274);
+    			create_component(iconswitch.$$.fragment);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, sp_action_group, anchor);
-    			append_dev(sp_action_group, sp_action_button0);
-    			append_dev(sp_action_button0, sp_icon0);
-    			append_dev(sp_action_group, t);
-    			append_dev(sp_action_group, sp_action_button1);
-    			append_dev(sp_action_button1, sp_icon1);
+    			mount_component(iconswitch, target, anchor);
+    			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*value*/ 1 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*value*/ ctx[0].fillRule === canvasEngine.FillRule.NonZero)) {
-    				set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value);
-    			}
-
-    			if (dirty & /*value*/ 1 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*value*/ ctx[0].fillRule === canvasEngine.FillRule.EvenOdd)) {
-    				set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value);
-    			}
+    			const iconswitch_changes = {};
+    			if (dirty & /*value*/ 1) iconswitch_changes.value = /*value*/ ctx[0].fillRule;
+    			iconswitch.$set(iconswitch_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(iconswitch.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(iconswitch.$$.fragment, local);
+    			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_action_group);
+    			destroy_component(iconswitch, detaching);
     		}
     	};
 
@@ -36563,14 +37268,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(7:4) <PropertyItem title=\\\"Fill rule\\\">",
+    		source: "(25:4) <PropertyItem title=\\\"Fill rule\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (6:0) <PropertyGroup title="Fill">
+    // (24:0) <PropertyGroup title="Fill">
     function create_default_slot$2(ctx) {
     	let propertyitem;
     	let current;
@@ -36595,7 +37300,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, dirty) {
     			const propertyitem_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 3) {
+    			if (dirty & /*$$scope, value*/ 17) {
     				propertyitem_changes.$$scope = { dirty, ctx };
     			}
 
@@ -36619,7 +37324,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(6:0) <PropertyGroup title=\\\"Fill\\\">",
+    		source: "(24:0) <PropertyGroup title=\\\"Fill\\\">",
     		ctx
     	});
 
@@ -36653,7 +37358,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, [dirty]) {
     			const propertygroup_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 3) {
+    			if (dirty & /*$$scope, value*/ 17) {
     				propertygroup_changes.$$scope = { dirty, ctx };
     			}
 
@@ -36687,7 +37392,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     function instance$4($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Fill", slots, []);
+    	const dispatch = createEventDispatcher();
     	let { value } = $$props;
+
+    	function onFillRuleChange(e) {
+    		dispatch("update", {
+    			property: "fillRule",
+    			value: parseInt(e.detail)
+    		});
+    	}
+
+    	const fillRuleItems = [
+    		{
+    			value: canvasEngine.FillRule.NonZero,
+    			title: "Non-Zero",
+    			icon: "expr:fill-nonzero"
+    		},
+    		{
+    			value: canvasEngine.FillRule.EvenOdd,
+    			title: "Even-Odd",
+    			icon: "expr:fill-evenodd"
+    		}
+    	];
+
     	const writable_props = ["value"];
 
     	Object.keys($$props).forEach(key => {
@@ -36702,7 +37429,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		FillRule: canvasEngine.FillRule,
     		PropertyGroup,
     		PropertyItem,
-    		value
+    		IconSwitch,
+    		createEventDispatcher,
+    		dispatch,
+    		value,
+    		onFillRuleChange,
+    		fillRuleItems
     	});
 
     	$$self.$inject_state = $$props => {
@@ -36713,7 +37445,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [value];
+    	return [value, onFillRuleChange, fillRuleItems];
     }
 
     class Fill extends SvelteComponentDev {
@@ -36747,103 +37479,46 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/FillAndStroke/Stroke.svelte generated by Svelte v3.38.2 */
 
-    const { console: console_1$1 } = globals;
-    const file$2 = "src/Components/Properties/FillAndStroke/Stroke.svelte";
-
-    // (13:4) <PropertyItem title="Line cap">
+    // (67:4) <PropertyItem title="Line cap">
     function create_default_slot_5(ctx) {
-    	let sp_action_group;
-    	let sp_action_button0;
-    	let sp_icon0;
-    	let sp_action_button0_selected_value;
-    	let t0;
-    	let sp_action_button1;
-    	let sp_icon1;
-    	let sp_action_button1_selected_value;
-    	let t1;
-    	let sp_action_button2;
-    	let sp_icon2;
-    	let sp_action_button2_selected_value;
-    	let mounted;
-    	let dispose;
+    	let iconswitch;
+    	let current;
+
+    	iconswitch = new IconSwitch({
+    			props: {
+    				size: "s",
+    				value: /*value*/ ctx[0].strokeLineCap,
+    				items: /*lineCapItems*/ ctx[7]
+    			},
+    			$$inline: true
+    		});
+
+    	iconswitch.$on("change", /*onLineCapChange*/ ctx[4]);
 
     	const block = {
     		c: function create() {
-    			sp_action_group = element("sp-action-group");
-    			sp_action_button0 = element("sp-action-button");
-    			sp_icon0 = element("sp-icon");
-    			t0 = space();
-    			sp_action_button1 = element("sp-action-button");
-    			sp_icon1 = element("sp-icon");
-    			t1 = space();
-    			sp_action_button2 = element("sp-action-button");
-    			sp_icon2 = element("sp-icon");
-    			set_custom_element_data(sp_icon0, "name", "expr:cap-butt");
-    			set_custom_element_data(sp_icon0, "size", "s");
-    			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$2, 15, 16, 838);
-    			set_custom_element_data(sp_action_button0, "title", "Butt");
-    			set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Butt);
-    			set_custom_element_data(sp_action_button0, "size", "s");
-    			add_location(sp_action_button0, file$2, 14, 12, 660);
-    			set_custom_element_data(sp_icon1, "name", "expr:cap-square");
-    			set_custom_element_data(sp_icon1, "size", "s");
-    			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$2, 18, 16, 1128);
-    			set_custom_element_data(sp_action_button1, "title", "Square");
-    			set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Square);
-    			set_custom_element_data(sp_action_button1, "size", "s");
-    			add_location(sp_action_button1, file$2, 17, 12, 944);
-    			set_custom_element_data(sp_icon2, "name", "expr:cap-round");
-    			set_custom_element_data(sp_icon2, "size", "s");
-    			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$2, 21, 16, 1417);
-    			set_custom_element_data(sp_action_button2, "title", "Round");
-    			set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Round);
-    			set_custom_element_data(sp_action_button2, "size", "s");
-    			add_location(sp_action_button2, file$2, 20, 12, 1236);
-    			set_custom_element_data(sp_action_group, "compact", "");
-    			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$2, 13, 8, 611);
+    			create_component(iconswitch.$$.fragment);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, sp_action_group, anchor);
-    			append_dev(sp_action_group, sp_action_button0);
-    			append_dev(sp_action_button0, sp_icon0);
-    			append_dev(sp_action_group, t0);
-    			append_dev(sp_action_group, sp_action_button1);
-    			append_dev(sp_action_button1, sp_icon1);
-    			append_dev(sp_action_group, t1);
-    			append_dev(sp_action_group, sp_action_button2);
-    			append_dev(sp_action_button2, sp_icon2);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(sp_action_button0, "click", /*click_handler*/ ctx[1], false, false, false),
-    					listen_dev(sp_action_button1, "click", /*click_handler_1*/ ctx[2], false, false, false),
-    					listen_dev(sp_action_button2, "click", /*click_handler_2*/ ctx[3], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
+    			mount_component(iconswitch, target, anchor);
+    			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*value*/ 1 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Butt)) {
-    				set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value);
-    			}
-
-    			if (dirty & /*value*/ 1 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Square)) {
-    				set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value);
-    			}
-
-    			if (dirty & /*value*/ 1 && sp_action_button2_selected_value !== (sp_action_button2_selected_value = /*value*/ ctx[0].strokeLineCap === canvasEngine.StrokeLineCap.Round)) {
-    				set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value);
-    			}
+    			const iconswitch_changes = {};
+    			if (dirty & /*value*/ 1) iconswitch_changes.value = /*value*/ ctx[0].strokeLineCap;
+    			iconswitch.$set(iconswitch_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(iconswitch.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(iconswitch.$$.fragment, local);
+    			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_action_group);
-    			mounted = false;
-    			run_all(dispose);
+    			destroy_component(iconswitch, detaching);
     		}
     	};
 
@@ -36851,107 +37526,53 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_5.name,
     		type: "slot",
-    		source: "(13:4) <PropertyItem title=\\\"Line cap\\\">",
+    		source: "(67:4) <PropertyItem title=\\\"Line cap\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (26:4) <PropertyItem title="Line join">
+    // (70:4) <PropertyItem title="Line join">
     function create_default_slot_4(ctx) {
-    	let sp_action_group;
-    	let sp_action_button0;
-    	let sp_icon0;
-    	let sp_action_button0_selected_value;
-    	let t0;
-    	let sp_action_button1;
-    	let sp_icon1;
-    	let sp_action_button1_selected_value;
-    	let t1;
-    	let sp_action_button2;
-    	let sp_icon2;
-    	let sp_action_button2_selected_value;
-    	let mounted;
-    	let dispose;
+    	let iconswitch;
+    	let current;
+
+    	iconswitch = new IconSwitch({
+    			props: {
+    				size: "s",
+    				value: /*value*/ ctx[0].strokeLineJoin,
+    				items: /*lineJoinItems*/ ctx[8]
+    			},
+    			$$inline: true
+    		});
+
+    	iconswitch.$on("change", /*onLineJoinChange*/ ctx[5]);
 
     	const block = {
     		c: function create() {
-    			sp_action_group = element("sp-action-group");
-    			sp_action_button0 = element("sp-action-button");
-    			sp_icon0 = element("sp-icon");
-    			t0 = space();
-    			sp_action_button1 = element("sp-action-button");
-    			sp_icon1 = element("sp-icon");
-    			t1 = space();
-    			sp_action_button2 = element("sp-action-button");
-    			sp_icon2 = element("sp-icon");
-    			set_custom_element_data(sp_icon0, "name", "expr:join-miter");
-    			set_custom_element_data(sp_icon0, "size", "s");
-    			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$2, 28, 16, 1838);
-    			set_custom_element_data(sp_action_button0, "title", "Miter");
-    			set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Miter);
-    			set_custom_element_data(sp_action_button0, "size", "s");
-    			add_location(sp_action_button0, file$2, 27, 12, 1653);
-    			set_custom_element_data(sp_icon1, "name", "expr:join-bevel");
-    			set_custom_element_data(sp_icon1, "size", "s");
-    			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$2, 31, 16, 2131);
-    			set_custom_element_data(sp_action_button1, "title", "Bevel");
-    			set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Bevel);
-    			set_custom_element_data(sp_action_button1, "size", "s");
-    			add_location(sp_action_button1, file$2, 30, 12, 1946);
-    			set_custom_element_data(sp_icon2, "name", "expr:join-round");
-    			set_custom_element_data(sp_icon2, "size", "s");
-    			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$2, 34, 16, 2424);
-    			set_custom_element_data(sp_action_button2, "title", "Round");
-    			set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Round);
-    			set_custom_element_data(sp_action_button2, "size", "s");
-    			add_location(sp_action_button2, file$2, 33, 12, 2239);
-    			set_custom_element_data(sp_action_group, "compact", "");
-    			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$2, 26, 8, 1604);
+    			create_component(iconswitch.$$.fragment);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, sp_action_group, anchor);
-    			append_dev(sp_action_group, sp_action_button0);
-    			append_dev(sp_action_button0, sp_icon0);
-    			append_dev(sp_action_group, t0);
-    			append_dev(sp_action_group, sp_action_button1);
-    			append_dev(sp_action_button1, sp_icon1);
-    			append_dev(sp_action_group, t1);
-    			append_dev(sp_action_group, sp_action_button2);
-    			append_dev(sp_action_button2, sp_icon2);
-
-    			if (!mounted) {
-    				dispose = [
-    					listen_dev(sp_action_button0, "click", /*click_handler_3*/ ctx[4], false, false, false),
-    					listen_dev(sp_action_button1, "click", /*click_handler_4*/ ctx[5], false, false, false),
-    					listen_dev(sp_action_button2, "click", /*click_handler_5*/ ctx[6], false, false, false)
-    				];
-
-    				mounted = true;
-    			}
+    			mount_component(iconswitch, target, anchor);
+    			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*value*/ 1 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Miter)) {
-    				set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value);
-    			}
-
-    			if (dirty & /*value*/ 1 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Bevel)) {
-    				set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value);
-    			}
-
-    			if (dirty & /*value*/ 1 && sp_action_button2_selected_value !== (sp_action_button2_selected_value = /*value*/ ctx[0].strokeLineJoin === canvasEngine.StrokeLineJoin.Round)) {
-    				set_custom_element_data(sp_action_button2, "selected", sp_action_button2_selected_value);
-    			}
+    			const iconswitch_changes = {};
+    			if (dirty & /*value*/ 1) iconswitch_changes.value = /*value*/ ctx[0].strokeLineJoin;
+    			iconswitch.$set(iconswitch_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(iconswitch.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(iconswitch.$$.fragment, local);
+    			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_action_group);
-    			mounted = false;
-    			run_all(dispose);
+    			destroy_component(iconswitch, detaching);
     		}
     	};
 
@@ -36959,14 +37580,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(26:4) <PropertyItem title=\\\"Line join\\\">",
+    		source: "(70:4) <PropertyItem title=\\\"Line join\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (39:4) <PropertyItem title="Miter limit">
+    // (73:4) <PropertyItem title="Miter limit">
     function create_default_slot_3(ctx) {
     	let sptextfield;
     	let current;
@@ -36974,16 +37595,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	sptextfield = new SpTextField({
     			props: {
     				disabled: /*value*/ ctx[0].strokeLineJoin !== canvasEngine.StrokeLineJoin.Miter,
-    				style: "width: var(--spectrum-global-dimension-size-800)",
+    				style: "width: var(--small-control-size)",
     				size: "S",
     				value: /*value*/ ctx[0].strokeMiterLimit,
     				type: "number",
     				min: 1,
     				max: 1000,
-    				step: 0.01
+    				step: 1,
+    				round: 0.01
     			},
     			$$inline: true
     		});
+
+    	sptextfield.$on("input", /*input_handler_1*/ ctx[12]);
+    	sptextfield.$on("blur", /*onBlur*/ ctx[6]);
+    	sptextfield.$on("start", /*start_handler_1*/ ctx[13]);
 
     	const block = {
     		c: function create() {
@@ -37017,14 +37643,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(39:4) <PropertyItem title=\\\"Miter limit\\\">",
+    		source: "(73:4) <PropertyItem title=\\\"Miter limit\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:4) <PropertyItem title="Dash array">
+    // (81:4) <PropertyItem title="Dash array">
     function create_default_slot_2(ctx) {
     	let sptextfield;
     	let current;
@@ -37034,11 +37660,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				placeholder: "dash, gap, ...",
     				style: "flex: 1; margin-left: var(--spectrum-global-dimension-size-40)",
     				size: "S",
-    				value: /*value*/ ctx[0].strokeDashArray.join(", "),
+    				value: /*formatDashArray*/ ctx[2](/*value*/ ctx[0].strokeDashArray),
     				type: "text"
     			},
     			$$inline: true
     		});
+
+    	sptextfield.$on("change", /*onDashArrayChange*/ ctx[3]);
 
     	const block = {
     		c: function create() {
@@ -37050,7 +37678,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const sptextfield_changes = {};
-    			if (dirty & /*value*/ 1) sptextfield_changes.value = /*value*/ ctx[0].strokeDashArray.join(", ");
+    			if (dirty & /*value*/ 1) sptextfield_changes.value = /*formatDashArray*/ ctx[2](/*value*/ ctx[0].strokeDashArray);
     			sptextfield.$set(sptextfield_changes);
     		},
     		i: function intro(local) {
@@ -37071,14 +37699,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(42:4) <PropertyItem title=\\\"Dash array\\\">",
+    		source: "(81:4) <PropertyItem title=\\\"Dash array\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (48:4) <PropertyItem title="Dash offset">
+    // (88:4) <PropertyItem title="Dash offset">
     function create_default_slot_1(ctx) {
     	let sptextfield;
     	let current;
@@ -37086,7 +37714,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	sptextfield = new SpTextField({
     			props: {
     				title: "Offset",
-    				style: "width: var(--spectrum-global-dimension-size-800)",
+    				style: "width: var(--small-control-size)",
     				size: "S",
     				value: /*value*/ ctx[0].strokeDashOffset,
     				type: "number",
@@ -37097,6 +37725,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			},
     			$$inline: true
     		});
+
+    	sptextfield.$on("input", /*input_handler_2*/ ctx[14]);
+    	sptextfield.$on("blur", /*onBlur*/ ctx[6]);
+    	sptextfield.$on("start", /*start_handler_2*/ ctx[15]);
 
     	const block = {
     		c: function create() {
@@ -37129,14 +37761,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(48:4) <PropertyItem title=\\\"Dash offset\\\">",
+    		source: "(88:4) <PropertyItem title=\\\"Dash offset\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (11:0) <PropertyGroup title="Stroke">
+    // (61:0) <PropertyGroup title="Stroke">
     function create_default_slot$1(ctx) {
     	let spslider;
     	let t0;
@@ -37164,6 +37796,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			},
     			$$inline: true
     		});
+
+    	spslider.$on("done", /*done_handler*/ ctx[9]);
+    	spslider.$on("input", /*input_handler*/ ctx[10]);
+    	spslider.$on("start", /*start_handler*/ ctx[11]);
 
     	propertyitem0 = new PropertyItem({
     			props: {
@@ -37244,35 +37880,35 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			spslider.$set(spslider_changes);
     			const propertyitem0_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertyitem0_changes.$$scope = { dirty, ctx };
     			}
 
     			propertyitem0.$set(propertyitem0_changes);
     			const propertyitem1_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertyitem1_changes.$$scope = { dirty, ctx };
     			}
 
     			propertyitem1.$set(propertyitem1_changes);
     			const propertyitem2_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertyitem2_changes.$$scope = { dirty, ctx };
     			}
 
     			propertyitem2.$set(propertyitem2_changes);
     			const propertyitem3_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertyitem3_changes.$$scope = { dirty, ctx };
     			}
 
     			propertyitem3.$set(propertyitem3_changes);
     			const propertyitem4_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertyitem4_changes.$$scope = { dirty, ctx };
     			}
 
@@ -37316,7 +37952,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(11:0) <PropertyGroup title=\\\"Stroke\\\">",
+    		source: "(61:0) <PropertyGroup title=\\\"Stroke\\\">",
     		ctx
     	});
 
@@ -37350,7 +37986,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, [dirty]) {
     			const propertygroup_changes = {};
 
-    			if (dirty & /*$$scope, value*/ 129) {
+    			if (dirty & /*$$scope, value*/ 65537) {
     				propertygroup_changes.$$scope = { dirty, ctx };
     			}
 
@@ -37381,26 +38017,116 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function changeProp(name, value) {
-    	console.log(name, value);
-    }
-
     function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Stroke", slots, []);
+    	const dispatch = createEventDispatcher();
     	let { value } = $$props;
+
+    	function formatDashArray(value) {
+    		return value.map(v => formatNumber(v, 4)).join(", ");
+    	}
+
+    	function onDashArrayChange(e) {
+    		dispatch("update", {
+    			property: "strokeDashArray",
+    			value: canvasEngine.parseNumberList(e.detail)
+    		});
+    	}
+
+    	function onLineCapChange(e) {
+    		dispatch("update", {
+    			property: "strokeLineCap",
+    			value: parseInt(e.detail)
+    		});
+    	}
+
+    	function onLineJoinChange(e) {
+    		dispatch("update", {
+    			property: "strokeLineJoin",
+    			value: parseInt(e.detail)
+    		});
+    	}
+
+    	function onBlur() {
+    		dispatch("done");
+    	}
+
+    	const lineCapItems = [
+    		{
+    			value: canvasEngine.StrokeLineCap.Butt,
+    			title: "Butt",
+    			icon: "expr:cap-butt"
+    		},
+    		{
+    			value: canvasEngine.StrokeLineCap.Square,
+    			title: "Square",
+    			icon: "expr:cap-square"
+    		},
+    		{
+    			value: canvasEngine.StrokeLineCap.Round,
+    			title: "Round",
+    			icon: "expr:cap-round"
+    		}
+    	];
+
+    	const lineJoinItems = [
+    		{
+    			value: canvasEngine.StrokeLineJoin.Miter,
+    			title: "Miter",
+    			icon: "expr:join-miter"
+    		},
+    		{
+    			value: canvasEngine.StrokeLineJoin.Bevel,
+    			title: "Bevel",
+    			icon: "expr:join-bevel"
+    		},
+    		{
+    			value: canvasEngine.StrokeLineJoin.Round,
+    			title: "Round",
+    			icon: "expr:join-round"
+    		}
+    	];
+
     	const writable_props = ["value"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<Stroke> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Stroke> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = () => changeProp("strokeLineCap", canvasEngine.StrokeLineCap.Butt);
-    	const click_handler_1 = () => changeProp("strokeLineCap", canvasEngine.StrokeLineCap.Square);
-    	const click_handler_2 = () => changeProp("strokeLineCap", canvasEngine.StrokeLineCap.Round);
-    	const click_handler_3 = () => changeProp("strokeLineJoin", canvasEngine.StrokeLineJoin.Miter);
-    	const click_handler_4 = () => changeProp("strokeLineJoin", canvasEngine.StrokeLineJoin.Bevel);
-    	const click_handler_5 = () => changeProp("strokeLineJoin", canvasEngine.StrokeLineJoin.Round);
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	const input_handler = e => dispatch("update", {
+    		property: "strokeLineWidth",
+    		value: e.detail
+    	});
+
+    	const start_handler = () => dispatch("start", {
+    		property: "strokeLineWidth",
+    		value: value.strokeLineWidth
+    	});
+
+    	const input_handler_1 = e => dispatch("update", {
+    		property: "strokeMiterLimit",
+    		value: e.detail
+    	});
+
+    	const start_handler_1 = () => dispatch("start", {
+    		property: "strokeMiterLimit",
+    		value: value.strokeMiterLimit
+    	});
+
+    	const input_handler_2 = e => dispatch("update", {
+    		property: "strokeDashOffset",
+    		value: e.detail
+    	});
+
+    	const start_handler_2 = () => dispatch("start", {
+    		property: "strokeDashOffset",
+    		value: value.strokeDashOffset
+    	});
 
     	$$self.$$set = $$props => {
     		if ("value" in $$props) $$invalidate(0, value = $$props.value);
@@ -37409,12 +38135,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	$$self.$capture_state = () => ({
     		StrokeLineCap: canvasEngine.StrokeLineCap,
     		StrokeLineJoin: canvasEngine.StrokeLineJoin,
+    		parseNumberList: canvasEngine.parseNumberList,
+    		formatNumber,
     		PropertyGroup,
     		PropertyItem,
     		SpTextField,
     		SpSlider,
+    		IconSwitch,
+    		createEventDispatcher,
+    		dispatch,
     		value,
-    		changeProp
+    		formatDashArray,
+    		onDashArrayChange,
+    		onLineCapChange,
+    		onLineJoinChange,
+    		onBlur,
+    		lineCapItems,
+    		lineJoinItems
     	});
 
     	$$self.$inject_state = $$props => {
@@ -37427,12 +38164,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	return [
     		value,
-    		click_handler,
-    		click_handler_1,
-    		click_handler_2,
-    		click_handler_3,
-    		click_handler_4,
-    		click_handler_5
+    		dispatch,
+    		formatDashArray,
+    		onDashArrayChange,
+    		onLineCapChange,
+    		onLineJoinChange,
+    		onBlur,
+    		lineCapItems,
+    		lineJoinItems,
+    		done_handler,
+    		input_handler,
+    		start_handler,
+    		input_handler_1,
+    		start_handler_1,
+    		input_handler_2,
+    		start_handler_2
     	];
     }
 
@@ -37452,7 +38198,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const props = options.props || {};
 
     		if (/*value*/ ctx[0] === undefined && !("value" in props)) {
-    			console_1$1.warn("<Stroke> was created without expected prop 'value'");
+    			console.warn("<Stroke> was created without expected prop 'value'");
     		}
     	}
 
@@ -37467,7 +38213,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/FillAndStroke/index.svelte generated by Svelte v3.38.2 */
 
-    // (14:0) {:else}
+    // (44:0) {:else}
     function create_else_block(ctx) {
     	let stroke;
     	let current;
@@ -37476,6 +38222,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			props: { value: /*value*/ ctx[2] },
     			$$inline: true
     		});
+
+    	stroke.$on("start", /*start_handler_2*/ ctx[18]);
+    	stroke.$on("done", /*done_handler_3*/ ctx[19]);
+    	stroke.$on("update", /*update_handler_2*/ ctx[20]);
+    	stroke.$on("action", /*action_handler_2*/ ctx[21]);
 
     	const block = {
     		c: function create() {
@@ -37508,14 +38259,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(14:0) {:else}",
+    		source: "(44:0) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (12:0) {#if showFill}
+    // (42:0) {#if showFill}
     function create_if_block$1(ctx) {
     	let fill;
     	let current;
@@ -37524,6 +38275,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			props: { value: /*value*/ ctx[2] },
     			$$inline: true
     		});
+
+    	fill.$on("start", /*start_handler_1*/ ctx[14]);
+    	fill.$on("done", /*done_handler_2*/ ctx[15]);
+    	fill.$on("update", /*update_handler_1*/ ctx[16]);
+    	fill.$on("action", /*action_handler_1*/ ctx[17]);
 
     	const block = {
     		c: function create() {
@@ -37556,7 +38312,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(12:0) {#if showFill}",
+    		source: "(42:0) {#if showFill}",
     		ctx
     	});
 
@@ -37576,7 +38332,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current;
 
     	function brushswitch_showFill_binding(value) {
-    		/*brushswitch_showFill_binding*/ ctx[3](value);
+    		/*brushswitch_showFill_binding*/ ctx[7](value);
     	}
 
     	let brushswitch_props = { value: /*value*/ ctx[2] };
@@ -37587,9 +38343,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	brushswitch = new BrushSwitch({ props: brushswitch_props, $$inline: true });
     	binding_callbacks.push(() => bind(brushswitch, "showFill", brushswitch_showFill_binding));
+    	brushswitch.$on("start", /*start_handler*/ ctx[8]);
+    	brushswitch.$on("done", /*done_handler*/ ctx[9]);
+    	brushswitch.$on("update", /*update_handler*/ ctx[10]);
+    	brushswitch.$on("action", /*action_handler*/ ctx[11]);
 
     	function brushcontrol_colorMode_binding(value) {
-    		/*brushcontrol_colorMode_binding*/ ctx[4](value);
+    		/*brushcontrol_colorMode_binding*/ ctx[12](value);
     	}
 
     	let brushcontrol_props = {
@@ -37608,6 +38368,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		});
 
     	binding_callbacks.push(() => bind(brushcontrol, "colorMode", brushcontrol_colorMode_binding));
+    	brushcontrol.$on("change", /*onBrushTypeChange*/ ctx[3]);
+    	brushcontrol.$on("start", /*onStart*/ ctx[4]);
+    	brushcontrol.$on("done", /*done_handler_1*/ ctx[13]);
+    	brushcontrol.$on("update", /*onUpdate*/ ctx[5]);
+    	brushcontrol.$on("action", /*onAction*/ ctx[6]);
     	const if_block_creators = [create_if_block$1, create_else_block];
     	const if_blocks = [];
 
@@ -37728,9 +38493,57 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("FillAndStroke", slots, []);
     	
+    	const dispatch = createEventDispatcher();
     	let { showFill = true } = $$props;
     	let { colorMode = undefined } = $$props;
     	let { value } = $$props;
+    	let brushProperty;
+
+    	function onBrushTypeChange(e) {
+    		switch (e.detail) {
+    			case canvasEngine.BrushType.None:
+    				dispatch("update", {
+    					property: brushProperty,
+    					value: canvasEngine.EmptyBrush.INSTANCE
+    				});
+    				break;
+    			case canvasEngine.BrushType.Solid:
+    				if (value[brushProperty] instanceof canvasEngine.GradientBrush) {
+    					dispatch("update", {
+    						property: brushProperty,
+    						value: value[brushProperty].stopColors.getColorAt(0) || canvasEngine.SolidBrush.BLACK
+    					});
+    				} else {
+    					dispatch("update", {
+    						property: brushProperty,
+    						value: canvasEngine.SolidBrush.BLACK
+    					});
+    				}
+    				break;
+    		} // TODO: other brushes
+    	}
+
+    	function onStart() {
+    		dispatch("start", {
+    			property: brushProperty,
+    			value: value[brushProperty]
+    		});
+    	}
+
+    	function onUpdate(e) {
+    		dispatch("update", { property: brushProperty, value: e.detail });
+    	}
+
+    	function onAction(e) {
+    		dispatch("action", {
+    			action: e.detail.action,
+    			value: {
+    				property: brushProperty,
+    				data: e.detail.value
+    			}
+    		});
+    	}
+
     	const writable_props = ["showFill", "colorMode", "value"];
 
     	Object.keys($$props).forEach(key => {
@@ -37742,9 +38555,61 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$invalidate(0, showFill);
     	}
 
+    	function start_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function done_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function update_handler(event) {
+    		bubble($$self, event);
+    	}
+
+    	function action_handler(event) {
+    		bubble($$self, event);
+    	}
+
     	function brushcontrol_colorMode_binding(value) {
     		colorMode = value;
     		$$invalidate(1, colorMode);
+    	}
+
+    	function done_handler_1(event) {
+    		bubble($$self, event);
+    	}
+
+    	function start_handler_1(event) {
+    		bubble($$self, event);
+    	}
+
+    	function done_handler_2(event) {
+    		bubble($$self, event);
+    	}
+
+    	function update_handler_1(event) {
+    		bubble($$self, event);
+    	}
+
+    	function action_handler_1(event) {
+    		bubble($$self, event);
+    	}
+
+    	function start_handler_2(event) {
+    		bubble($$self, event);
+    	}
+
+    	function done_handler_3(event) {
+    		bubble($$self, event);
+    	}
+
+    	function update_handler_2(event) {
+    		bubble($$self, event);
+    	}
+
+    	function action_handler_2(event) {
+    		bubble($$self, event);
     	}
 
     	$$self.$$set = $$props => {
@@ -37758,27 +38623,62 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		BrushControl: Brush_1,
     		Fill,
     		Stroke,
+    		BrushType: canvasEngine.BrushType,
+    		EmptyBrush: canvasEngine.EmptyBrush,
+    		GradientBrush: canvasEngine.GradientBrush,
+    		SolidBrush: canvasEngine.SolidBrush,
+    		createEventDispatcher,
+    		dispatch,
     		showFill,
     		colorMode,
-    		value
+    		value,
+    		brushProperty,
+    		onBrushTypeChange,
+    		onStart,
+    		onUpdate,
+    		onAction
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("showFill" in $$props) $$invalidate(0, showFill = $$props.showFill);
     		if ("colorMode" in $$props) $$invalidate(1, colorMode = $$props.colorMode);
     		if ("value" in $$props) $$invalidate(2, value = $$props.value);
+    		if ("brushProperty" in $$props) brushProperty = $$props.brushProperty;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*showFill*/ 1) {
+    			brushProperty = showFill ? "fill" : "strokeBrush";
+    		}
+    	};
+
     	return [
     		showFill,
     		colorMode,
     		value,
+    		onBrushTypeChange,
+    		onStart,
+    		onUpdate,
+    		onAction,
     		brushswitch_showFill_binding,
-    		brushcontrol_colorMode_binding
+    		start_handler,
+    		done_handler,
+    		update_handler,
+    		action_handler,
+    		brushcontrol_colorMode_binding,
+    		done_handler_1,
+    		start_handler_1,
+    		done_handler_2,
+    		update_handler_1,
+    		action_handler_1,
+    		start_handler_2,
+    		done_handler_3,
+    		update_handler_2,
+    		action_handler_2
     	];
     }
 
@@ -37832,21 +38732,34 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const { console: console_1 } = globals;
     const file$1 = "src/Components/Properties/index.svelte";
 
-    // (22:4) {#if $CurrentSelectedElement != null}
+    // (87:4) {#if $CurrentSelectedElement != null}
     function create_if_block(ctx) {
     	let t0;
     	let transform;
+    	let updating_proportionalScale;
     	let t1;
     	let compositing;
     	let current;
     	let if_block = /*$CurrentSelectedElement*/ ctx[0] instanceof canvasEngine.VectorElement && create_if_block_1(ctx);
 
-    	transform = new Transform({
-    			props: {
-    				element: /*$CurrentSelectedElement*/ ctx[0]
-    			},
-    			$$inline: true
-    		});
+    	function transform_proportionalScale_binding(value) {
+    		/*transform_proportionalScale_binding*/ ctx[10](value);
+    	}
+
+    	let transform_props = {
+    		element: /*$CurrentSelectedElement*/ ctx[0]
+    	};
+
+    	if (/*$ProportionalScale*/ ctx[3] !== void 0) {
+    		transform_props.proportionalScale = /*$ProportionalScale*/ ctx[3];
+    	}
+
+    	transform = new Transform({ props: transform_props, $$inline: true });
+    	binding_callbacks.push(() => bind(transform, "proportionalScale", transform_proportionalScale_binding));
+    	transform.$on("action", /*onAction*/ ctx[7]);
+    	transform.$on("start", /*onStart*/ ctx[5]);
+    	transform.$on("update", /*onUpdate*/ ctx[6]);
+    	transform.$on("done", /*onDone*/ ctx[4]);
 
     	compositing = new Compositing({
     			props: {
@@ -37854,6 +38767,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			},
     			$$inline: true
     		});
+
+    	compositing.$on("action", /*onAction*/ ctx[7]);
+    	compositing.$on("start", /*onStart*/ ctx[5]);
+    	compositing.$on("update", /*onUpdate*/ ctx[6]);
+    	compositing.$on("done", /*onDone*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -37897,6 +38815,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			const transform_changes = {};
     			if (dirty & /*$CurrentSelectedElement*/ 1) transform_changes.element = /*$CurrentSelectedElement*/ ctx[0];
+
+    			if (!updating_proportionalScale && dirty & /*$ProportionalScale*/ 8) {
+    				updating_proportionalScale = true;
+    				transform_changes.proportionalScale = /*$ProportionalScale*/ ctx[3];
+    				add_flush_callback(() => updating_proportionalScale = false);
+    			}
+
     			transform.$set(transform_changes);
     			const compositing_changes = {};
     			if (dirty & /*$CurrentSelectedElement*/ 1) compositing_changes.element = /*$CurrentSelectedElement*/ ctx[0];
@@ -37928,14 +38853,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(22:4) {#if $CurrentSelectedElement != null}",
+    		source: "(87:4) {#if $CurrentSelectedElement != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (23:8) {#if $CurrentSelectedElement instanceof VectorElement}
+    // (88:8) {#if $CurrentSelectedElement instanceof VectorElement}
     function create_if_block_1(ctx) {
     	let fillandstroke;
     	let updating_showFill;
@@ -37943,11 +38868,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current;
 
     	function fillandstroke_showFill_binding(value) {
-    		/*fillandstroke_showFill_binding*/ ctx[3](value);
+    		/*fillandstroke_showFill_binding*/ ctx[8](value);
     	}
 
     	function fillandstroke_colorMode_binding(value) {
-    		/*fillandstroke_colorMode_binding*/ ctx[4](value);
+    		/*fillandstroke_colorMode_binding*/ ctx[9](value);
     	}
 
     	let fillandstroke_props = {
@@ -37969,6 +38894,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	binding_callbacks.push(() => bind(fillandstroke, "showFill", fillandstroke_showFill_binding));
     	binding_callbacks.push(() => bind(fillandstroke, "colorMode", fillandstroke_colorMode_binding));
+    	fillandstroke.$on("action", /*onAction*/ ctx[7]);
+    	fillandstroke.$on("start", /*onStart*/ ctx[5]);
+    	fillandstroke.$on("update", /*onUpdate*/ ctx[6]);
+    	fillandstroke.$on("done", /*onDone*/ ctx[4]);
 
     	const block = {
     		c: function create() {
@@ -38014,7 +38943,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(23:8) {#if $CurrentSelectedElement instanceof VectorElement}",
+    		source: "(88:8) {#if $CurrentSelectedElement instanceof VectorElement}",
     		ctx
     	});
 
@@ -38032,7 +38961,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "scroll");
     			attr_dev(div, "hidden-x", "");
-    			add_location(div, file$1, 20, 0, 733);
+    			add_location(div, file$1, 85, 0, 2944);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -38092,35 +39021,115 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function onBrushInput(e) {
-    	console.log("input", e.detail);
-    }
+    const debug = false;
 
     function instance$1($$self, $$props, $$invalidate) {
     	let $CurrentProject;
     	let $CurrentSelectedElement;
     	let $IsFillSelected;
     	let $CurrentColorMode;
+    	let $ProportionalScale;
     	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(5, $CurrentProject = $$value));
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(15, $CurrentProject = $$value));
     	validate_store(CurrentSelectedElement, "CurrentSelectedElement");
     	component_subscribe($$self, CurrentSelectedElement, $$value => $$invalidate(0, $CurrentSelectedElement = $$value));
     	validate_store(IsFillSelected, "IsFillSelected");
     	component_subscribe($$self, IsFillSelected, $$value => $$invalidate(1, $IsFillSelected = $$value));
     	validate_store(CurrentColorMode, "CurrentColorMode");
     	component_subscribe($$self, CurrentColorMode, $$value => $$invalidate(2, $CurrentColorMode = $$value));
+    	validate_store(ProportionalScale, "ProportionalScale");
+    	component_subscribe($$self, ProportionalScale, $$value => $$invalidate(3, $ProportionalScale = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Properties", slots, []);
     	
     	const keyframeCounter = new KeyframeCounter();
+    	let started = false;
+    	let currentPropertyName = undefined;
+    	let currentPropertyValue = undefined;
+    	let initialPropertyValue = undefined;
 
-    	function onStart() {
-    		keyframeCounter.start($CurrentProject.engine);
+    	function onDone() {
+    		if (!started) {
+    			return;
+    		}
+
+    		const engine = $CurrentProject.engine;
+
+    		if (currentPropertyValue !== undefined && !canvasEngine.equals(initialPropertyValue, currentPropertyValue) || keyframeCounter.hasChanged(engine)) {
+    			engine.project.state.snapshot();
+    		}
+    		started = false;
+    		currentPropertyName = undefined;
+    		currentPropertyValue = undefined;
+    		initialPropertyValue = undefined;
     	}
 
-    	function onStop(e) {
-    		const keyframesAdded = keyframeCounter.hasChanged($CurrentProject.engine);
-    		console.log(keyframesAdded, e.detail);
+    	function onStart(e) {
+    		const engine = $CurrentProject.engine;
+
+    		if (started) {
+    			if (currentPropertyName !== e.detail.property) {
+    				// finish current started if different property (if any)
+    				onDone();
+    			}
+    		}
+
+    		started = true;
+    		currentPropertyName = e.detail.property;
+    		initialPropertyValue = e.detail.value;
+    		currentPropertyValue = undefined;
+    		keyframeCounter.start(engine);
+    	}
+
+    	function updateProperty(property, value, snapshot) {
+    		const project = $CurrentProject;
+
+    		if (project.middleware.setElementsProperty(project.selection, property, value)) {
+    			notifyPropertiesChanged();
+
+    			if (snapshot) {
+    				project.state.snapshot();
+    			}
+
+    			project.engine.invalidate();
+    			return true;
+    		}
+
+    		return false;
+    	}
+
+    	function onUpdate(e) {
+    		if (currentPropertyName !== e.detail.property) {
+    			onDone();
+    		}
+
+    		if (!started) {
+    			updateProperty(e.detail.property, e.detail.value, true);
+    			return;
+    		}
+
+    		if (!canvasEngine.equals(currentPropertyValue, e.detail.value)) {
+    			currentPropertyValue = e.detail.value;
+    			updateProperty(e.detail.property, e.detail.value, false);
+    		}
+    	}
+
+    	function onAction(e) {
+    		onDone();
+    		const project = $CurrentProject;
+    		keyframeCounter.start(project.engine);
+    		let changed = false;
+
+    		for (const element of project.selection) {
+    			if (e.detail.action(project, element, e.detail.value)) {
+    				changed = true;
+    			}
+    		}
+
+    		if (changed || keyframeCounter.hasChanged(project.engine)) {
+    			project.state.snapshot();
+    			project.engine.invalidate();
+    		}
     	}
 
     	const writable_props = [];
@@ -38139,33 +39148,66 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		CurrentColorMode.set($CurrentColorMode);
     	}
 
+    	function transform_proportionalScale_binding(value) {
+    		$ProportionalScale = value;
+    		ProportionalScale.set($ProportionalScale);
+    	}
+
     	$$self.$capture_state = () => ({
     		Transform,
     		CurrentProject,
     		CurrentSelectedElement,
     		IsFillSelected,
     		CurrentColorMode,
-    		Brush: Brush_1,
+    		ProportionalScale,
+    		notifyPropertiesChanged,
     		Compositing,
     		FillAndStroke,
+    		AnimationProject,
     		KeyframeCounter,
+    		equals: canvasEngine.equals,
     		VectorElement: canvasEngine.VectorElement,
     		keyframeCounter,
+    		started,
+    		currentPropertyName,
+    		currentPropertyValue,
+    		initialPropertyValue,
+    		debug,
+    		onDone,
     		onStart,
-    		onStop,
-    		onBrushInput,
+    		updateProperty,
+    		onUpdate,
+    		onAction,
     		$CurrentProject,
     		$CurrentSelectedElement,
     		$IsFillSelected,
-    		$CurrentColorMode
+    		$CurrentColorMode,
+    		$ProportionalScale
     	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("started" in $$props) started = $$props.started;
+    		if ("currentPropertyName" in $$props) currentPropertyName = $$props.currentPropertyName;
+    		if ("currentPropertyValue" in $$props) currentPropertyValue = $$props.currentPropertyValue;
+    		if ("initialPropertyValue" in $$props) initialPropertyValue = $$props.initialPropertyValue;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
 
     	return [
     		$CurrentSelectedElement,
     		$IsFillSelected,
     		$CurrentColorMode,
+    		$ProportionalScale,
+    		onDone,
+    		onStart,
+    		onUpdate,
+    		onAction,
     		fillandstroke_showFill_binding,
-    		fillandstroke_colorMode_binding
+    		fillandstroke_colorMode_binding,
+    		transform_proportionalScale_binding
     	];
     }
 
@@ -38530,9 +39572,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    var CustomIcons = "y<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"path\" viewBox=\"0 0 16 16\">\n        <path d=\"M13,11a1.994,1.994,0,0,0-1.925,1.488c-1.586-.047-2.6-.354-3-.923-.528-.749-.056-2.1.4-3.4.54-1.543,1.1-3.139.266-4.312-.611-.86-1.832-1.287-3.8-1.342a2,2,0,1,0-.007,1c1.582.046,2.594.354,3,.925.533.748.061,2.1-.4,3.4-.54,1.543-1.1,3.139-.266,4.311.611.861,1.833,1.288,3.805,1.343A2,2,0,1,0,13,11ZM3,4A1,1,0,1,1,4,3,1,1,0,0,1,3,4ZM13,14a1,1,0,1,1,1-1A1,1,0,0,1,13,14Z\" />\n    </symbol>\n\n    <symbol id=\"text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n    <symbol id=\"transform-tool\" viewBox=\"0 0 16 16\">\n        <circle cx=\"10.75\" cy=\"10.763\" r=\"0.655\" />\n        <polygon\n                points=\"16 7.491 16 5.526 14.03 5.526 14.03 6.185 11.73 6.185 11.73 5.526 9.77 5.526 9.77 6.185 7.86 6.185 8.54 6.833 9.77 6.833 9.77 7.491 11.73 7.491 11.73 6.833 14.03 6.833 14.03 7.491 14.69 7.491 14.69 9.786 14.03 9.786 14.03 11.741 14.69 11.741 14.69 14.035 14.03 14.035 14.03 14.693 11.73 14.693 11.73 14.035 9.77 14.035 9.77 14.693 7.47 14.693 7.47 14.035 6.81 14.035 6.81 11.741 7.47 11.741 7.47 9.786 5.5 9.786 5.5 11.741 6.14 11.741 6.14 14.035 5.5 14.035 5.5 16 7.47 16 7.47 15.342 9.77 15.342 9.77 16 11.73 16 11.73 15.342 14.03 15.342 14.03 16 16 16 16 14.035 15.36 14.035 15.36 11.741 16 11.741 16 9.786 15.36 9.786 15.36 7.491 16 7.491\" />\n        <path\n                d=\"M6.81,9.047l2.34-.139a.2.2,0,0,0,.12-.349L7.47,6.843,6.08,5.526.33.06A.194.194,0,0,0,.2,0,.2.2,0,0,0,0,.2V12.569a.2.2,0,0,0,.2.2.211.211,0,0,0,.13-.05L3.86,9.267a.273.273,0,0,1,.12-.06l2.16-.13Z\" />\n    </symbol>\n\n    <symbol id=\"polyline-tool\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M1.465,15.035a.5.5,0,0,1-.5-.5V2.782l13,5.467L14,1.5a.5.5,0,0,1,.5-.5h0a.5.5,0,0,1,.5.5l-.039,8.249-13-5.464V14.535A.5.5,0,0,1,1.465,15.035Z\" />\n    </symbol>\n\n    <symbol id=\"swap-arrow-up-left\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M6.328,3.487V1.451a.2.2,0,0,0-.3-.177L1.152,3.935a.2.2,0,0,0,0,.354L6.03,6.949a.2.2,0,0,0,.3-.176V4.737A7.383,7.383,0,0,1,13.7,12.112v2.014a.625.625,0,1,0,1.25,0V12.112A8.635,8.635,0,0,0,6.328,3.487Z\" />\n    </symbol>\n    <symbol id=\"swap-arrow-down-right\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M9.672,12.513v2.036a.2.2,0,0,0,.3.177l4.878-2.661a.2.2,0,0,0,0-.354L9.97,9.051a.2.2,0,0,0-.3.176v2.036A7.383,7.383,0,0,1,2.3,3.888V1.874a.625.625,0,0,0-1.25,0V3.888A8.635,8.635,0,0,0,9.672,12.513Z\" />\n    </symbol>\n    <symbol id=\"swap-arrows\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M14.8,9.718H12.762V7.863A4.631,4.631,0,0,0,8.137,3.238H6.282V1.2a.2.2,0,0,0-.295-.175L1.1,3.688a.2.2,0,0,0,0,.351L5.987,6.7a.2.2,0,0,0,.295-.176V4.488H8.137a3.379,3.379,0,0,1,3.375,3.375V9.718H9.474a.2.2,0,0,0-.176.295L11.961,14.9a.2.2,0,0,0,.351,0l2.663-4.883A.2.2,0,0,0,14.8,9.718Z\" />\n    </symbol>\n    <symbol id=\"fill-radial-focal-gradient\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75a2.452,2.452,0,0,0-.27.02A1.8,1.8,0,0,0,.51.51a1.858,1.858,0,0,0-.46.82v.01c-.02.11-.03.21-.04.32A.277.277,0,0,0,0,1.75v12.5a.277.277,0,0,0,.01.09,1.648,1.648,0,0,0,.04.32v.01a1.66,1.66,0,0,0,.48.83,1.731,1.731,0,0,0,.95.48,2.452,2.452,0,0,0,.27.02h12.5a1.8,1.8,0,0,0,1.24-.51A1.756,1.756,0,0,0,16,14.25V1.75A1.725,1.725,0,0,0,15.5.53ZM15,14.25a.755.755,0,0,1-.75.75H1.75a.711.711,0,0,1-.51-.21A.734.734,0,0,1,1,14.25V1.75A.755.755,0,0,1,1.75,1h12.5a.734.734,0,0,1,.54.24.694.694,0,0,1,.21.51Z\" />\n        <path\n                d=\"M16,2.74V13.26a10.088,10.088,0,0,1-1.43,1.81,9.474,9.474,0,0,1-1.08.93H1.75a2.452,2.452,0,0,1-.27-.02,10.07,10.07,0,0,1-1.05-.91c-.13-.13-.25-.26-.38-.4v-.01a1.648,1.648,0,0,1-.04-.32A.277.277,0,0,1,0,14.25V1.75a.277.277,0,0,1,.01-.09c.01-.11.02-.21.04-.32V1.33c.13-.14.25-.27.38-.4A10.07,10.07,0,0,1,1.48.02,2.452,2.452,0,0,1,1.75,0H13.49A9.807,9.807,0,0,1,16,2.74Z\"\n                opacity=\"0.04\"/>\n        <path\n                d=\"M16,5.22v5.56a7.871,7.871,0,0,1-1,1.88,7.294,7.294,0,0,1-.84,1A7.672,7.672,0,0,1,12.36,15a7.95,7.95,0,0,1-7.72,0,7.672,7.672,0,0,1-1.8-1.34A8.072,8.072,0,0,1,1,10.78,7.978,7.978,0,0,1,1,5.22,8.072,8.072,0,0,1,2.84,2.34,7.672,7.672,0,0,1,4.64,1a7.95,7.95,0,0,1,7.72,0A7.98,7.98,0,0,1,16,5.22Z\"\n                opacity=\"0.08\"/>\n        <path\n                d=\"M9.065,1.83h0A5.835,5.835,0,0,1,14.9,7.665h0A5.835,5.835,0,0,1,9.065,13.5h0A5.834,5.834,0,0,1,3.23,7.665h0A5.834,5.834,0,0,1,9.065,1.83Z\"\n                opacity=\"0.15\"/>\n        <path\n                d=\"M10.114,3.494h0A4.506,4.506,0,0,1,14.621,8h0a4.506,4.506,0,0,1-4.507,4.506h0A4.505,4.505,0,0,1,5.608,8h0A4.505,4.505,0,0,1,10.114,3.494Z\"\n                opacity=\"0.2\"/>\n        <path\n                d=\"M11.226,4.822h0A3.178,3.178,0,0,1,14.4,8h0a3.178,3.178,0,0,1-3.178,3.178h0A3.178,3.178,0,0,1,8.048,8h0A3.178,3.178,0,0,1,11.226,4.822Z\"\n                opacity=\"0.4\"/>\n        <path\n                d=\"M12.35,6.026h0A1.973,1.973,0,0,1,14.323,8h0A1.973,1.973,0,0,1,12.35,9.974h0A1.974,1.974,0,0,1,10.376,8h0A1.974,1.974,0,0,1,12.35,6.026Z\"\n                opacity=\"0.5\"/>\n        <path d=\"M13.523,7.2h0a.8.8,0,0,1,.8.8h0a.8.8,0,0,1-.8.8h0a.8.8,0,0,1-.8-.8h0A.8.8,0,0,1,13.523,7.2Z\"/>\n    </symbol>\n</svg>";
+    var CustomIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"path\" viewBox=\"0 0 16 16\">\n        <path d=\"M13,11a1.994,1.994,0,0,0-1.925,1.488c-1.586-.047-2.6-.354-3-.923-.528-.749-.056-2.1.4-3.4.54-1.543,1.1-3.139.266-4.312-.611-.86-1.832-1.287-3.8-1.342a2,2,0,1,0-.007,1c1.582.046,2.594.354,3,.925.533.748.061,2.1-.4,3.4-.54,1.543-1.1,3.139-.266,4.311.611.861,1.833,1.288,3.805,1.343A2,2,0,1,0,13,11ZM3,4A1,1,0,1,1,4,3,1,1,0,0,1,3,4ZM13,14a1,1,0,1,1,1-1A1,1,0,0,1,13,14Z\" />\n    </symbol>\n\n    <symbol id=\"text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n    <symbol id=\"transform-tool\" viewBox=\"0 0 16 16\">\n        <circle cx=\"10.75\" cy=\"10.763\" r=\"0.655\" />\n        <polygon\n                points=\"16 7.491 16 5.526 14.03 5.526 14.03 6.185 11.73 6.185 11.73 5.526 9.77 5.526 9.77 6.185 7.86 6.185 8.54 6.833 9.77 6.833 9.77 7.491 11.73 7.491 11.73 6.833 14.03 6.833 14.03 7.491 14.69 7.491 14.69 9.786 14.03 9.786 14.03 11.741 14.69 11.741 14.69 14.035 14.03 14.035 14.03 14.693 11.73 14.693 11.73 14.035 9.77 14.035 9.77 14.693 7.47 14.693 7.47 14.035 6.81 14.035 6.81 11.741 7.47 11.741 7.47 9.786 5.5 9.786 5.5 11.741 6.14 11.741 6.14 14.035 5.5 14.035 5.5 16 7.47 16 7.47 15.342 9.77 15.342 9.77 16 11.73 16 11.73 15.342 14.03 15.342 14.03 16 16 16 16 14.035 15.36 14.035 15.36 11.741 16 11.741 16 9.786 15.36 9.786 15.36 7.491 16 7.491\" />\n        <path\n                d=\"M6.81,9.047l2.34-.139a.2.2,0,0,0,.12-.349L7.47,6.843,6.08,5.526.33.06A.194.194,0,0,0,.2,0,.2.2,0,0,0,0,.2V12.569a.2.2,0,0,0,.2.2.211.211,0,0,0,.13-.05L3.86,9.267a.273.273,0,0,1,.12-.06l2.16-.13Z\" />\n    </symbol>\n\n    <symbol id=\"polyline-tool\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M1.465,15.035a.5.5,0,0,1-.5-.5V2.782l13,5.467L14,1.5a.5.5,0,0,1,.5-.5h0a.5.5,0,0,1,.5.5l-.039,8.249-13-5.464V14.535A.5.5,0,0,1,1.465,15.035Z\" />\n    </symbol>\n\n    <symbol id=\"swap-arrow-up-left\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M3.487,6.328H1.451a.2.2,0,0,1-.177-.3L3.935,1.152a.2.2,0,0,1,.354,0L6.949,6.03a.2.2,0,0,1-.176.3H4.737A7.383,7.383,0,0,0,12.112,13.7h2.014a.625.625,0,1,1,0,1.25H12.112A8.635,8.635,0,0,1,3.487,6.328Z\"/>\n    </symbol>\n    <symbol id=\"swap-arrow-down-right\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M9.672,12.513v2.036a.2.2,0,0,0,.3.177l4.878-2.661a.2.2,0,0,0,0-.354L9.97,9.051a.2.2,0,0,0-.3.176v2.036A7.383,7.383,0,0,1,2.3,3.888V1.874a.625.625,0,0,0-1.25,0V3.888A8.635,8.635,0,0,0,9.672,12.513Z\" />\n    </symbol>\n    <symbol id=\"swap-arrows\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M14.8,9.718H12.762V7.863A4.631,4.631,0,0,0,8.137,3.238H6.282V1.2a.2.2,0,0,0-.295-.175L1.1,3.688a.2.2,0,0,0,0,.351L5.987,6.7a.2.2,0,0,0,.295-.176V4.488H8.137a3.379,3.379,0,0,1,3.375,3.375V9.718H9.474a.2.2,0,0,0-.176.295L11.961,14.9a.2.2,0,0,0,.351,0l2.663-4.883A.2.2,0,0,0,14.8,9.718Z\" />\n    </symbol>\n    <symbol id=\"fill-radial-focal-gradient\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75a2.452,2.452,0,0,0-.27.02A1.8,1.8,0,0,0,.51.51a1.858,1.858,0,0,0-.46.82v.01c-.02.11-.03.21-.04.32A.277.277,0,0,0,0,1.75v12.5a.277.277,0,0,0,.01.09,1.648,1.648,0,0,0,.04.32v.01a1.66,1.66,0,0,0,.48.83,1.731,1.731,0,0,0,.95.48,2.452,2.452,0,0,0,.27.02h12.5a1.8,1.8,0,0,0,1.24-.51A1.756,1.756,0,0,0,16,14.25V1.75A1.725,1.725,0,0,0,15.5.53ZM15,14.25a.755.755,0,0,1-.75.75H1.75a.711.711,0,0,1-.51-.21A.734.734,0,0,1,1,14.25V1.75A.755.755,0,0,1,1.75,1h12.5a.734.734,0,0,1,.54.24.694.694,0,0,1,.21.51Z\" />\n        <path\n                d=\"M16,2.74V13.26a10.088,10.088,0,0,1-1.43,1.81,9.474,9.474,0,0,1-1.08.93H1.75a2.452,2.452,0,0,1-.27-.02,10.07,10.07,0,0,1-1.05-.91c-.13-.13-.25-.26-.38-.4v-.01a1.648,1.648,0,0,1-.04-.32A.277.277,0,0,1,0,14.25V1.75a.277.277,0,0,1,.01-.09c.01-.11.02-.21.04-.32V1.33c.13-.14.25-.27.38-.4A10.07,10.07,0,0,1,1.48.02,2.452,2.452,0,0,1,1.75,0H13.49A9.807,9.807,0,0,1,16,2.74Z\"\n                opacity=\"0.04\"/>\n        <path\n                d=\"M16,5.22v5.56a7.871,7.871,0,0,1-1,1.88,7.294,7.294,0,0,1-.84,1A7.672,7.672,0,0,1,12.36,15a7.95,7.95,0,0,1-7.72,0,7.672,7.672,0,0,1-1.8-1.34A8.072,8.072,0,0,1,1,10.78,7.978,7.978,0,0,1,1,5.22,8.072,8.072,0,0,1,2.84,2.34,7.672,7.672,0,0,1,4.64,1a7.95,7.95,0,0,1,7.72,0A7.98,7.98,0,0,1,16,5.22Z\"\n                opacity=\"0.08\"/>\n        <path\n                d=\"M9.065,1.83h0A5.835,5.835,0,0,1,14.9,7.665h0A5.835,5.835,0,0,1,9.065,13.5h0A5.834,5.834,0,0,1,3.23,7.665h0A5.834,5.834,0,0,1,9.065,1.83Z\"\n                opacity=\"0.15\"/>\n        <path\n                d=\"M10.114,3.494h0A4.506,4.506,0,0,1,14.621,8h0a4.506,4.506,0,0,1-4.507,4.506h0A4.505,4.505,0,0,1,5.608,8h0A4.505,4.505,0,0,1,10.114,3.494Z\"\n                opacity=\"0.2\"/>\n        <path\n                d=\"M11.226,4.822h0A3.178,3.178,0,0,1,14.4,8h0a3.178,3.178,0,0,1-3.178,3.178h0A3.178,3.178,0,0,1,8.048,8h0A3.178,3.178,0,0,1,11.226,4.822Z\"\n                opacity=\"0.4\"/>\n        <path\n                d=\"M12.35,6.026h0A1.973,1.973,0,0,1,14.323,8h0A1.973,1.973,0,0,1,12.35,9.974h0A1.974,1.974,0,0,1,10.376,8h0A1.974,1.974,0,0,1,12.35,6.026Z\"\n                opacity=\"0.5\"/>\n        <path d=\"M13.523,7.2h0a.8.8,0,0,1,.8.8h0a.8.8,0,0,1-.8.8h0a.8.8,0,0,1-.8-.8h0A.8.8,0,0,1,13.523,7.2Z\"/>\n    </symbol>\n</svg>";
 
-    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
+    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n    <symbol id=\"LockClosed\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H14V7A5,5,0,0,0,4,7V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM6,7a3,3,0,0,1,6,0V8H6Zm4,6.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"LockOpen\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H5.95V5.1765A3.1065,3.1065,0,0,1,8.9852,2.0003L9,2a3.0715,3.0715,0,0,1,2.754,1.7095c.155.3195.133.573.3885.573a.2541.2541,0,0,0,.093-.018L13.576,3.73a.25649.25649,0,0,0,.161-.2355A4.96,4.96,0,0,0,9,.05,5.16306,5.16306,0,0,0,4,5.146V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM10,13.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
 
     /**
      *  Copyright 2018 Adobe. All rights reserved.

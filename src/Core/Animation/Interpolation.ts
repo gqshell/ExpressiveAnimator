@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-import {clamp, round} from "@zindex/canvas-engine";
-import {Brush, Color, Path, PathNode, Point, RectShapeRadius} from "@zindex/canvas-engine";
+import {
+    Brush,
+    BrushType,
+    clamp,
+    Color,
+    Path,
+    PathNode,
+    Point,
+    RectShapeRadius,
+    round,
+    SolidBrush
+} from "@zindex/canvas-engine";
 
 export type InterpolationFunction<T> = (from: T, to: T, percent: number) => T;
 
@@ -90,8 +100,17 @@ export function interpolateColor(from: Color, to: Color, percent: number = 0.5):
 }
 
 export function interpolateBrush(from: Brush, to: Brush, percent: number = 0.5): Brush {
-    // TODO: implement different brush interpolation
-    return interpolateDiscrete(from, to, percent).clone();
+    if (from.type !== to.type) {
+        return interpolateDiscrete(from, to, percent);
+    }
+
+    switch (from.type) {
+        case BrushType.Solid:
+            return new SolidBrush((from as SolidBrush).color.interpolate((to as SolidBrush).color, percent));
+            // TODO: ...
+    }
+
+    return interpolateDiscrete(from, to, percent);
 }
 
 export function interpolateDashArray(from: number[], to: number[], percent: number = 0.5): number[] {

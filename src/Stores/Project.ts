@@ -100,10 +100,10 @@ export const CurrentSelectedElement = derived<[Readable<AnimationSelection>, Rea
     return $selection ? $selection.activeElement : null;
 });
 
-export const CurrentDocument = derived<Readable<AnimationProject>, AnimationDocument>(project, ($project) => {
+export const CurrentDocument = derived<Readable<AnimationProject>, AnimationDocument>(project, ($project): AnimationDocument => {
     return $project ? $project.document : null;
 });
 
-export const CurrentDocumentAnimation = derived<[Readable<AnimationDocument>, Readable<number>], DocumentAnimation>([CurrentDocument, animationGenId], ([$document]) => {
+export const CurrentDocumentAnimation = derived<[Readable<AnimationDocument>, Readable<number>], DocumentAnimation>([CurrentDocument, animationGenId], ([$document]): DocumentAnimation => {
     return $document ? $document.animation : null;
 });

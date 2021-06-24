@@ -1,6 +1,5 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
-    //import {NumberFieldControl} from "../../Controls";
     import type {PointStruct} from "@zindex/canvas-engine";
     import SpTextField from "../../Controls/SpTextField.svelte";
 
@@ -37,12 +36,7 @@
     }
 
     function onInput(item: 'x' | 'y', input: number) {
-        value = getData(item, input);
-    }
-
-    function onChange(item: 'x' | 'y', input: number) {
-        value = getData(item, input);
-        dispatch('change', value);
+        dispatch('input', getData(item, input));
     }
 </script>
 <div class="number-pair-wrapper">
@@ -50,19 +44,21 @@
     <div class="number-pair">
         <SpTextField
                 type="number"
-                size="S" style="width: var(--spectrum-global-dimension-size-800)"
+                size="S" style="width: var(--small-control-size)"
                 title={xTitle}
                 value={value.x} min={min} max={max} step={step} round={round}
                 on:input={e => onInput('x', e.detail)}
-                on:change={e => onChange('x', e.detail)}
+                on:blur={() => dispatch('done', 'x')}
+                on:start={() => dispatch('start', 'x')}
         />
         <SpTextField
                 type="number"
-                size="S" style="width: var(--spectrum-global-dimension-size-800)"
+                size="S" style="width: var(--small-control-size)"
                 title={yTitle}
                 value={value.y} min={min} max={max} step={step} round={round}
                 on:input={e => onInput('y', e.detail)}
-                on:change={e => onChange('y', e.detail)}
+                on:blur={() => dispatch('done', 'y')}
+                on:start={() => dispatch('start', 'y')}
         />
     </div>
     {#if $$slots.default}

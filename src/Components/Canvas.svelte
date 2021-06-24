@@ -29,7 +29,12 @@
     $: if (canvas) canvas.showGridToBack = $showGridToBack;
     $: if (canvas) canvas.highQuality = $highQuality;
     $: if (canvas) canvas.project = $CurrentProject;
-    $: if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) canvas.invalidate();
+    $: {
+        if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) {
+            notifyPropertiesChanged();
+            canvas.invalidate();
+        }
+    }
 
 
     onMount(() => {

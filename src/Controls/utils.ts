@@ -35,6 +35,9 @@ export function TShirtSizeToNumber(size: TShirtSize, fallback: string = '100'): 
 }
 
 export function formatNumber(value: number, digits: number): string {
+    if (Number.isNaN(value) || !Number.isFinite(value)) {
+        return '';
+    }
     if (Number.isInteger(value)) {
         return value.toFixed(0);
     }

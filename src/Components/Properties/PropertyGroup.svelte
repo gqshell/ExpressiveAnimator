@@ -1,13 +1,17 @@
 <script lang="ts">
     export let title: string = '';
 </script>
-<div>
+<div class="property-group">
     {#if title !== ''}
         <div class="property-title">{title}</div>
     {/if}
     <div class="properties"><slot /></div>
 </div>
 <style>
+    .property-group {
+        --small-control-size: var(--spectrum-global-dimension-size-800);
+    }
+
     .property-title {
         margin: var(--spectrum-global-dimension-size-150) 0;
         text-transform: uppercase;
