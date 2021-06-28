@@ -47,7 +47,7 @@ a2.addKeyframeAtOffset(5000, new Point(400, 500));
 a2.addKeyframeAtOffset(9000, new Point(800, 700));
 doc.animation.addAnimation(rect2, "position", a2);
 
-const g1 = new GroupElement(doc);
+const g1 = new GroupElement(doc, 'test-group');
 g1.title = 'Group 1';
 g1.appendChild(rect2);
 

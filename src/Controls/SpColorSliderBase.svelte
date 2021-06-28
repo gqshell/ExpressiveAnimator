@@ -10,6 +10,9 @@
     export let invert: boolean = false;
     export let disabled: boolean = false;
     export let loupe: boolean = false;
+    export let loupeCheckerboard: boolean = false;
+
+    let isTouch: boolean = false;
 
     export let value: number = 0;
 
@@ -39,7 +42,8 @@
 
     let original;
 
-    function onDragStart() {
+    function onDragStart(_, e: PointerEvent) {
+        isTouch = e.pointerType === 'pen' || e.pointerType === 'touch';
         original = value;
         dispatch('start');
     }
@@ -61,7 +65,12 @@
         if (original !== value) {
             dispatch('change', value);
         }
-        colorHandle.blur();
+        if (isTouch) {
+            isTouch = false;
+            dispatch('done');
+        } else {
+            colorHandle.blur();
+        }
     }
 
     function onArrow(e) {
@@ -127,7 +136,7 @@
                    dragOptions={{surface, start: onDragStart, end: onDragEnd, move: onDrag}}
                    style={vertical ? `top: ${percent}%` : `left: ${percent}%;`}
                    tabindex="0"
-                   color="{color}" class="spectrum-ColorSlider-handle" disabled={disabled} loupe={loupe} />
+                   color="{color}" class="spectrum-ColorSlider-handle" disabled={disabled} loupeCheckerboard={loupeCheckerboard} loupe={isTouch || loupe} open={isTouch} />
     <input tabindex="-1" type="range" class="spectrum-ColorSlider-slider" value="{value}" min="{min}" max="{max}" step="{step}">
 </div>
 <style global>

@@ -6,9 +6,17 @@
     import {CurrentTime, CurrentMaxTime} from "../../Stores";
 
     export let zoom: number = 1;
+    export let collapsed: boolean = false;
 
     let scrollTop: number = 0;
     let scrollLeft: number = 0;
+
+    $: {
+        if (collapsed) {
+            // reset scroll when collapsing
+            scrollLeft = scrollTop = 0;
+        }
+    }
 
     $: unit = zoom * 0.24;
 
@@ -22,14 +30,16 @@
     `;
 </script>
 <div class="timeline-wrapper" style="{style}">
-    <div class="timeline-controls-wrapper">
-        <TimelineControls />
-        <TimelineRuler bind:zoom scroll={scrollLeft} />
-    </div>
-    <Timeline bind:scrollTop bind:scrollLeft={scrollLeft} />
-    <div class="timeline-bottom-bar">
-        bar
-    </div>
+    {#if !collapsed}
+        <div class="timeline-controls-wrapper">
+            <TimelineControls />
+            <TimelineRuler bind:zoom scroll={scrollLeft} />
+        </div>
+        <Timeline bind:scrollTop bind:scrollLeft={scrollLeft} />
+        <div class="timeline-bottom-bar">
+            bar
+        </div>
+    {/if}
 </div>
 <style global>
     .timeline-wrapper {
@@ -51,8 +61,8 @@
     }
 
     .timeline-bottom-bar {
-        box-sizing: border-box;
+        box-sizing: content-box;
         border-top: 1px solid var(--separator-color);
-        height: 21px;
+        height: var(--spectrum-alias-item-height-s);
     }
 </style>

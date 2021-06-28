@@ -329,6 +329,10 @@
     </div>
 </div>
 <style global>
+    .spectrum-Slider {
+        touch-action: none;
+    }
+
     .spectrum-Textfield-input.spectrum-Slider-value {
         width: 42px;
         height: 15px;

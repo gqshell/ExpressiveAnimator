@@ -23,7 +23,10 @@
 
     let colorHandle, surface, original;
 
-    function onDragStart() {
+    let isTouch: boolean = false;
+
+    function onDragStart(_, e: PointerEvent) {
+        isTouch = e.pointerType === 'pen' || e.pointerType === 'touch';
         dragged = true;
         original = value;
         dispatch('start');
@@ -34,7 +37,12 @@
         if (value !== original) {
             dispatch('input', value);
         }
-        colorHandle.blur();
+        if (isTouch) {
+            isTouch = false;
+            dispatch('done');
+        } else {
+            colorHandle.blur();
+        }
     }
 
     function getAngle(x: number, y: number, bbox: DOMRect) {
@@ -136,7 +144,7 @@
                    dragOptions={{surface, start: onDragStart, move: onDrag, end: onDragEnd, raw: true}}
                    on:arrow={onArrow}
                    on:focus={onFocus} on:blur={onBlur}
-                   loupe={loupe} disabled={disabled} />
+                   loupe={isTouch || loupe} open={isTouch} disabled={disabled} />
 </div>
 <style global>
     .spectrum-ColorWheel.is-disabled div.spectrum-ColorWheel-gradient {
@@ -146,9 +154,11 @@
         border: none;
         background: conic-gradient(from 90deg, rgb(255, 0, 0), rgb(255, 128, 0), rgb(255, 255, 0), rgb(128, 255, 0), rgb(0, 255, 0), rgb(0, 255, 128), rgb(0, 255, 255), rgb(0, 128, 255), rgb(0, 0, 255), rgb(128, 0, 255), rgb(255, 0, 255), rgb(255, 0, 128), rgb(255, 0, 0));
     }
+    .spectrum-ColorWheel > .spectrum-ColorArea.is-dragged .spectrum-ColorHandle,
     .spectrum-ColorWheel:not(.is-focused) > .spectrum-ColorArea.is-focused .spectrum-ColorHandle {
         z-index: 2;
     }
+
     .spectrum-ColorWheel > .spectrum-ColorArea {
         position: absolute;
         top: 50%;

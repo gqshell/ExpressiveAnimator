@@ -144,11 +144,11 @@ export function getXYPercent(e: PointerEvent, bbox: DOMRect): {x: number, y: num
     };
 }
 
-export function dragAction(node, params) {
+export function dragAction(node: HTMLElement, params) {
     let surface: HTMLElement = params?.surface,
-        move: ((value: {x: number, y: number}) => void) = params?.move,
-        start: (value: {x: number, y: number}) => void = params?.start,
-        end: (changed: boolean, value: {x: number, y: number}) => void = params?.end,
+        move: ((value: {x: number, y: number}, e?: PointerEvent) => void) = params?.move,
+        start: (value: {x: number, y: number}, e?: PointerEvent) => void = params?.start,
+        end: (changed: boolean, value: {x: number, y: number}, e?: PointerEvent) => void = params?.end,
         raw: boolean = params?.raw
     ;
 
@@ -160,24 +160,28 @@ export function dragAction(node, params) {
         const value = raw ? {x: e.clientX, y: e.clientY, bbox} : getXYPercent(e, bbox);
         if (last.x !== value.x || last.y !== value.y) {
             last = value;
-            move && move(value);
+            move && move(value, e);
         }
     };
 
-    const onPointerUp = () => {
-        window.removeEventListener('pointermove', onPointerMove);
-        window.removeEventListener('pointerup', onPointerUp);
+    const onPointerUp = (e: PointerEvent = null) => {
+        node.removeEventListener('pointermove', onPointerMove);
+        node.removeEventListener('pointerup', onPointerUp);
+        if (e) {
+            node.releasePointerCapture(e.pointerId);
+        }
 
-        end && end(original.x !== last.x || original.y !== last.y, last);
+        end && end(original.x !== last.x || original.y !== last.y, last, e);
         bbox = original = last = null;
     };
 
-    const onPointerDown = e => {
+    const onPointerDown = (e: PointerEvent) => {
         bbox = surface.getBoundingClientRect();
         original = last = raw ? {x: e.clientX, y: e.clientY, bbox} : getXYPercent(e, bbox);
-        window.addEventListener('pointermove', onPointerMove);
-        window.addEventListener('pointerup', onPointerUp);
-        start && start(original);
+        node.addEventListener('pointermove', onPointerMove);
+        node.addEventListener('pointerup', onPointerUp);
+        node.setPointerCapture(e.pointerId);
+        start && start(original, e);
     }
 
     let added = false;

@@ -7,8 +7,11 @@
 
     export let placement: string = 'right';
 
-    let current;
-    $: current = getCurrentTool(buttons, $CurrentTool.name);
+    let current, last = null;
+    $: {
+        current = getCurrentTool(buttons, $CurrentTool.name) || buttons[0];
+        last = current;
+    }
 
     let open = false;
 
@@ -19,7 +22,7 @@
     }
 
     function getCurrentTool(buttons: any[], name: string) {
-        return buttons.find((v: ToolButtonDef) => v.tool === name) || buttons[0];
+        return buttons.find((v: ToolButtonDef) => v.tool === name) || last;
     }
 </script>
 <overlay-trigger type="inline" placement="{placement}" disabled={disabled}
@@ -43,3 +46,8 @@
         </sp-action-group>
     </sp-popover>
 </overlay-trigger>
+<style>
+    overlay-trigger, sp-action-button {
+        touch-action: none;
+    }
+</style>

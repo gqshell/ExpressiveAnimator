@@ -5,8 +5,9 @@
     import MenuComponent from "./Components/Menu.svelte";
     import ProjectStateComponent from "./Components/MenuBar/ProjectState.svelte";
     import AlignSelectionComponent from "./Components/MenuBar/AlignSelection.svelte";
-    import TreeComponent from "./Components/Tree";
+    import TreeComponent from "./Components/Tree.svelte";
     import PropertiesComponent from "./Components/Properties";
+    import SpSplitView from "./Controls/SpSplitView.svelte";
 
     import {CurrentTheme, CurrentProject} from "./Stores";
 
@@ -17,10 +18,10 @@
 <sp-icons-workflow></sp-icons-workflow>
 <sp-icons-expr></sp-icons-expr>
 <sp-theme scale="medium" color={$CurrentTheme} class="app">
-    <div class="logo">
+    <div class="app-logo">
         <MenuComponent />
     </div>
-    <div class="menubar">
+    <div class="app-menubar">
         <ProjectStateComponent />
         <div>
             <sp-button size="s" on:click={CurrentTheme.toggle}>Change theme</sp-button>
@@ -28,24 +29,31 @@
         </div>
         <AlignSelectionComponent />
     </div>
-    <div class="toolbar">
+    <div class="app-toolbar">
         <ToolsComponent disabled={$CurrentProject == null} />
         <div>down</div>
     </div>
-    <sp-split-view class="sidebar" resizable vertical primary-min="160" primary-size="75%">
-        <PropertiesComponent />
-        <TreeComponent />
-    </sp-split-view>
-    <sp-split-view
-            class="content" resizable vertical
-            primary-size="80%"
-            secondary-min="0"
-            secondary-max="600">
-        <CanvasComponent hidden={hidden}>Now canvas is hidden and this is the fallback content</CanvasComponent>
-        <TimelineComponent />
-    </sp-split-view>
+    <SpSplitView class="app-sidebar" resizable vertical primary-min="160" primary-size="75%">
+        <svelte:fragment slot="primary">
+            <PropertiesComponent />
+        </svelte:fragment>
+        <svelte:fragment slot="secondary" let:collapsed>
+            <TreeComponent collapsed={collapsed} />
+        </svelte:fragment>
+    </SpSplitView>
+    <SpSplitView class="app-content" resizable vertical
+                 primary-size="80%"
+                 secondary-min="0"
+                 secondary-max="600">
+        <svelte:fragment slot="primary">
+            <CanvasComponent hidden={hidden}>Now canvas is hidden and this is the fallback content</CanvasComponent>
+        </svelte:fragment>
+        <svelte:fragment slot="secondary" let:collapsed>
+            <TimelineComponent collapsed={collapsed} />
+        </svelte:fragment>
+    </SpSplitView>
 </sp-theme>
-<style>
+<style global>
     .app {
         display: grid;
         grid-gap: 0;
@@ -74,7 +82,7 @@
 
         --scrollbar-width: 6px;
         --scrollbar-radius: 0px;
-        --scrollbar-color: var(--spectrum-global-color-gray-300);
+        --scrollbar-color: var(--spectrum-global-color-gray-500);
 
         --spectrum-dragbar-handle-background-color: var(--separator-color);
         --spectrum-dragbar-handle-background-color-hover: var(--separator-color);
@@ -88,7 +96,7 @@
         box-sizing: border-box;
     }
 
-    .logo {
+    .app-logo {
         grid-area: logo;
         display: flex;
         flex-direction: row;
@@ -97,7 +105,7 @@
         user-select: none;
     }
 
-    .menubar {
+    .app-menubar {
         grid-area: menubar;
         display: flex;
         flex-direction: row;
@@ -106,7 +114,7 @@
         user-select: none;
     }
 
-    .toolbar {
+    .app-toolbar {
         grid-area: toolbar;
         display: flex;
         flex-direction: column;
@@ -116,19 +124,18 @@
         border-top: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
     }
 
-    .sidebar {
+    .app-sidebar {
         grid-area: sidebar;
         user-select: none;
         box-sizing: border-box;
         border-top: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
     }
 
-    .content {
+    .app-content {
         box-sizing: border-box;
 
         grid-area: content;
         border: var(--spectrum-global-dimension-static-size-25) solid var(--separator-color);
         border-bottom: none;
     }
-
 </style>

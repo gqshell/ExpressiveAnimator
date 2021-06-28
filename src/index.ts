@@ -42,8 +42,20 @@ async function patchIcon() {
     const prop = Object.getOwnPropertyDescriptor(icon.prototype, 'name')
     const set = prop.set;
     prop.set = function (value) {
+        if (this.name === value) {
+            return;
+        }
         set.call(this, value);
         this.setAttribute('name', value);
     }
     Object.defineProperty(icon.prototype, 'name', prop);
+
+    const updateIcon = icon.prototype.updateIcon;
+    icon.prototype.updateIcon = async function () {
+        if (this.updateIconPromise) {
+            // wait for current update
+            await this.updateIconPromise;
+        }
+        return updateIcon.call(this);
+    }
 }

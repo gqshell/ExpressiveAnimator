@@ -9,6 +9,7 @@
     export let disabled: boolean = false;
     export let open: boolean = false;
     export let loupe: boolean = false;
+    export let loupeCheckerboard: boolean = false;
     export let color: string = 'transparent';
     export let dragOptions = null;
 
@@ -47,11 +48,14 @@
     <div class="spectrum-ColorHandle-color" style={`background-color: ${color};`}></div>
     {#if loupe && !disabled}
         <div class="spectrum-ColorLoupe--wrapper">
-            <SpColorLoupe color={color} open={focused || open}/>
+            <SpColorLoupe checkerboard={loupeCheckerboard} color={color} open={focused || open}/>
         </div>
     {/if}
 </div>
 <style global>
+    .spectrum-ColorHandle {
+        touch-action: none;
+    }
     .spectrum-ColorHandle > .spectrum-ColorLoupe--wrapper {
         position: absolute;
         left: 50%;

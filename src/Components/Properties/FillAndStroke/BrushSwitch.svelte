@@ -51,25 +51,25 @@
         return `${picture}; opacity: ${opacity};`;
     }
 
-    function swap(project: AnimationProject, element: VectorElement): boolean {
+    function swap(project: AnimationProject, element: VectorElement, keepOpacity: boolean): boolean {
         if (!(element instanceof VectorElement)) {
             return false;
         }
-        return project.middleware.swapStrokeFill([element], true);
+        return project.middleware.swapStrokeFill([element], keepOpacity);
     }
 
-    function copyStroke(project: AnimationProject, element: VectorElement): boolean {
+    function copyStroke(project: AnimationProject, element: VectorElement, copyOpacity: boolean): boolean {
         if (!(element instanceof VectorElement)) {
             return false;
         }
-        return project.middleware.copyStrokeToFill([element], true);
+        return project.middleware.copyStrokeToFill([element], copyOpacity);
     }
 
-    function copyFill(project: AnimationProject, element: VectorElement): boolean {
+    function copyFill(project: AnimationProject, element: VectorElement, copyOpacity: boolean): boolean {
         if (!(element instanceof VectorElement)) {
             return false;
         }
-        return project.middleware.copyFillToStroke([element], true);
+        return project.middleware.copyFillToStroke([element], copyOpacity);
     }
 </script>
 <div class="brush-switch">
@@ -77,11 +77,11 @@
         <sp-thumbnail title="Fill" background="{getBackground(value.fill, value.fillOpacity)}" selected={showFill ? '' : undefined} on:click={() => showFill = true} class="fill"></sp-thumbnail>
         <sp-thumbnail title="Stroke" background="{getBackground(value.strokeBrush, value.strokeOpacity)}" selected={!showFill ? '' : undefined} on:click={() => showFill = false} class="stroke"></sp-thumbnail>
         <div class="action-icon"
-             on:click={() => dispatch('action', {action: showFill ? copyStroke : copyFill, value: null})} title="{showFill ? 'Copy Stroke' : 'Copy Fill'}" style="bottom: 0; left: 0">
+             on:click={e => dispatch('action', {action: showFill ? copyStroke : copyFill, value: e.altKey})} title="{showFill ? 'Copy Stroke' : 'Copy Fill'}" style="bottom: 0; left: 0">
             <sp-icon name="{showFill ? 'expr:swap-arrow-up-left' : 'expr:swap-arrow-down-right'}" size="s"></sp-icon>
         </div>
         <div class="action-icon"
-             on:click={() => dispatch('action', {action: swap,value: null})} title="Swap Fill & Stroke" style="top: 0; right: 0">
+             on:click={e => dispatch('action', {action: swap, value: !e.altKey})} title="Swap Fill & Stroke" style="top: 0; right: 0">
             <sp-icon name="expr:swap-arrows" size="s"></sp-icon>
         </div>
     </div>

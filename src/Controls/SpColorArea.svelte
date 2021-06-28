@@ -104,7 +104,12 @@
         }
     }
 
-    function onDragStart() {
+    let isTouch: boolean = false
+    let dragging: boolean = false;
+
+    function onDragStart(_e, e: PointerEvent) {
+        dragging = true;
+        isTouch = e.pointerType === 'pen' || e.pointerType === 'touch';
         dispatch('start');
     }
 
@@ -115,10 +120,16 @@
     }
 
     function onDragEnd(changed) {
+        dragging = false;
         if (changed) {
             dispatchValue('change');
         }
-        colorHandle.blur();
+        if (isTouch) {
+            isTouch = false;
+            dispatch('done');
+        } else {
+            colorHandle.blur();
+        }
     }
 
     let focused: boolean = false;
@@ -145,6 +156,7 @@
     $: computedClass = mergeClasses({
         'spectrum-ColorArea': true,
         'is-disabled': disabled,
+        'is-dragged': dragging,
         'is-focused': focused,
     }, $$props.class);
 </script>
@@ -152,8 +164,13 @@
     <div class="spectrum-ColorArea-gradient"
          style={`background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(to right, white 0%, rgba(0, 0, 0, 0) 100%), hsl(${hue}, 100%, 50%);`}></div>
     <SpColorHandle dragOptions={dragOptions} bind:element={colorHandle} on:arrow={onArrow} on:focus={onFocus} on:blur={onBlur}
-                   class="spectrum-ColorArea-handle" loupe={loupe} color={color} disabled={disabled}
+                   class="spectrum-ColorArea-handle" loupe={isTouch || loupe} open={isTouch} color={color} disabled={disabled}
                    tabindex="0" style={`left: ${saturation * 100}%; top: ${(1 - value) * 100}%`}/>
     <input tabindex="-1" value={saturation} type="range" class="spectrum-ColorArea-slider" name="x" aria-label="saturation and value" min="0" max="1" step="0.01">
     <input tabindex="-1" value={value} type="range" class="spectrum-ColorArea-slider" name="y" aria-label="saturation and value" min="0" max="1" step="0.01">
 </div>
+<style global>
+    .spectrum-ColorArea.is-dragged {
+        z-index: 2;
+    }
+</style>

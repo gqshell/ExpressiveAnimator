@@ -80,7 +80,8 @@
 
     async function onSnapshotCreated(e: CustomEvent) {
         await tick();
-        notifyStateChanged();
+        //notifyStateChanged();
+        CurrentProject.forceUpdate();
     }
 
     async function onSelectionChanged(e: CustomEvent<Selection<AnimationDocument>>) {
@@ -147,6 +148,7 @@
     .canvas-wrapper {
         box-sizing: border-box;
         overflow: hidden;
+        background: var(--separator-color);
     }
     canvas-engine {
         touch-action: none;

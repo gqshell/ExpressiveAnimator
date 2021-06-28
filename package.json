@@ -29,6 +29,7 @@
     "@spectrum-css/dropindicator": "^3.0.3",
     "@spectrum-css/slider": "^3.0.2",
     "@spectrum-css/textfield": "^3.0.2",
+    "@spectrum-css/treeview": "^3.0.3",
     "@tsconfig/svelte": "^2.0.0",
     "cssnano": "^5.0.1",
     "postcss": "^8.2.14",

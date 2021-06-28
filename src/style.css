@@ -11,6 +11,11 @@ html, body {
     box-sizing: border-box;
 }
 
+sp-action-group.very-small sp-action-button {
+    --spectrum-actionbutton-s-textonly-padding-left: var(--spectrum-alias-border-size-thin);
+    --spectrum-actionbutton-s-textonly-padding-right: var(--spectrum-alias-border-size-thin);
+    --spectrum-actionbutton-s-min-width: var(--spectrum-global-dimension-size-300);
+}
 
 /*sp-split-view[vertical] {*/
 /*    --spectrum-dragbar-gripper-height: 0;*/

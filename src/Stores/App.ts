@@ -19,3 +19,4 @@ import {writable} from "svelte/store";
 export const IsFillSelected = writable<boolean>(true);
 export const CurrentColorMode = writable<string>('HEX');
 export const ProportionalScale = writable<boolean>(false);
+export const ShowTreeReverse = writable<boolean>(true);
