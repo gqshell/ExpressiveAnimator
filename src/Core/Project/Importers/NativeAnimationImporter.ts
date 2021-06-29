@@ -16,7 +16,7 @@
 
 import type {Importer} from "@zindex/canvas-engine";
 import {AnimationProject} from "../AnimationProject";
-import {NativeReader} from "@zindex/canvas-engine";
+import {decompress, NativeReader, readBytes, toStream} from "@zindex/canvas-engine";
 import {AnimatorSource, DocumentAnimation} from "../../Animation";
 import {
     AutomaticGrid,
@@ -46,15 +46,53 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
     private source: AnimatorSource;
 
     async import(stream: ReadableStream): Promise<AnimationProject> {
-        const reader = await NativeReader.fromStream(stream);
-        const manifest = reader.getManifest();
-
         this.source = new AnimatorSource();
-
         const project = new AnimationProject(this.source);
 
-        for (const docId of manifest.documents) {
-            project.addDocument(this.deserializeDocument(reader.getDocument(docId) as AnimationDocument));
+        const bytes = await readBytes(stream);
+        const view = new DataView(bytes.buffer);
+
+        let offset = 0;
+
+        if (view.getInt32(offset) !== 0x65377865) { // ex7e
+            throw new Error('Unknown file type');
+        }
+        offset += 4;
+        if (view.getUint8(offset) !== 1) { // manifest type
+            throw new Error('Invalid file type');
+        }
+        offset++;
+        const manifestLength = view.getInt32(offset);
+        offset += 4;
+        const manifestData = new DataView(bytes.buffer, offset, manifestLength);
+        const manifest = JSON.parse(await (new Blob([await decompress(toStream(manifestData))], {type: 'application/json'})).text());
+        offset += manifestLength;
+
+        if (manifest.type !== 'expressive/animation') {
+            throw new Error('Invalid file type');
+        }
+
+        while (true) {
+            const entryType = view.getUint8(offset);
+            if (entryType === 0xef) { // eof
+                break;
+            }
+            // handle other types here
+            if (entryType === 0x03) { // Document
+                const length = view.getUint32(offset + 1);
+                offset += 5;
+                const data = new DataView(bytes.buffer, offset, length);
+                const doc = JSON.parse(await (new Blob([await decompress(toStream(data))], {type: 'application/json'})).text());
+                project.addDocument(this.deserializeDocument(doc));
+                offset += length;
+                continue;
+            }
+
+            offset++;
+
+            if (offset >= bytes.length) {
+                throw new Error('Invalid file end');
+            }
         }
 
         project.masterDocument = project.getDocumentById(manifest.masterDocument);
@@ -63,7 +101,7 @@ export class NativeAnimationImporter implements Importer<AnimationProject> {
     }
 
     dispose() {
-        // nothing here
+        this.source = null;
     }
 
     protected deserializeDocument(data: any): AnimationDocument {

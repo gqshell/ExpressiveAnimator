@@ -16,7 +16,7 @@
 
 import type {Exporter} from "@zindex/canvas-engine";
 import type {AnimationProject} from "../AnimationProject";
-import {AutomaticGrid, NativeWriter} from "@zindex/canvas-engine";
+import {AutomaticGrid, NativeWriter, readBytes} from "@zindex/canvas-engine";
 import type {
     ClipPathElement,
     Element,
@@ -44,32 +44,58 @@ import {
 } from "../../Animation";
 import type {AnimationDocument} from "../AnimationDocument";
 import type {AnimatedMaskElement, AnimatedSymbolElement} from "../../Elements";
+import {compress} from "@zindex/canvas-engine";
 
 export class NativeAnimationExporter implements Exporter<AnimationProject> {
-    private writer: NativeWriter;
-
-    constructor() {
-        this.writer = new NativeWriter();
-    }
 
     async export(project: AnimationProject): Promise<ReadableStream> {
-        await this.writer.addManifest(this.getManifest(project));
+        const self = this;
 
-        for (const doc of project.getDocuments()) {
-            await this.writer.addDocument(this.serializeDocument(doc));
-        }
+        return new ReadableStream<any>({
+            async start(controller) {
+                const manifest = await compress((
+                    new Blob([JSON.stringify(self.getManifest(project))], {type: "application/json"})
+                ).stream());
 
-        return this.writer.toStream();
+                const view = new DataView(new ArrayBuffer( 9));
+
+                view.setUint32(0, 0x65377865); // ex7e
+                view.setUint8(4, 0x01); // Manifest type
+                view.setUint32(5, manifest.length);
+
+                controller.enqueue(view.buffer);
+                controller.enqueue(manifest);
+            },
+
+            async pull(controller) {
+                // no binary for now, only documents
+                for (const doc of project.getDocuments()) {
+                    const view = new DataView(new ArrayBuffer(5));
+                    const document = await compress((
+                        new Blob([JSON.stringify(self.serializeDocument(doc))], {type: "application/json"})
+                    ).stream());
+
+                    view.setUint8(0, 0x03); // Document type
+                    view.setUint32(1, document.length); // Document length
+
+                    controller.enqueue(view.buffer);
+                    controller.enqueue(document);
+                }
+                const view = new DataView(new ArrayBuffer(1));
+                view.setUint8(0, 0xef); // eof
+                controller.enqueue(view.buffer);
+                controller.close();
+            }
+        });
     }
 
     dispose() {
-        this.writer.dispose();
     }
 
     protected getManifest(project: AnimationProject): any {
         const data: any = {
             type: 'expressive/animation',
-            version: 10,
+            version: 100,
             documents: [],
             masterDocument: project.masterDocument.id
         };

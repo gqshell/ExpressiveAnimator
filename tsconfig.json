@@ -3,7 +3,14 @@
   "compilerOptions": {
     "lib": ["es2020", "dom"],
     "preserveSymlinks": true,
-    "types": ["svelte", "@zindex/canvas-engine", "@zindex/skia-js", "@zindex/serialization", "@ctrl/tinycolor"],
+    "types": [
+      "svelte",
+      "@zindex/canvas-engine",
+      "@zindex/skia-js",
+      "@zindex/serialization",
+      "@ctrl/tinycolor",
+      "@types/wicg-file-system-access"
+    ],
     "experimentalDecorators": true,
     "module": "ES2020",
   },

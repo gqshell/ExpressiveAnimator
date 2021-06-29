@@ -52,6 +52,10 @@
         canvas.allowSurfaceDisposal();
 
         canvas.project = $CurrentProject;
+
+        CurrentProject.subscribe(p => {
+            canvas.project = p;
+        });
     });
 
     onDestroy(() => {

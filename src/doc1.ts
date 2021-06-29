@@ -55,7 +55,8 @@ doc.appendChild(g1);
 
 project.addDocument(doc);
 
-project.isRecording = true;
+project.isRecording = false;
+project.masterDocument = doc;
 
 export {
     project,

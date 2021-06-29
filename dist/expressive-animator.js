@@ -4267,16 +4267,11 @@ var app = (function (canvasEngine) {
         }
         manageAnchor() {
             if (this.href && this.href.length > 0) {
-                if (this.getAttribute('role') === 'button') {
-                    this.setAttribute('role', 'link');
-                }
+                this.removeAttribute('role');
                 this.removeEventListener('click', this.shouldProxyClick);
             }
-            else {
-                if (!this.hasAttribute('role') ||
-                    this.getAttribute('role') === 'link') {
-                    this.setAttribute('role', 'button');
-                }
+            else if (!this.hasAttribute('role')) {
+                this.setAttribute('role', 'button');
                 this.addEventListener('click', this.shouldProxyClick);
             }
         }
@@ -11208,7 +11203,7 @@ var(--spectrum-global-animation-duration-300)))}:host([open]){transition:opacity
     governing permissions and limitations under the License.
     */
     const styles$l = css `
-:host{position:fixed;left:0;top:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100vw;height:100vh;height:-webkit-fill-available;height:fill-available;visibility:hidden;pointer-events:none;z-index:2;transition:visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s)}:host([open]){visibility:visible}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]){width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0}:host([responsive]){margin-top:0}}.modal{visibility:hidden;opacity:0;transition:transform var(--spectrum-global-animation-duration-100,.13s) ease-in-out,opacity var(--spectrum-global-animation-duration-100,.13s) ease-in-out,visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s);pointer-events:none}:host([open]) .modal{visibility:visible;opacity:1;transition-delay:0ms;pointer-events:auto}:host{--spectrum-dialog-confirm-exit-animation-delay:0ms;--spectrum-dialog-fullscreen-margin:32px;--spectrum-dialog-max-height:90vh}.modal{transform:translateY(var(--spectrum-dialog-confirm-entry-animation-distance,var(--spectrum-global-dimension-size-250)));z-index:2;max-height:var(--spectrum-dialog-max-height);border-radius:var(--spectrum-dialog-confirm-border-radius,var(--spectrum-global-dimension-size-50));overflow:hidden;outline:none;pointer-events:auto;transition:opacity var(--spectrum-dialog-confirm-exit-animation-duration,var(--spectrum-global-animation-duration-100)) cubic-bezier(.5,0,1,1) var(--spectrum-dialog-confirm-exit-animation-delay,0ms),visibility 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
+:host{position:fixed;left:0;top:0;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100vw;height:100vh;height:-webkit-fill-available;height:fill-available;visibility:hidden;pointer-events:none;z-index:2;transition:visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s)}:host([open]){visibility:visible}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]){width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0;margin-top:0}}.modal{visibility:hidden;opacity:0;transition:transform var(--spectrum-global-animation-duration-100,.13s) ease-in-out,opacity var(--spectrum-global-animation-duration-100,.13s) ease-in-out,visibility 0ms linear var(--spectrum-global-animation-duration-100,.13s);pointer-events:none}:host([open]) .modal{visibility:visible;opacity:1;transition-delay:0ms;pointer-events:auto}:host{--spectrum-dialog-confirm-exit-animation-delay:0ms;--spectrum-dialog-fullscreen-margin:32px;--spectrum-dialog-max-height:90vh}.modal{transform:translateY(var(--spectrum-dialog-confirm-entry-animation-distance,var(--spectrum-global-dimension-size-250)));z-index:2;max-height:var(--spectrum-dialog-max-height);border-radius:var(--spectrum-dialog-confirm-border-radius,var(--spectrum-global-dimension-size-50));overflow:hidden;outline:none;pointer-events:auto;transition:opacity var(--spectrum-dialog-confirm-exit-animation-duration,var(--spectrum-global-animation-duration-100)) cubic-bezier(.5,0,1,1) var(--spectrum-dialog-confirm-exit-animation-delay,0ms),visibility 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
 var(--spectrum-global-animation-duration-100))),transform 0ms linear calc(var(--spectrum-dialog-confirm-exit-animation-delay, 0ms) + var(--spectrum-dialog-confirm-exit-animation-duration,
 var(--spectrum-global-animation-duration-100)))}:host([open]) .modal{transition:transform var(--spectrum-dialog-confirm-entry-animation-duration,var(--spectrum-global-animation-duration-500)) cubic-bezier(0,0,.4,1) var(--spectrum-dialog-confirm-entry-animation-delay,var(--spectrum-global-animation-duration-200)),opacity var(--spectrum-dialog-confirm-entry-animation-duration,var(--spectrum-global-animation-duration-500)) cubic-bezier(0,0,.4,1) var(--spectrum-dialog-confirm-entry-animation-delay,var(--spectrum-global-animation-duration-200));transform:translateY(0)}@media only screen and (max-device-height:350px),only screen and (max-device-width:400px){:host([responsive]) .modal{width:100%;height:100%;max-width:100%;max-height:100%;border-radius:0}}.fullscreen{left:var(--spectrum-dialog-fullscreen-margin);top:var(--spectrum-dialog-fullscreen-margin);right:var(--spectrum-dialog-fullscreen-margin);bottom:var(--spectrum-dialog-fullscreen-margin)}.fullscreen,.fullscreenTakeover{position:fixed;max-width:none;max-height:none}.fullscreenTakeover{left:0;right:0;top:0;bottom:0;box-sizing:border-box;border:none;border-radius:0}.fullscreenTakeover,:host([open]) .fullscreenTakeover{transform:none}.modal{background:var(--spectrum-dialog-confirm-background-color,var(--spectrum-alias-background-color-default))}:host{width:calc(100vw - var(--swc-body-margins-inline, 0 * 1px));height:calc(100vh - var(--swc-body-margins-block, 0 * 1px))}
 `;
@@ -12555,7 +12550,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
           throw new Error('unit option must be provided with style: "unit"');
         }
 
-        if (!((_UNITS$unit2 = $fe87f22deac4debf3eab2ca6a89602ab$var$UNITS[unit]) != null && _UNITS$unit2[unitDisplay])) {
+        if (!((_UNITS$unit2 = $fe87f22deac4debf3eab2ca6a89602ab$var$UNITS[unit]) == null ? void 0 : _UNITS$unit2[unitDisplay])) {
           throw new Error("Unsupported unit " + unit + " with unitDisplay = " + unitDisplay);
         }
 
@@ -13410,6 +13405,7 @@ var(--spectrum-global-dimension-size-100))/2);--spectrum-stepper-quiet-button-wi
             this.keyboardFocused = false;
         }
         onChange() {
+            console.log('onchange');
             const value = this.convertValueToNumber(this.inputElement.value);
             this.value = value;
             super.onChange();
@@ -17477,6 +17473,406 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
+    class NativeAnimationExporter {
+        async export(project) {
+            const self = this;
+            return new ReadableStream({
+                async start(controller) {
+                    const manifest = await canvasEngine.compress((new Blob([JSON.stringify(self.getManifest(project))], { type: "application/json" })).stream());
+                    const view = new DataView(new ArrayBuffer(9));
+                    view.setUint32(0, 0x65377865); // ex7e
+                    view.setUint8(4, 0x01); // Manifest type
+                    view.setUint32(5, manifest.length);
+                    controller.enqueue(view.buffer);
+                    controller.enqueue(manifest);
+                },
+                async pull(controller) {
+                    // no binary for now, only documents
+                    for (const doc of project.getDocuments()) {
+                        const view = new DataView(new ArrayBuffer(5));
+                        const document = await canvasEngine.compress((new Blob([JSON.stringify(self.serializeDocument(doc))], { type: "application/json" })).stream());
+                        view.setUint8(0, 0x03); // Document type
+                        view.setUint32(1, document.length); // Document length
+                        controller.enqueue(view.buffer);
+                        controller.enqueue(document);
+                    }
+                    const view = new DataView(new ArrayBuffer(1));
+                    view.setUint8(0, 0xef); // eof
+                    controller.enqueue(view.buffer);
+                    controller.close();
+                }
+            });
+        }
+        dispose() {
+        }
+        getManifest(project) {
+            const data = {
+                type: 'expressive/animation',
+                version: 100,
+                documents: [],
+                masterDocument: project.masterDocument.id
+            };
+            for (const doc of project.getDocuments()) {
+                data.documents.push(doc.id);
+            }
+            return data;
+        }
+        serializeDocument(document) {
+            const data = {
+                id: document.id,
+                title: document.title,
+                guides: this.serializeGuides(document.guides),
+                grid: this.serializeGrid(document.grid),
+                properties: {
+                    size: { width: document.size.width, height: document.size.height },
+                },
+                animation: this.serializeAnimation(document.animation),
+                children: [],
+            };
+            for (const element of document.children()) {
+                data.children.push(this.serializeElement(element));
+            }
+            return data;
+        }
+        serializeElement(element) {
+            const data = {
+                id: element.id,
+                title: element.title,
+                type: element.type,
+                locked: element.locked,
+                hidden: element.hidden,
+                properties: this.serializeElementProperties(element),
+            };
+            if (element.supportsChildren) {
+                data.children = [];
+                for (let child of element.children()) {
+                    data.children.push(this.serializeElement(child));
+                }
+            }
+            return data;
+        }
+        serializeElementProperties(element) {
+            const data = {
+                element: {
+                    anchor: this.serializePoint(element.anchor),
+                    scale: this.serializePoint(element.scale),
+                    position: this.serializePoint(element.position),
+                    rotate: element.rotate,
+                    skewAngle: element.skewAngle,
+                    skewAxis: element.skewAxis,
+                    orientation: element.orientation,
+                    opacity: element.opacity,
+                    blend: element.blend,
+                    isolate: element.isolate,
+                }
+            };
+            switch (element.type) {
+                case "clip-path":
+                    data.clipPath = this.serializeClipPathElementProperties(element);
+                    break;
+                case "ellipse":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.ellipse = this.serializeEllipseElementProperties(element);
+                    break;
+                case "group":
+                    data.group = this.serializeGroupElementProperties(element);
+                    break;
+                case "mask":
+                    data.mask = this.serializeMaskElementProperties(element);
+                    break;
+                case "path":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.path = this.serializePathElementProperties(element);
+                    break;
+                case "poly":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.poly = this.serializePolyElementProperties(element);
+                    break;
+                case "rect":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.rect = this.serializeRectElementProperties(element);
+                    break;
+                case "regular-polygon":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.regularPolygon = this.serializeRegularPolygonElementProperties(element);
+                    break;
+                case "star":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.star = this.serializeStarElementProperties(element);
+                    break;
+                case "symbol":
+                    data.symbol = this.serializeSymbolElementProperties(element);
+                    break;
+                case "text":
+                    data.vector = this.serializeVectorElementProperties(element);
+                    data.text = this.serializeTextElementProperties(element);
+                    break;
+            }
+            return data;
+        }
+        serializeVectorElementProperties(element) {
+            return {
+                stroke: this.serializePen(element.stroke),
+                fill: this.serializeBrush(element.fill),
+                fillOpacity: element.fillOpacity,
+                strokeOpacity: element.strokeOpacity,
+                paintOrder: element.paintOrder,
+                fillRule: element.fillRule
+            };
+        }
+        serializeClipPathElementProperties(element) {
+            return {
+                path: this.serializePath(element.path)
+            };
+        }
+        serializeEllipseElementProperties(element) {
+            return {
+                width: element.width,
+                height: element.height,
+            };
+        }
+        serializeGroupElementProperties(element) {
+            return {};
+        }
+        serializeMaskElementProperties(element) {
+            return {
+                reference: element.reference,
+                time: element.time,
+            };
+        }
+        serializePathElementProperties(element) {
+            return {
+                path: this.serializePath(element.path)
+            };
+        }
+        serializePolyElementProperties(element) {
+            return {
+                points: this.serializePoints(element.points),
+                isClosed: element.isClosed,
+            };
+        }
+        serializeRectElementProperties(element) {
+            return {
+                width: element.width,
+                height: element.height,
+                radius: this.serializeRectShapeRadius(element.radius),
+            };
+        }
+        serializeRegularPolygonElementProperties(element) {
+            return {
+                sides: element.sides,
+                radius: element.radius,
+                cornerRadius: element.cornerRadius,
+                angle: element.angle
+            };
+        }
+        serializeStarElementProperties(element) {
+            return {
+                sides: element.sides,
+                outerRotate: element.outerRotate,
+                outerRadius: element.outerRadius,
+                outerCornerRadius: element.outerCornerRadius,
+                innerRotate: element.innerRotate,
+                innerRadius: element.innerRadius,
+                innerCornerRadius: element.innerCornerRadius,
+                angle: element.angle
+            };
+        }
+        serializeSymbolElementProperties(element) {
+            return {
+                reference: element.reference,
+                width: element.width,
+                height: element.height,
+                time: element.time
+            };
+        }
+        serializeTextElementProperties(element) {
+            return {
+                text: element.text,
+                font: this.serializeFont(element.font)
+            };
+        }
+        serializePoints(points) {
+            return points.map(this.serializePoint);
+        }
+        serializePoint(point) {
+            return { x: point.x, y: point.y };
+        }
+        serializeBrush(brush) {
+            const data = {
+                type: brush.type,
+            };
+            switch (brush.type) {
+                case canvasEngine.BrushType.Solid:
+                    data.color = brush.color.code;
+                    break;
+                case canvasEngine.BrushType.LinearGradient:
+                case canvasEngine.BrushType.RadialGradient:
+                case canvasEngine.BrushType.ConicalGradient:
+                    data.spread = brush.spread;
+                    data.stopColors = brush.stopColors.list.map(sc => ({ color: sc.color.code, offset: sc.offset }));
+                    data.transform = this.serializeMatrix(brush.transform);
+                    break;
+            }
+            switch (brush.type) {
+                case canvasEngine.BrushType.LinearGradient:
+                    data.start = brush.start;
+                    data.end = brush.end;
+                    break;
+                case canvasEngine.BrushType.RadialGradient:
+                    data.center = brush.center;
+                    data.radius = brush.radius;
+                    break;
+                case canvasEngine.BrushType.ConicalGradient:
+                    data.center = brush.center;
+                    data.startAngle = brush.startAngle;
+                    data.endAngle = brush.endAngle;
+                    break;
+            }
+            return data;
+        }
+        serializePen(pen) {
+            return {
+                brush: this.serializeBrush(pen.brush),
+                width: pen.width,
+                lineCap: pen.lineCap,
+                lineJoin: pen.lineJoin,
+                miterLimit: pen.miterLimit,
+                dashes: pen.dashes,
+                offset: pen.offset
+            };
+        }
+        serializePath(path) {
+            return path.nodes.map(this.serializePathNode);
+        }
+        serializePathNode(pathNode) {
+            return {
+                x: pathNode.x,
+                y: pathNode.y,
+                type: pathNode.type,
+                joint: pathNode.joint,
+                handleIn: pathNode.handleIn,
+                handleOut: pathNode.handleOut
+            };
+        }
+        serializeFont(font) {
+            return {
+                family: font.family,
+                style: font.style,
+                weight: font.weight,
+                size: font.size,
+            };
+        }
+        serializeMatrix(matrix) {
+            if (matrix === null) {
+                return null;
+            }
+            return { a: matrix.a, b: matrix.b, c: matrix.c, d: matrix.d, e: matrix.e, f: matrix.f };
+        }
+        serializeRectShapeRadius(radius) {
+            return {
+                rx: radius.rx,
+                ry: radius.ry,
+                multiple: radius.multiple,
+            };
+        }
+        serializeAnimation(animation) {
+            return {
+                startTime: animation.startTime,
+                endTime: animation.endTime,
+                mode: animation.mode,
+                animations: this.serializeAnimationList(animation),
+            };
+        }
+        serializeAnimationList(animation) {
+            const hold = {};
+            for (const [elementId, properties] of animation.getAnimatedEntries()) {
+                const h = {};
+                for (const [propertyName, animation] of Object.entries(properties)) {
+                    h[propertyName] = this.serializeAnimationItem(animation);
+                }
+                hold[elementId] = h;
+            }
+            return hold;
+        }
+        serializeAnimationItem(animation) {
+            let type = "generic";
+            let valueSerializer = v => v;
+            let easingSerializer = v => v;
+            if (animation instanceof PointAnimation) {
+                type = "point";
+                valueSerializer = this.serializePoint.bind(this);
+            }
+            else if (animation instanceof BrushAnimation) {
+                type = "brush";
+                valueSerializer = this.serializeBrush.bind(this);
+            }
+            else if (animation instanceof MotionAnimation) {
+                type = "path-node";
+                valueSerializer = this.serializePathNode.bind(this);
+            }
+            else if (animation instanceof RectRadiusAnimation) {
+                type = "rect-shape-radius";
+                valueSerializer = this.serializeRectShapeRadius.bind(this);
+            }
+            else if (animation instanceof PathAnimation) {
+                type = "path";
+                valueSerializer = this.serializePath.bind(this);
+            }
+            else if (animation instanceof PolyAnimation) {
+                type = "point-array";
+                valueSerializer = this.serializePoints.bind(this);
+            }
+            return {
+                type,
+                disabled: animation.disabled,
+                keyframes: animation.keyframes.map(k => ({
+                    easing: easingSerializer(k.easing),
+                    offset: k.offset,
+                    value: valueSerializer(k.value)
+                })),
+            };
+        }
+        serializeGuides(guideList) {
+            const guides = [];
+            for (const guide of guideList) {
+                guides.push({
+                    position: guide.position,
+                    isHidden: guide.isHidden,
+                    isHorizontal: guide.isHorizontal
+                });
+            }
+            return {
+                guides
+            };
+        }
+        serializeGrid(grid) {
+            if (grid instanceof canvasEngine.AutomaticGrid) {
+                return {
+                    horizontalSubdivisions: grid.horizontalSubdivisions,
+                    verticalSubdivisions: grid.verticalSubdivisions,
+                    color: grid.color.code,
+                };
+            }
+            return null;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     var AnimationProjectEvent;
     (function (AnimationProjectEvent) {
         /**
@@ -17793,6 +18189,378 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             const clone = super.clone(newId);
             clone._animation = (_a = this._animation) === null || _a === void 0 ? void 0 : _a.clone(clone);
             return clone;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class AnimatedMaskElement extends canvasEngine.MaskElement {
+        constructor() {
+            super(...arguments);
+            this._time = 0;
+        }
+        get time() {
+            return this._time;
+        }
+        set time(value) {
+            if (this._time !== value) {
+                this._time = value;
+                this.invalidate();
+            }
+        }
+        getDocumentPictureOptions() {
+            return this._time;
+        }
+        clone(newId) {
+            const clone = super.clone(newId);
+            clone._time = this._time;
+            return clone;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class AnimatedSymbolElement extends canvasEngine.SymbolElement {
+        constructor() {
+            super(...arguments);
+            this._time = 0;
+        }
+        get time() {
+            return this._time;
+        }
+        set time(value) {
+            if (this._time !== value) {
+                this._time = value;
+                this.invalidate();
+            }
+        }
+        getDocumentPictureOptions() {
+            return this._time;
+        }
+        clone(newId) {
+            const clone = super.clone(newId);
+            clone._time = this._time;
+            return clone;
+        }
+    }
+
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    class NativeAnimationImporter {
+        async import(stream) {
+            this.source = new AnimatorSource();
+            const project = new AnimationProject(this.source);
+            const bytes = await canvasEngine.readBytes(stream);
+            const view = new DataView(bytes.buffer);
+            let offset = 0;
+            if (view.getInt32(offset) !== 0x65377865) { // ex7e
+                throw new Error('Unknown file type');
+            }
+            offset += 4;
+            if (view.getUint8(offset) !== 1) { // manifest type
+                throw new Error('Invalid file type');
+            }
+            offset++;
+            const manifestLength = view.getInt32(offset);
+            offset += 4;
+            const manifestData = new DataView(bytes.buffer, offset, manifestLength);
+            const manifest = JSON.parse(await (new Blob([await canvasEngine.decompress(canvasEngine.toStream(manifestData))], { type: 'application/json' })).text());
+            offset += manifestLength;
+            if (manifest.type !== 'expressive/animation') {
+                throw new Error('Invalid file type');
+            }
+            while (true) {
+                const entryType = view.getUint8(offset);
+                if (entryType === 0xef) { // eof
+                    break;
+                }
+                // handle other types here
+                if (entryType === 0x03) { // Document
+                    const length = view.getUint32(offset + 1);
+                    offset += 5;
+                    const data = new DataView(bytes.buffer, offset, length);
+                    const doc = JSON.parse(await (new Blob([await canvasEngine.decompress(canvasEngine.toStream(data))], { type: 'application/json' })).text());
+                    project.addDocument(this.deserializeDocument(doc));
+                    offset += length;
+                    continue;
+                }
+                offset++;
+                if (offset >= bytes.length) {
+                    throw new Error('Invalid file end');
+                }
+            }
+            project.masterDocument = project.getDocumentById(manifest.masterDocument);
+            return project;
+        }
+        dispose() {
+            this.source = null;
+        }
+        deserializeDocument(data) {
+            // TODO: We should have specialized documents
+            const document = new AnimationDocument(new canvasEngine.Size(data.properties.size.width, data.properties.size.height), data.id);
+            document.title = data.title;
+            document.grid = this.deserializeGrid(data.grid);
+            document.guides = this.deserializeGuides(data.guides);
+            for (const child of data.children) {
+                document.appendChild(this.deserializeElement(document, child));
+            }
+            document.animation = this.deserializeAnimation(document, data.animation);
+            return document;
+        }
+        deserializeElement(document, data) {
+            let element = null, isVector = false;
+            switch (data.type) {
+                case "clip-path":
+                    element = this.deserializeClipPathElement(document, data.id, data.properties.clipPath);
+                    break;
+                case "ellipse":
+                    element = this.deserializeEllipseElement(document, data.id, data.properties.ellipse);
+                    isVector = true;
+                    break;
+                case "group":
+                    element = this.deserializeGroupElement(document, data.id, data.properties.group);
+                    break;
+                case "mask":
+                    element = this.deserializeMaskElement(document, data.id, data.properties.mask);
+                    break;
+                case "path":
+                    element = this.deserializePathElement(document, data.id, data.properties.path);
+                    isVector = true;
+                    break;
+                case "poly":
+                    element = this.deserializePolyElement(document, data.id, data.properties.poly);
+                    isVector = true;
+                    break;
+                case "rect":
+                    element = this.deserializeRectElement(document, data.id, data.properties.rect);
+                    isVector = true;
+                    break;
+                case "regular-polygon":
+                    element = this.deserializeRegularPolygonElement(document, data.id, data.properties.regularPolygon);
+                    isVector = true;
+                    break;
+                case "star":
+                    element = this.deserializeStarElement(document, data.id, data.properties.star);
+                    isVector = true;
+                    break;
+                case "symbol":
+                    element = this.deserializeSymbolElement(document, data.id, data.properties.symbol);
+                    break;
+                case "text":
+                    element = this.deserializeTextElement(document, data.id, data.properties.text);
+                    isVector = true;
+                    break;
+            }
+            if (element === null) {
+                throw new Error("Unknown element type '" + data.type + "'");
+            }
+            element.title = data.title;
+            element.locked = data.locked;
+            element.hidden = data.hidden;
+            this.setElementProperties(element, data.properties.element);
+            if (isVector) {
+                this.setVectorElementProperties(element, data.properties.vector);
+            }
+            if (data.children) {
+                for (let d of data.children) {
+                    element.appendChild(this.deserializeElement(document, d));
+                }
+            }
+            return element;
+        }
+        setElementProperties(element, properties) {
+            element.anchor = this.deserializePoint(properties.anchor);
+            element.scale = this.deserializePoint(properties.scale);
+            element.position = this.deserializePoint(properties.position);
+            element.rotate = properties.rotate;
+            element.skewAngle = properties.skewAngle;
+            element.skewAxis = properties.skewAxis;
+            element.orientation = properties.orientation;
+            element.opacity = properties.opacity;
+            element.blend = properties.blend;
+            element.isolate = properties.isolate;
+        }
+        setVectorElementProperties(element, properties) {
+            element.stroke = this.deserializePen(properties.stroke);
+            element.fill = this.deserializeBrush(properties.fill);
+            element.fillOpacity = properties.fillOpacity;
+            element.strokeOpacity = properties.strokeOpacity;
+            element.paintOrder = properties.paintOrder;
+            element.fillRule = properties.fillRule;
+            return element;
+        }
+        deserializeClipPathElement(document, id, properties) {
+            return new canvasEngine.ClipPathElement(this.deserializePath(properties.path), document, id);
+        }
+        deserializeEllipseElement(document, id, properties) {
+            return new canvasEngine.EllipseElement(new canvasEngine.EllipseShape(properties.width, properties.height), document, id);
+        }
+        deserializeGroupElement(document, id, properties) {
+            return new canvasEngine.GroupElement(document, id);
+        }
+        deserializeMaskElement(document, id, properties) {
+            const element = new AnimatedMaskElement(properties.reference, document, id);
+            element.time = properties.reference;
+            return element;
+        }
+        deserializePathElement(document, id, properties) {
+            return new canvasEngine.PathElement(this.deserializePath(properties.path), document, id);
+        }
+        deserializePolyElement(document, id, properties) {
+            return new canvasEngine.PolyElement(new canvasEngine.PolyShape(this.deserializePoints(properties.points), properties.isClosed), document, id);
+        }
+        deserializeRectElement(document, id, properties) {
+            return new canvasEngine.RectElement(new canvasEngine.RectShape(properties.width, properties.height, this.deserializeRectShapeRadius(properties.radius)), document, id);
+        }
+        deserializeRegularPolygonElement(document, id, properties) {
+            return new canvasEngine.RegularPolygonElement(new canvasEngine.RegularPolygonShape(properties.sides, properties.radius, properties.cornerRadius, properties.angle), document, id);
+        }
+        deserializeStarElement(document, id, properties) {
+            return new canvasEngine.StarElement(new canvasEngine.StarShape(properties.sides, properties.outerRadius, properties.innerRadius, properties.outerCornerRadius, properties.innerCornerRadius, properties.outerRotate, properties.innerRotate, properties.angle), document, id);
+        }
+        deserializeSymbolElement(document, id, properties) {
+            const element = new AnimatedSymbolElement(properties.reference, document, id);
+            element.width = properties.width;
+            element.height = properties.height;
+            element.time = properties.time;
+            return element;
+        }
+        deserializeTextElement(document, id, properties) {
+            return new canvasEngine.TextElement(document, properties.text, this.deserializeFont(properties.font), id);
+        }
+        deserializePoints(data) {
+            return data.map(this.deserializePoint);
+        }
+        deserializePoint(data) {
+            return new canvasEngine.Point(data.x, data.y);
+        }
+        deserializeBrush(data) {
+            switch (data.type) {
+                case canvasEngine.BrushType.Solid:
+                    return new canvasEngine.SolidBrush(canvasEngine.Color.fromCode(data.color));
+                case canvasEngine.BrushType.LinearGradient:
+                    return new canvasEngine.LinearGradientBrush(this.deserializePoint(data.start), this.deserializePoint(data.end), new canvasEngine.StopColorList(data.stopColors.map(sc => ({ color: canvasEngine.Color.fromCode(sc.color), offset: sc.offset }))), data.spread, this.deserializeMatrix(data.transform));
+                case canvasEngine.BrushType.RadialGradient:
+                    return new canvasEngine.RadialGradientBrush(this.deserializePoint(data.center), data.radius, new canvasEngine.StopColorList(data.stopColors.map(sc => ({ color: canvasEngine.Color.fromCode(sc.color), offset: sc.offset }))), data.spread, this.deserializeMatrix(data.transform));
+                case canvasEngine.BrushType.ConicalGradient:
+                    return new canvasEngine.ConicalGradientBrush(this.deserializePoint(data.center), data.startAngle, data.endAngle, new canvasEngine.StopColorList(data.stopColors.map(sc => ({ color: canvasEngine.Color.fromCode(sc.color), offset: sc.offset }))), data.spread, this.deserializeMatrix(data.transform));
+            }
+            throw new Error("Unsupported brush type '" + data.type + "'");
+        }
+        deserializePen(data) {
+            return new canvasEngine.DefaultPen(this.deserializeBrush(data.brush), data.width, data.lineCap, data.lineJoin, data.miterLimit, data.dashes, data.offset);
+        }
+        deserializePath(data) {
+            return new canvasEngine.Path(data.map(this.deserializePathNode));
+        }
+        deserializePathNode(data) {
+            return new canvasEngine.PathNode(data.x, data.y, data.type, data.joint, data.handleIn, data.handleOut);
+        }
+        deserializeRectShapeRadius(data) {
+            return new canvasEngine.RectShapeRadius(data.rx, data.ry, data.multiple);
+        }
+        deserializeFont(data) {
+            return canvasEngine.FontManager.getFont(data.family, data.style, data.weight, data.size);
+        }
+        deserializeMatrix(data) {
+            if (!data) {
+                return null;
+            }
+            return canvasEngine.Matrix.Create(data);
+        }
+        deserializeAnimation(document, data) {
+            const docAnimation = new DocumentAnimation(document, data.startTime, data.endTime, data.mode);
+            return this.deserializeAnimationList(docAnimation, data.animations);
+        }
+        deserializeAnimationList(documentAnimation, data) {
+            let easingDeserializer = v => v;
+            let valueDeserializer = null;
+            for (let [elementID, properties] of Object.entries(data)) {
+                const element = documentAnimation.document.getElementById(elementID);
+                for (let [propertyName, animation] of Object.entries(properties)) {
+                    switch (animation.type) {
+                        case "point":
+                            valueDeserializer = this.deserializePoint.bind(this);
+                            break;
+                        case "brush":
+                            valueDeserializer = this.deserializeBrush.bind(this);
+                            break;
+                        case "path-node":
+                            valueDeserializer = this.deserializePathNode.bind(this);
+                            break;
+                        case "rect-shape-radius":
+                            valueDeserializer = this.deserializeRectShapeRadius.bind(this);
+                            break;
+                        case "path":
+                            valueDeserializer = this.deserializePath.bind(this);
+                            break;
+                        case "point-array":
+                            valueDeserializer = this.deserializePoints.bind(this);
+                            break;
+                        default:
+                            valueDeserializer = v => v;
+                    }
+                    const anim = this.source.createAnimation(element, propertyName);
+                    anim.disabled = animation.disabled;
+                    for (let keyframe of animation.keyframes) {
+                        anim.addKeyframeAtOffset(keyframe.offset, valueDeserializer(keyframe.value), easingDeserializer(keyframe.easing));
+                    }
+                    documentAnimation.addAnimation(element, propertyName, anim);
+                }
+            }
+            return documentAnimation;
+        }
+        deserializeGuides(data) {
+            return new canvasEngine.GuideList(data.guides.map(g => new canvasEngine.Guide(g.position, g.isHorizontal, g.isHidden)));
+        }
+        deserializeGrid(data) {
+            if (!data) {
+                return null;
+            }
+            const grid = new canvasEngine.AutomaticGrid();
+            grid.color = canvasEngine.Color.fromCode(data.color);
+            grid.horizontalSubdivisions = data.horizontalSubdivisions;
+            grid.verticalSubdivisions = data.verticalSubdivisions;
+            return grid;
         }
     }
 
@@ -18997,6 +19765,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const IsFillSelected = writable(true);
     const CurrentColorMode = writable('HEX');
     const ProportionalScale = writable(false);
+    const IsProjectSaved = writable(false);
+    const ProjectFileHandle = writable(null);
     const ShowTreeReverse = writable(true);
 
     /* src/Components/Tools/SubTools.svelte generated by Svelte v3.38.2 */
@@ -19884,7 +20654,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const file$H = "src/Components/Canvas.svelte";
 
-    // (152:4) {#if hidden}
+    // (155:4) {#if hidden}
     function create_if_block$f(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[30].default;
@@ -19926,7 +20696,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$f.name,
     		type: "if",
-    		source: "(152:4) {#if hidden}",
+    		source: "(155:4) {#if hidden}",
     		ctx
     	});
 
@@ -19950,10 +20720,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			set_custom_element_data(canvas_engine, "class", "svelte-6hby6z");
     			toggle_class(canvas_engine, "hidden", /*hidden*/ ctx[0]);
-    			add_location(canvas_engine, file$H, 136, 4, 4468);
+    			add_location(canvas_engine, file$H, 139, 4, 4540);
     			attr_dev(div, "class", "canvas-wrapper svelte-6hby6z");
     			attr_dev(div, "tabindex", "0");
-    			add_location(div, file$H, 135, 0, 4422);
+    			add_location(div, file$H, 138, 0, 4494);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20136,6 +20906,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$invalidate(1, canvas.tool = $CurrentTool, canvas);
     		canvas.allowSurfaceDisposal();
     		$$invalidate(1, canvas.project = $CurrentProject, canvas);
+
+    		CurrentProject.subscribe(p => {
+    			$$invalidate(1, canvas.project = p, canvas);
+    		});
     	});
 
     	onDestroy(() => {
@@ -23559,32 +24333,32 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon0, "size", "s");
     			set_custom_element_data(sp_icon0, "name", "workflow:FolderOpen");
     			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$w, 16, 8, 392);
+    			add_location(sp_icon0, file$w, 77, 8, 2872);
     			set_custom_element_data(sp_action_button0, "title", "Open");
-    			add_location(sp_action_button0, file$w, 15, 4, 352);
+    			add_location(sp_action_button0, file$w, 75, 4, 2794);
     			set_custom_element_data(sp_icon1, "size", "s");
     			set_custom_element_data(sp_icon1, "name", "workflow:SaveFloppy");
     			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$w, 19, 8, 528);
+    			add_location(sp_icon1, file$w, 80, 8, 3024);
     			set_custom_element_data(sp_action_button1, "title", "Save");
-    			add_location(sp_action_button1, file$w, 18, 4, 488);
+    			add_location(sp_action_button1, file$w, 79, 4, 2968);
     			set_custom_element_data(sp_icon2, "size", "s");
     			set_custom_element_data(sp_icon2, "name", "workflow:Undo");
     			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$w, 24, 8, 790);
+    			add_location(sp_icon2, file$w, 85, 8, 3286);
     			set_custom_element_data(sp_action_button2, "title", "Undo");
     			set_custom_element_data(sp_action_button2, "disabled", sp_action_button2_disabled_value = !/*$CurrentProjectState*/ ctx[0] || !/*$CurrentProjectState*/ ctx[0].canUndo);
-    			add_location(sp_action_button2, file$w, 21, 4, 624);
+    			add_location(sp_action_button2, file$w, 82, 4, 3120);
     			set_custom_element_data(sp_icon3, "size", "s");
     			set_custom_element_data(sp_icon3, "name", "workflow:Redo");
     			set_custom_element_data(sp_icon3, "slot", "icon");
-    			add_location(sp_icon3, file$w, 29, 8, 1046);
+    			add_location(sp_icon3, file$w, 90, 8, 3542);
     			set_custom_element_data(sp_action_button3, "title", "Redo");
     			set_custom_element_data(sp_action_button3, "disabled", sp_action_button3_disabled_value = !/*$CurrentProjectState*/ ctx[0] || !/*$CurrentProjectState*/ ctx[0].canRedo);
-    			add_location(sp_action_button3, file$w, 26, 4, 880);
+    			add_location(sp_action_button3, file$w, 87, 4, 3376);
     			set_custom_element_data(sp_action_group, "compact", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
-    			add_location(sp_action_group, file$w, 14, 0, 316);
+    			add_location(sp_action_group, file$w, 74, 0, 2758);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -23605,6 +24379,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
+    					listen_dev(sp_action_button0, "click", /*open*/ ctx[3], false, false, false),
+    					listen_dev(sp_action_button1, "click", /*save*/ ctx[4], false, false, false),
     					listen_dev(sp_action_button2, "click", /*undo*/ ctx[1], false, false, false),
     					listen_dev(sp_action_button3, "click", /*redo*/ ctx[2], false, false, false)
     				];
@@ -23643,13 +24419,55 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     function instance$C($$self, $$props, $$invalidate) {
     	let $CurrentProject;
+    	let $IsProjectSaved;
+    	let $ProjectFileHandle;
     	let $CurrentProjectState;
     	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(3, $CurrentProject = $$value));
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(5, $CurrentProject = $$value));
+    	validate_store(IsProjectSaved, "IsProjectSaved");
+    	component_subscribe($$self, IsProjectSaved, $$value => $$invalidate(6, $IsProjectSaved = $$value));
+    	validate_store(ProjectFileHandle, "ProjectFileHandle");
+    	component_subscribe($$self, ProjectFileHandle, $$value => $$invalidate(7, $ProjectFileHandle = $$value));
     	validate_store(CurrentProjectState, "CurrentProjectState");
     	component_subscribe($$self, CurrentProjectState, $$value => $$invalidate(0, $CurrentProjectState = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ProjectState", slots, []);
+
+    	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+    		function adopt(value) {
+    			return value instanceof P
+    			? value
+    			: new P(function (resolve) {
+    						resolve(value);
+    					});
+    		}
+
+    		return new (P || (P = Promise))(function (resolve, reject) {
+    				function fulfilled(value) {
+    					try {
+    						step(generator.next(value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function rejected(value) {
+    					try {
+    						step(generator["throw"](value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function step(result) {
+    					result.done
+    					? resolve(result.value)
+    					: adopt(result.value).then(fulfilled, rejected);
+    				}
+
+    				step((generator = generator.apply(thisArg, _arguments || [])).next());
+    			});
+    	};
 
     	function undo() {
     		const engine = $CurrentProject.engine;
@@ -23667,6 +24485,59 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		}
     	}
 
+    	function open() {
+    		return __awaiter(this, void 0, void 0, function* () {
+
+    			let fileHandle;
+
+    			try {
+    				[fileHandle] = yield window.showOpenFilePicker();
+    			} catch(e) {
+    				return;
+    			}
+
+    			set_store_value(ProjectFileHandle, $ProjectFileHandle = fileHandle, $ProjectFileHandle);
+    			const stream = (yield fileHandle.getFile()).stream();
+    			const importer = new NativeAnimationImporter();
+    			const project = yield importer.import(stream);
+    			const old = $CurrentProject;
+    			set_store_value(CurrentProject, $CurrentProject = project, $CurrentProject);
+    			set_store_value(IsProjectSaved, $IsProjectSaved = true, $IsProjectSaved);
+    			old.dispose();
+    			importer.dispose();
+    		});
+    	}
+
+    	function save() {
+    		return __awaiter(this, void 0, void 0, function* () {
+    			if (!$ProjectFileHandle) {
+    				try {
+    					set_store_value(
+    						ProjectFileHandle,
+    						$ProjectFileHandle = yield window.showSaveFilePicker({
+    							types: [
+    								{
+    									description: "Expressive Animation files",
+    									startIn: "documents",
+    									accept: { "expressive/animation": [".eaf"] }
+    								}
+    							]
+    						}),
+    						$ProjectFileHandle
+    					);
+    				} catch(_a) {
+    					return;
+    				}
+    			}
+
+    			const exporter = new NativeAnimationExporter();
+    			const stream = yield exporter.export($CurrentProject);
+    			yield stream.pipeTo(yield $ProjectFileHandle.createWritable());
+    			set_store_value(IsProjectSaved, $IsProjectSaved = true, $IsProjectSaved);
+    			exporter.dispose();
+    		});
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -23674,15 +24545,32 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	});
 
     	$$self.$capture_state = () => ({
+    		__awaiter,
+    		ProjectFileHandle,
     		CurrentProject,
     		CurrentProjectState,
+    		IsProjectSaved,
+    		NativeAnimationExporter,
+    		NativeAnimationImporter,
     		undo,
     		redo,
+    		open,
+    		save,
     		$CurrentProject,
+    		$IsProjectSaved,
+    		$ProjectFileHandle,
     		$CurrentProjectState
     	});
 
-    	return [$CurrentProjectState, undo, redo];
+    	$$self.$inject_state = $$props => {
+    		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [$CurrentProjectState, undo, redo, open, save];
     }
 
     class ProjectState extends SvelteComponentDev {
@@ -41025,7 +41913,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     g1.appendChild(rect2);
     doc.appendChild(g1);
     project.addDocument(doc);
-    project.isRecording = true;
+    project.isRecording = false;
+    project.masterDocument = doc;
 
     var index = LoadApp();
     async function LoadApp() {
