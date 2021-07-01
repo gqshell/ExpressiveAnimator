@@ -54,13 +54,29 @@
         let graduationNo = Math.floor(t);
         let delta = ((Math.round(t * 100) - graduationNo * 100) / 100);
 
+        let scaleFactor = 1;
+
+        if (zoom <= 0.5) {
+            scaleFactor = 2;
+            if (zoom <= 0.1) {
+                scaleFactor = 10;
+            } else if (zoom < 0.125) {
+                scaleFactor = 8;
+            } else if (zoom <= 0.25) {
+                scaleFactor = 4;
+            }
+        }
+
         let x = padding > scroll ? padding - scroll : padding;
         x -= delta * minorGraduationWidth * zoom;
+
+        let step = minorGraduationWidth * zoom;
+        let visible = step >= 4;
 
         while (true) {
             path.moveTo(x + 0.5, height);
 
-            if (graduationNo % divisions === 0) {
+            if (graduationNo % (divisions * scaleFactor) === 0) {
                 let s = graduationNo / divisions;
                 let m = (s - s % 60) / 60;
                 let h = (m - m % 60) / 60;
@@ -74,13 +90,13 @@
                 }
                 path.lineTo(x + 0.5, height - 20);
                 context.fillText(text, Math.ceil(x) + 4.5, height - 15);
-            } else if (graduationNo % halfDivisions === 0) {
+            } else if (graduationNo % (halfDivisions * scaleFactor) === 0) {
                 path.lineTo(x + 0.5, height - 15);
-            } else {
+            } else if (graduationNo % scaleFactor === 0) {
                 path.lineTo(x + 0.5, height - 10);
             }
 
-            x += minorGraduationWidth * zoom;
+            x += step;
             graduationNo++;
 
             if (x > width) {
@@ -117,7 +133,7 @@
         currentTime += delta;
         playHeadPosition = event.x;
 
-        $CurrentTime = clamp(computeTime(currentTime), 0, $CurrentMaxTime);
+        $CurrentTime = clamp(computeTime(currentTime), 0, Number.POSITIVE_INFINITY);
     }
 
     function playHedPointerUp(event: PointerEvent) {
@@ -159,7 +175,7 @@
 
         canvas.addEventListener('click', function (event: MouseEvent) {
             const x = ((event.clientX - bounds.x - padding) + scroll) / zoom;
-            $CurrentTime = clamp(computeTime(x / majorGraduationWidth * 1000), 0, $CurrentMaxTime);
+            $CurrentTime = clamp(computeTime(x / majorGraduationWidth * 1000), 0, Number.POSITIVE_INFINITY);
         });
 
         return () => {

@@ -4,6 +4,7 @@
     import TimelineRuler from "./TimelineRuler.svelte";
 
     import {CurrentTime, CurrentMaxTime} from "../../Stores";
+    import TimelineActionBar from "./TimelineActionBar.svelte";
 
     export let zoom: number = 1;
     export let collapsed: boolean = false;
@@ -36,9 +37,7 @@
             <TimelineRuler bind:zoom scroll={scrollLeft} />
         </div>
         <Timeline bind:scrollTop bind:scrollLeft={scrollLeft} />
-        <div class="timeline-bottom-bar">
-            bar
-        </div>
+        <TimelineActionBar bind:zoom />
     {/if}
 </div>
 <style global>
@@ -58,11 +57,5 @@
         min-height: 32px;
         display: flex;
         flex-direction: row;
-    }
-
-    .timeline-bottom-bar {
-        box-sizing: content-box;
-        border-top: 1px solid var(--separator-color);
-        height: var(--spectrum-alias-item-height-s);
     }
 </style>
