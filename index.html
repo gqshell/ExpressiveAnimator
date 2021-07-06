@@ -5,6 +5,146 @@
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     <meta name="expressive:default-font" content="./node_modules/@zindex/canvas-engine/dist/font.ttf.woff2">
 
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: Montserrat, Arial, Helvetica, sans-serif;
+        }
+        #expressive-animator-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            background-color: #1a1a1a;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIj4KICA8ZGVmcz4KICAgIDxjbGlwUGF0aCBpZD0iY2xpcC1BcnRib2FyZF8xMSI+CiAgICAgIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiLz4KICAgIDwvY2xpcFBhdGg+CiAgPC9kZWZzPgogIDxnIGlkPSJBcnRib2FyZF8xMSIgZGF0YS1uYW1lPSJBcnRib2FyZCDigJMgMTEiIGNsaXAtcGF0aD0idXJsKCNjbGlwLUFydGJvYXJkXzExKSI+CiAgICA8ZyBpZD0iR3JvdXBfNjU5MTIiIGRhdGEtbmFtZT0iR3JvdXAgNjU5MTIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE5Mi4yNzYpIj4KICAgICAgPGVsbGlwc2UgaWQ9IkVsbGlwc2VfOTQzNSIgZGF0YS1uYW1lPSJFbGxpcHNlIDk0MzUiIGN4PSIxMC4wOTQiIGN5PSIxMC4wOTQiIHJ4PSIxMC4wOTQiIHJ5PSIxMC4wOTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEzNzQuNjYzIDIxMC44MjkpIHJvdGF0ZSgtOTApIiBmaWxsPSIjNmUyNWYyIi8+CiAgICAgIDxlbGxpcHNlIGlkPSJFbGxpcHNlXzk0MzYiIGRhdGEtbmFtZT0iRWxsaXBzZSA5NDM2IiBjeD0iNi40NTgiIGN5PSI2LjQ1OCIgcng9IjYuNDU4IiByeT0iNi40NTgiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1NzQuOTM3IDc5Ni44MjgpIHJvdGF0ZSgtOTApIiBmaWxsPSIjYzkzZGZjIi8+CiAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGVfMTQ1MDM4IiBkYXRhLW5hbWU9IlJlY3RhbmdsZSAxNDUwMzgiIHdpZHRoPSIyOC4yNDEiIGhlaWdodD0iMjguMjQxIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNjM5LjU1MyAxMjYuODIzKSByb3RhdGUoOTApIiBmaWxsPSIjZmMzZGQ3Ii8+CiAgICAgIDxnIGlkPSJHcm91cF82NTUyMSIgZGF0YS1uYW1lPSJHcm91cCA2NTUyMSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTYwMy4xNDIgOTUzLjE3Nikgcm90YXRlKC05MCkiPgogICAgICAgIDxwYXRoIGlkPSJQYXRoXzM3ODUwIiBkYXRhLW5hbWU9IlBhdGggMzc4NTAiIGQ9Ik0wLDBINDQuNTgyVjQ0LjU4MkgwWk00MC44LDMuNzg1SDMuNzg1VjQwLjhINDAuOFoiIGZpbGw9IiNmZmYiLz4KICAgICAgPC9nPgogICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlXzE0NTAzOSIgZGF0YS1uYW1lPSJSZWN0YW5nbGUgMTQ1MDM5IiB3aWR0aD0iMjguMjQxIiBoZWlnaHQ9IjI4LjI0MSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUyNC43NjIgNjk3LjM5Nykgcm90YXRlKDEzNSkiIGZpbGw9IiMzOTE1N2IiLz4KICAgICAgPHBhdGggaWQ9IlBhdGhfMzc4NTEiIGRhdGEtbmFtZT0iUGF0aCAzNzg1MSIgZD0iTTE0LjYzLDI1LjM0LDcuMzE1LDEyLjY3LDAsMEgyOS4yNkwyMS45NDUsMTIuNjdaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDY4LjkyOSAzNjguMDUyKSByb3RhdGUoLTkwKSIgZmlsbD0iI2ZmNjBjZSIvPgogICAgICA8ZyBpZD0iR3JvdXBfNjU1MjIiIGRhdGEtbmFtZT0iR3JvdXAgNjU1MjIiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1OTguNDk3IDQwMy44NjkpIHJvdGF0ZSgtOTApIj4KICAgICAgICA8cGF0aCBpZD0iUGF0aF8zNzg1MiIgZGF0YS1uYW1lPSJQYXRoIDM3ODUyIiBkPSJNMCwwSDM1LjgxNkwxNy45MDgsMzEuMDE4Wk0yOS4yNiwzLjc4NUg2LjU1N0wxNy45MDgsMjMuNDQ3WiIgZmlsbD0iIzgxM2RmYyIvPgogICAgICA8L2c+CiAgICAgIDxnIGlkPSJHcm91cF82NTUyMyIgZGF0YS1uYW1lPSJHcm91cCA2NTUyMyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTU5Mi4yMiA1NjUuOTcxKSByb3RhdGUoLTkwKSI+CiAgICAgICAgPHBhdGggaWQ9IlBhdGhfMzc4NTMiIGRhdGEtbmFtZT0iUGF0aCAzNzg1MyIgZD0iTTE5Ljg5NSwwQTE5Ljg5NCwxOS44OTQsMCwxLDEsMCwxOS44OTMsMTkuOTE1LDE5LjkxNSwwLDAsMSwxOS44OTUsMFptMCwzNkExNi4xMDgsMTYuMTA4LDAsMSwwLDMuNzg1LDE5Ljg5MywxNi4xMjcsMTYuMTI3LDAsMCwwLDE5Ljg5NSwzNloiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgMCkiIGZpbGw9IiNmZmYiLz4KICAgICAgPC9nPgogICAgPC9nPgogICAgPGcgaWQ9Ikdyb3VwXzY1OTEzIiBkYXRhLW5hbWU9Ikdyb3VwIDY1OTEzIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjIuMTEyKSI+CiAgICAgIDxlbGxpcHNlIGlkPSJFbGxpcHNlXzk0MzUtMiIgZGF0YS1uYW1lPSJFbGxpcHNlIDk0MzUiIGN4PSIxMC4wOTQiIGN5PSIxMC4wOTQiIHJ4PSIxMC4wOTQiIHJ5PSIxMC4wOTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDM1My4xNDggMjEwLjgyOSkgcm90YXRlKC05MCkiIGZpbGw9IiM2ZTI1ZjIiLz4KICAgICAgPGVsbGlwc2UgaWQ9IkVsbGlwc2VfOTQzNi0yIiBkYXRhLW5hbWU9IkVsbGlwc2UgOTQzNiIgY3g9IjYuNDU4IiBjeT0iNi40NTgiIHJ4PSI2LjQ1OCIgcnk9IjYuNDU4IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNjAuMTQ3IDc5Ni44MjcpIHJvdGF0ZSgtOTApIiBmaWxsPSIjYzkzZGZjIi8+CiAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGVfMTQ1MDM5LTIiIGRhdGEtbmFtZT0iUmVjdGFuZ2xlIDE0NTAzOSIgd2lkdGg9IjI4LjI0MSIgaGVpZ2h0PSIyOC4yNDEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI0My4yMDggNjc3LjQyNykgcm90YXRlKDQ1KSIgZmlsbD0iIzM5MTU3YiIvPgogICAgICA8cGF0aCBpZD0iUGF0aF8zNzg1MS0yIiBkYXRhLW5hbWU9IlBhdGggMzc4NTEiIGQ9Ik0xNC42MywwLDcuMzE1LDEyLjY3LDAsMjUuMzRIMjkuMjZMMjEuOTQ1LDEyLjY3WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTA4LjYyOCAxNTkuOTgzKSByb3RhdGUoLTkwKSIgZmlsbD0iI2ZmNjBjZSIvPgogICAgICA8ZyBpZD0iR3JvdXBfNjU1MjItMiIgZGF0YS1uYW1lPSJHcm91cCA2NTUyMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTE4LjQ4NCA0MDMuODY5KSByb3RhdGUoLTkwKSI+CiAgICAgICAgPHBhdGggaWQ9IlBhdGhfMzc4NTItMiIgZGF0YS1uYW1lPSJQYXRoIDM3ODUyIiBkPSJNMCwzMS4wMThIMzUuODE3TDE3LjkwOCwwWm0yOS4yNjEtMy43ODVINi41NTdMMTcuOTA4LDcuNTcxWiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCkiIGZpbGw9IiM4MTNkZmMiLz4KICAgICAgPC9nPgogICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlXzE0NTA2OCIgZGF0YS1uYW1lPSJSZWN0YW5nbGUgMTQ1MDY4IiB3aWR0aD0iMjguMjQxIiBoZWlnaHQ9IjI4LjI0MiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjkxLjg4NiAzMzkuMjg4KSByb3RhdGUoOTApIiBmaWxsPSIjZmMzZGQ3Ii8+CiAgICAgIDxnIGlkPSJHcm91cF82NTY5MyIgZGF0YS1uYW1lPSJHcm91cCA2NTY5MyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAyLjExMiA5NTAuODExKSByb3RhdGUoLTkwKSI+CiAgICAgICAgPHBhdGggaWQ9IlBhdGhfMzc4NTMtMiIgZGF0YS1uYW1lPSJQYXRoIDM3ODUzIiBkPSJNMTkuODk0LDM5Ljc4N0ExOS44OTQsMTkuODk0LDAsMSwwLDAsMTkuODk0LDE5LjkxNSwxOS45MTUsMCwwLDAsMTkuODk0LDM5Ljc4N1ptMC0zNkExNi4xMDgsMTYuMTA4LDAsMSwxLDMuNzg1LDE5Ljg5NCwxNi4xMjcsMTYuMTI3LDAsMCwxLDE5Ljg5NCwzLjc4NVoiIGZpbGw9IiNmZmYiLz4KICAgICAgPC9nPgogICAgICA8ZyBpZD0iR3JvdXBfNjU2OTQiIGRhdGEtbmFtZT0iR3JvdXAgNjU2OTQiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDExNC4xNTUgNTY4LjMzNikgcm90YXRlKC05MCkiPgogICAgICAgIDxwYXRoIGlkPSJQYXRoXzM3ODUwLTIiIGRhdGEtbmFtZT0iUGF0aCAzNzg1MCIgZD0iTTAsNDQuNTgySDQ0LjU4MlYwSDBaTTQwLjgsNDAuOEgzLjc4NVYzLjc4NUg0MC44WiIgZmlsbD0iI2ZmZiIvPgogICAgICA8L2c+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #expressive-animator-overlay .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        #expressive-animator-overlay .logo-group {
+            display: flex;
+            align-items: center;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        #expressive-animator-overlay .img {
+            width: 100%;
+            max-width: 96px;
+            height: auto;
+        }
+
+        #expressive-animator-overlay .text-group {
+            margin-left: 16px;
+        }
+
+        #expressive-animator-overlay .title {
+            font-size: 1.5rem;
+            font-weight: 100;
+            letter-spacing: 1px;
+        }
+
+        #expressive-animator-overlay .subtitle {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        #expressive-animator-overlay .version {
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-align: right;
+            color: #c8c8c8;
+        }
+
+        #expressive-animator-overlay .loading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 96px;
+            width: 240px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        #expressive-animator-overlay  .semi-bold {
+            font-weight: 600;
+        }
+        .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-ellipsis div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #fff;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+            left: 8px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+            left: 8px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+            left: 32px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+            left: 56px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes lds-ellipsis3 {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        @keyframes lds-ellipsis2 {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(24px, 0);
+            }
+        }
+    </style>
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&family=Source+Serif+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap"
           rel="stylesheet">
@@ -16,7 +156,30 @@
     <script defer src="./node_modules/@zindex/skia-js/dist/skia.js"></script>
     <script defer src="./node_modules/@zindex/canvas-engine/dist/canvas-engine.js"></script>
     <script defer src="./dist/expressive-animator.js"></script>
+    <script>
+        window.addEventListener('expressive-animator-ready', function() {
+            document.getElementById('expressive-animator-overlay').remove();
+        });
+    </script>
 </head>
 <body>
+<div id="expressive-animator-overlay">
+    <div class="container">
+        <div class="logo-group">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiAxMTAuNiI+CiAgPHRpdGxlPkFzc2V0IDI4PC90aXRsZT4KICA8Zz4KICAgIDxyZWN0IHk9IjE0LjYiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgcng9IjIwIiBmaWxsPSIjNmUyNWYyIi8+CiAgICA8cGF0aCBkPSJNOTYsMzQuNnY1NmEyMCwyMCwwLDAsMS0yMCwyMEgyMEEyMC4yLDIwLjIsMCwwLDEsLjYsOTUuNmEyMC43LDIwLjcsMCwwLDEtLjYtNXYtNTZhMjAuMSwyMC4xLDAsMCwxLDIwLTIwSDc2QTIwLjEsMjAuMSwwLDAsMSw5NiwzNC42WiIgZmlsbD0ibm9uZSIvPgogICAgPGc+CiAgICAgIDxwYXRoIGQ9Ik01MywxOS42djU2YTIwLDIwLDAsMCwxLTIwLDIwSC42YTIwLjcsMjAuNywwLDAsMS0uNi01di01NmEyMC4xLDIwLjEsMCwwLDEsMjAtMjBINTIuNEEyMC43LDIwLjcsMCwwLDEsNTMsMTkuNloiIGZpbGw9IiM4MTNkZmMiLz4KICAgICAgPHBhdGggZD0iTTQ1LDE0LjZ2NTJhMjAsMjAsMCwwLDEtMjAsMjBIMHYtNTJhMjAuMSwyMC4xLDAsMCwxLDIwLTIwWiIgZmlsbD0iI2M5M2RmYyIvPgogICAgICA8cGF0aCBkPSJNMzcsMTQuNnY0MWEyMCwyMCwwLDAsMS0yMCwyMEgwdi00MWEyMC4xLDIwLjEsMCwwLDEsMjAtMjBaIiBmaWxsPSIjZmMzZGQ3Ii8+CiAgICAgIDxwYXRoIGQ9Ik0yOCwxNC42djI2YTIwLDIwLDAsMCwxLTIwLDIwSDB2LTI2YTIwLjEsMjAuMSwwLDAsMSwyMC0yMFoiIGZpbGw9IiNmZjYwY2UiLz4KICAgIDwvZz4KICAgIDxwYXRoIGQ9Ik05NiwzNC42djU2YTIwLjcsMjAuNywwLDAsMS0uNiw1LDIwLjEsMjAuMSwwLDAsMS0xOS40LDE1SDIwYTIwLDIwLDAsMCwxLTIwLTIwdi01NmEyMC4xLDIwLjEsMCwwLDEsMjAtMjBINzZBMjAuMSwyMC4xLDAsMCwxLDk2LDM0LjZaIiBmaWxsPSJub25lIi8+CiAgICA8Zz4KICAgICAgPHBhdGggZD0iTTk2LDM0LjZ2NTZhMjAuNywyMC43LDAsMCwxLS42LDVINjNhMjAsMjAsMCwwLDEtMjAtMjB2LTU2YTIwLjcsMjAuNywwLDAsMSwuNi01SDc2QTIwLjEsMjAuMSwwLDAsMSw5NiwzNC42WiIgZmlsbD0iIzgxM2RmYyIvPgogICAgICA8cGF0aCBkPSJNOTYsMzQuNnY1Mkg3MWEyMCwyMCwwLDAsMS0yMC0yMHYtNTJINzZBMjAuMSwyMC4xLDAsMCwxLDk2LDM0LjZaIiBmaWxsPSIjYzkzZGZjIi8+CiAgICAgIDxwYXRoIGQ9Ik05NiwzNC42djQxSDc5YTIwLDIwLDAsMCwxLTIwLTIwdi00MUg3NkEyMC4xLDIwLjEsMCwwLDEsOTYsMzQuNloiIGZpbGw9IiNmYzNkZDciLz4KICAgICAgPHBhdGggZD0iTTk2LDM0LjZ2MjZIODhhMjAsMjAsMCwwLDEtMjAtMjB2LTI2aDhBMjAuMSwyMC4xLDAsMCwxLDk2LDM0LjZaIiBmaWxsPSIjZmY2MGNlIi8+CiAgICA8L2c+CiAgICA8cGF0aCBkPSJNNzQuMiwyNC42QzcyLjgsMTYuNSw2Ny41LDMuOCw0OS42LDNINDguMWMtNywwLTE1LjcsMS43LTI2LjgsNmguMWMyLjUsMy42LDIuNiw4LjIsMS4yLDEyLjRhMjYuOCwyNi44LDAsMCwwLS43LDIuN2MwLC4yLDAsLjMtLjEuNEExMiwxMiwwLDAsMCwxMCwzNi42djUyYTEyLDEyLDAsMCwwLDEyLDEySDc0YTEyLDEyLDAsMCwwLDEyLTEydi01MkExMiwxMiwwLDAsMCw3NC4yLDI0LjZaIiBmaWxsPSIjMzkxNTdiIi8+CiAgICA8Zz4KICAgICAgPHBhdGggZD0iTTM3LjIsNjUuOSwyOC44LDg4LjZoNC45bDEuNi00LjdoOC4ybDEuNiw0LjdoNUw0MS42LDY1LjlabS0uNiwxNC4yLDIuOC04LjUsMi45LDguNVoiIGZpbGw9IiNmZmYiLz4KICAgICAgPHBhdGggZD0iTTYwLjMsNzEuNGE1LjksNS45LDAsMCwwLTQuOCwyLjNsLS4yLTJINTEuMVY4OC42aDQuNVY3Ni43YTMsMywwLDAsMSwyLjgtMS42LDIuMiwyLjIsMCwwLDEsMi43LDIuN1Y4OC42aDQuNlY3Ny43Yy0uMS0yLjEtLjUtMy43LTEuNC00LjdBNC44LDQuOCwwLDAsMCw2MC4zLDcxLjRaIiBmaWxsPSIjZmZmIi8+CiAgICAgIDxwYXRoIGQ9Ik03My4zLDM0LjdhMjguNywyOC43LDAsMCwwLTIuOC0yMy4yLDIxLjYsMjEuNiwwLDAsMC05LjYtOC44QzU1LjkuMiw1MC4yLS4zLDQ0LjcuMSwzNi42LjcsMjguOCwzLjEsMjEuMyw2YTEzLjksMTMuOSwwLDAsMSwxLjYsMTEuNCwzNywzNywwLDAsMC0xLjYsMTAuNCwzMi4xLDMyLjEsMCwwLDAsMi4yLDEwLjEsMjIuNywyMi43LDAsMCwwLDguNCwxMC45YzUsMy41LDExLjEsNC42LDE3LjEsNC41LDguOC0uMiwxNy41LTIuOSwyNS42LTYuMUM3Mi4xLDQzLjUsNzIsMzguOSw3My4zLDM0LjdaTTQ4LjMsNDdBMjAuMSwyMC4xLDAsMCwxLDI4LjUsMzIuNmM1LDguNSwxNy41LDEyLDI1LjUsNS41YTE1LDE1LDAsMCwwLDUuNi0xMC4zYy40LTUtMS42LTkuOS02LjEtMTIuNGExMS40LDExLjQsMCwwLDAtMTAuNi0uMmMtMy4yLDEuOC01LjIsNS45LTMuOSw5LjVBNy4yLDcuMiwwLDAsMSw0My45LDE4YTgsOCwwLDAsMSw3LjQsMS43LDguMyw4LjMsMCwwLDEsMS4xLDEwLDguNiw4LjYsMCwwLDEtNS44LDQuNCwxMi4xLDEyLjEsMCwwLDEtMTMuMy02LjRBMTQuOCwxNC44LDAsMCwxLDMzLjcsMTQsMTUuNiwxNS42LDAsMCwxLDQ2LjQsNi40YTIwLDIwLDAsMCwxLDE1LjksNS43LDIwLjgsMjAuOCwwLDAsMSw2LDEzLjlBMjAuOCwyMC44LDAsMCwxLDUyLDQ2LjUsMjIsMjIsMCwwLDEsNDguMyw0N1oiIGZpbGw9IiNmZmYiLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPgo="
+                 alt="Expressive Animator logo" class="img">
+            <div class="text-group">
+                <div class="title">Expressive</div>
+                <div>
+                    <div class="subtitle">Animator</div>
+                    <div class="version">v0.1.0 <span class="semi-bold">beta</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="loading">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

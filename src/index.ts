@@ -30,10 +30,15 @@ async function LoadApp() {
     // @ts-ignore
     //project.document.test();
     CurrentProject.set(project);
-    return new App({
+
+    const app = new App({
         target: document.body,
         props: {},
     });
+
+    window.dispatchEvent(new CustomEvent('expressive-animator-ready', {detail: app}));
+
+    return app;
 }
 
 async function patchIcon() {
