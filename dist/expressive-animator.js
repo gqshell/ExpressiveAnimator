@@ -20377,12 +20377,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*button*/ ctx[12].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$L, 34, 24, 1575);
+    			add_location(sp_icon, file$L, 34, 24, 1574);
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*button*/ ctx[12].disabled);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*button*/ ctx[12].tool);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*button*/ ctx[12].title);
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$L, 33, 20, 1431);
+    			add_location(sp_action_button, file$L, 33, 20, 1430);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20525,7 +20525,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*current*/ ctx[3].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$L, 27, 8, 1047);
+    			add_location(sp_icon, file$L, 27, 8, 1046);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*current*/ ctx[3].title);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*current*/ ctx[3].tool);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = !/*disabled*/ ctx[0] && /*$CurrentTool*/ ctx[4].name === /*current*/ ctx[3].tool);
@@ -20533,15 +20533,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_button, "hold-affordance", "");
     			set_custom_element_data(sp_action_button, "slot", "trigger");
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$L, 24, 4, 773);
+    			add_location(sp_action_button, file$L, 24, 4, 772);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_style(sp_action_group, "padding", "var(--spectrum-global-dimension-size-50)");
-    			add_location(sp_action_group, file$L, 30, 8, 1236);
+    			add_location(sp_action_group, file$L, 30, 8, 1235);
     			set_custom_element_data(sp_popover, "slot", "longpress-content");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_style(sp_popover, "--spectrum-popover-dialog-min-width", "0");
-    			add_location(sp_popover, file$L, 29, 4, 1138);
-    			set_custom_element_data(overlay_trigger, "type", "inline");
+    			add_location(sp_popover, file$L, 29, 4, 1137);
+    			set_custom_element_data(overlay_trigger, "type", "modal");
     			set_custom_element_data(overlay_trigger, "placement", /*placement*/ ctx[2]);
     			set_custom_element_data(overlay_trigger, "disabled", /*disabled*/ ctx[0]);
     			set_custom_element_data(overlay_trigger, "class", "svelte-1jj07za");
@@ -27858,76 +27858,76 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			h2 = element("h2");
     			h2.textContent = "Expressive Animator";
     			t3 = text("\n            ...");
-    			add_location(title, file$w, 3, 12, 201);
+    			add_location(title, file$w, 3, 12, 200);
     			attr_dev(rect, "y", "14.6");
     			attr_dev(rect, "width", "96");
     			attr_dev(rect, "height", "96");
     			attr_dev(rect, "rx", "20");
     			attr_dev(rect, "fill", "#6e25f2");
-    			add_location(rect, file$w, 5, 16, 268);
+    			add_location(rect, file$w, 5, 16, 267);
     			attr_dev(path0, "d", "M96,34.6v56a20,20,0,0,1-20,20H20A20.2,20.2,0,0,1,.6,95.6a20.7,20.7,0,0,1-.6-5v-56a20.1,20.1,0,0,1,20-20H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path0, "fill", "none");
-    			add_location(path0, file$w, 6, 16, 347);
+    			add_location(path0, file$w, 6, 16, 346);
     			attr_dev(path1, "d", "M53,19.6v56a20,20,0,0,1-20,20H.6a20.7,20.7,0,0,1-.6-5v-56a20.1,20.1,0,0,1,20-20H52.4A20.7,20.7,0,0,1,53,19.6Z");
     			attr_dev(path1, "fill", "#813dfc");
-    			add_location(path1, file$w, 8, 20, 543);
+    			add_location(path1, file$w, 8, 20, 542);
     			attr_dev(path2, "d", "M45,14.6v52a20,20,0,0,1-20,20H0v-52a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path2, "fill", "#c93dfc");
-    			add_location(path2, file$w, 9, 20, 700);
+    			add_location(path2, file$w, 9, 20, 699);
     			attr_dev(path3, "d", "M37,14.6v41a20,20,0,0,1-20,20H0v-41a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path3, "fill", "#fc3dd7");
-    			add_location(path3, file$w, 10, 20, 806);
+    			add_location(path3, file$w, 10, 20, 805);
     			attr_dev(path4, "d", "M28,14.6v26a20,20,0,0,1-20,20H0v-26a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path4, "fill", "#ff60ce");
-    			add_location(path4, file$w, 11, 20, 912);
-    			add_location(g0, file$w, 7, 16, 519);
+    			add_location(path4, file$w, 11, 20, 911);
+    			add_location(g0, file$w, 7, 16, 518);
     			attr_dev(path5, "d", "M96,34.6v56a20.7,20.7,0,0,1-.6,5,20.1,20.1,0,0,1-19.4,15H20a20,20,0,0,1-20-20v-56a20.1,20.1,0,0,1,20-20H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path5, "fill", "none");
-    			add_location(path5, file$w, 13, 16, 1035);
+    			add_location(path5, file$w, 13, 16, 1034);
     			attr_dev(path6, "d", "M96,34.6v56a20.7,20.7,0,0,1-.6,5H63a20,20,0,0,1-20-20v-56a20.7,20.7,0,0,1,.6-5H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path6, "fill", "#813dfc");
-    			add_location(path6, file$w, 15, 20, 1231);
+    			add_location(path6, file$w, 15, 20, 1230);
     			attr_dev(path7, "d", "M96,34.6v52H71a20,20,0,0,1-20-20v-52H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path7, "fill", "#c93dfc");
-    			add_location(path7, file$w, 16, 20, 1385);
+    			add_location(path7, file$w, 16, 20, 1384);
     			attr_dev(path8, "d", "M96,34.6v41H79a20,20,0,0,1-20-20v-41H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path8, "fill", "#fc3dd7");
-    			add_location(path8, file$w, 17, 20, 1497);
+    			add_location(path8, file$w, 17, 20, 1496);
     			attr_dev(path9, "d", "M96,34.6v26H88a20,20,0,0,1-20-20v-26h8A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path9, "fill", "#ff60ce");
-    			add_location(path9, file$w, 18, 20, 1609);
-    			add_location(g1, file$w, 14, 16, 1207);
+    			add_location(path9, file$w, 18, 20, 1608);
+    			add_location(g1, file$w, 14, 16, 1206);
     			attr_dev(path10, "d", "M74.2,24.6C72.8,16.5,67.5,3.8,49.6,3H48.1c-7,0-15.7,1.7-26.8,6h.1c2.5,3.6,2.6,8.2,1.2,12.4a26.8,26.8,0,0,0-.7,2.7c0,.2,0,.3-.1.4A12,12,0,0,0,10,36.6v52a12,12,0,0,0,12,12H74a12,12,0,0,0,12-12v-52A12,12,0,0,0,74.2,24.6Z");
     			attr_dev(path10, "fill", "#39157b");
-    			add_location(path10, file$w, 20, 16, 1737);
+    			add_location(path10, file$w, 20, 16, 1736);
     			attr_dev(path11, "d", "M37.2,65.9,28.8,88.6h4.9l1.6-4.7h8.2l1.6,4.7h5L41.6,65.9Zm-.6,14.2,2.8-8.5,2.9,8.5Z");
     			attr_dev(path11, "fill", "#fff");
-    			add_location(path11, file$w, 22, 20, 2022);
+    			add_location(path11, file$w, 22, 20, 2021);
     			attr_dev(path12, "d", "M60.3,71.4a5.9,5.9,0,0,0-4.8,2.3l-.2-2H51.1V88.6h4.5V76.7a3,3,0,0,1,2.8-1.6,2.2,2.2,0,0,1,2.7,2.7V88.6h4.6V77.7c-.1-2.1-.5-3.7-1.4-4.7A4.8,4.8,0,0,0,60.3,71.4Z");
     			attr_dev(path12, "fill", "#fff");
-    			add_location(path12, file$w, 23, 20, 2150);
+    			add_location(path12, file$w, 23, 20, 2149);
     			attr_dev(path13, "d", "M73.3,34.7a28.7,28.7,0,0,0-2.8-23.2,21.6,21.6,0,0,0-9.6-8.8C55.9.2,50.2-.3,44.7.1,36.6.7,28.8,3.1,21.3,6a13.9,13.9,0,0,1,1.6,11.4,37,37,0,0,0-1.6,10.4,32.1,32.1,0,0,0,2.2,10.1,22.7,22.7,0,0,0,8.4,10.9c5,3.5,11.1,4.6,17.1,4.5,8.8-.2,17.5-2.9,25.6-6.1C72.1,43.5,72,38.9,73.3,34.7ZM48.3,47A20.1,20.1,0,0,1,28.5,32.6c5,8.5,17.5,12,25.5,5.5a15,15,0,0,0,5.6-10.3c.4-5-1.6-9.9-6.1-12.4a11.4,11.4,0,0,0-10.6-.2c-3.2,1.8-5.2,5.9-3.9,9.5A7.2,7.2,0,0,1,43.9,18a8,8,0,0,1,7.4,1.7,8.3,8.3,0,0,1,1.1,10,8.6,8.6,0,0,1-5.8,4.4,12.1,12.1,0,0,1-13.3-6.4A14.8,14.8,0,0,1,33.7,14,15.6,15.6,0,0,1,46.4,6.4a20,20,0,0,1,15.9,5.7,20.8,20.8,0,0,1,6,13.9A20.8,20.8,0,0,1,52,46.5,22,22,0,0,1,48.3,47Z");
     			attr_dev(path13, "fill", "#fff");
-    			add_location(path13, file$w, 24, 20, 2354);
-    			add_location(g2, file$w, 21, 16, 1998);
-    			add_location(g3, file$w, 4, 12, 248);
+    			add_location(path13, file$w, 24, 20, 2353);
+    			add_location(g2, file$w, 21, 16, 1997);
+    			add_location(g3, file$w, 4, 12, 247);
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "viewBox", "0 0 96 110.6");
     			attr_dev(svg, "width", "32");
     			attr_dev(svg, "height", "32");
-    			add_location(svg, file$w, 2, 8, 102);
+    			add_location(svg, file$w, 2, 8, 101);
     			attr_dev(div, "slot", "trigger");
     			attr_dev(div, "class", "logo svelte-xbdewj");
-    			add_location(div, file$w, 1, 4, 60);
+    			add_location(div, file$w, 1, 4, 59);
     			attr_dev(h2, "slot", "heading");
-    			add_location(h2, file$w, 31, 12, 3204);
+    			add_location(h2, file$w, 31, 12, 3203);
     			set_custom_element_data(sp_dialog, "size", "small");
-    			add_location(sp_dialog, file$w, 30, 8, 3167);
+    			add_location(sp_dialog, file$w, 30, 8, 3166);
     			set_custom_element_data(sp_popover, "slot", "click-content");
     			set_custom_element_data(sp_popover, "open", "");
-    			add_location(sp_popover, file$w, 29, 4, 3120);
+    			add_location(sp_popover, file$w, 29, 4, 3119);
     			set_custom_element_data(overlay_trigger, "placement", "right-start");
-    			set_custom_element_data(overlay_trigger, "type", "inline");
+    			set_custom_element_data(overlay_trigger, "type", "modal");
     			add_location(overlay_trigger, file$w, 0, 0, 0);
     		},
     		l: function claim(nodes) {
@@ -32744,7 +32744,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(circle, "cy", circle_cy_value = (/*y*/ ctx[13] - 1) * /*half*/ ctx[4]);
     			attr_dev(circle, "r", /*radius*/ ctx[2]);
     			attr_dev(circle, "class", "svelte-1sysvix");
-    			add_location(circle, file$l, 23, 20, 1031);
+    			add_location(circle, file$l, 23, 20, 1030);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, circle, anchor);
@@ -32892,30 +32892,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			set_custom_element_data(sp_icon, "name", /*icon*/ ctx[0]);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$l, 16, 8, 591);
+    			add_location(sp_icon, file$l, 16, 8, 590);
     			set_custom_element_data(sp_action_button, "slot", "trigger");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "size", "s");
-    			add_location(sp_action_button, file$l, 15, 4, 534);
+    			add_location(sp_action_button, file$l, 15, 4, 533);
     			attr_dev(rect, "x", 0);
     			attr_dev(rect, "y", 0);
     			attr_dev(rect, "width", rect_width_value = /*size*/ ctx[1] - 2 * /*radius*/ ctx[2]);
     			attr_dev(rect, "height", rect_height_value = /*size*/ ctx[1] - 2 * /*radius*/ ctx[2]);
     			attr_dev(rect, "stroke-width", "2");
     			attr_dev(rect, "class", "svelte-1sysvix");
-    			add_location(rect, file$l, 20, 12, 847);
+    			add_location(rect, file$l, 20, 12, 846);
     			attr_dev(svg, "width", svg_width_value = /*size*/ ctx[1] + /*radius*/ ctx[2]);
     			attr_dev(svg, "height", svg_height_value = /*size*/ ctx[1] + /*radius*/ ctx[2]);
     			attr_dev(svg, "viewBox", svg_viewBox_value = `${-/*radius*/ ctx[2]} ${-/*radius*/ ctx[2]} ${/*size*/ ctx[1]} ${/*size*/ ctx[1]}`);
     			attr_dev(svg, "class", "svelte-1sysvix");
-    			add_location(svg, file$l, 19, 8, 734);
+    			add_location(svg, file$l, 19, 8, 733);
     			set_custom_element_data(sp_popover, "slot", "click-content");
     			set_custom_element_data(sp_popover, "open", "");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_custom_element_data(sp_popover, "class", "svelte-1sysvix");
-    			add_location(sp_popover, file$l, 18, 4, 663);
+    			add_location(sp_popover, file$l, 18, 4, 662);
     			set_custom_element_data(overlay_trigger, "placement", "left");
-    			set_custom_element_data(overlay_trigger, "type", "inline");
+    			set_custom_element_data(overlay_trigger, "type", "modal");
     			add_location(overlay_trigger, file$l, 14, 0, 481);
     		},
     		l: function claim(nodes) {
@@ -43779,6 +43779,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     var index = LoadApp();
     async function LoadApp() {
         await patchIcon();
+        await patchPicker();
         await loadIconSet('expr', CustomIcons);
         await loadIconSet('workflow', AdobeWorkflowIcons);
         await canvasEngine.CanvasEngineInit({
@@ -43794,6 +43795,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         });
         window.dispatchEvent(new CustomEvent('expressive-animator-ready', { detail: app }));
         return app;
+    }
+    async function patchPicker() {
+        await customElements.whenDefined('sp-picker');
+        const picker = customElements.get('sp-picker');
+        const open = picker.openOverlay;
+        picker.openOverlay = async function (target, interaction, content, options) {
+            interaction = target.hasAttribute("interaction") ? target.getAttribute("interaction") : "modal";
+            return open(target, interaction, content, options);
+        };
     }
     async function patchIcon() {
         await customElements.whenDefined('sp-icon');

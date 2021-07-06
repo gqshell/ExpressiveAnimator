@@ -1,4 +1,4 @@
-<overlay-trigger placement="right-start" type="inline">
+<overlay-trigger placement="right-start" type="modal">
     <div slot="trigger" class="logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 110.6" width="32" height="32">
             <title>Expressive Animator</title>

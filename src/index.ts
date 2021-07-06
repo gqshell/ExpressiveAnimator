@@ -21,6 +21,7 @@ export default LoadApp();
 
 async function LoadApp() {
     await patchIcon();
+    await patchPicker();
     await loadIconSet('expr', CustomIcons);
     await loadIconSet('workflow', AdobeWorkflowIcons);
     await CanvasEngineInit({
@@ -39,6 +40,16 @@ async function LoadApp() {
     window.dispatchEvent(new CustomEvent('expressive-animator-ready', {detail: app}));
 
     return app;
+}
+
+async function patchPicker() {
+    await customElements.whenDefined('sp-picker');
+    const picker = customElements.get('sp-picker');
+    const open = picker.openOverlay;
+    picker.openOverlay = async function (target: HTMLElement, interaction, content, options) {
+        interaction = target.hasAttribute("interaction") ? target.getAttribute("interaction") : "modal";
+        return open(target, interaction, content, options);
+    };
 }
 
 async function patchIcon() {

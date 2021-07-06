@@ -25,7 +25,7 @@
         return buttons.find((v: ToolButtonDef) => v.tool === name) || last;
     }
 </script>
-<overlay-trigger type="inline" placement="{placement}" disabled={disabled}
+<overlay-trigger type="modal" placement="{placement}" disabled={disabled}
                  on:sp-opened={() => open = true}
                  on:sp-closed={() => open = false}
 >

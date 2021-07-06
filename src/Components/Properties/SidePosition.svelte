@@ -19,7 +19,7 @@
     }
 
 </script>
-<overlay-trigger placement="left" type="inline">
+<overlay-trigger placement="left" type="modal">
     <sp-action-button slot="trigger" quiet size="s">
         <sp-icon name={icon} slot="icon"></sp-icon>
     </sp-action-button>
