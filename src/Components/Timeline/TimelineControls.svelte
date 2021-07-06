@@ -2,25 +2,12 @@
     // import {TimelineStore} from "../../Stores";
     import {CurrentDocumentAnimation, CurrentTime, CurrentProject} from "../../Stores";
     import {AnimationProject, DocumentAnimation} from "../../Core";
-    import {clamp} from "@zindex/canvas-engine";
+    import {formatTime} from "./utils";
 
     let animationHandle: number = null;
     let animationStartTime: number;
     $: isRecording = ($CurrentProject as AnimationProject).isRecording;
     $: isPlaying = animationHandle !== null;
-
-    function formatCurrentTime(time: number): string {
-        time = Math.round(time);
-        let k = time % 1000;
-        time = (time - k) / 1000;
-        let s = time % 60;
-        time = (time - s) / 60;
-        let m = time % 60;
-        time = (time - m) / 60;
-        return `${time}:${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}:${k > 99 ? k : '0' + (k > 9 ? k : '0' + k)}`;
-    }
-
-    $: playerTime = formatCurrentTime($CurrentTime);
 
     function goToEnd() {
         $CurrentTime = ($CurrentDocumentAnimation as DocumentAnimation).endTime;
@@ -40,11 +27,11 @@
             animationHandle = null;
             return;
         }
+        const endTime = ($CurrentDocumentAnimation as DocumentAnimation).endTime;
         animationStartTime = performance.now();
         let f = () => {
             let now = performance.now();
             $CurrentTime += now - animationStartTime;
-            const endTime = ($CurrentDocumentAnimation as DocumentAnimation).endTime;
             if ($CurrentTime >= endTime) {
                 $CurrentTime = endTime;
                 animationHandle = null;
@@ -74,7 +61,7 @@
             <sp-action-button title="Go to end" on:click={goToEnd}>
                 <sp-icon name="expr:player-end" slot="icon" size="s"></sp-icon>
             </sp-action-button>
-            <div class="timeline-controls-time">{playerTime}</div>
+            <div class="timeline-controls-time">{formatTime($CurrentTime)}</div>
             <sp-action-button title="Add animator" disabled>
                 <sp-icon name="expr:add-color" slot="icon" size="s"></sp-icon>
             </sp-action-button>
@@ -103,6 +90,7 @@
         vertical-align: middle;
         font-size: 12px;
         text-align: center;
+        flex: 1;
     }
     .timeline-controls-recording {
         --spectrum-alias-icon-color: var(--spectrum-global-color-red-400);

@@ -2,55 +2,9 @@
     import {CurrentProject, CurrentDocument, CurrentSelection, ShowTreeReverse, notifySelectionChanged} from "../Stores";
     import type {Element, Document, MoveElementMode, Selection} from "@zindex/canvas-engine";
     import SpTreeView from "../Controls/SpTreeView";
+    import {ElementInfoMap} from "./Mapping";
 
     export let collapsed: boolean = false;
-
-    const infoMap = {
-        rect: {
-            title: 'Rectangle',
-            icon: 'expr:rectangle-tool'
-        },
-        ellipse: {
-            title: 'Ellipse',
-            icon: 'expr:ellipse'
-        },
-        star: {
-            title: 'Star',
-            icon: 'expr:star-tool'
-        },
-        'regular-polygon': {
-            title: 'Regular polygon',
-            icon: 'expr:polygon'
-        },
-        poly: {
-            title: 'Polyline',
-            icon: 'expr:polyline-tool'
-        },
-        path: {
-            title: 'Path',
-            icon: 'expr:path'
-        },
-        symbol: {
-            title: 'Symbol',
-            icon: 'expr:symbol'
-        },
-        group: {
-            title: 'Group',
-            icon: 'expr:group'
-        },
-        'clip-path': {
-            title: 'Clip path',
-            icon: 'expr:clip-path'
-        },
-        'mask': {
-            title: 'Mask',
-            icon: null, // TODO
-        },
-        text: {
-            title: 'Text',
-            icon: 'expr:text-tool'
-        },
-    };
 
     let noSelection: boolean;
     $: noSelection = !$CurrentSelection || $CurrentSelection.isEmpty;
@@ -93,7 +47,7 @@
                     reverse={$ShowTreeReverse}
                     document={$CurrentDocument}
                     selection={$CurrentSelection}
-                    infoMap={infoMap}
+                    infoMap={ElementInfoMap}
                     on:drop={onDrop}
                     on:lock={onLock}
                     on:hide={onHide}
@@ -145,6 +99,6 @@
         align-items: center;
         box-sizing: content-box;
         border-top: 1px solid var(--separator-color);
-        height: var(--spectrum-alias-item-height-s);
+        height: var(--spectrum-alias-item-height-m);
     }
 </style>

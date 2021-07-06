@@ -19,7 +19,7 @@ import type {Element} from "@zindex/canvas-engine";
 import type {Point} from "@zindex/canvas-engine";
 import type {WritableKeys} from "@zindex/canvas-engine";
 import type {AnimationProject} from "./AnimationProject";
-import type {Animation} from "../Animation";
+import type {Animation, Keyframe} from "../Animation";
 import {AnimationProjectEvent} from "./AnimationProjectEvent";
 import {equals} from "@zindex/canvas-engine";
 import type {AnimationDocument} from "./AnimationDocument";
@@ -51,6 +51,13 @@ export class AnimationMiddleware extends Middleware<AnimationProject> {
         }
 
         return animation.updateAnimatedProperties(time, this.setAnimatedPropertyValue.bind(this));
+    }
+
+    /**
+     * Updates only some animations
+     */
+    updateAnimations(filter: {animations: Set<Animation<any>>, keyframes: Set<Keyframe<any>>}): boolean {
+        return this.project.document.animation.updateAnimatedProperties(this.project.time, this.setAnimatedPropertyValue.bind(this), filter);
     }
 
     /**

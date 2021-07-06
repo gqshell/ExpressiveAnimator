@@ -33,6 +33,12 @@ a1.addKeyframeAtOffset(2000, new Point(100, 0));
 a1.addKeyframeAtOffset(5000, new Point(500, 0));
 doc.animation.addAnimation(rect, "position", a1);
 
+const as1 = animators.createAnimation(rect, "strokeLineWidth");
+as1.addKeyframeAtOffset(0, 10);
+as1.addKeyframeAtOffset(2000, 20);
+as1.addKeyframeAtOffset(4000, 30);
+doc.animation.addAnimation(rect, "strokeLineWidth", as1);
+
 const rect2 = new RectElement(new RectShape(300, 300), doc);
 rect2.title = 'Rect 2';
 rect2.fill = new SolidBrush(Color.parse('yellow'));

@@ -5,12 +5,18 @@
 
     import {CurrentTime, CurrentMaxTime} from "../../Stores";
     import TimelineActionBar from "./TimelineActionBar.svelte";
+    import {getScaleFactor, UNIT} from "./utils";
 
     export let zoom: number = 1;
     export let collapsed: boolean = false;
 
+    let scaleFactor: number;
     let scrollTop: number = 0;
     let scrollLeft: number = 0;
+
+    $: scaleFactor = getScaleFactor(zoom);
+
+    let wrapper: HTMLElement;
 
     $: {
         if (collapsed) {
@@ -19,24 +25,19 @@
         }
     }
 
-    $: unit = zoom * 0.24;
-
-    // TODO: use zoom and others
-    $: style = `
-        --timeline-play-offset: ${$CurrentTime};
-        --timeline-scroll-top: ${scrollTop}px;
-        --timeline-scroll-left: ${scrollLeft}px;
-        --timeline-max-offset: ${$CurrentMaxTime};
-        --timeline-ms-unit: ${unit}px;
-    `;
+    $: wrapper && wrapper.style.setProperty('--timeline-play-offset', $CurrentTime.toString());
+    $: wrapper && wrapper.style.setProperty('--timeline-max-offset', $CurrentMaxTime.toString());
+    $: wrapper && wrapper.style.setProperty('--timeline-ms-unit', (zoom * UNIT) + 'px');
+    $: wrapper && wrapper.style.setProperty('--timeline-scroll-top', scrollTop + 'px');
+    $: wrapper && wrapper.style.setProperty('--timeline-scroll-left', scrollLeft + 'px');
 </script>
-<div class="timeline-wrapper" style="{style}">
+<div bind:this={wrapper} class="timeline-wrapper">
     {#if !collapsed}
         <div class="timeline-controls-wrapper">
             <TimelineControls />
-            <TimelineRuler bind:zoom scroll={scrollLeft} />
+            <TimelineRuler zoom={zoom} scaleFactor={scaleFactor} scroll={scrollLeft}/>
         </div>
-        <Timeline bind:scrollTop bind:scrollLeft={scrollLeft} />
+        <Timeline zoom={zoom} scaleFactor={scaleFactor} bind:scrollTop bind:scrollLeft />
         <TimelineActionBar bind:zoom />
     {/if}
 </div>

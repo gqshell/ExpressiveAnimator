@@ -11,7 +11,9 @@ html, body {
     box-sizing: border-box;
 }
 
-sp-action-group.very-small sp-action-button {
+sp-action-group.very-small sp-action-button,
+sp-action-button.very-small
+{
     --spectrum-actionbutton-s-textonly-padding-left: var(--spectrum-alias-border-size-thin);
     --spectrum-actionbutton-s-textonly-padding-right: var(--spectrum-alias-border-size-thin);
     --spectrum-actionbutton-s-min-width: var(--spectrum-global-dimension-size-300);

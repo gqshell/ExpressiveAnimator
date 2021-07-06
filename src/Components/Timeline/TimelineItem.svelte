@@ -2,9 +2,11 @@
     export let disabled: boolean = false;
     export let selected: boolean = false;
     export let keyframes: boolean = false;
+    export let isAlt: boolean = false;
 </script>
 <div class="timeline-item"
      class:has-keyframes={keyframes}
+     class:is-alt={isAlt}
      class:is-disabled={disabled}
      class:is-selected={selected}>
     {#if keyframes}
@@ -20,6 +22,15 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        /*background: var(--spectrum-global-color-gray-75);*/
+    }
+
+    .timeline-item.is-selected {
+        background: var(--spectrum-alias-background-color-hover-overlay);
+    }
+
+    .timeline-item.is-alt {
+        /*background: var(--spectrum-global-color-gray-100);*/
     }
 
     /*.timeline-item.is-selected {*/

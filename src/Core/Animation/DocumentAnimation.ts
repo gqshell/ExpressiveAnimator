@@ -17,6 +17,7 @@
 import type {Document, Element} from "@zindex/canvas-engine";
 import type {Cloneable, Disposable, WritableKeys} from "@zindex/canvas-engine";
 import type {Animation} from "./Animation";
+import type {Keyframe} from "./Keyframe";
 import {clamp} from "@zindex/canvas-engine";
 
 export type AnimatedProperties<E extends Element> = {
@@ -37,6 +38,8 @@ export enum AnimationMode {
     Loop,
     LoopReverse,
 }
+
+type AnimatedValueSetter = <E extends Element, K extends WritableKeys<E>, V extends E[K]>(element: E, property: K, value: V) => boolean;
 
 export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimation> {
     private _startTime: number;
@@ -118,12 +121,10 @@ export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimatio
     /**
      * Updates the property values for animated documents
      */
-    updateAnimatedProperties(time: number, setter: <E extends Element, K extends WritableKeys<E>, V extends E[K]>(element: E, property: K, value: V) => boolean): boolean {
+    updateAnimatedProperties(time: number, setter: AnimatedValueSetter, filter?: {animations: Set<Animation<any>>, keyframes: Set<Keyframe<any>>}): boolean {
         if (this._map.size === 0) {
             return false;
         }
-
-        time = this.mapTime(time);
 
         let updated: boolean = false;
 
@@ -139,11 +140,11 @@ export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimatio
             }
 
             for ([property, animation] of Object.entries(properties)) {
-                if (animation.disabled) {
+                if (animation.disabled || (filter && !filter.animations.has(animation))) {
                     continue;
                 }
 
-                value = animation.getValueAtOffset(time);
+                value = animation.getValueAtOffset(time, filter?.keyframes);
 
                 if (value === null) {
                     // no keyframes, ignore
@@ -236,6 +237,56 @@ export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimatio
         }
 
         return false;
+    }
+
+    *allKeyframes(): Generator<Keyframe<any>> {
+        for (const properties of this._map.values()) {
+            for (const animation of Object.values(properties)) {
+                for (const keyframe of animation.keyframes) {
+                    yield keyframe;
+                }
+            }
+        }
+    }
+
+    fixKeyframes(priority: Set<Keyframe<any>>): boolean {
+        let changed: boolean = false;
+
+        for (const properties of this._map.values()) {
+            for (const animation of Object.values(properties)) {
+                if (animation.fixKeyframes(priority)) {
+                    changed = true;
+                }
+            }
+        }
+
+        return changed;
+    }
+
+    resolveAnimationsAndKeyframes(ids: Set<string>): {animations: Set<Animation<any>>, keyframes: Set<Keyframe<any>>} | null {
+        if (ids.size === 0) {
+            return null;
+        }
+
+        const animations = new Set<Animation<any>>();
+        const keyframes = new Set<Keyframe<any>>();
+
+        for (const properties of this._map.values()) {
+            for (const animation of Object.values(properties)) {
+                let added: boolean = false;
+                for (const keyframe of animation.keyframes) {
+                    if (ids.has(keyframe.id)) {
+                        keyframes.add(keyframe);
+                        added = true;
+                    }
+                }
+                if (added) {
+                    animations.add(animation);
+                }
+            }
+        }
+
+        return {animations, keyframes};
     }
 
     getAnimation<E extends Element, P extends  WritableKeys<E>>(element: E, property: P): Animation<E[P]> | null {

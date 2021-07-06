@@ -1,13 +1,11 @@
 <script lang="ts">
     import {onMount, tick} from "svelte";
-    import {CurrentTheme, CurrentTime, CurrentMaxTime} from "../../Stores";
-    import {clamp} from "@zindex/canvas-engine";
+    import {renderRuler, roundTime, getTimeAtX, getDeltaTimeByX, getDurationBounds} from "./utils";
+    import {CurrentTheme, CurrentTime} from "../../Stores";
 
     export let zoom: number = 1;
     export let scroll: number = 0;
-    export let divisions: number = 30;
-    export let padding: number = 6;
-    export let majorGraduationWidth = 240;
+    export let scaleFactor: number = 1;
 
     let canvas: HTMLCanvasElement;
     let context: CanvasRenderingContext2D;
@@ -16,23 +14,26 @@
 
     let width = 100;
     let height = 31;
+    // TODO: use dpo observer
     let dpi = window.devicePixelRatio;
     let foreground: string;
     let background: string;
+    let overlay: string;
     let paintReady: boolean = false;
 
-    let playHeadPosition: number;
-    let currentTime: number = $CurrentTime;
+    let playHeadPosition: number,
+        currentTime: number;
 
-    const minorGraduationWidth = majorGraduationWidth / divisions;
-    const halfDivisions = divisions / 2;
-    const unit = majorGraduationWidth / 1000;
+    $: if (canvas && $CurrentTheme) {
+        updateTheme(canvas);
+    }
 
-
-    $: if (paintReady && canvas && $CurrentTheme) {
+    async function updateTheme(canvas: HTMLCanvasElement) {
+        await tick();
         const style = window.getComputedStyle(canvas);
         background = style.getPropertyValue('--ruler-background') || 'black';
         foreground = style.getPropertyValue('--ruler-foreground') || 'white';
+        overlay = style.getPropertyValue('--ruler-overlay') || 'gray';
     }
 
     $: if (paintReady && context) {
@@ -42,79 +43,14 @@
         context.fillStyle = background;
         context.strokeStyle = foreground;
         context.fillRect(0, 0, width, height);
+        // const dBounds = getDurationBounds($CurrentDocumentAnimation.startTime, $CurrentDocumentAnimation.endTime, width, scroll, zoom);
+        // if (dBounds) {
+        //     context.fillStyle = overlay;
+        //     context.fillRect(dBounds[0], 0, dBounds[1] - dBounds[0], height);
+        // }
         context.fillStyle = foreground;
-        render(context, width, height, scroll/zoom, zoom);
+        renderRuler(context, width, height, scroll, zoom, scaleFactor);
         context.restore();
-    }
-
-    function render(context: CanvasRenderingContext2D, width: number, height: number, scroll: number, zoom: number) {
-        const path = new Path2D();
-
-        const t = scroll / minorGraduationWidth;
-        let graduationNo = Math.floor(t);
-        let delta = ((Math.round(t * 100) - graduationNo * 100) / 100);
-
-        let scaleFactor = 1;
-
-        if (zoom <= 0.5) {
-            scaleFactor = 2;
-            if (zoom <= 0.1) {
-                scaleFactor = 10;
-            } else if (zoom < 0.125) {
-                scaleFactor = 8;
-            } else if (zoom <= 0.25) {
-                scaleFactor = 4;
-            }
-        }
-
-        let x = padding > scroll ? padding - scroll : padding;
-        x -= delta * minorGraduationWidth * zoom;
-
-        let step = minorGraduationWidth * zoom;
-        let visible = step >= 4;
-
-        while (true) {
-            path.moveTo(x + 0.5, height);
-
-            if (graduationNo % (divisions * scaleFactor) === 0) {
-                let s = graduationNo / divisions;
-                let m = (s - s % 60) / 60;
-                let h = (m - m % 60) / 60;
-                m = m % 60;
-                s = s % 60;
-                let text = s > 9 ? s.toString() : '0' + s;
-                if (h > 0) {
-                    text = `${h}:${m > 9 ? m.toString() : '0' + m}:${text}`;
-                } else {
-                    text = `${m}:${text}`;
-                }
-                path.lineTo(x + 0.5, height - 20);
-                context.fillText(text, Math.ceil(x) + 4.5, height - 15);
-            } else if (graduationNo % (halfDivisions * scaleFactor) === 0) {
-                path.lineTo(x + 0.5, height - 15);
-            } else if (graduationNo % scaleFactor === 0) {
-                path.lineTo(x + 0.5, height - 10);
-            }
-
-            x += step;
-            graduationNo++;
-
-            if (x > width) {
-                break;
-            }
-        }
-
-        context.stroke(path);
-    }
-
-    function computeTime(currentTime: number): number {
-        let time = Math.round(currentTime);
-        let frame = Math.round(1000 / divisions);
-        time = time - time % frame;
-        let totalFrames = time / frame;
-        let elapsedFrames = totalFrames % divisions;
-        let elapsedSeconds = (totalFrames - elapsedFrames) / divisions;
-        return Math.round(elapsedSeconds * 1000 + elapsedFrames * 1000 / divisions);
     }
 
     function playHeadPointerDown(event: PointerEvent) {
@@ -127,18 +63,18 @@
         if (playHeadPosition === undefined) {
             return;
         }
-
-        let delta = (event.x - playHeadPosition) / zoom / unit;
-
-        currentTime += delta;
+        currentTime += getDeltaTimeByX(event.x - playHeadPosition, zoom);
         playHeadPosition = event.x;
-
-        $CurrentTime = clamp(computeTime(currentTime), 0, Number.POSITIVE_INFINITY);
+        $CurrentTime = roundTime(currentTime, scaleFactor);
     }
 
-    function playHedPointerUp(event: PointerEvent) {
+    function playHeadPointerUp(event: PointerEvent) {
         playHead.releasePointerCapture(event.pointerId);
         playHeadPosition = undefined;
+    }
+
+    function onRulerClick(e: MouseEvent) {
+        $CurrentTime = roundTime(getTimeAtX(e.clientX - bounds.x, scroll, zoom), scaleFactor);
     }
 
     function setupCanvas() {
@@ -169,24 +105,18 @@
         });
         observer.observe(canvas.parentElement);
 
-        playHead.addEventListener('pointerdown', playHeadPointerDown);
-        playHead.addEventListener('pointermove', playHeadPointerMove);
-        playHead.addEventListener('pointerup', playHedPointerUp);
-
-        canvas.addEventListener('click', function (event: MouseEvent) {
-            const x = ((event.clientX - bounds.x - padding) + scroll) / zoom;
-            $CurrentTime = clamp(computeTime(x / majorGraduationWidth * 1000), 0, Number.POSITIVE_INFINITY);
-        });
-
         return () => {
             observer.disconnect();
         };
     });
-
 </script>
 <div class="timeline-ruler">
-    <canvas bind:this={canvas}></canvas>
-    <div bind:this={playHead} class="timeline-ruler-play-head"></div>
+    <canvas bind:this={canvas} on:click={onRulerClick}></canvas>
+    <div bind:this={playHead}
+         on:pointerdown|self={playHeadPointerDown}
+         on:pointermove={playHeadPointerMove}
+         on:pointerup={playHeadPointerUp}
+         class="timeline-ruler-play-head"></div>
 </div>
 <style global>
     .timeline-ruler {
@@ -195,6 +125,7 @@
         position: relative;
         overflow: hidden;
         border-bottom: 1px solid var(--separator-color);
+        --ruler-overlay: var(--spectrum-global-color-gray-200);
         --ruler-background: var(--spectrum-global-color-gray-75);
         --ruler-foreground: var(--spectrum-alias-text-color);
     }
@@ -208,7 +139,7 @@
         height: 13px;
         top: 19px;
         left: 0;
-        clip-path: polygon(0 0, 13px 0, 6.5px 13px, 0 0);
+        clip-path: polygon(0 0, 100% 0, 50% 100%, 0 0);
         background: var(--spectrum-global-color-blue-500);
         transform: translateX(calc(var(--timeline-play-offset) * var(--timeline-ms-unit) - var(--timeline-scroll-left)));
         will-change: transform;

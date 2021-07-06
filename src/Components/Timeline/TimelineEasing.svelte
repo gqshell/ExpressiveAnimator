@@ -13,10 +13,16 @@
             min = start;
             max = end;
         }
+        if (min < 0) {
+            min = 0;
+        }
+        if (max < 0) {
+            max = 0;
+        }
     }
 </script>
 {#if end != null}
-<div on:click on:contextmenu on:pointerdown
+<div on:pointerdown
      class="timeline-easing" class:is-selected={selected}
      style={`--timeline-keyframe-easing-start: ${min}; --timeline-keyframe-easing-end: ${max}`}></div>
 {/if}

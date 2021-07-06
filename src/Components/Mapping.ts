@@ -1,21 +1,63 @@
-export const ElementIconMap = {
-    group: 'expr:group',
-    rect: 'expr:rectangle-tool',
-    ellipse: 'expr:ellipse',
-    poly: 'expr:polygon',
+import type {Element} from "@zindex/canvas-engine";
+
+type ElementInfo = {
+    title: string,
+    icon: string
+};
+
+export const ElementInfoMap: {[type: string]: ElementInfo} = {
+    rect: {
+        title: 'Rectangle',
+        icon: 'expr:rectangle-tool'
+    },
+    ellipse: {
+        title: 'Ellipse',
+        icon: 'expr:ellipse'
+    },
+    star: {
+        title: 'Star',
+        icon: 'expr:star-tool'
+    },
+    'regular-polygon': {
+        title: 'Regular polygon',
+        icon: 'expr:polygon'
+    },
+    poly: {
+        title: 'Polyline',
+        icon: 'expr:polyline-tool'
+    },
+    path: {
+        title: 'Path',
+        icon: 'expr:path'
+    },
+    symbol: {
+        title: 'Symbol',
+        icon: 'expr:symbol'
+    },
+    group: {
+        title: 'Group',
+        icon: 'expr:group'
+    },
+    'clip-path': {
+        title: 'Clip path',
+        icon: 'expr:clip-path'
+    },
+    'mask': {
+        title: 'Mask',
+        icon: null, // TODO
+    },
+    text: {
+        title: 'Text',
+        icon: 'expr:text-tool'
+    },
+};
+
+export function getElementTitle(element: Element): string {
+    return element.title || ElementInfoMap[element.type].title || ('(' + element.type + ')');
 }
 
-export const FallbackElementIcon = 'expr:unknown';
-
-export const ElementTitleMap = {
-    group: 'Group',
-    rect: 'Rectangle',
-    ellipse: 'Ellipse',
-    path: 'Path',
-    star: 'Star',
-    poly: 'Polygon',
-    'regular-polygon': 'Regular polygon',
-    'clip-path': 'Clip path',
+export function getElementIcon(element: Element): string {
+    return ElementInfoMap[element.type]?.icon || 'expr:unknown';
 }
 
 

@@ -20,6 +20,7 @@
     export let disabled: boolean = false;
     export let editable: boolean = false;
     export let allowOverflow: boolean = false;
+    export let middle: number = null;
 
     const genId = nextId();
     const labelId = `spectrum-slider-label-${genId}`;
@@ -242,6 +243,15 @@
         dispatch('done');
     }
 
+    let middlePercent;
+    $: {
+        if (middle == null || fill !== 'middle') {
+            middlePercent = 50;
+        } else {
+            middlePercent = (middle - min) * 100 / (max  - min);
+        }
+    }
+
     $: useTextbox = editable && !isRange;
     $: computedClass = mergeClasses({
         'spectrum-Slider': true,
@@ -323,8 +333,8 @@
         {/if}
         {#if !isRange && fill === 'middle'}
             <div class="spectrum-Slider-fill"
-                 class:spectrum-Slider-fill--right={percent > 50}
-                 style={percent === 50 ? undefined : (percent < 50 ? `left: ${percent}%; width: ${50 - percent}%` : `left: 50%; width: ${percent - 50}%`)}></div>
+                 class:spectrum-Slider-fill--right={percent > middlePercent}
+                 style={percent === 50 ? undefined : (percent < middlePercent ? `left: ${percent}%; width: ${middlePercent - percent}%` : `left: 50%; width: ${percent - middlePercent}%`)}></div>
         {/if}
     </div>
 </div>

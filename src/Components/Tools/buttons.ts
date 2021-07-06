@@ -123,7 +123,6 @@ export const buttons: ToolButtons = [
     {
         tool: 'zoom',
         icon: 'expr:zoom-tool',
-        title: 'Zoom tool (Z)',
-        disabled: true
+        title: 'Zoom tool (Z)'
     },
 ];

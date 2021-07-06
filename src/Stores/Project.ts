@@ -44,12 +44,14 @@ const animationGenId = createGenIdStore();
 const propertiesGenId = createGenIdStore();
 const stateGenId = createGenIdStore();
 const selectionGenId = createGenIdStore();
-const documentGenId = createGenIdStore();
+const keyframeSelectionGenId = createGenIdStore();
+//const documentGenId = createGenIdStore();
 
 export const notifyAnimationChanged = animationGenId.invalidate;
 export const notifyPropertiesChanged = propertiesGenId.invalidate;
 export const notifyStateChanged = stateGenId.invalidate;
 export const notifySelectionChanged = selectionGenId.invalidate;
+export const notifyKeyframeSelectionChanged = keyframeSelectionGenId.invalidate;
 
 export const CurrentProject: CurrentProjectDef = {
     subscribe: project.subscribe,
@@ -92,7 +94,7 @@ export const CurrentProjectState = derived<[Readable<AnimationProject>, Readable
     return $project ? ($project.state as AnimationState) : null;
 });
 
-export const CurrentKeyframeSelection = derived<Readable<AnimationProject>, KeyframeSelection>(project, ($project) => {
+export const CurrentKeyframeSelection = derived<[Readable<AnimationProject>, Readable<number>], KeyframeSelection>([project, keyframeSelectionGenId], ([$project]) => {
     return $project ? $project.keyframeSelection : null;
 });
 

@@ -1,9 +1,9 @@
 <script lang="ts">
     export let offset: number;
+    export let id: string;
     export let selected: boolean = false;
-
 </script>
-<div on:click on:pointerdown class="timeline-keyframe" class:is-selected={selected} style={`--keyframe-offset: ${offset}`}></div>
+<div on:pointerdown data-keyframe-id="{id}" class="timeline-keyframe" class:is-selected={selected} style={`--keyframe-offset: ${offset <= 0 ? 0 : offset}`}></div>
 <style global>
     .timeline-keyframe {
         /*--keyframe-offset: 0;*/
@@ -20,6 +20,7 @@
 
     .timeline-keyframe:hover,
     .timeline-keyframe.is-selected {
+        z-index: 7;
         background: var(--spectrum-semantic-cta-color-background-default);
     }
 </style>

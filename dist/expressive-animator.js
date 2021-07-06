@@ -16749,15 +16749,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    class Keyframe$1 {
-        constructor(value, offset = 0, easing = null) {
+    class Keyframe {
+        constructor(value, offset = 0, easing = null, id) {
             this.value = value;
             this.offset = offset;
             this.easing = easing;
+            this.id = id || canvasEngine.uuid();
         }
-        clone() {
+        clone(newId) {
             // T should be immutable
-            return new Keyframe$1(this.value, this.offset, this.easing);
+            return new Keyframe(this.value, this.offset, this.easing, newId ? null : this.id);
         }
     }
 
@@ -16781,6 +16782,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             this.keyframes = keyframes !== null && keyframes !== void 0 ? keyframes : [];
             this.disabled = disabled;
             this.interpolate = interpolate;
+        }
+        get sortedKeyframes() {
+            return this.keyframes.slice().sort(sortKeyframes);
         }
         clone() {
             // @ts-ignore
@@ -16850,6 +16854,42 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             }
             return null;
         }
+        fixKeyframes(priority) {
+            let l = this.keyframes.length;
+            if (l === 0) {
+                return false;
+            }
+            let prev = this.keyframes[0];
+            if (prev.offset < 0) {
+                prev.offset = 0;
+            }
+            let current;
+            for (let i = 1; i < l; i++) {
+                current = this.keyframes[i];
+                if (current.offset < 0) {
+                    current.offset = 0;
+                }
+                if (prev.offset === current.offset) {
+                    if (priority.has(current) || !priority.has(prev)) {
+                        this.keyframes.splice(i - 1, 1);
+                        prev = current;
+                        i--;
+                    }
+                    else {
+                        this.keyframes.splice(i, 1);
+                    }
+                    l--;
+                }
+                else {
+                    prev = current;
+                }
+            }
+            this.keyframes.sort(sortKeyframes);
+            return true;
+        }
+        getIndexOfKeyframe(keyframe) {
+            return this.keyframes.indexOf(keyframe);
+        }
         addKeyframeAtOffset(offset, value, easing = null) {
             if (value == null) {
                 value = this.getValueAtOffset(offset);
@@ -16871,37 +16911,45 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             }
             return this.removeKeyframe(keyframe);
         }
-        getValueAtOffset(offset) {
-            const keyframes = this.keyframes;
-            const last = keyframes.length - 1;
-            if (last === -1) {
-                return null;
+        getValueAtOffset(offset, priority) {
+            if (!priority || this.keyframes.length <= 1) {
+                return calcValue(offset, this.keyframes, this.interpolate);
             }
-            if (last === 0) {
-                return keyframes[0].value;
+            const keyframes = this.sortedKeyframes;
+            let length = keyframes.length;
+            let prev = keyframes[0];
+            let prevOffset = Math.max(prev.offset, 0);
+            if (offset < prevOffset) {
+                return prev.value;
             }
-            if (offset <= keyframes[0].offset) {
-                return keyframes[0].value;
-            }
-            if (offset >= keyframes[last].offset) {
-                return keyframes[last].value;
-            }
-            for (let i = 1; i <= last; i++) {
-                if (offset > keyframes[i].offset) {
+            let current;
+            let currentOffset;
+            for (let i = 1; i < length; i++) {
+                current = keyframes[i];
+                currentOffset = Math.max(current.offset, 0);
+                if (currentOffset === prevOffset) {
+                    if (priority.has(current) || !priority.has(prev)) {
+                        prev = current;
+                    }
+                    else {
+                        // if last
+                        current = prev;
+                    }
                     continue;
                 }
-                const j = i - 1;
-                let percent = canvasEngine.getRangePercent(offset, keyframes[j].offset, keyframes[i].offset);
-                const easing = keyframes[j].easing;
-                if (easing != null) {
-                    percent = easing.value(percent);
+                if (offset === prevOffset) {
+                    return prev.value;
                 }
-                return this.interpolate(keyframes[j].value, keyframes[i].value, percent);
+                if (offset < currentOffset) {
+                    return this.interpolate(prev.value, current.value, calcPercent(offset, prev, current));
+                }
+                prevOffset = currentOffset;
+                prev = current;
             }
-            return null;
+            return current.value;
         }
         createKeyframe(value, offset, easing = null) {
-            return new Keyframe$1(value, offset, easing);
+            return new Keyframe(value, offset, easing);
         }
         *[Symbol.iterator]() {
             const length = this.keyframes.length;
@@ -16909,6 +16957,34 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
                 yield this.keyframes[i];
             }
         }
+    }
+    function sortKeyframes(a, b) {
+        return a.offset - b.offset;
+    }
+    function calcValue(offset, keyframes, interpolate) {
+        const last = keyframes.length - 1;
+        if (last === -1) {
+            return null;
+        }
+        if (last === 0) {
+            return keyframes[0].value;
+        }
+        if (offset <= keyframes[0].offset) {
+            return keyframes[0].value;
+        }
+        if (offset >= keyframes[last].offset) {
+            return keyframes[last].value;
+        }
+        for (let i = 1; i <= last; i++) {
+            if (offset <= keyframes[i].offset) {
+                return interpolate(keyframes[i - 1].value, keyframes[i].value, calcPercent(offset, keyframes[i - 1], keyframes[i]));
+            }
+        }
+        return null;
+    }
+    function calcPercent(offset, from, to) {
+        const percent = canvasEngine.getRangePercent(offset, from.offset <= 0 ? 0 : from.offset, to.offset <= 0 ? 0 : to.offset);
+        return from.easing ? from.easing.value(percent) : percent;
     }
 
     /*
@@ -17627,11 +17703,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         /**
          * Updates the property values for animated documents
          */
-        updateAnimatedProperties(time, setter) {
+        updateAnimatedProperties(time, setter, filter) {
             if (this._map.size === 0) {
                 return false;
             }
-            time = this.mapTime(time);
             let updated = false;
             let element;
             let property;
@@ -17643,10 +17718,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
                     continue;
                 }
                 for ([property, animation] of Object.entries(properties)) {
-                    if (animation.disabled) {
+                    if (animation.disabled || (filter && !filter.animations.has(animation))) {
                         continue;
                     }
-                    value = animation.getValueAtOffset(time);
+                    value = animation.getValueAtOffset(time, filter === null || filter === void 0 ? void 0 : filter.keyframes);
                     if (value === null) {
                         // no keyframes, ignore
                         continue;
@@ -17722,6 +17797,48 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
                 }
             }
             return false;
+        }
+        *allKeyframes() {
+            for (const properties of this._map.values()) {
+                for (const animation of Object.values(properties)) {
+                    for (const keyframe of animation.keyframes) {
+                        yield keyframe;
+                    }
+                }
+            }
+        }
+        fixKeyframes(priority) {
+            let changed = false;
+            for (const properties of this._map.values()) {
+                for (const animation of Object.values(properties)) {
+                    if (animation.fixKeyframes(priority)) {
+                        changed = true;
+                    }
+                }
+            }
+            return changed;
+        }
+        resolveAnimationsAndKeyframes(ids) {
+            if (ids.size === 0) {
+                return null;
+            }
+            const animations = new Set();
+            const keyframes = new Set();
+            for (const properties of this._map.values()) {
+                for (const animation of Object.values(properties)) {
+                    let added = false;
+                    for (const keyframe of animation.keyframes) {
+                        if (ids.has(keyframe.id)) {
+                            keyframes.add(keyframe);
+                            added = true;
+                        }
+                    }
+                    if (added) {
+                        animations.add(animation);
+                    }
+                }
+            }
+            return { animations, keyframes };
         }
         getAnimation(element, property) {
             if (element.document !== this._document) {
@@ -18231,6 +18348,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             return animation.updateAnimatedProperties(time, this.setAnimatedPropertyValue.bind(this));
         }
         /**
+         * Updates only some animations
+         */
+        updateAnimations(filter) {
+            return this.project.document.animation.updateAnimatedProperties(this.project.time, this.setAnimatedPropertyValue.bind(this), filter);
+        }
+        /**
          * Get property animation from element, or null if no animation is defined
          */
         getAnimation(element, property) {
@@ -18351,15 +18474,122 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
      * limitations under the License.
      */
     class KeyframeSelection {
-        // TODO: finish this
         constructor() {
+            this._document = null;
+            this._selection = new Set();
         }
         dispose() {
+            this._selection = null;
+            this._document = null;
         }
-        setDocument(document, state) {
+        setDocument(document, selection) {
+            if (selection == null && document != null && this._document != null && document.id === this._document.id) {
+                // we have the same document id and no selection, get current selection
+                selection = this.getSelectedKeyframes();
+            }
+            this._document = document;
+            this._selection.clear();
+            if (document != null && selection != null && selection.length > 0 && document.animation) {
+                for (const kf of document.animation.allKeyframes()) {
+                    if (selection.indexOf(kf.id) !== -1) {
+                        this._selection.add(kf.id);
+                    }
+                }
+            }
+        }
+        clear() {
+            if (this._selection.size === 0) {
+                return false;
+            }
+            this._selection.clear();
+            return true;
+        }
+        deselectUnselectedElements(selection) {
+            if (selection.isEmpty) {
+                return this.clear();
+            }
+            let changed = false;
+            const animation = this._document.animation;
+            for (const [element, properties] of animation.getAnimatedElements()) {
+                if (selection.isSelected(element)) {
+                    continue;
+                }
+                for (const animation of Object.values(properties)) {
+                    for (const keyframe of animation.keyframes) {
+                        if (this._selection.has(keyframe.id)) {
+                            this._selection.delete(keyframe.id);
+                            changed = true;
+                        }
+                    }
+                }
+            }
+            return changed;
+        }
+        animationHasSelectedKeyframes(animation) {
+            if (this._selection.size === 0) {
+                return false;
+            }
+            for (const keyframe of animation.keyframes) {
+                if (this._selection.has(keyframe.id)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        isKeyframeSelected(keyframe) {
+            return this._selection.has(keyframe.id);
+        }
+        areKeyframesSelected(...keyframes) {
+            for (const k of keyframes) {
+                if (!k || !this._selection.has(k.id)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        deselectKeyframe(keyframe) {
+            if (!this._selection.has(keyframe.id)) {
+                return false;
+            }
+            this._selection.delete(keyframe.id);
+            return true;
+        }
+        selectMultipleKeyframes(keyframes, multiple) {
+            let selected = false;
+            if (!multiple && this._selection.size > 0) {
+                this._selection.clear();
+                selected = true;
+            }
+            for (const keyframe of keyframes) {
+                if (!this._selection.has(keyframe.id)) {
+                    this._selection.add(keyframe.id);
+                    selected = true;
+                }
+            }
+            return selected;
+        }
+        selectKeyframeIds(ids) {
+            for (const id of ids) {
+                this._selection.add(id);
+            }
+            return this._selection.size > 0;
+        }
+        selectKeyframe(keyframe, multiple) {
+            if (this._selection.has(keyframe.id)) {
+                return false;
+            }
+            if (!multiple) {
+                this._selection.clear();
+            }
+            this._selection.add(keyframe.id);
+            return true;
         }
         getSelectedKeyframes() {
-            return null;
+            return Array.from(this._selection);
+        }
+        resolveSelectedKeyframes() {
+            var _a, _b;
+            return (_b = (_a = this._document) === null || _a === void 0 ? void 0 : _a.animation) === null || _b === void 0 ? void 0 : _b.resolveAnimationsAndKeyframes(this._selection);
         }
     }
 
@@ -19848,6 +20078,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         'regular-polygon': new canvasEngine.RegularPolygonTool(),
         star: new canvasEngine.StarTool(),
         poly: new canvasEngine.PolyTool(),
+        zoom: new canvasEngine.ZoomTool(),
         // TODO: add other tools
     };
     const CurrentTool = ((initial) => {
@@ -19981,10 +20212,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const propertiesGenId = createGenIdStore();
     const stateGenId = createGenIdStore();
     const selectionGenId = createGenIdStore();
+    const keyframeSelectionGenId = createGenIdStore();
+    //const documentGenId = createGenIdStore();
     const notifyAnimationChanged = animationGenId.invalidate;
     const notifyPropertiesChanged = propertiesGenId.invalidate;
     const notifyStateChanged = stateGenId.invalidate;
     const notifySelectionChanged = selectionGenId.invalidate;
+    const notifyKeyframeSelectionChanged = keyframeSelectionGenId.invalidate;
     const CurrentProject = {
         subscribe: project$1.subscribe,
         set: project$1.set,
@@ -20022,7 +20256,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const CurrentProjectState = derived([project$1, stateGenId], ([$project]) => {
         return $project ? $project.state : null;
     });
-    derived(project$1, ($project) => {
+    const CurrentKeyframeSelection = derived([project$1, keyframeSelectionGenId], ([$project]) => {
         return $project ? $project.keyframeSelection : null;
     });
     const CurrentSelectedElement = derived([CurrentSelection, propertiesGenId, stateGenId], ([$selection]) => {
@@ -20053,6 +20287,44 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const MAX_TIME_SCALE = 1.5;
     const CurrentTime = writable(0);
     const CurrentMaxTime = derived([CurrentDocumentAnimation, CurrentTime], ([$animation, $time]) => Math.max($time, $animation ? $animation.endTime : 0) * MAX_TIME_SCALE);
+    const ShowOnlySelectedElementsAnimations = writable(false);
+    const CurrentAnimatedElements = derived([CurrentProject, CurrentDocumentAnimation, CurrentSelection, ShowOnlySelectedElementsAnimations], ([$project, $animation, $selection, $onlySelected]) => {
+        if (!$animation || ($onlySelected && $selection.isEmpty)) {
+            return [];
+        }
+        return getAnimatedElements($onlySelected ? getSelectedElementsProperties($animation, $selection) : $animation.getAnimatedElements(), $project.animatorSource);
+    });
+    function* getSelectedElementsProperties(animation, selection) {
+        for (const entry of animation.getAnimatedElements()) {
+            if (selection.isSelected(entry[0])) {
+                yield entry;
+            }
+        }
+    }
+    function getAnimatedElements(elements, source) {
+        const list = [];
+        for (const [element, properties] of elements) {
+            const animatedProperties = [];
+            for (const [property, animation] of Object.entries(properties)) {
+                const animator = source.getAnimator(element, property);
+                if (!animator) {
+                    continue;
+                }
+                animatedProperties.push({
+                    animator,
+                    property,
+                    animation,
+                });
+            }
+            if (animatedProperties.length > 0) {
+                list.push({
+                    element,
+                    animatedProperties,
+                });
+            }
+        }
+        return list;
+    }
 
     /*
      * Copyright 2021 Zindex Software
@@ -20077,16 +20349,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const ShowTreeReverse = writable(true);
 
     /* src/Components/Tools/SubTools.svelte generated by Svelte v3.38.3 */
-    const file$K = "src/Components/Tools/SubTools.svelte";
+    const file$L = "src/Components/Tools/SubTools.svelte";
 
-    function get_each_context$8(ctx, list, i) {
+    function get_each_context$a(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     // (33:16) {#if current !== button}
-    function create_if_block$h(ctx) {
+    function create_if_block$i(ctx) {
     	let sp_action_button;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -20105,12 +20377,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*button*/ ctx[12].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$K, 34, 24, 1575);
+    			add_location(sp_icon, file$L, 34, 24, 1575);
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*button*/ ctx[12].disabled);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*button*/ ctx[12].tool);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*button*/ ctx[12].title);
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$K, 33, 20, 1431);
+    			add_location(sp_action_button, file$L, 33, 20, 1431);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20148,7 +20420,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$h.name,
+    		id: create_if_block$i.name,
     		type: "if",
     		source: "(33:16) {#if current !== button}",
     		ctx
@@ -20158,10 +20430,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (32:12) {#each buttons as button (button.tool)}
-    function create_each_block$8(key_1, ctx) {
+    function create_each_block$a(key_1, ctx) {
     	let first;
     	let if_block_anchor;
-    	let if_block = /*current*/ ctx[3] !== /*button*/ ctx[12] && create_if_block$h(ctx);
+    	let if_block = /*current*/ ctx[3] !== /*button*/ ctx[12] && create_if_block$i(ctx);
 
     	const block = {
     		key: key_1,
@@ -20184,7 +20456,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$h(ctx);
+    					if_block = create_if_block$i(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -20202,7 +20474,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$8.name,
+    		id: create_each_block$a.name,
     		type: "each",
     		source: "(32:12) {#each buttons as button (button.tool)}",
     		ctx
@@ -20211,7 +20483,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$Q(ctx) {
+    function create_fragment$T(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -20229,12 +20501,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = /*buttons*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*button*/ ctx[12].tool;
-    	validate_each_keys(ctx, each_value, get_each_context$8, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$a, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$8(ctx, each_value, i);
+    		let child_ctx = get_each_context$a(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$8(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$a(key, child_ctx));
     	}
 
     	const block = {
@@ -20253,7 +20525,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*current*/ ctx[3].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$K, 27, 8, 1047);
+    			add_location(sp_icon, file$L, 27, 8, 1047);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*current*/ ctx[3].title);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*current*/ ctx[3].tool);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = !/*disabled*/ ctx[0] && /*$CurrentTool*/ ctx[4].name === /*current*/ ctx[3].tool);
@@ -20261,19 +20533,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_button, "hold-affordance", "");
     			set_custom_element_data(sp_action_button, "slot", "trigger");
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$K, 24, 4, 773);
+    			add_location(sp_action_button, file$L, 24, 4, 773);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_style(sp_action_group, "padding", "var(--spectrum-global-dimension-size-50)");
-    			add_location(sp_action_group, file$K, 30, 8, 1236);
+    			add_location(sp_action_group, file$L, 30, 8, 1236);
     			set_custom_element_data(sp_popover, "slot", "longpress-content");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_style(sp_popover, "--spectrum-popover-dialog-min-width", "0");
-    			add_location(sp_popover, file$K, 29, 4, 1138);
+    			add_location(sp_popover, file$L, 29, 4, 1138);
     			set_custom_element_data(overlay_trigger, "type", "inline");
     			set_custom_element_data(overlay_trigger, "placement", /*placement*/ ctx[2]);
     			set_custom_element_data(overlay_trigger, "disabled", /*disabled*/ ctx[0]);
     			set_custom_element_data(overlay_trigger, "class", "svelte-1jj07za");
-    			add_location(overlay_trigger, file$K, 20, 0, 591);
+    			add_location(overlay_trigger, file$L, 20, 0, 591);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20324,8 +20596,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (dirty & /*buttons, selectTool, current*/ 74) {
     				each_value = /*buttons*/ ctx[1];
     				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$8, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$8, null, get_each_context$8);
+    				validate_each_keys(ctx, each_value, get_each_context$a, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$a, null, get_each_context$a);
     			}
 
     			if (dirty & /*placement*/ 4) {
@@ -20352,7 +20624,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$Q.name,
+    		id: create_fragment$T.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20361,7 +20633,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$Q($$self, $$props, $$invalidate) {
+    function instance$T($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(4, $CurrentTool = $$value));
@@ -20452,13 +20724,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SubTools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$Q, create_fragment$Q, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
+    		init(this, options, instance$T, create_fragment$T, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SubTools",
     			options,
-    			id: create_fragment$Q.name
+    			id: create_fragment$T.name
     		});
     	}
 
@@ -20602,15 +20874,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         {
             tool: 'zoom',
             icon: 'expr:zoom-tool',
-            title: 'Zoom tool (Z)',
-            disabled: true
+            title: 'Zoom tool (Z)'
         },
     ];
 
     /* src/Components/Tools/index.svelte generated by Svelte v3.38.3 */
-    const file$J = "src/Components/Tools/index.svelte";
+    const file$K = "src/Components/Tools/index.svelte";
 
-    function get_each_context$7(ctx, list, i) {
+    function get_each_context$9(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[3] = list[i];
     	return child_ctx;
@@ -20634,12 +20905,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", /*button*/ ctx[3].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$J, 14, 16, 697);
+    			add_location(sp_icon, file$K, 14, 16, 697);
     			set_custom_element_data(sp_action_button, "title", /*button*/ ctx[3].title);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = !/*disabled*/ ctx[0] && /*button*/ ctx[3].tool === /*$CurrentTool*/ ctx[1].name);
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*disabled*/ ctx[0] || /*button*/ ctx[3].disabled);
     			set_custom_element_data(sp_action_button, "data-tool-name", /*button*/ ctx[3].tool);
-    			add_location(sp_action_button, file$J, 13, 12, 491);
+    			add_location(sp_action_button, file$K, 13, 12, 491);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20681,7 +20952,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (11:8) {#if Array.isArray(button)}
-    function create_if_block$g(ctx) {
+    function create_if_block$h(ctx) {
     	let subtools;
     	let current;
 
@@ -20722,7 +20993,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$g.name,
+    		id: create_if_block$h.name,
     		type: "if",
     		source: "(11:8) {#if Array.isArray(button)}",
     		ctx
@@ -20732,12 +21003,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (10:4) {#each buttons as button}
-    function create_each_block$7(ctx) {
+    function create_each_block$9(ctx) {
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block$g, create_else_block$4];
+    	const if_block_creators = [create_if_block$h, create_else_block$4];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -20778,7 +21049,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$7.name,
+    		id: create_each_block$9.name,
     		type: "each",
     		source: "(10:4) {#each buttons as button}",
     		ctx
@@ -20787,7 +21058,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$P(ctx) {
+    function create_fragment$S(ctx) {
     	let sp_action_group;
     	let current;
     	let each_value = buttons;
@@ -20795,7 +21066,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$7(get_each_context$7(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$9(get_each_context$9(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -20813,7 +21084,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_group, "vertical", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$J, 8, 0, 272);
+    			add_location(sp_action_group, file$K, 8, 0, 272);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20834,13 +21105,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$7(ctx, each_value, i);
+    					const child_ctx = get_each_context$9(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$7(child_ctx);
+    						each_blocks[i] = create_each_block$9(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(sp_action_group, null);
@@ -20882,7 +21153,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$P.name,
+    		id: create_fragment$S.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20891,7 +21162,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$P($$self, $$props, $$invalidate) {
+    function instance$S($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(1, $CurrentTool = $$value));
@@ -20936,13 +21207,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Tools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$P, create_fragment$P, safe_not_equal, { disabled: 0 });
+    		init(this, options, instance$S, create_fragment$S, safe_not_equal, { disabled: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Tools",
     			options,
-    			id: create_fragment$P.name
+    			id: create_fragment$S.name
     		});
     	}
 
@@ -20959,10 +21230,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const { console: console_1$1 } = globals;
 
-    const file$I = "src/Components/Canvas.svelte";
+    const file$J = "src/Components/Canvas.svelte";
 
     // (155:4) {#if hidden}
-    function create_if_block$f(ctx) {
+    function create_if_block$g(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[30].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[29], null);
@@ -21001,7 +21272,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$f.name,
+    		id: create_if_block$g.name,
     		type: "if",
     		source: "(155:4) {#if hidden}",
     		ctx
@@ -21010,14 +21281,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$O(ctx) {
+    function create_fragment$R(ctx) {
     	let div;
     	let canvas_engine;
     	let t;
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*hidden*/ ctx[0] && create_if_block$f(ctx);
+    	let if_block = /*hidden*/ ctx[0] && create_if_block$g(ctx);
 
     	const block = {
     		c: function create() {
@@ -21027,10 +21298,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			set_custom_element_data(canvas_engine, "class", "svelte-6hby6z");
     			toggle_class(canvas_engine, "hidden", /*hidden*/ ctx[0]);
-    			add_location(canvas_engine, file$I, 139, 4, 4540);
+    			add_location(canvas_engine, file$J, 139, 4, 4540);
     			attr_dev(div, "class", "canvas-wrapper svelte-6hby6z");
     			attr_dev(div, "tabindex", "0");
-    			add_location(div, file$I, 138, 0, 4494);
+    			add_location(div, file$J, 138, 0, 4494);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21074,7 +21345,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$f(ctx);
+    					if_block = create_if_block$g(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div, null);
@@ -21109,7 +21380,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$O.name,
+    		id: create_fragment$R.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21118,7 +21389,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$O($$self, $$props, $$invalidate) {
+    function instance$R($$self, $$props, $$invalidate) {
     	let $CurrentTheme;
     	let $CurrentTool;
     	let $showRuler;
@@ -21479,13 +21750,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Canvas extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$O, create_fragment$O, safe_not_equal, { hidden: 0 }, [-1, -1]);
+    		init(this, options, instance$R, create_fragment$R, safe_not_equal, { hidden: 0 }, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Canvas",
     			options,
-    			id: create_fragment$O.name
+    			id: create_fragment$R.name
     		});
     	}
 
@@ -21498,10 +21769,139 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    /* src/Components/Timeline/TimelineControls.svelte generated by Svelte v3.38.3 */
-    const file$H = "src/Components/Timeline/TimelineControls.svelte";
+    /*
+     * Copyright 2021 Zindex Software
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *    http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    const RULER_PADDING = 6;
+    const RULER_DIVISIONS = 30;
+    const FRAME = 1000 / RULER_DIVISIONS;
+    const MAJOR_GRADUATION_WIDTH = 240;
+    const MINOR_GRADUATION_WIDTH = MAJOR_GRADUATION_WIDTH / RULER_DIVISIONS;
+    const UNIT = MAJOR_GRADUATION_WIDTH / 1000;
+    function roundTime(time, scaleFactor = 1) {
+        if (time <= 0) {
+            return 0;
+        }
+        const frame = scaleFactor * FRAME;
+        return Math.round(Math.round(time / frame) * frame);
+        //
+        // time = Math.round(time);
+        // const frame = Math.round(FRAME);
+        // time = time - time % frame;
+        // const totalFrames = time / frame;
+        // const elapsedFrames = totalFrames % RULER_DIVISIONS;
+        // const elapsedSeconds = (totalFrames - elapsedFrames) / RULER_DIVISIONS;
+        // return Math.round(elapsedSeconds * 1000 + elapsedFrames * FRAME);
+    }
+    function getTimeAtX(x, scroll, zoom) {
+        return (x + scroll - RULER_PADDING) / zoom / UNIT;
+    }
+    function getXAtTime(time, scroll, zoom) {
+        return time * UNIT * zoom - scroll + RULER_PADDING;
+    }
+    function getDeltaTimeByX(x, zoom) {
+        return x / zoom / UNIT;
+    }
+    function getRoundedDeltaTimeByX(x, offset, zoom, scaleFactor) {
+        return roundTime(offset + getDeltaTimeByX(x, zoom), scaleFactor) - offset;
+    }
+    const SCALES = [0.05, 0.1, 0.125, 0.25, 0.5];
+    const LAST_SCALE = SCALES.length - 1;
+    function getScaleFactor(zoom) {
+        if (zoom > SCALES[LAST_SCALE]) {
+            return 1;
+        }
+        for (let i = 0; i <= LAST_SCALE; i++) {
+            if (zoom <= SCALES[i]) {
+                return 1 / SCALES[i];
+            }
+        }
+        return 1;
+    }
+    function renderRuler(context, width, height, scroll, zoom, scaleFactor) {
+        scroll /= zoom;
+        const t = scroll / MINOR_GRADUATION_WIDTH;
+        let graduationNo = Math.floor(t);
+        const delta = ((Math.round(t * 100) - graduationNo * 100) / 100);
+        let x = RULER_PADDING > scroll ? RULER_PADDING - scroll : RULER_PADDING;
+        x -= delta * MINOR_GRADUATION_WIDTH * zoom;
+        const step = MINOR_GRADUATION_WIDTH * zoom;
+        const path = new Path2D();
+        while (true) {
+            path.moveTo(x + 0.5, height);
+            if (graduationNo % (RULER_DIVISIONS * scaleFactor) === 0) {
+                path.lineTo(x + 0.5, height - 20);
+                context.fillText(formatSeconds(graduationNo / RULER_DIVISIONS), Math.ceil(x) + 4.5, height - 15);
+            }
+            else if (graduationNo % (RULER_DIVISIONS * scaleFactor / 2) === 0) {
+                path.lineTo(x + 0.5, height - 15);
+            }
+            else if (graduationNo % scaleFactor === 0) {
+                path.lineTo(x + 0.5, height - 10);
+            }
+            x += step;
+            graduationNo++;
+            if (x > width) {
+                break;
+            }
+        }
+        context.stroke(path);
+    }
+    function getDurationBounds(startTime, endTime, width, scroll, zoom) {
+        let start = getXAtTime(startTime, scroll, zoom);
+        if (start <= 0) {
+            start = 0;
+        }
+        let stop = getXAtTime(endTime, scroll, zoom);
+        if (stop < 0) {
+            stop = 0;
+        }
+        else if (stop - start > width) {
+            stop = width + start;
+        }
+        if (stop <= start) {
+            return null;
+        }
+        return [start, stop];
+    }
+    function formatSeconds(s) {
+        let m = (s - s % 60) / 60;
+        let h = (m - m % 60) / 60;
+        m = m % 60;
+        s = s % 60;
+        if (h > 0) {
+            return `${h}:${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}`;
+        }
+        return `${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}`;
+    }
+    function formatTime(time) {
+        time = Math.round(time);
+        let k = time % 1000;
+        time = (time - k) / 1000;
+        let s = time % 60;
+        time = (time - s) / 60;
+        // let m = time % 60;
+        // time = (time - m) / 60;
+        // return `${time}:${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}:${k > 99 ? k : '0' + (k > 9 ? k : '0' + k)}`;
+        return `${time > 9 ? time : '0' + time}:${s > 9 ? s : '0' + s}.${k > 99 ? k : '0' + (k > 9 ? k : '0' + k)}`;
+    }
 
-    function create_fragment$N(ctx) {
+    /* src/Components/Timeline/TimelineControls.svelte generated by Svelte v3.38.3 */
+    const file$I = "src/Components/Timeline/TimelineControls.svelte";
+
+    function create_fragment$Q(ctx) {
     	let div2;
     	let div1;
     	let sp_action_group;
@@ -21519,6 +21919,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let sp_icon3;
     	let t3;
     	let div0;
+    	let t4_value = formatTime(/*$CurrentTime*/ ctx[2]) + "";
     	let t4;
     	let t5;
     	let sp_action_button4;
@@ -21544,23 +21945,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon3 = element("sp-icon");
     			t3 = space();
     			div0 = element("div");
-    			t4 = text(/*playerTime*/ ctx[2]);
+    			t4 = text(t4_value);
     			t5 = space();
     			sp_action_button4 = element("sp-action-button");
     			sp_icon4 = element("sp-icon");
     			set_custom_element_data(sp_icon0, "name", "expr:player-record");
     			set_custom_element_data(sp_icon0, "slot", "icon");
     			set_custom_element_data(sp_icon0, "size", "s");
-    			add_location(sp_icon0, file$H, 55, 16, 1988);
+    			add_location(sp_icon0, file$I, 44, 16, 1591);
     			set_custom_element_data(sp_action_button0, "title", "Record");
     			toggle_class(sp_action_button0, "timeline-controls-recording", /*isRecording*/ ctx[0]);
-    			add_location(sp_action_button0, file$H, 52, 12, 1803);
+    			add_location(sp_action_button0, file$I, 41, 12, 1406);
     			set_custom_element_data(sp_icon1, "name", "expr:player-start");
     			set_custom_element_data(sp_icon1, "slot", "icon");
     			set_custom_element_data(sp_icon1, "size", "s");
-    			add_location(sp_icon1, file$H, 58, 16, 2175);
+    			add_location(sp_icon1, file$I, 47, 16, 1778);
     			set_custom_element_data(sp_action_button1, "title", "Go to start");
-    			add_location(sp_action_button1, file$H, 57, 12, 2099);
+    			add_location(sp_action_button1, file$I, 46, 12, 1702);
 
     			set_custom_element_data(sp_icon2, "name", sp_icon2_name_value = /*isPlaying*/ ctx[1]
     			? "expr:player-stop"
@@ -21568,31 +21969,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			set_custom_element_data(sp_icon2, "slot", "icon");
     			set_custom_element_data(sp_icon2, "size", "s");
-    			add_location(sp_icon2, file$H, 61, 16, 2358);
+    			add_location(sp_icon2, file$I, 50, 16, 1961);
     			set_custom_element_data(sp_action_button2, "title", "Play");
-    			add_location(sp_action_button2, file$H, 60, 12, 2285);
+    			add_location(sp_action_button2, file$I, 49, 12, 1888);
     			set_custom_element_data(sp_icon3, "name", "expr:player-end");
     			set_custom_element_data(sp_icon3, "slot", "icon");
     			set_custom_element_data(sp_icon3, "size", "s");
-    			add_location(sp_icon3, file$H, 64, 16, 2576);
+    			add_location(sp_icon3, file$I, 53, 16, 2179);
     			set_custom_element_data(sp_action_button3, "title", "Go to end");
-    			add_location(sp_action_button3, file$H, 63, 12, 2504);
+    			add_location(sp_action_button3, file$I, 52, 12, 2107);
     			attr_dev(div0, "class", "timeline-controls-time");
-    			add_location(div0, file$H, 66, 12, 2684);
+    			add_location(div0, file$I, 55, 12, 2287);
     			set_custom_element_data(sp_icon4, "name", "expr:add-color");
     			set_custom_element_data(sp_icon4, "slot", "icon");
     			set_custom_element_data(sp_icon4, "size", "s");
-    			add_location(sp_icon4, file$H, 68, 16, 2816);
+    			add_location(sp_icon4, file$I, 57, 16, 2433);
     			set_custom_element_data(sp_action_button4, "title", "Add animator");
     			set_custom_element_data(sp_action_button4, "disabled", "");
-    			add_location(sp_action_button4, file$H, 67, 12, 2751);
+    			add_location(sp_action_button4, file$I, 56, 12, 2368);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "compact", "");
-    			add_location(sp_action_group, file$H, 51, 8, 1759);
+    			add_location(sp_action_group, file$I, 40, 8, 1362);
     			attr_dev(div1, "class", "timeline-controls-container");
-    			add_location(div1, file$H, 50, 4, 1709);
+    			add_location(div1, file$I, 39, 4, 1312);
     			attr_dev(div2, "class", "timeline-controls");
-    			add_location(div2, file$H, 49, 0, 1673);
+    			add_location(div2, file$I, 38, 0, 1276);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21641,7 +22042,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				set_custom_element_data(sp_icon2, "name", sp_icon2_name_value);
     			}
 
-    			if (dirty & /*playerTime*/ 4) set_data_dev(t4, /*playerTime*/ ctx[2]);
+    			if (dirty & /*$CurrentTime*/ 4 && t4_value !== (t4_value = formatTime(/*$CurrentTime*/ ctx[2]) + "")) set_data_dev(t4, t4_value);
     		},
     		i: noop,
     		o: noop,
@@ -21654,7 +22055,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$N.name,
+    		id: create_fragment$Q.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21663,30 +22064,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function formatCurrentTime(time) {
-    	time = Math.round(time);
-    	let k = time % 1000;
-    	time = (time - k) / 1000;
-    	let s = time % 60;
-    	time = (time - s) / 60;
-    	let m = time % 60;
-    	time = (time - m) / 60;
-    	return `${time}:${m > 9 ? m : "0" + m}:${s > 9 ? s : "0" + s}:${k > 99 ? k : "0" + (k > 9 ? k : "0" + k)}`;
-    }
-
-    function instance$N($$self, $$props, $$invalidate) {
+    function instance$Q($$self, $$props, $$invalidate) {
     	let isRecording;
     	let isPlaying;
-    	let playerTime;
     	let $CurrentProject;
     	let $CurrentTime;
     	let $CurrentDocumentAnimation;
     	validate_store(CurrentProject, "CurrentProject");
     	component_subscribe($$self, CurrentProject, $$value => $$invalidate(8, $CurrentProject = $$value));
     	validate_store(CurrentTime, "CurrentTime");
-    	component_subscribe($$self, CurrentTime, $$value => $$invalidate(9, $CurrentTime = $$value));
+    	component_subscribe($$self, CurrentTime, $$value => $$invalidate(2, $CurrentTime = $$value));
     	validate_store(CurrentDocumentAnimation, "CurrentDocumentAnimation");
-    	component_subscribe($$self, CurrentDocumentAnimation, $$value => $$invalidate(11, $CurrentDocumentAnimation = $$value));
+    	component_subscribe($$self, CurrentDocumentAnimation, $$value => $$invalidate(10, $CurrentDocumentAnimation = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineControls", slots, []);
     	let animationHandle = null;
@@ -21711,12 +22100,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			return;
     		}
 
+    		const endTime = $CurrentDocumentAnimation.endTime;
     		animationStartTime = performance.now();
 
     		let f = () => {
     			let now = performance.now();
     			set_store_value(CurrentTime, $CurrentTime += now - animationStartTime, $CurrentTime);
-    			const endTime = $CurrentDocumentAnimation.endTime;
 
     			if ($CurrentTime >= endTime) {
     				set_store_value(CurrentTime, $CurrentTime = endTime, $CurrentTime);
@@ -21743,10 +22132,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		CurrentProject,
     		AnimationProject,
     		DocumentAnimation,
-    		clamp: canvasEngine.clamp,
+    		formatTime,
     		animationHandle,
     		animationStartTime,
-    		formatCurrentTime,
     		goToEnd,
     		goToStart,
     		toggleRecording,
@@ -21754,7 +22142,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		isRecording,
     		$CurrentProject,
     		isPlaying,
-    		playerTime,
     		$CurrentTime,
     		$CurrentDocumentAnimation
     	});
@@ -21764,7 +22151,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("animationStartTime" in $$props) animationStartTime = $$props.animationStartTime;
     		if ("isRecording" in $$props) $$invalidate(0, isRecording = $$props.isRecording);
     		if ("isPlaying" in $$props) $$invalidate(1, isPlaying = $$props.isPlaying);
-    		if ("playerTime" in $$props) $$invalidate(2, playerTime = $$props.playerTime);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -21779,53 +22165,48 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ($$self.$$.dirty & /*animationHandle*/ 128) {
     			$$invalidate(1, isPlaying = animationHandle !== null);
     		}
-
-    		if ($$self.$$.dirty & /*$CurrentTime*/ 512) {
-    			$$invalidate(2, playerTime = formatCurrentTime($CurrentTime));
-    		}
     	};
 
     	return [
     		isRecording,
     		isPlaying,
-    		playerTime,
+    		$CurrentTime,
     		goToEnd,
     		goToStart,
     		toggleRecording,
     		playAnimation,
     		animationHandle,
-    		$CurrentProject,
-    		$CurrentTime
+    		$CurrentProject
     	];
     }
 
     class TimelineControls extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$N, create_fragment$N, safe_not_equal, {});
+    		init(this, options, instance$Q, create_fragment$Q, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineControls",
     			options,
-    			id: create_fragment$N.name
+    			id: create_fragment$Q.name
     		});
     	}
     }
 
     /* src/Components/Timeline/TimelineItem.svelte generated by Svelte v3.38.3 */
 
-    const file$G = "src/Components/Timeline/TimelineItem.svelte";
+    const file$H = "src/Components/Timeline/TimelineItem.svelte";
 
-    // (9:4) {#if keyframes}
-    function create_if_block$e(ctx) {
+    // (11:4) {#if keyframes}
+    function create_if_block$f(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "timeline-keyframes-line");
-    			add_location(div, file$G, 9, 8, 277);
+    			add_location(div, file$H, 11, 8, 329);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -21837,22 +22218,22 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$e.name,
+    		id: create_if_block$f.name,
     		type: "if",
-    		source: "(9:4) {#if keyframes}",
+    		source: "(11:4) {#if keyframes}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$M(ctx) {
+    function create_fragment$P(ctx) {
     	let div;
     	let t;
     	let current;
-    	let if_block = /*keyframes*/ ctx[2] && create_if_block$e(ctx);
-    	const default_slot_template = /*#slots*/ ctx[4].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
+    	let if_block = /*keyframes*/ ctx[2] && create_if_block$f(ctx);
+    	const default_slot_template = /*#slots*/ ctx[5].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
 
     	const block = {
     		c: function create() {
@@ -21862,9 +22243,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (default_slot) default_slot.c();
     			attr_dev(div, "class", "timeline-item");
     			toggle_class(div, "has-keyframes", /*keyframes*/ ctx[2]);
+    			toggle_class(div, "is-alt", /*isAlt*/ ctx[3]);
     			toggle_class(div, "is-disabled", /*disabled*/ ctx[0]);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$G, 4, 0, 116);
+    			add_location(div, file$H, 5, 0, 142);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21883,7 +22265,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, [dirty]) {
     			if (/*keyframes*/ ctx[2]) {
     				if (if_block) ; else {
-    					if_block = create_if_block$e(ctx);
+    					if_block = create_if_block$f(ctx);
     					if_block.c();
     					if_block.m(div, t);
     				}
@@ -21893,13 +22275,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			if (default_slot) {
-    				if (default_slot.p && (!current || dirty & /*$$scope*/ 8)) {
-    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[3], !current ? -1 : dirty, null, null);
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 16)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[4], !current ? -1 : dirty, null, null);
     				}
     			}
 
     			if (dirty & /*keyframes*/ 4) {
     				toggle_class(div, "has-keyframes", /*keyframes*/ ctx[2]);
+    			}
+
+    			if (dirty & /*isAlt*/ 8) {
+    				toggle_class(div, "is-alt", /*isAlt*/ ctx[3]);
     			}
 
     			if (dirty & /*disabled*/ 1) {
@@ -21928,7 +22314,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$M.name,
+    		id: create_fragment$P.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21937,13 +22323,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$M($$self, $$props, $$invalidate) {
+    function instance$P($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineItem", slots, ['default']);
     	let { disabled = false } = $$props;
     	let { selected = false } = $$props;
     	let { keyframes = false } = $$props;
-    	const writable_props = ["disabled", "selected", "keyframes"];
+    	let { isAlt = false } = $$props;
+    	const writable_props = ["disabled", "selected", "keyframes", "isAlt"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineItem> was created with unknown prop '${key}'`);
@@ -21953,34 +22340,42 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
     		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
     		if ("keyframes" in $$props) $$invalidate(2, keyframes = $$props.keyframes);
-    		if ("$$scope" in $$props) $$invalidate(3, $$scope = $$props.$$scope);
+    		if ("isAlt" in $$props) $$invalidate(3, isAlt = $$props.isAlt);
+    		if ("$$scope" in $$props) $$invalidate(4, $$scope = $$props.$$scope);
     	};
 
-    	$$self.$capture_state = () => ({ disabled, selected, keyframes });
+    	$$self.$capture_state = () => ({ disabled, selected, keyframes, isAlt });
 
     	$$self.$inject_state = $$props => {
     		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
     		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
     		if ("keyframes" in $$props) $$invalidate(2, keyframes = $$props.keyframes);
+    		if ("isAlt" in $$props) $$invalidate(3, isAlt = $$props.isAlt);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [disabled, selected, keyframes, $$scope, slots];
+    	return [disabled, selected, keyframes, isAlt, $$scope, slots];
     }
 
     class TimelineItem extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$M, create_fragment$M, safe_not_equal, { disabled: 0, selected: 1, keyframes: 2 });
+
+    		init(this, options, instance$P, create_fragment$P, safe_not_equal, {
+    			disabled: 0,
+    			selected: 1,
+    			keyframes: 2,
+    			isAlt: 3
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineItem",
     			options,
-    			id: create_fragment$M.name
+    			id: create_fragment$P.name
     		});
     	}
 
@@ -22007,44 +22402,454 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	set keyframes(value) {
     		throw new Error("<TimelineItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get isAlt() {
+    		throw new Error("<TimelineItem>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isAlt(value) {
+    		throw new Error("<TimelineItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
-    /* src/Components/Timeline/Keyframe.svelte generated by Svelte v3.38.3 */
+    /* src/Components/Timeline/TimelineSelectionRect.svelte generated by Svelte v3.38.3 */
 
-    const file$F = "src/Components/Timeline/Keyframe.svelte";
+    const file$G = "src/Components/Timeline/TimelineSelectionRect.svelte";
 
-    function create_fragment$L(ctx) {
+    // (4:0) {#if rect && rect.isVisible}
+    function create_if_block$e(ctx) {
     	let div;
     	let div_style_value;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "timeline-selection-rect");
+    			attr_dev(div, "style", div_style_value = `top: ${/*rect*/ ctx[0].top}px; left: ${/*rect*/ ctx[0].left}px; width: ${/*rect*/ ctx[0].width}px; height: ${/*rect*/ ctx[0].height}px;`);
+    			add_location(div, file$G, 4, 0, 83);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*rect*/ 1 && div_style_value !== (div_style_value = `top: ${/*rect*/ ctx[0].top}px; left: ${/*rect*/ ctx[0].left}px; width: ${/*rect*/ ctx[0].width}px; height: ${/*rect*/ ctx[0].height}px;`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$e.name,
+    		type: "if",
+    		source: "(4:0) {#if rect && rect.isVisible}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$O(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*rect*/ ctx[0] && /*rect*/ ctx[0].isVisible && create_if_block$e(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*rect*/ ctx[0] && /*rect*/ ctx[0].isVisible) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$e(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$O.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$O($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TimelineSelectionRect", slots, []);
+    	
+    	let { rect = null } = $$props;
+    	const writable_props = ["rect"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineSelectionRect> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("rect" in $$props) $$invalidate(0, rect = $$props.rect);
+    	};
+
+    	$$self.$capture_state = () => ({ rect });
+
+    	$$self.$inject_state = $$props => {
+    		if ("rect" in $$props) $$invalidate(0, rect = $$props.rect);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [rect];
+    }
+
+    class TimelineSelectionRect extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$O, create_fragment$O, safe_not_equal, { rect: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TimelineSelectionRect",
+    			options,
+    			id: create_fragment$O.name
+    		});
+    	}
+
+    	get rect() {
+    		throw new Error("<TimelineSelectionRect>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set rect(value) {
+    		throw new Error("<TimelineSelectionRect>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const ElementInfoMap = {
+        rect: {
+            title: 'Rectangle',
+            icon: 'expr:rectangle-tool'
+        },
+        ellipse: {
+            title: 'Ellipse',
+            icon: 'expr:ellipse'
+        },
+        star: {
+            title: 'Star',
+            icon: 'expr:star-tool'
+        },
+        'regular-polygon': {
+            title: 'Regular polygon',
+            icon: 'expr:polygon'
+        },
+        poly: {
+            title: 'Polyline',
+            icon: 'expr:polyline-tool'
+        },
+        path: {
+            title: 'Path',
+            icon: 'expr:path'
+        },
+        symbol: {
+            title: 'Symbol',
+            icon: 'expr:symbol'
+        },
+        group: {
+            title: 'Group',
+            icon: 'expr:group'
+        },
+        'clip-path': {
+            title: 'Clip path',
+            icon: 'expr:clip-path'
+        },
+        'mask': {
+            title: 'Mask',
+            icon: null, // TODO
+        },
+        text: {
+            title: 'Text',
+            icon: 'expr:text-tool'
+        },
+    };
+    function getElementTitle(element) {
+        return element.title || ElementInfoMap[element.type].title || ('(' + element.type + ')');
+    }
+    function getElementIcon(element) {
+        var _a;
+        return ((_a = ElementInfoMap[element.type]) === null || _a === void 0 ? void 0 : _a.icon) || 'expr:unknown';
+    }
+
+    /* src/Components/Timeline/TimelineElement.svelte generated by Svelte v3.38.3 */
+    const file$F = "src/Components/Timeline/TimelineElement.svelte";
+
+    function create_fragment$N(ctx) {
+    	let div;
+    	let sp_icon;
+    	let sp_icon_name_value;
+    	let t0;
+    	let span;
+    	let t1_value = getElementTitle(/*element*/ ctx[0]) + "";
+    	let t1;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "timeline-keyframe");
-    			attr_dev(div, "style", div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0]}`);
-    			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$F, 3, 0, 76);
+    			sp_icon = element("sp-icon");
+    			t0 = space();
+    			span = element("span");
+    			t1 = text(t1_value);
+    			set_custom_element_data(sp_icon, "name", sp_icon_name_value = getElementIcon(/*element*/ ctx[0]));
+    			set_custom_element_data(sp_icon, "size", "s");
+    			add_location(sp_icon, file$F, 12, 4, 462);
+    			attr_dev(span, "class", "timeline-element-title");
+    			add_location(span, file$F, 13, 4, 526);
+    			attr_dev(div, "class", "timeline-item is-alt timeline-element-item");
+    			toggle_class(div, "is-disabled", /*disabled*/ ctx[1]);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[2]);
+    			add_location(div, file$F, 8, 0, 260);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
+    			append_dev(div, sp_icon);
+    			append_dev(div, t0);
+    			append_dev(div, span);
+    			append_dev(span, t1);
+
+    			if (!mounted) {
+    				dispose = listen_dev(div, "click", /*click_handler*/ ctx[4], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*element*/ 1 && sp_icon_name_value !== (sp_icon_name_value = getElementIcon(/*element*/ ctx[0]))) {
+    				set_custom_element_data(sp_icon, "name", sp_icon_name_value);
+    			}
+
+    			if (dirty & /*element*/ 1 && t1_value !== (t1_value = getElementTitle(/*element*/ ctx[0]) + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty & /*disabled*/ 2) {
+    				toggle_class(div, "is-disabled", /*disabled*/ ctx[1]);
+    			}
+
+    			if (dirty & /*selected*/ 4) {
+    				toggle_class(div, "is-selected", /*selected*/ ctx[2]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$N.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$N($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TimelineElement", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { element } = $$props;
+    	let { disabled = false } = $$props;
+    	let { selected = false } = $$props;
+    	const writable_props = ["element", "disabled", "selected"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineElement> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = e => dispatch("select", { element, multiple: e.shiftKey });
+
+    	$$self.$$set = $$props => {
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    		if ("disabled" in $$props) $$invalidate(1, disabled = $$props.disabled);
+    		if ("selected" in $$props) $$invalidate(2, selected = $$props.selected);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getElementIcon,
+    		getElementTitle,
+    		createEventDispatcher,
+    		dispatch,
+    		element,
+    		disabled,
+    		selected
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    		if ("disabled" in $$props) $$invalidate(1, disabled = $$props.disabled);
+    		if ("selected" in $$props) $$invalidate(2, selected = $$props.selected);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [element, disabled, selected, dispatch, click_handler];
+    }
+
+    class TimelineElement extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$N, create_fragment$N, safe_not_equal, { element: 0, disabled: 1, selected: 2 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TimelineElement",
+    			options,
+    			id: create_fragment$N.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*element*/ ctx[0] === undefined && !("element" in props)) {
+    			console.warn("<TimelineElement> was created without expected prop 'element'");
+    		}
+    	}
+
+    	get element() {
+    		throw new Error("<TimelineElement>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set element(value) {
+    		throw new Error("<TimelineElement>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<TimelineElement>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<TimelineElement>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<TimelineElement>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<TimelineElement>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/TimelineProperty.svelte generated by Svelte v3.38.3 */
+    const file$E = "src/Components/Timeline/TimelineProperty.svelte";
+
+    function create_fragment$M(ctx) {
+    	let div;
+    	let span;
+    	let t0_value = /*animated*/ ctx[0].animator.title + "";
+    	let t0;
+    	let t1;
+    	let sp_action_button;
+    	let sp_icon;
+    	let sp_action_button_disabled_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			span = element("span");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			attr_dev(span, "class", "svelte-s70d20");
+    			toggle_class(span, "is-selected", /*selectedKeyframes*/ ctx[2]);
+    			add_location(span, file$E, 11, 4, 555);
+    			set_custom_element_data(sp_icon, "name", "workflow:AddCircle");
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			set_custom_element_data(sp_icon, "size", "s");
+    			add_location(sp_icon, file$E, 13, 8, 908);
+    			set_custom_element_data(sp_action_button, "title", "Add keyframe");
+    			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*animated*/ ctx[0].animation.disabled);
+    			set_custom_element_data(sp_action_button, "class", "very-small");
+    			set_custom_element_data(sp_action_button, "quiet", "");
+    			set_custom_element_data(sp_action_button, "size", "s");
+    			add_location(sp_action_button, file$E, 12, 4, 744);
+    			attr_dev(div, "class", "timeline-item timeline-property-item svelte-s70d20");
+    			toggle_class(div, "is-disabled", /*animated*/ ctx[0].animation.disabled);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
+    			add_location(div, file$E, 7, 0, 208);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, span);
+    			append_dev(span, t0);
+    			append_dev(div, t1);
+    			append_dev(div, sp_action_button);
+    			append_dev(sp_action_button, sp_icon);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div, "click", /*click_handler*/ ctx[2], false, false, false),
-    					listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[3], false, false, false)
+    					listen_dev(span, "click", /*click_handler*/ ctx[4], false, false, false),
+    					listen_dev(sp_action_button, "click", /*click_handler_1*/ ctx[5], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*offset*/ 1 && div_style_value !== (div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0]}`)) {
-    				attr_dev(div, "style", div_style_value);
+    			if (dirty & /*animated*/ 1 && t0_value !== (t0_value = /*animated*/ ctx[0].animator.title + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*selectedKeyframes*/ 4) {
+    				toggle_class(span, "is-selected", /*selectedKeyframes*/ ctx[2]);
+    			}
+
+    			if (dirty & /*animated*/ 1 && sp_action_button_disabled_value !== (sp_action_button_disabled_value = /*animated*/ ctx[0].animation.disabled)) {
+    				set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value);
+    			}
+
+    			if (dirty & /*animated*/ 1) {
+    				toggle_class(div, "is-disabled", /*animated*/ ctx[0].animation.disabled);
     			}
 
     			if (dirty & /*selected*/ 2) {
@@ -22062,6 +22867,294 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
+    		id: create_fragment$M.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$M($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TimelineProperty", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { animated } = $$props;
+    	let { selected = false } = $$props;
+    	let { selectedKeyframes = false } = $$props;
+    	const writable_props = ["animated", "selected", "selectedKeyframes"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineProperty> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = e => dispatch("selectAnimationKeyframes", {
+    		animation: animated.animation,
+    		multiple: e.shiftKey
+    	});
+
+    	const click_handler_1 = () => dispatch("add", animated);
+
+    	$$self.$$set = $$props => {
+    		if ("animated" in $$props) $$invalidate(0, animated = $$props.animated);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ("selectedKeyframes" in $$props) $$invalidate(2, selectedKeyframes = $$props.selectedKeyframes);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		createEventDispatcher,
+    		dispatch,
+    		animated,
+    		selected,
+    		selectedKeyframes
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("animated" in $$props) $$invalidate(0, animated = $$props.animated);
+    		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ("selectedKeyframes" in $$props) $$invalidate(2, selectedKeyframes = $$props.selectedKeyframes);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		animated,
+    		selected,
+    		selectedKeyframes,
+    		dispatch,
+    		click_handler,
+    		click_handler_1
+    	];
+    }
+
+    class TimelineProperty extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$M, create_fragment$M, safe_not_equal, {
+    			animated: 0,
+    			selected: 1,
+    			selectedKeyframes: 2
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TimelineProperty",
+    			options,
+    			id: create_fragment$M.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*animated*/ ctx[0] === undefined && !("animated" in props)) {
+    			console.warn("<TimelineProperty> was created without expected prop 'animated'");
+    		}
+    	}
+
+    	get animated() {
+    		throw new Error("<TimelineProperty>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set animated(value) {
+    		throw new Error("<TimelineProperty>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<TimelineProperty>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<TimelineProperty>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selectedKeyframes() {
+    		throw new Error("<TimelineProperty>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selectedKeyframes(value) {
+    		throw new Error("<TimelineProperty>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/TimelineElementWrapper.svelte generated by Svelte v3.38.3 */
+
+    function get_each_context$8(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[7] = list[i];
+    	return child_ctx;
+    }
+
+    // (16:0) {#each animated.animatedProperties as animatedProperty (animatedProperty.animator.id)}
+    function create_each_block$8(key_1, ctx) {
+    	let first;
+    	let timelineproperty;
+    	let current;
+
+    	timelineproperty = new TimelineProperty({
+    			props: {
+    				selected: /*selected*/ ctx[1],
+    				animated: /*animatedProperty*/ ctx[7],
+    				selectedKeyframes: /*selection*/ ctx[2].animationHasSelectedKeyframes(/*animatedProperty*/ ctx[7].animation)
+    			},
+    			$$inline: true
+    		});
+
+    	timelineproperty.$on("add", /*add_handler*/ ctx[4]);
+    	timelineproperty.$on("selectAnimationKeyframes", /*selectAnimationKeyframes_handler*/ ctx[5]);
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			first = empty();
+    			create_component(timelineproperty.$$.fragment);
+    			this.first = first;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, first, anchor);
+    			mount_component(timelineproperty, target, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const timelineproperty_changes = {};
+    			if (dirty & /*selected*/ 2) timelineproperty_changes.selected = /*selected*/ ctx[1];
+    			if (dirty & /*animated*/ 1) timelineproperty_changes.animated = /*animatedProperty*/ ctx[7];
+    			if (dirty & /*selection, animated*/ 5) timelineproperty_changes.selectedKeyframes = /*selection*/ ctx[2].animationHasSelectedKeyframes(/*animatedProperty*/ ctx[7].animation);
+    			timelineproperty.$set(timelineproperty_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelineproperty.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelineproperty.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(first);
+    			destroy_component(timelineproperty, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$8.name,
+    		type: "each",
+    		source: "(16:0) {#each animated.animatedProperties as animatedProperty (animatedProperty.animator.id)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$L(ctx) {
+    	let timelineelement;
+    	let t;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_1_anchor;
+    	let current;
+
+    	timelineelement = new TimelineElement({
+    			props: {
+    				selected: /*selected*/ ctx[1],
+    				element: /*animated*/ ctx[0].element
+    			},
+    			$$inline: true
+    		});
+
+    	timelineelement.$on("select", /*select_handler*/ ctx[3]);
+    	let each_value = /*animated*/ ctx[0].animatedProperties;
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*animatedProperty*/ ctx[7].animator.id;
+    	validate_each_keys(ctx, each_value, get_each_context$8, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$8(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$8(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			create_component(timelineelement.$$.fragment);
+    			t = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(timelineelement, target, anchor);
+    			insert_dev(target, t, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const timelineelement_changes = {};
+    			if (dirty & /*selected*/ 2) timelineelement_changes.selected = /*selected*/ ctx[1];
+    			if (dirty & /*animated*/ 1) timelineelement_changes.element = /*animated*/ ctx[0].element;
+    			timelineelement.$set(timelineelement_changes);
+
+    			if (dirty & /*selected, animated, selection*/ 7) {
+    				each_value = /*animated*/ ctx[0].animatedProperties;
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$8, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$8, each_1_anchor, get_each_context$8);
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelineelement.$$.fragment, local);
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelineelement.$$.fragment, local);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(timelineelement, detaching);
+    			if (detaching) detach_dev(t);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
     		id: create_fragment$L.name,
     		type: "component",
     		source: "",
@@ -22073,50 +23166,75 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     function instance$L($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Keyframe", slots, []);
-    	let { offset } = $$props;
+    	validate_slots("TimelineElementWrapper", slots, []);
+    	
+    	
+    	const dispatch = createEventDispatcher();
+    	let { animated } = $$props;
     	let { selected = false } = $$props;
-    	const writable_props = ["offset", "selected"];
+    	let { selection } = $$props;
+    	const writable_props = ["animated", "selected", "selection"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Keyframe> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineElementWrapper> was created with unknown prop '${key}'`);
     	});
 
-    	function click_handler(event) {
+    	function select_handler(event) {
     		bubble.call(this, $$self, event);
     	}
 
-    	function pointerdown_handler(event) {
+    	function add_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function selectAnimationKeyframes_handler(event) {
     		bubble.call(this, $$self, event);
     	}
 
     	$$self.$$set = $$props => {
-    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("animated" in $$props) $$invalidate(0, animated = $$props.animated);
     		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ("selection" in $$props) $$invalidate(2, selection = $$props.selection);
     	};
 
-    	$$self.$capture_state = () => ({ offset, selected });
+    	$$self.$capture_state = () => ({
+    		TimelineElement,
+    		TimelineProperty,
+    		createEventDispatcher,
+    		dispatch,
+    		animated,
+    		selected,
+    		selection
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("animated" in $$props) $$invalidate(0, animated = $$props.animated);
     		if ("selected" in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ("selection" in $$props) $$invalidate(2, selection = $$props.selection);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [offset, selected, click_handler, pointerdown_handler];
+    	return [
+    		animated,
+    		selected,
+    		selection,
+    		select_handler,
+    		add_handler,
+    		selectAnimationKeyframes_handler
+    	];
     }
 
-    class Keyframe extends SvelteComponentDev {
+    class TimelineElementWrapper extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { offset: 0, selected: 1 });
+    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { animated: 0, selected: 1, selection: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "Keyframe",
+    			tagName: "TimelineElementWrapper",
     			options,
     			id: create_fragment$L.name
     		});
@@ -22124,33 +23242,194 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
+    		if (/*animated*/ ctx[0] === undefined && !("animated" in props)) {
+    			console.warn("<TimelineElementWrapper> was created without expected prop 'animated'");
+    		}
+
+    		if (/*selection*/ ctx[2] === undefined && !("selection" in props)) {
+    			console.warn("<TimelineElementWrapper> was created without expected prop 'selection'");
+    		}
+    	}
+
+    	get animated() {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set animated(value) {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selection() {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selection(value) {
+    		throw new Error("<TimelineElementWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Timeline/TimelineKeyframe.svelte generated by Svelte v3.38.3 */
+
+    const file$D = "src/Components/Timeline/TimelineKeyframe.svelte";
+
+    function create_fragment$K(ctx) {
+    	let div;
+    	let div_style_value;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "data-keyframe-id", /*id*/ ctx[1]);
+    			attr_dev(div, "class", "timeline-keyframe");
+    			attr_dev(div, "style", div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0] <= 0 ? 0 : /*offset*/ ctx[0]}`);
+    			toggle_class(div, "is-selected", /*selected*/ ctx[2]);
+    			add_location(div, file$D, 4, 0, 91);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*id*/ 2) {
+    				attr_dev(div, "data-keyframe-id", /*id*/ ctx[1]);
+    			}
+
+    			if (dirty & /*offset*/ 1 && div_style_value !== (div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0] <= 0 ? 0 : /*offset*/ ctx[0]}`)) {
+    				attr_dev(div, "style", div_style_value);
+    			}
+
+    			if (dirty & /*selected*/ 4) {
+    				toggle_class(div, "is-selected", /*selected*/ ctx[2]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$K.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$K($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("TimelineKeyframe", slots, []);
+    	let { offset } = $$props;
+    	let { id } = $$props;
+    	let { selected = false } = $$props;
+    	const writable_props = ["offset", "id", "selected"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineKeyframe> was created with unknown prop '${key}'`);
+    	});
+
+    	function pointerdown_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("id" in $$props) $$invalidate(1, id = $$props.id);
+    		if ("selected" in $$props) $$invalidate(2, selected = $$props.selected);
+    	};
+
+    	$$self.$capture_state = () => ({ offset, id, selected });
+
+    	$$self.$inject_state = $$props => {
+    		if ("offset" in $$props) $$invalidate(0, offset = $$props.offset);
+    		if ("id" in $$props) $$invalidate(1, id = $$props.id);
+    		if ("selected" in $$props) $$invalidate(2, selected = $$props.selected);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [offset, id, selected, pointerdown_handler];
+    }
+
+    class TimelineKeyframe extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$K, create_fragment$K, safe_not_equal, { offset: 0, id: 1, selected: 2 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "TimelineKeyframe",
+    			options,
+    			id: create_fragment$K.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
     		if (/*offset*/ ctx[0] === undefined && !("offset" in props)) {
-    			console.warn("<Keyframe> was created without expected prop 'offset'");
+    			console.warn("<TimelineKeyframe> was created without expected prop 'offset'");
+    		}
+
+    		if (/*id*/ ctx[1] === undefined && !("id" in props)) {
+    			console.warn("<TimelineKeyframe> was created without expected prop 'id'");
     		}
     	}
 
     	get offset() {
-    		throw new Error("<Keyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineKeyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set offset(value) {
-    		throw new Error("<Keyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineKeyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get id() {
+    		throw new Error("<TimelineKeyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set id(value) {
+    		throw new Error("<TimelineKeyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get selected() {
-    		throw new Error("<Keyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineKeyframe>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set selected(value) {
-    		throw new Error("<Keyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineKeyframe>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
-    /* src/Components/Timeline/Easing.svelte generated by Svelte v3.38.3 */
+    /* src/Components/Timeline/TimelineEasing.svelte generated by Svelte v3.38.3 */
 
-    const file$E = "src/Components/Timeline/Easing.svelte";
+    const file$C = "src/Components/Timeline/TimelineEasing.svelte";
 
-    // (16:0) {#if end != null}
+    // (22:0) {#if end != null}
     function create_if_block$d(ctx) {
     	let div;
     	let div_style_value;
@@ -22163,18 +23442,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div, "class", "timeline-easing");
     			attr_dev(div, "style", div_style_value = `--timeline-keyframe-easing-start: ${/*min*/ ctx[2]}; --timeline-keyframe-easing-end: ${/*max*/ ctx[3]}`);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$E, 16, 0, 282);
+    			add_location(div, file$C, 22, 0, 366);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
 
     			if (!mounted) {
-    				dispose = [
-    					listen_dev(div, "click", /*click_handler*/ ctx[5], false, false, false),
-    					listen_dev(div, "contextmenu", /*contextmenu_handler*/ ctx[6], false, false, false),
-    					listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[7], false, false, false)
-    				];
-
+    				dispose = listen_dev(div, "pointerdown", /*pointerdown_handler*/ ctx[5], false, false, false);
     				mounted = true;
     			}
     		},
@@ -22190,7 +23464,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			mounted = false;
-    			run_all(dispose);
+    			dispose();
     		}
     	};
 
@@ -22198,14 +23472,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$d.name,
     		type: "if",
-    		source: "(16:0) {#if end != null}",
+    		source: "(22:0) {#if end != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$K(ctx) {
+    function create_fragment$J(ctx) {
     	let if_block_anchor;
     	let if_block = /*end*/ ctx[0] != null && create_if_block$d(ctx);
 
@@ -22245,7 +23519,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$K.name,
+    		id: create_fragment$J.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22254,9 +23528,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$K($$self, $$props, $$invalidate) {
+    function instance$J($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Easing", slots, []);
+    	validate_slots("TimelineEasing", slots, []);
     	let { start = 0 } = $$props;
     	let { end = null } = $$props;
     	let { selected = false } = $$props;
@@ -22264,16 +23538,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	const writable_props = ["start", "end", "selected"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Easing> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineEasing> was created with unknown prop '${key}'`);
     	});
-
-    	function click_handler(event) {
-    		bubble.call(this, $$self, event);
-    	}
-
-    	function contextmenu_handler(event) {
-    		bubble.call(this, $$self, event);
-    	}
 
     	function pointerdown_handler(event) {
     		bubble.call(this, $$self, event);
@@ -22300,7 +23566,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*end, start*/ 17) {
+    		if ($$self.$$.dirty & /*end, start, min, max*/ 29) {
     			{
     				if (end != null && start > end) {
     					$$invalidate(2, min = end);
@@ -22309,290 +23575,233 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     					$$invalidate(2, min = start);
     					$$invalidate(3, max = end);
     				}
+
+    				if (min < 0) {
+    					$$invalidate(2, min = 0);
+    				}
+
+    				if (max < 0) {
+    					$$invalidate(3, max = 0);
+    				}
     			}
     		}
     	};
 
-    	return [
-    		end,
-    		selected,
-    		min,
-    		max,
-    		start,
-    		click_handler,
-    		contextmenu_handler,
-    		pointerdown_handler
-    	];
+    	return [end, selected, min, max, start, pointerdown_handler];
     }
 
-    class Easing extends SvelteComponentDev {
+    class TimelineEasing extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$K, create_fragment$K, safe_not_equal, { start: 4, end: 0, selected: 1 });
+    		init(this, options, instance$J, create_fragment$J, safe_not_equal, { start: 4, end: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "Easing",
+    			tagName: "TimelineEasing",
     			options,
-    			id: create_fragment$K.name
+    			id: create_fragment$J.name
     		});
     	}
 
     	get start() {
-    		throw new Error("<Easing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set start(value) {
-    		throw new Error("<Easing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get end() {
-    		throw new Error("<Easing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set end(value) {
-    		throw new Error("<Easing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get selected() {
-    		throw new Error("<Easing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	set selected(value) {
-    		throw new Error("<Easing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		throw new Error("<TimelineEasing>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
-    const ElementIconMap = {
-        group: 'expr:group',
-        rect: 'expr:rectangle-tool',
-        ellipse: 'expr:ellipse',
-        poly: 'expr:polygon',
-    };
-    const FallbackElementIcon = 'expr:unknown';
-    const ElementTitleMap = {
-        group: 'Group',
-        rect: 'Rectangle',
-        ellipse: 'Ellipse',
-        path: 'Path',
-        star: 'Star',
-        poly: 'Polygon',
-        'regular-polygon': 'Regular polygon',
-        'clip-path': 'Clip path',
-    };
+    /* src/Components/Timeline/TimelineKeyfreamesLine.svelte generated by Svelte v3.38.3 */
 
-    /* src/Components/Timeline/Element.svelte generated by Svelte v3.38.3 */
-    const file$D = "src/Components/Timeline/Element.svelte";
+    function get_each_context$7(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[8] = list[i];
+    	child_ctx[10] = i;
+    	return child_ctx;
+    }
 
-    function create_fragment$J(ctx) {
-    	let div;
-    	let sp_icon;
-    	let sp_icon_name_value;
-    	let t0;
-    	let span;
-    	let t1_value = (/*title*/ ctx[1] || ElementIconMap[/*type*/ ctx[0]] || "Unknown") + "";
-    	let t1;
+    // (16:0) {#each keyframes as keyframe, index (keyframe.id)}
+    function create_each_block$7(key_1, ctx) {
+    	let first;
+    	let timelinekeyframe;
+    	let t;
+    	let timelineeasing;
+    	let current;
+
+    	function pointerdown_handler(...args) {
+    		return /*pointerdown_handler*/ ctx[6](/*keyframe*/ ctx[8], ...args);
+    	}
+
+    	timelinekeyframe = new TimelineKeyframe({
+    			props: {
+    				selected: /*$CurrentKeyframeSelection*/ ctx[0].isKeyframeSelected(/*keyframe*/ ctx[8]),
+    				id: /*keyframe*/ ctx[8].id,
+    				offset: /*keyframe*/ ctx[8].offset
+    			},
+    			$$inline: true
+    		});
+
+    	timelinekeyframe.$on("pointerdown", pointerdown_handler);
+
+    	function pointerdown_handler_1(...args) {
+    		return /*pointerdown_handler_1*/ ctx[7](/*keyframe*/ ctx[8], ...args);
+    	}
+
+    	timelineeasing = new TimelineEasing({
+    			props: {
+    				selected: /*$CurrentKeyframeSelection*/ ctx[0].areKeyframesSelected(/*keyframe*/ ctx[8], /*keyframes*/ ctx[1][/*index*/ ctx[10] + 1]),
+    				start: /*keyframe*/ ctx[8].offset,
+    				end: /*keyframes*/ ctx[1][/*index*/ ctx[10] + 1]?.offset
+    			},
+    			$$inline: true
+    		});
+
+    	timelineeasing.$on("pointerdown", pointerdown_handler_1);
 
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
-    			div = element("div");
-    			sp_icon = element("sp-icon");
-    			t0 = space();
-    			span = element("span");
-    			t1 = text(t1_value);
-    			set_custom_element_data(sp_icon, "name", sp_icon_name_value = ElementIconMap[/*type*/ ctx[0]] || FallbackElementIcon);
-    			set_custom_element_data(sp_icon, "size", "s");
-    			add_location(sp_icon, file$D, 9, 4, 311);
-    			add_location(span, file$D, 10, 4, 395);
-    			attr_dev(div, "class", "timeline-item");
-    			toggle_class(div, "is-disabled", /*disabled*/ ctx[2]);
-    			toggle_class(div, "is-selected", /*selected*/ ctx[3]);
-    			add_location(div, file$D, 6, 0, 211);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    			first = empty();
+    			create_component(timelinekeyframe.$$.fragment);
+    			t = space();
+    			create_component(timelineeasing.$$.fragment);
+    			this.first = first;
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, sp_icon);
-    			append_dev(div, t0);
-    			append_dev(div, span);
-    			append_dev(span, t1);
+    			insert_dev(target, first, anchor);
+    			mount_component(timelinekeyframe, target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(timelineeasing, target, anchor);
+    			current = true;
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*type*/ 1 && sp_icon_name_value !== (sp_icon_name_value = ElementIconMap[/*type*/ ctx[0]] || FallbackElementIcon)) {
-    				set_custom_element_data(sp_icon, "name", sp_icon_name_value);
-    			}
-
-    			if (dirty & /*title, type*/ 3 && t1_value !== (t1_value = (/*title*/ ctx[1] || ElementIconMap[/*type*/ ctx[0]] || "Unknown") + "")) set_data_dev(t1, t1_value);
-
-    			if (dirty & /*disabled*/ 4) {
-    				toggle_class(div, "is-disabled", /*disabled*/ ctx[2]);
-    			}
-
-    			if (dirty & /*selected*/ 8) {
-    				toggle_class(div, "is-selected", /*selected*/ ctx[3]);
-    			}
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const timelinekeyframe_changes = {};
+    			if (dirty & /*$CurrentKeyframeSelection, keyframes*/ 3) timelinekeyframe_changes.selected = /*$CurrentKeyframeSelection*/ ctx[0].isKeyframeSelected(/*keyframe*/ ctx[8]);
+    			if (dirty & /*keyframes*/ 2) timelinekeyframe_changes.id = /*keyframe*/ ctx[8].id;
+    			if (dirty & /*keyframes*/ 2) timelinekeyframe_changes.offset = /*keyframe*/ ctx[8].offset;
+    			timelinekeyframe.$set(timelinekeyframe_changes);
+    			const timelineeasing_changes = {};
+    			if (dirty & /*$CurrentKeyframeSelection, keyframes*/ 3) timelineeasing_changes.selected = /*$CurrentKeyframeSelection*/ ctx[0].areKeyframesSelected(/*keyframe*/ ctx[8], /*keyframes*/ ctx[1][/*index*/ ctx[10] + 1]);
+    			if (dirty & /*keyframes*/ 2) timelineeasing_changes.start = /*keyframe*/ ctx[8].offset;
+    			if (dirty & /*keyframes*/ 2) timelineeasing_changes.end = /*keyframes*/ ctx[1][/*index*/ ctx[10] + 1]?.offset;
+    			timelineeasing.$set(timelineeasing_changes);
     		},
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelinekeyframe.$$.fragment, local);
+    			transition_in(timelineeasing.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelinekeyframe.$$.fragment, local);
+    			transition_out(timelineeasing.$$.fragment, local);
+    			current = false;
+    		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(first);
+    			destroy_component(timelinekeyframe, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(timelineeasing, detaching);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$J.name,
-    		type: "component",
-    		source: "",
+    		id: create_each_block$7.name,
+    		type: "each",
+    		source: "(16:0) {#each keyframes as keyframe, index (keyframe.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    function instance$J($$self, $$props, $$invalidate) {
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Element", slots, []);
-    	let { type } = $$props;
-    	let { title = null } = $$props;
-    	let { disabled = false } = $$props;
-    	let { selected = false } = $$props;
-    	const writable_props = ["type", "title", "disabled", "selected"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Element> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ("type" in $$props) $$invalidate(0, type = $$props.type);
-    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
-    		if ("disabled" in $$props) $$invalidate(2, disabled = $$props.disabled);
-    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		FallbackElementIcon,
-    		ElementIconMap,
-    		ElementTitleMap,
-    		type,
-    		title,
-    		disabled,
-    		selected
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("type" in $$props) $$invalidate(0, type = $$props.type);
-    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
-    		if ("disabled" in $$props) $$invalidate(2, disabled = $$props.disabled);
-    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	return [type, title, disabled, selected];
-    }
-
-    class Element$1 extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$J, create_fragment$J, safe_not_equal, {
-    			type: 0,
-    			title: 1,
-    			disabled: 2,
-    			selected: 3
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Element",
-    			options,
-    			id: create_fragment$J.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*type*/ ctx[0] === undefined && !("type" in props)) {
-    			console.warn("<Element> was created without expected prop 'type'");
-    		}
-    	}
-
-    	get type() {
-    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set type(value) {
-    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get title() {
-    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set title(value) {
-    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get disabled() {
-    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set disabled(value) {
-    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get selected() {
-    		throw new Error("<Element>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set selected(value) {
-    		throw new Error("<Element>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src/Components/Timeline/Property.svelte generated by Svelte v3.38.3 */
-
-    const file$C = "src/Components/Timeline/Property.svelte";
-
     function create_fragment$I(ctx) {
-    	let div;
-    	let span;
-    	let t;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let each_1_anchor;
+    	let current;
+    	let each_value = /*keyframes*/ ctx[1];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*keyframe*/ ctx[8].id;
+    	validate_each_keys(ctx, each_value, get_each_context$7, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$7(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$7(key, child_ctx));
+    	}
 
     	const block = {
     		c: function create() {
-    			div = element("div");
-    			span = element("span");
-    			t = text(/*title*/ ctx[0]);
-    			add_location(span, file$C, 5, 4, 157);
-    			attr_dev(div, "class", "timeline-item");
-    			toggle_class(div, "is-disabled", /*disabled*/ ctx[1]);
-    			add_location(div, file$C, 4, 0, 96);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, span);
-    			append_dev(span, t);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*title*/ 1) set_data_dev(t, /*title*/ ctx[0]);
-
-    			if (dirty & /*disabled*/ 2) {
-    				toggle_class(div, "is-disabled", /*disabled*/ ctx[1]);
+    			if (dirty & /*$CurrentKeyframeSelection, keyframes, dispatch*/ 7) {
+    				each_value = /*keyframes*/ ctx[1];
+    				validate_each_argument(each_value);
+    				group_outros();
+    				validate_each_keys(ctx, each_value, get_each_context$7, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$7, each_1_anchor, get_each_context$7);
+    				check_outros();
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(each_1_anchor);
     		}
     	};
 
@@ -22607,356 +23816,193 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
+    function getKeyframes(animation, moving, selection, junk) {
+    	return moving && selection.animationHasSelectedKeyframes(animation)
+    	? animation.sortedKeyframes
+    	: animation.keyframes;
+    }
+
     function instance$I($$self, $$props, $$invalidate) {
+    	let $CurrentKeyframeSelection;
+    	validate_store(CurrentKeyframeSelection, "CurrentKeyframeSelection");
+    	component_subscribe($$self, CurrentKeyframeSelection, $$value => $$invalidate(0, $CurrentKeyframeSelection = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Property", slots, []);
-    	let { title } = $$props;
-    	let { property } = $$props;
-    	let { disabled = false } = $$props;
-    	const writable_props = ["title", "property", "disabled"];
+    	validate_slots("TimelineKeyfreamesLine", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { animation = undefined } = $$props;
+    	let { moving = false } = $$props;
+    	let { renderId = 1 } = $$props;
+    	let keyframes;
+    	const writable_props = ["animation", "moving", "renderId"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Property> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineKeyfreamesLine> was created with unknown prop '${key}'`);
     	});
 
+    	const pointerdown_handler = (keyframe, event) => dispatch("keyframe", { event, keyframe });
+    	const pointerdown_handler_1 = (keyframe, event) => dispatch("easing", { event, keyframe });
+
     	$$self.$$set = $$props => {
-    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
-    		if ("property" in $$props) $$invalidate(2, property = $$props.property);
-    		if ("disabled" in $$props) $$invalidate(1, disabled = $$props.disabled);
+    		if ("animation" in $$props) $$invalidate(3, animation = $$props.animation);
+    		if ("moving" in $$props) $$invalidate(4, moving = $$props.moving);
+    		if ("renderId" in $$props) $$invalidate(5, renderId = $$props.renderId);
     	};
 
-    	$$self.$capture_state = () => ({ title, property, disabled });
+    	$$self.$capture_state = () => ({
+    		TimelineKeyframe,
+    		TimelineEasing,
+    		CurrentKeyframeSelection,
+    		createEventDispatcher,
+    		dispatch,
+    		animation,
+    		moving,
+    		renderId,
+    		keyframes,
+    		getKeyframes,
+    		$CurrentKeyframeSelection
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ("title" in $$props) $$invalidate(0, title = $$props.title);
-    		if ("property" in $$props) $$invalidate(2, property = $$props.property);
-    		if ("disabled" in $$props) $$invalidate(1, disabled = $$props.disabled);
+    		if ("animation" in $$props) $$invalidate(3, animation = $$props.animation);
+    		if ("moving" in $$props) $$invalidate(4, moving = $$props.moving);
+    		if ("renderId" in $$props) $$invalidate(5, renderId = $$props.renderId);
+    		if ("keyframes" in $$props) $$invalidate(1, keyframes = $$props.keyframes);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [title, disabled, property];
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*animation, moving, $CurrentKeyframeSelection, renderId*/ 57) {
+    			$$invalidate(1, keyframes = getKeyframes(animation, moving, $CurrentKeyframeSelection));
+    		}
+    	};
+
+    	return [
+    		$CurrentKeyframeSelection,
+    		keyframes,
+    		dispatch,
+    		animation,
+    		moving,
+    		renderId,
+    		pointerdown_handler,
+    		pointerdown_handler_1
+    	];
     }
 
-    class Property extends SvelteComponentDev {
+    class TimelineKeyfreamesLine extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { title: 0, property: 2, disabled: 1 });
+    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { animation: 3, moving: 4, renderId: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "Property",
+    			tagName: "TimelineKeyfreamesLine",
     			options,
     			id: create_fragment$I.name
     		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*title*/ ctx[0] === undefined && !("title" in props)) {
-    			console.warn("<Property> was created without expected prop 'title'");
-    		}
-
-    		if (/*property*/ ctx[2] === undefined && !("property" in props)) {
-    			console.warn("<Property> was created without expected prop 'property'");
-    		}
     	}
 
-    	get title() {
-    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	get animation() {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set title(value) {
-    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	set animation(value) {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get property() {
-    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	get moving() {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set property(value) {
-    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	set moving(value) {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get disabled() {
-    		throw new Error("<Property>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	get renderId() {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set disabled(value) {
-    		throw new Error("<Property>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	set renderId(value) {
+    		throw new Error("<TimelineKeyfreamesLine>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     /* src/Components/Timeline/Timeline.svelte generated by Svelte v3.38.3 */
-
-    const { Object: Object_1 } = globals;
     const file$B = "src/Components/Timeline/Timeline.svelte";
 
     function get_each_context$6(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
+    	child_ctx[45] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[15] = list[i];
+    	child_ctx[48] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[18] = list[i];
-    	child_ctx[20] = i;
+    	child_ctx[45] = list[i];
     	return child_ctx;
     }
 
-    function get_each_context_3(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
-    	return child_ctx;
-    }
-
-    function get_each_context_4(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[15] = list[i];
-    	return child_ctx;
-    }
-
-    // (60:12) {#each animated.animations as animationObject}
-    function create_each_block_4(ctx) {
-    	let property;
+    // (230:8) {#each $CurrentAnimatedElements as animated (animated.element.id)}
+    function create_each_block_2(key_1, ctx) {
+    	let first;
+    	let timelineelementwrapper;
     	let current;
 
-    	property = new Property({
+    	timelineelementwrapper = new TimelineElementWrapper({
     			props: {
-    				title: /*animationObject*/ ctx[15].title,
-    				property: /*animationObject*/ ctx[15].property,
-    				disabled: /*animationObject*/ ctx[15].animation.disabled
+    				animated: /*animated*/ ctx[45],
+    				selected: /*$CurrentSelection*/ ctx[1].isSelected(/*animated*/ ctx[45].element),
+    				selection: /*$CurrentKeyframeSelection*/ ctx[0]
     			},
     			$$inline: true
     		});
 
+    	timelineelementwrapper.$on("select", /*onElementSelect*/ ctx[13]);
+    	timelineelementwrapper.$on("add", /*onAddKeyframe*/ ctx[12]);
+    	timelineelementwrapper.$on("selectAnimationKeyframes", /*onSelectAnimationKeyframes*/ ctx[14]);
+
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
-    			create_component(property.$$.fragment);
+    			first = empty();
+    			create_component(timelineelementwrapper.$$.fragment);
+    			this.first = first;
     		},
     		m: function mount(target, anchor) {
-    			mount_component(property, target, anchor);
+    			insert_dev(target, first, anchor);
+    			mount_component(timelineelementwrapper, target, anchor);
     			current = true;
     		},
-    		p: function update(ctx, dirty) {
-    			const property_changes = {};
-    			if (dirty & /*animatedElements*/ 4) property_changes.title = /*animationObject*/ ctx[15].title;
-    			if (dirty & /*animatedElements*/ 4) property_changes.property = /*animationObject*/ ctx[15].property;
-    			if (dirty & /*animatedElements*/ 4) property_changes.disabled = /*animationObject*/ ctx[15].animation.disabled;
-    			property.$set(property_changes);
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const timelineelementwrapper_changes = {};
+    			if (dirty[0] & /*$CurrentAnimatedElements*/ 128) timelineelementwrapper_changes.animated = /*animated*/ ctx[45];
+    			if (dirty[0] & /*$CurrentSelection, $CurrentAnimatedElements*/ 130) timelineelementwrapper_changes.selected = /*$CurrentSelection*/ ctx[1].isSelected(/*animated*/ ctx[45].element);
+    			if (dirty[0] & /*$CurrentKeyframeSelection*/ 1) timelineelementwrapper_changes.selection = /*$CurrentKeyframeSelection*/ ctx[0];
+    			timelineelementwrapper.$set(timelineelementwrapper_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(property.$$.fragment, local);
+    			transition_in(timelineelementwrapper.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(property.$$.fragment, local);
+    			transition_out(timelineelementwrapper.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_component(property, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block_4.name,
-    		type: "each",
-    		source: "(60:12) {#each animated.animations as animationObject}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (58:8) {#each animatedElements as animated}
-    function create_each_block_3(ctx) {
-    	let element_1;
-    	let t;
-    	let each_1_anchor;
-    	let current;
-
-    	element_1 = new Element$1({
-    			props: {
-    				title: /*animated*/ ctx[12].element.title,
-    				type: /*animated*/ ctx[12].element.type
-    			},
-    			$$inline: true
-    		});
-
-    	let each_value_4 = /*animated*/ ctx[12].animations;
-    	validate_each_argument(each_value_4);
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value_4.length; i += 1) {
-    		each_blocks[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
-    	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
-
-    	const block = {
-    		c: function create() {
-    			create_component(element_1.$$.fragment);
-    			t = space();
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			each_1_anchor = empty();
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(element_1, target, anchor);
-    			insert_dev(target, t, anchor);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(target, anchor);
-    			}
-
-    			insert_dev(target, each_1_anchor, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const element_1_changes = {};
-    			if (dirty & /*animatedElements*/ 4) element_1_changes.title = /*animated*/ ctx[12].element.title;
-    			if (dirty & /*animatedElements*/ 4) element_1_changes.type = /*animated*/ ctx[12].element.type;
-    			element_1.$set(element_1_changes);
-
-    			if (dirty & /*animatedElements*/ 4) {
-    				each_value_4 = /*animated*/ ctx[12].animations;
-    				validate_each_argument(each_value_4);
-    				let i;
-
-    				for (i = 0; i < each_value_4.length; i += 1) {
-    					const child_ctx = get_each_context_4(ctx, each_value_4, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block_4(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
-    					}
-    				}
-
-    				group_outros();
-
-    				for (i = each_value_4.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
-    				check_outros();
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(element_1.$$.fragment, local);
-
-    			for (let i = 0; i < each_value_4.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(element_1.$$.fragment, local);
-    			each_blocks = each_blocks.filter(Boolean);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(element_1, detaching);
-    			if (detaching) detach_dev(t);
-    			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(each_1_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block_3.name,
-    		type: "each",
-    		source: "(58:8) {#each animatedElements as animated}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (73:24) {#each animationObject.animation.keyframes as keyframe, index}
-    function create_each_block_2(ctx) {
-    	let keyframe;
-    	let t;
-    	let easing;
-    	let current;
-
-    	keyframe = new Keyframe({
-    			props: { offset: /*keyframe*/ ctx[18].offset },
-    			$$inline: true
-    		});
-
-    	easing = new Easing({
-    			props: {
-    				start: /*keyframe*/ ctx[18].offset,
-    				end: /*animationObject*/ ctx[15].animation.keyframes[/*index*/ ctx[20] + 1]?.offset
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(keyframe.$$.fragment);
-    			t = space();
-    			create_component(easing.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(keyframe, target, anchor);
-    			insert_dev(target, t, anchor);
-    			mount_component(easing, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const keyframe_changes = {};
-    			if (dirty & /*animatedElements*/ 4) keyframe_changes.offset = /*keyframe*/ ctx[18].offset;
-    			keyframe.$set(keyframe_changes);
-    			const easing_changes = {};
-    			if (dirty & /*animatedElements*/ 4) easing_changes.start = /*keyframe*/ ctx[18].offset;
-    			if (dirty & /*animatedElements*/ 4) easing_changes.end = /*animationObject*/ ctx[15].animation.keyframes[/*index*/ ctx[20] + 1]?.offset;
-    			easing.$set(easing_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(keyframe.$$.fragment, local);
-    			transition_in(easing.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(keyframe.$$.fragment, local);
-    			transition_out(easing.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(keyframe, detaching);
-    			if (detaching) detach_dev(t);
-    			destroy_component(easing, detaching);
+    			if (detaching) detach_dev(first);
+    			destroy_component(timelineelementwrapper, detaching);
     		}
     	};
 
@@ -22964,94 +24010,68 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(73:24) {#each animationObject.animation.keyframes as keyframe, index}",
+    		source: "(230:8) {#each $CurrentAnimatedElements as animated (animated.element.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (72:20) <TimelineItem keyframes={true} disabled={animationObject.animation.disabled}>
+    // (249:20) <TimelineItem keyframes={true} disabled={animatedProperty.animation.disabled}>
     function create_default_slot$6(ctx) {
+    	let timelinekeyfreamesline;
     	let t;
     	let current;
-    	let each_value_2 = /*animationObject*/ ctx[15].animation.keyframes;
-    	validate_each_argument(each_value_2);
-    	let each_blocks = [];
 
-    	for (let i = 0; i < each_value_2.length; i += 1) {
-    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	function keyframe_handler(...args) {
+    		return /*keyframe_handler*/ ctx[22](/*animated*/ ctx[45], /*animatedProperty*/ ctx[48], ...args);
     	}
 
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
+    	function easing_handler(...args) {
+    		return /*easing_handler*/ ctx[23](/*animated*/ ctx[45], /*animatedProperty*/ ctx[48], ...args);
+    	}
+
+    	timelinekeyfreamesline = new TimelineKeyfreamesLine({
+    			props: {
+    				animation: /*animatedProperty*/ ctx[48].animation,
+    				moving: /*isMoving*/ ctx[6],
+    				renderId: /*reRender*/ ctx[5]
+    			},
+    			$$inline: true
+    		});
+
+    	timelinekeyfreamesline.$on("keyframe", keyframe_handler);
+    	timelinekeyfreamesline.$on("easing", easing_handler);
 
     	const block = {
     		c: function create() {
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
+    			create_component(timelinekeyfreamesline.$$.fragment);
     			t = space();
     		},
     		m: function mount(target, anchor) {
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(target, anchor);
-    			}
-
+    			mount_component(timelinekeyfreamesline, target, anchor);
     			insert_dev(target, t, anchor);
     			current = true;
     		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*animatedElements*/ 4) {
-    				each_value_2 = /*animationObject*/ ctx[15].animation.keyframes;
-    				validate_each_argument(each_value_2);
-    				let i;
-
-    				for (i = 0; i < each_value_2.length; i += 1) {
-    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block_2(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(t.parentNode, t);
-    					}
-    				}
-
-    				group_outros();
-
-    				for (i = each_value_2.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
-    				check_outros();
-    			}
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const timelinekeyfreamesline_changes = {};
+    			if (dirty[0] & /*$CurrentAnimatedElements*/ 128) timelinekeyfreamesline_changes.animation = /*animatedProperty*/ ctx[48].animation;
+    			if (dirty[0] & /*isMoving*/ 64) timelinekeyfreamesline_changes.moving = /*isMoving*/ ctx[6];
+    			if (dirty[0] & /*reRender*/ 32) timelinekeyfreamesline_changes.renderId = /*reRender*/ ctx[5];
+    			timelinekeyfreamesline.$set(timelinekeyfreamesline_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-
-    			for (let i = 0; i < each_value_2.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
+    			transition_in(timelinekeyfreamesline.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
+    			transition_out(timelinekeyfreamesline.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			destroy_each(each_blocks, detaching);
+    			destroy_component(timelinekeyfreamesline, detaching);
     			if (detaching) detach_dev(t);
     		}
     	};
@@ -23060,14 +24080,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot$6.name,
     		type: "slot",
-    		source: "(72:20) <TimelineItem keyframes={true} disabled={animationObject.animation.disabled}>",
+    		source: "(249:20) <TimelineItem keyframes={true} disabled={animatedProperty.animation.disabled}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:16) {#each animated.animations as animationObject}
+    // (248:16) {#each animated.animatedProperties as animatedProperty}
     function create_each_block_1$1(ctx) {
     	let timelineitem;
     	let current;
@@ -23075,7 +24095,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	timelineitem = new TimelineItem({
     			props: {
     				keyframes: true,
-    				disabled: /*animationObject*/ ctx[15].animation.disabled,
+    				disabled: /*animatedProperty*/ ctx[48].animation.disabled,
     				$$slots: { default: [create_default_slot$6] },
     				$$scope: { ctx }
     			},
@@ -23092,9 +24112,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const timelineitem_changes = {};
-    			if (dirty & /*animatedElements*/ 4) timelineitem_changes.disabled = /*animationObject*/ ctx[15].animation.disabled;
+    			if (dirty[0] & /*$CurrentAnimatedElements*/ 128) timelineitem_changes.disabled = /*animatedProperty*/ ctx[48].animation.disabled;
 
-    			if (dirty & /*$$scope, animatedElements*/ 33554436) {
+    			if (dirty[0] & /*$CurrentAnimatedElements, isMoving, reRender*/ 224 | dirty[1] & /*$$scope*/ 4194304) {
     				timelineitem_changes.$$scope = { dirty, ctx };
     			}
 
@@ -23118,21 +24138,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_each_block_1$1.name,
     		type: "each",
-    		source: "(71:16) {#each animated.animations as animationObject}",
+    		source: "(248:16) {#each animated.animatedProperties as animatedProperty}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:12) {#each animatedElements as animated}
+    // (244:12) {#each $CurrentAnimatedElements as animated}
     function create_each_block$6(ctx) {
     	let timelineitem;
     	let t;
     	let each_1_anchor;
     	let current;
-    	timelineitem = new TimelineItem({ $$inline: true });
-    	let each_value_1 = /*animated*/ ctx[12].animations;
+    	timelineitem = new TimelineItem({ props: { isAlt: true }, $$inline: true });
+    	let each_value_1 = /*animated*/ ctx[45].animatedProperties;
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -23167,8 +24187,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*animatedElements*/ 4) {
-    				each_value_1 = /*animated*/ ctx[12].animations;
+    			if (dirty[0] & /*$CurrentAnimatedElements, isMoving, reRender, onKeyframePointerDown, onEasingPointerDown*/ 3296) {
+    				each_value_1 = /*animated*/ ctx[45].animatedProperties;
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -23227,7 +24247,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_each_block$6.name,
     		type: "each",
-    		source: "(67:12) {#each animatedElements as animated}",
+    		source: "(244:12) {#each $CurrentAnimatedElements as animated}",
     		ctx
     	});
 
@@ -23237,27 +24257,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     function create_fragment$H(ctx) {
     	let div4;
     	let div0;
+    	let each_blocks_1 = [];
+    	let each0_lookup = new Map();
     	let t0;
     	let div3;
     	let div1;
     	let t1;
+    	let timelineselectionrect;
+    	let t2;
     	let div2;
     	let current;
     	let mounted;
     	let dispose;
-    	let each_value_3 = /*animatedElements*/ ctx[2];
-    	validate_each_argument(each_value_3);
-    	let each_blocks_1 = [];
+    	let each_value_2 = /*$CurrentAnimatedElements*/ ctx[7];
+    	validate_each_argument(each_value_2);
+    	const get_key = ctx => /*animated*/ ctx[45].element.id;
+    	validate_each_keys(ctx, each_value_2, get_each_context_2, get_key);
 
-    	for (let i = 0; i < each_value_3.length; i += 1) {
-    		each_blocks_1[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		let child_ctx = get_each_context_2(ctx, each_value_2, i);
+    		let key = get_key(child_ctx);
+    		each0_lookup.set(key, each_blocks_1[i] = create_each_block_2(key, child_ctx));
     	}
 
-    	const out = i => transition_out(each_blocks_1[i], 1, 1, () => {
-    		each_blocks_1[i] = null;
-    	});
-
-    	let each_value = /*animatedElements*/ ctx[2];
+    	let each_value = /*$CurrentAnimatedElements*/ ctx[7];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -23265,9 +24288,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		each_blocks[i] = create_each_block$6(get_each_context$6(ctx, each_value, i));
     	}
 
-    	const out_1 = i => transition_out(each_blocks[i], 1, 1, () => {
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
     		each_blocks[i] = null;
     	});
+
+    	timelineselectionrect = new TimelineSelectionRect({
+    			props: { rect: /*selectionRect*/ ctx[4] },
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
@@ -23287,18 +24315,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			t1 = space();
+    			create_component(timelineselectionrect.$$.fragment);
+    			t2 = space();
     			div2 = element("div");
     			attr_dev(div0, "class", "timeline-elements scroll scroll-invisible scroll-no-padding");
     			attr_dev(div0, "hidden-x", "");
-    			add_location(div0, file$B, 56, 4, 1763);
+    			add_location(div0, file$B, 228, 4, 8361);
     			attr_dev(div1, "class", "timeline-items-wrapper");
-    			add_location(div1, file$B, 65, 8, 2391);
+    			add_location(div1, file$B, 242, 8, 9159);
     			attr_dev(div2, "class", "timeline-play-line");
-    			add_location(div2, file$B, 82, 8, 3280);
+    			add_location(div2, file$B, 261, 8, 10346);
     			attr_dev(div3, "class", "timeline-keyframes scroll scroll-no-hide scroll-no-padding");
-    			add_location(div3, file$B, 64, 4, 2267);
+    			add_location(div3, file$B, 240, 4, 8987);
     			attr_dev(div4, "class", "timeline");
-    			add_location(div4, file$B, 55, 0, 1736);
+    			add_location(div4, file$B, 227, 0, 8334);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -23311,7 +24341,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				each_blocks_1[i].m(div0, null);
     			}
 
-    			/*div0_binding*/ ctx[8](div0);
+    			/*div0_binding*/ ctx[21](div0);
     			append_dev(div4, t0);
     			append_dev(div4, div3);
     			append_dev(div3, div1);
@@ -23321,50 +24351,34 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			append_dev(div3, t1);
+    			mount_component(timelineselectionrect, div3, null);
+    			append_dev(div3, t2);
     			append_dev(div3, div2);
-    			/*div3_binding*/ ctx[9](div3);
+    			/*div3_binding*/ ctx[24](div3);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(div0, "scroll", /*onScroll*/ ctx[3], false, false, false),
-    					listen_dev(div3, "scroll", /*onScroll*/ ctx[3], false, false, false)
+    					listen_dev(div0, "scroll", /*onScroll*/ ctx[8], false, false, false),
+    					listen_dev(div3, "scroll", /*onScroll*/ ctx[8], false, false, false),
+    					listen_dev(div3, "pointerdown", /*onTimelinePointerDown*/ ctx[9], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*animatedElements*/ 4) {
-    				each_value_3 = /*animatedElements*/ ctx[2];
-    				validate_each_argument(each_value_3);
-    				let i;
-
-    				for (i = 0; i < each_value_3.length; i += 1) {
-    					const child_ctx = get_each_context_3(ctx, each_value_3, i);
-
-    					if (each_blocks_1[i]) {
-    						each_blocks_1[i].p(child_ctx, dirty);
-    						transition_in(each_blocks_1[i], 1);
-    					} else {
-    						each_blocks_1[i] = create_each_block_3(child_ctx);
-    						each_blocks_1[i].c();
-    						transition_in(each_blocks_1[i], 1);
-    						each_blocks_1[i].m(div0, null);
-    					}
-    				}
-
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*$CurrentAnimatedElements, $CurrentSelection, $CurrentKeyframeSelection, onElementSelect, onAddKeyframe, onSelectAnimationKeyframes*/ 28803) {
+    				each_value_2 = /*$CurrentAnimatedElements*/ ctx[7];
+    				validate_each_argument(each_value_2);
     				group_outros();
-
-    				for (i = each_value_3.length; i < each_blocks_1.length; i += 1) {
-    					out(i);
-    				}
-
+    				validate_each_keys(ctx, each_value_2, get_each_context_2, get_key);
+    				each_blocks_1 = update_keyed_each(each_blocks_1, dirty, get_key, 1, ctx, each_value_2, each0_lookup, div0, outro_and_destroy_block, create_each_block_2, null, get_each_context_2);
     				check_outros();
     			}
 
-    			if (dirty & /*animatedElements*/ 4) {
-    				each_value = /*animatedElements*/ ctx[2];
+    			if (dirty[0] & /*$CurrentAnimatedElements, isMoving, reRender, onKeyframePointerDown, onEasingPointerDown*/ 3296) {
+    				each_value = /*$CurrentAnimatedElements*/ ctx[7];
     				validate_each_argument(each_value);
     				let i;
 
@@ -23385,16 +24399,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				group_outros();
 
     				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out_1(i);
+    					out(i);
     				}
 
     				check_outros();
     			}
+
+    			const timelineselectionrect_changes = {};
+    			if (dirty[0] & /*selectionRect*/ 16) timelineselectionrect_changes.rect = /*selectionRect*/ ctx[4];
+    			timelineselectionrect.$set(timelineselectionrect_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
 
-    			for (let i = 0; i < each_value_3.length; i += 1) {
+    			for (let i = 0; i < each_value_2.length; i += 1) {
     				transition_in(each_blocks_1[i]);
     			}
 
@@ -23402,11 +24420,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				transition_in(each_blocks[i]);
     			}
 
+    			transition_in(timelineselectionrect.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			each_blocks_1 = each_blocks_1.filter(Boolean);
-
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
     				transition_out(each_blocks_1[i]);
     			}
@@ -23417,14 +24434,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				transition_out(each_blocks[i]);
     			}
 
+    			transition_out(timelineselectionrect.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div4);
-    			destroy_each(each_blocks_1, detaching);
-    			/*div0_binding*/ ctx[8](null);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].d();
+    			}
+
+    			/*div0_binding*/ ctx[21](null);
     			destroy_each(each_blocks, detaching);
-    			/*div3_binding*/ ctx[9](null);
+    			destroy_component(timelineselectionrect);
+    			/*div3_binding*/ ctx[24](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -23441,47 +24464,49 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function mapAnimations(project, documentAnimation) {
-    	if (!project || !documentAnimation) {
-    		return [];
+    function* getKeyframeIdsFromRect(pane, rect) {
+    	if (!rect || !rect.isVisible) {
+    		return;
     	}
 
-    	const animators = project.animatorSource;
-    	const list = [];
-    	let element, properties, animation, property, animator;
+    	for (const element of pane.querySelectorAll(".timeline-keyframe")) {
+    		const bounds = element.getBoundingClientRect();
 
-    	for ([element, properties] of documentAnimation.getAnimatedElements()) {
-    		const animations = [];
-
-    		for ([property, animation] of Object.entries(properties)) {
-    			animator = animators.getAnimator(element, property);
-
-    			animations.push({
-    				title: animator.title,
-    				property,
-    				animation
-    			});
+    		if (rect.contains(bounds.x + pane.scrollLeft - pane.offsetLeft + bounds.width / 2, bounds.y + pane.scrollTop - pane.offsetTop + bounds.height / 2)) {
+    			yield element.getAttribute("data-keyframe-id");
     		}
-
-    		list.push({ element, animations });
     	}
-
-    	return list;
     }
 
     function instance$H($$self, $$props, $$invalidate) {
-    	let animatedElements;
+    	let $CurrentKeyframeSelection;
     	let $CurrentProject;
-    	let $CurrentDocumentAnimation;
+    	let $CurrentTime;
+    	let $CurrentSelection;
+    	let $ShowOnlySelectedElementsAnimations;
+    	let $CurrentAnimatedElements;
+    	validate_store(CurrentKeyframeSelection, "CurrentKeyframeSelection");
+    	component_subscribe($$self, CurrentKeyframeSelection, $$value => $$invalidate(0, $CurrentKeyframeSelection = $$value));
     	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(6, $CurrentProject = $$value));
-    	validate_store(CurrentDocumentAnimation, "CurrentDocumentAnimation");
-    	component_subscribe($$self, CurrentDocumentAnimation, $$value => $$invalidate(7, $CurrentDocumentAnimation = $$value));
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(34, $CurrentProject = $$value));
+    	validate_store(CurrentTime, "CurrentTime");
+    	component_subscribe($$self, CurrentTime, $$value => $$invalidate(35, $CurrentTime = $$value));
+    	validate_store(CurrentSelection, "CurrentSelection");
+    	component_subscribe($$self, CurrentSelection, $$value => $$invalidate(1, $CurrentSelection = $$value));
+    	validate_store(ShowOnlySelectedElementsAnimations, "ShowOnlySelectedElementsAnimations");
+    	component_subscribe($$self, ShowOnlySelectedElementsAnimations, $$value => $$invalidate(20, $ShowOnlySelectedElementsAnimations = $$value));
+    	validate_store(CurrentAnimatedElements, "CurrentAnimatedElements");
+    	component_subscribe($$self, CurrentAnimatedElements, $$value => $$invalidate(7, $CurrentAnimatedElements = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Timeline", slots, []);
     	
+    	
+    	
+    	let { zoom = 1 } = $$props;
+    	let { scaleFactor = 1 } = $$props;
     	let { scrollTop = 0 } = $$props;
     	let { scrollLeft = 0 } = $$props;
+    	let { disabled = false } = $$props;
 
     	/* Scroll sync Y */
     	let leftPane;
@@ -23502,68 +24527,356 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     		if (top !== prevScrollTop) {
     			(el === rightPane ? leftPane : rightPane).scrollTop = top;
-    			$$invalidate(4, scrollTop = prevScrollTop = top);
+    			$$invalidate(15, scrollTop = prevScrollTop = top);
     		} else if (el === rightPane) {
-    			$$invalidate(5, scrollLeft = rightPane.scrollLeft);
+    			$$invalidate(16, scrollLeft = rightPane.scrollLeft);
     		} //rightPane.scrollWidth
 
     		isScrollingTop = false;
     	};
 
-    	const writable_props = ["scrollTop", "scrollLeft"];
+    	let selectionRect = null;
+    	let selectionRectPivot = null;
+    	let reRender = 1;
+    	let deselectKeyframe = null;
+    	let startKeyframe = null;
+    	let startOffset = 0;
+    	let positionDelta = 0;
+    	let isMoving = false;
+    	let position = 0;
+    	let currentSelectionData = null;
 
-    	Object_1.keys($$props).forEach(key => {
+    	function getTimelinePoint(e) {
+    		return new canvasEngine.Point(e.clientX - rightPane.offsetLeft + rightPane.scrollLeft, e.clientY - rightPane.offsetTop + rightPane.scrollTop);
+    	}
+
+    	function onTimelinePointerDown(e) {
+    		const target = e.target;
+
+    		if (target.classList.contains("timeline-keyframe") || target.classList.contains("timeline-easing")) {
+    			return;
+    		}
+
+    		// if ((e.clientX - rightPane.offsetWidth - rightPane.offsetLeft > rightPane.clientWidth - rightPane.offsetWidth) ||
+    		//     (e.clientY - rightPane.offsetHeight - rightPane.offsetTop > rightPane.clientHeight - rightPane.offsetHeight)) {
+    		if (e.clientX - rightPane.offsetLeft > rightPane.clientWidth || e.clientY - rightPane.offsetTop > rightPane.clientHeight) {
+    			// click on scrollbar
+    			return;
+    		}
+
+    		if ($CurrentKeyframeSelection.clear()) {
+    			notifyKeyframeSelectionChanged();
+    		}
+
+    		selectionRectPivot = getTimelinePoint(e);
+    		rightPane.addEventListener("pointermove", onTimelinePointerMove);
+    		rightPane.addEventListener("pointerup", onTimelinePointerUp);
+    		rightPane.setPointerCapture(e.pointerId);
+    	}
+
+    	function onTimelinePointerMove(e) {
+    		$$invalidate(4, selectionRect = canvasEngine.Rectangle.fromPoints(selectionRectPivot, getTimelinePoint(e)));
+    	}
+
+    	function onTimelinePointerUp(e) {
+    		rightPane.removeEventListener("pointermove", onTimelinePointerMove);
+    		rightPane.removeEventListener("pointerup", onTimelinePointerUp);
+    		rightPane.releasePointerCapture(e.pointerId);
+
+    		if ($CurrentKeyframeSelection.selectKeyframeIds(getKeyframeIdsFromRect(rightPane, selectionRect))) {
+    			notifyKeyframeSelectionChanged();
+    		}
+
+    		selectionRectPivot = null;
+    		$$invalidate(4, selectionRect = null);
+    	}
+
+    	function prepareMove(e, keyframe) {
+    		rightPane.addEventListener("pointermove", onKeyframePointerMove);
+    		rightPane.addEventListener("pointerup", onKeyframePointerUp);
+    		rightPane.setPointerCapture(e.pointerId);
+    		position = e.clientX;
+    		$$invalidate(6, isMoving = false);
+    		startKeyframe = keyframe;
+    		startOffset = keyframe.offset;
+    		positionDelta = getXAtTime(keyframe.offset, scrollLeft, zoom) + rightPane.offsetLeft - position;
+    	}
+
+    	function destroyMove(e) {
+    		rightPane.removeEventListener("pointermove", onKeyframePointerMove);
+    		rightPane.removeEventListener("pointerup", onKeyframePointerUp);
+    		rightPane.releasePointerCapture(e.pointerId);
+    		deselectKeyframe = null;
+    		currentSelectionData = null;
+    		startKeyframe = null;
+    		$$invalidate(6, isMoving = false);
+    	}
+
+    	function onEasingPointerDown(e, element, info, keyframe) {
+    		if (e.button !== canvasEngine.MouseButton.Left) {
+    			return;
+    		}
+
+    		const index = info.animation.getIndexOfKeyframe(keyframe);
+
+    		const next = index === -1
+    		? null
+    		: info.animation.getKeyframeAtIndex(index + 1);
+
+    		const selection = $CurrentKeyframeSelection;
+
+    		if (!selection.areKeyframesSelected(keyframe, next)) {
+    			if (!e.shiftKey) {
+    				selection.clear();
+    			}
+
+    			selection.selectKeyframe(keyframe, true);
+
+    			if (next) {
+    				selection.selectKeyframe(next, true);
+    			}
+
+    			notifyKeyframeSelectionChanged();
+    		}
+
+    		prepareMove(e, keyframe);
+    	}
+
+    	function onKeyframePointerDown(e, element, info, keyframe) {
+    		if (e.button !== canvasEngine.MouseButton.Left) {
+    			return;
+    		}
+
+    		if ($CurrentKeyframeSelection.selectKeyframe(keyframe, e.shiftKey)) {
+    			notifyKeyframeSelectionChanged();
+    		} else if (e.shiftKey) {
+    			deselectKeyframe = keyframe;
+    		}
+
+    		prepareMove(e, keyframe);
+    	}
+
+    	function getKeyframeMoveDelta(x) {
+    		return getRoundedDeltaTimeByX(x, startKeyframe.offset, zoom, scaleFactor);
+    	}
+
+    	function onKeyframePointerMove(e) {
+    		var _a;
+    		const delta = getKeyframeMoveDelta(e.clientX - position);
+
+    		if (delta === 0) {
+    			return;
+    		}
+
+    		position = rightPane.offsetLeft + getXAtTime(startKeyframe.offset + delta, rightPane.scrollLeft, zoom) - positionDelta;
+
+    		if (!isMoving) {
+    			$$invalidate(6, isMoving = true);
+    			currentSelectionData = $CurrentKeyframeSelection.resolveSelectedKeyframes();
+    		}
+
+    		for (const k of currentSelectionData.keyframes) {
+    			k.offset += delta;
+    		}
+
+    		// re-eval
+    		const project = $CurrentProject;
+
+    		if (project.middleware.updateAnimations(currentSelectionData)) {
+    			(_a = project.engine) === null || _a === void 0
+    			? void 0
+    			: _a.invalidate();
+
+    			notifyPropertiesChanged();
+    		}
+
+    		// force update of keyframe offsets
+    		$$invalidate(5, reRender++, reRender);
+    	}
+
+    	function onKeyframePointerUp(e) {
+    		var _a;
+
+    		if (isMoving && startOffset !== startKeyframe.offset) {
+    			const project = $CurrentProject;
+
+    			// changed
+    			for (const animation of currentSelectionData.animations) {
+    				animation.fixKeyframes(currentSelectionData.keyframes);
+    			}
+
+    			if (project.middleware.updateAnimatedProperties(project.document)) {
+    				(_a = project.engine) === null || _a === void 0
+    				? void 0
+    				: _a.invalidate();
+    			}
+
+    			snapshot();
+    		} else if (!isMoving && deselectKeyframe != null) {
+    			if ($CurrentKeyframeSelection.deselectKeyframe(deselectKeyframe)) {
+    				notifyKeyframeSelectionChanged();
+    			}
+    		}
+
+    		destroyMove(e);
+    	}
+
+    	function onAddKeyframe(e) {
+    		if (disabled) {
+    			return;
+    		}
+
+    		const time = $CurrentTime;
+
+    		if (e.detail.animation.getKeyframeAtOffset(time) == null) {
+    			const keyframe = e.detail.animation.addKeyframeAtOffset(time, null);
+    			$CurrentKeyframeSelection.clear();
+    			$CurrentKeyframeSelection.selectKeyframe(keyframe);
+    			snapshot();
+    		}
+    	}
+
+    	function onElementSelect(e) {
+    		var _a;
+
+    		if (disabled) {
+    			return;
+    		}
+
+    		if ($CurrentSelection.toggle(e.detail.element, e.detail.multiple)) {
+    			(_a = $CurrentProject.engine) === null || _a === void 0
+    			? void 0
+    			: _a.invalidate();
+
+    			notifySelectionChanged();
+    		}
+    	}
+
+    	function onSelectAnimationKeyframes(e) {
+    		if ($CurrentKeyframeSelection.selectMultipleKeyframes(e.detail.animation.keyframes, e.detail.multiple)) {
+    			notifyKeyframeSelectionChanged();
+    		}
+    	}
+
+    	function snapshot() {
+    		$CurrentProject.state.snapshot();
+    		$CurrentProject.engine.invalidate();
+    	}
+
+    	const writable_props = ["zoom", "scaleFactor", "scrollTop", "scrollLeft", "disabled"];
+
+    	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Timeline> was created with unknown prop '${key}'`);
     	});
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			leftPane = $$value;
-    			$$invalidate(0, leftPane);
+    			$$invalidate(2, leftPane);
     		});
     	}
+
+    	const keyframe_handler = (animated, animatedProperty, e) => onKeyframePointerDown(e.detail.event, animated.element, animatedProperty, e.detail.keyframe);
+    	const easing_handler = (animated, animatedProperty, e) => onEasingPointerDown(e.detail.event, animated.element, animatedProperty, e.detail.keyframe);
 
     	function div3_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			rightPane = $$value;
-    			$$invalidate(1, rightPane);
+    			$$invalidate(3, rightPane);
     		});
     	}
 
     	$$self.$$set = $$props => {
-    		if ("scrollTop" in $$props) $$invalidate(4, scrollTop = $$props.scrollTop);
-    		if ("scrollLeft" in $$props) $$invalidate(5, scrollLeft = $$props.scrollLeft);
+    		if ("zoom" in $$props) $$invalidate(17, zoom = $$props.zoom);
+    		if ("scaleFactor" in $$props) $$invalidate(18, scaleFactor = $$props.scaleFactor);
+    		if ("scrollTop" in $$props) $$invalidate(15, scrollTop = $$props.scrollTop);
+    		if ("scrollLeft" in $$props) $$invalidate(16, scrollLeft = $$props.scrollLeft);
+    		if ("disabled" in $$props) $$invalidate(19, disabled = $$props.disabled);
     	};
 
     	$$self.$capture_state = () => ({
     		TimelineItem,
-    		Keyframe,
-    		Easing,
-    		Element: Element$1,
-    		Property,
-    		CurrentDocumentAnimation,
+    		TimelineSelectionRect,
+    		TimelineElementWrapper,
+    		TimelineKeyfreamesLine,
     		CurrentProject,
+    		CurrentTime,
+    		CurrentSelection,
+    		CurrentKeyframeSelection,
+    		CurrentAnimatedElements,
+    		ShowOnlySelectedElementsAnimations,
+    		notifySelectionChanged,
+    		notifyKeyframeSelectionChanged,
+    		notifyPropertiesChanged,
+    		getRoundedDeltaTimeByX,
+    		getXAtTime,
+    		MouseButton: canvasEngine.MouseButton,
+    		Point: canvasEngine.Point,
+    		Rectangle: canvasEngine.Rectangle,
+    		zoom,
+    		scaleFactor,
     		scrollTop,
     		scrollLeft,
+    		disabled,
     		leftPane,
     		rightPane,
     		isScrollingTop,
     		prevScrollTop,
     		onScroll,
-    		mapAnimations,
-    		animatedElements,
+    		selectionRect,
+    		selectionRectPivot,
+    		reRender,
+    		deselectKeyframe,
+    		startKeyframe,
+    		startOffset,
+    		positionDelta,
+    		isMoving,
+    		position,
+    		currentSelectionData,
+    		getTimelinePoint,
+    		onTimelinePointerDown,
+    		onTimelinePointerMove,
+    		getKeyframeIdsFromRect,
+    		onTimelinePointerUp,
+    		prepareMove,
+    		destroyMove,
+    		onEasingPointerDown,
+    		onKeyframePointerDown,
+    		getKeyframeMoveDelta,
+    		onKeyframePointerMove,
+    		onKeyframePointerUp,
+    		onAddKeyframe,
+    		onElementSelect,
+    		onSelectAnimationKeyframes,
+    		snapshot,
+    		$CurrentKeyframeSelection,
     		$CurrentProject,
-    		$CurrentDocumentAnimation
+    		$CurrentTime,
+    		$CurrentSelection,
+    		$ShowOnlySelectedElementsAnimations,
+    		$CurrentAnimatedElements
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("scrollTop" in $$props) $$invalidate(4, scrollTop = $$props.scrollTop);
-    		if ("scrollLeft" in $$props) $$invalidate(5, scrollLeft = $$props.scrollLeft);
-    		if ("leftPane" in $$props) $$invalidate(0, leftPane = $$props.leftPane);
-    		if ("rightPane" in $$props) $$invalidate(1, rightPane = $$props.rightPane);
+    		if ("zoom" in $$props) $$invalidate(17, zoom = $$props.zoom);
+    		if ("scaleFactor" in $$props) $$invalidate(18, scaleFactor = $$props.scaleFactor);
+    		if ("scrollTop" in $$props) $$invalidate(15, scrollTop = $$props.scrollTop);
+    		if ("scrollLeft" in $$props) $$invalidate(16, scrollLeft = $$props.scrollLeft);
+    		if ("disabled" in $$props) $$invalidate(19, disabled = $$props.disabled);
+    		if ("leftPane" in $$props) $$invalidate(2, leftPane = $$props.leftPane);
+    		if ("rightPane" in $$props) $$invalidate(3, rightPane = $$props.rightPane);
     		if ("isScrollingTop" in $$props) isScrollingTop = $$props.isScrollingTop;
     		if ("prevScrollTop" in $$props) prevScrollTop = $$props.prevScrollTop;
-    		if ("animatedElements" in $$props) $$invalidate(2, animatedElements = $$props.animatedElements);
+    		if ("selectionRect" in $$props) $$invalidate(4, selectionRect = $$props.selectionRect);
+    		if ("selectionRectPivot" in $$props) selectionRectPivot = $$props.selectionRectPivot;
+    		if ("reRender" in $$props) $$invalidate(5, reRender = $$props.reRender);
+    		if ("deselectKeyframe" in $$props) deselectKeyframe = $$props.deselectKeyframe;
+    		if ("startKeyframe" in $$props) startKeyframe = $$props.startKeyframe;
+    		if ("startOffset" in $$props) startOffset = $$props.startOffset;
+    		if ("positionDelta" in $$props) positionDelta = $$props.positionDelta;
+    		if ("isMoving" in $$props) $$invalidate(6, isMoving = $$props.isMoving);
+    		if ("position" in $$props) position = $$props.position;
+    		if ("currentSelectionData" in $$props) currentSelectionData = $$props.currentSelectionData;
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -23571,21 +24884,38 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$CurrentProject, $CurrentDocumentAnimation*/ 192) {
-    			$$invalidate(2, animatedElements = mapAnimations($CurrentProject, $CurrentDocumentAnimation));
+    		if ($$self.$$.dirty[0] & /*$ShowOnlySelectedElementsAnimations, $CurrentKeyframeSelection, $CurrentSelection*/ 1048579) {
+    			if ($ShowOnlySelectedElementsAnimations && $CurrentKeyframeSelection.deselectUnselectedElements($CurrentSelection)) {
+    				notifyKeyframeSelectionChanged();
+    			}
     		}
     	};
 
     	return [
+    		$CurrentKeyframeSelection,
+    		$CurrentSelection,
     		leftPane,
     		rightPane,
-    		animatedElements,
+    		selectionRect,
+    		reRender,
+    		isMoving,
+    		$CurrentAnimatedElements,
     		onScroll,
+    		onTimelinePointerDown,
+    		onEasingPointerDown,
+    		onKeyframePointerDown,
+    		onAddKeyframe,
+    		onElementSelect,
+    		onSelectAnimationKeyframes,
     		scrollTop,
     		scrollLeft,
-    		$CurrentProject,
-    		$CurrentDocumentAnimation,
+    		zoom,
+    		scaleFactor,
+    		disabled,
+    		$ShowOnlySelectedElementsAnimations,
     		div0_binding,
+    		keyframe_handler,
+    		easing_handler,
     		div3_binding
     	];
     }
@@ -23593,7 +24923,22 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Timeline extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$H, create_fragment$H, safe_not_equal, { scrollTop: 4, scrollLeft: 5 });
+
+    		init(
+    			this,
+    			options,
+    			instance$H,
+    			create_fragment$H,
+    			safe_not_equal,
+    			{
+    				zoom: 17,
+    				scaleFactor: 18,
+    				scrollTop: 15,
+    				scrollLeft: 16,
+    				disabled: 19
+    			},
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -23601,6 +24946,22 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			options,
     			id: create_fragment$H.name
     		});
+    	}
+
+    	get zoom() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set zoom(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get scaleFactor() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set scaleFactor(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get scrollTop() {
@@ -23618,6 +24979,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	set scrollLeft(value) {
     		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get disabled() {
+    		throw new Error("<Timeline>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<Timeline>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Components/Timeline/TimelineRuler.svelte generated by Svelte v3.38.3 */
@@ -23628,6 +24997,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let canvas_1;
     	let t;
     	let div0;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
@@ -23635,11 +25006,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			canvas_1 = element("canvas");
     			t = space();
     			div0 = element("div");
-    			add_location(canvas_1, file$A, 159, 4, 5344);
+    			add_location(canvas_1, file$A, 108, 4, 3905);
     			attr_dev(div0, "class", "timeline-ruler-play-head");
-    			add_location(div0, file$A, 160, 4, 5385);
+    			add_location(div0, file$A, 109, 4, 3970);
     			attr_dev(div1, "class", "timeline-ruler");
-    			add_location(div1, file$A, 158, 0, 5311);
+    			add_location(div1, file$A, 107, 0, 3872);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -23647,18 +25018,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
     			append_dev(div1, canvas_1);
-    			/*canvas_1_binding*/ ctx[14](canvas_1);
+    			/*canvas_1_binding*/ ctx[16](canvas_1);
     			append_dev(div1, t);
     			append_dev(div1, div0);
-    			/*div0_binding*/ ctx[15](div0);
+    			/*div0_binding*/ ctx[17](div0);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(canvas_1, "click", /*onRulerClick*/ ctx[5], false, false, false),
+    					listen_dev(div0, "pointerdown", self$1(/*playHeadPointerDown*/ ctx[2]), false, false, false),
+    					listen_dev(div0, "pointermove", /*playHeadPointerMove*/ ctx[3], false, false, false),
+    					listen_dev(div0, "pointerup", /*playHeadPointerUp*/ ctx[4], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
-    			/*canvas_1_binding*/ ctx[14](null);
-    			/*div0_binding*/ ctx[15](null);
+    			/*canvas_1_binding*/ ctx[16](null);
+    			/*div0_binding*/ ctx[17](null);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -23674,102 +25058,78 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     function instance$G($$self, $$props, $$invalidate) {
-    	let $CurrentTime;
     	let $CurrentTheme;
-    	validate_store(CurrentTime, "CurrentTime");
-    	component_subscribe($$self, CurrentTime, $$value => $$invalidate(19, $CurrentTime = $$value));
+    	let $CurrentTime;
     	validate_store(CurrentTheme, "CurrentTheme");
-    	component_subscribe($$self, CurrentTheme, $$value => $$invalidate(13, $CurrentTheme = $$value));
+    	component_subscribe($$self, CurrentTheme, $$value => $$invalidate(15, $CurrentTheme = $$value));
+    	validate_store(CurrentTime, "CurrentTime");
+    	component_subscribe($$self, CurrentTime, $$value => $$invalidate(22, $CurrentTime = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineRuler", slots, []);
+
+    	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+    		function adopt(value) {
+    			return value instanceof P
+    			? value
+    			: new P(function (resolve) {
+    						resolve(value);
+    					});
+    		}
+
+    		return new (P || (P = Promise))(function (resolve, reject) {
+    				function fulfilled(value) {
+    					try {
+    						step(generator.next(value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function rejected(value) {
+    					try {
+    						step(generator["throw"](value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function step(result) {
+    					result.done
+    					? resolve(result.value)
+    					: adopt(result.value).then(fulfilled, rejected);
+    				}
+
+    				step((generator = generator.apply(thisArg, _arguments || [])).next());
+    			});
+    	};
+
     	let { zoom = 1 } = $$props;
     	let { scroll = 0 } = $$props;
-    	let { divisions = 30 } = $$props;
-    	let { padding = 6 } = $$props;
-    	let { majorGraduationWidth = 240 } = $$props;
+    	let { scaleFactor = 1 } = $$props;
     	let canvas;
     	let context;
     	let playHead;
     	let bounds;
     	let width = 100;
     	let height = 31;
+
+    	// TODO: use dpo observer
     	let dpi = window.devicePixelRatio;
+
     	let foreground;
     	let background;
+    	let overlay;
     	let paintReady = false;
-    	let playHeadPosition;
-    	let currentTime = $CurrentTime;
-    	const minorGraduationWidth = majorGraduationWidth / divisions;
-    	const halfDivisions = divisions / 2;
-    	const unit = majorGraduationWidth / 1000;
+    	let playHeadPosition, currentTime;
 
-    	function render(context, width, height, scroll, zoom) {
-    		const path = new Path2D();
-    		const t = scroll / minorGraduationWidth;
-    		let graduationNo = Math.floor(t);
-    		let delta = (Math.round(t * 100) - graduationNo * 100) / 100;
-    		let scaleFactor = 1;
-
-    		if (zoom <= 0.5) {
-    			scaleFactor = 2;
-
-    			if (zoom <= 0.1) {
-    				scaleFactor = 10;
-    			} else if (zoom < 0.125) {
-    				scaleFactor = 8;
-    			} else if (zoom <= 0.25) {
-    				scaleFactor = 4;
-    			}
-    		}
-
-    		let x = padding > scroll ? padding - scroll : padding;
-    		x -= delta * minorGraduationWidth * zoom;
-    		let step = minorGraduationWidth * zoom;
-
-    		while (true) {
-    			path.moveTo(x + 0.5, height);
-
-    			if (graduationNo % (divisions * scaleFactor) === 0) {
-    				let s = graduationNo / divisions;
-    				let m = (s - s % 60) / 60;
-    				let h = (m - m % 60) / 60;
-    				m = m % 60;
-    				s = s % 60;
-    				let text = s > 9 ? s.toString() : "0" + s;
-
-    				if (h > 0) {
-    					text = `${h}:${m > 9 ? m.toString() : "0" + m}:${text}`;
-    				} else {
-    					text = `${m}:${text}`;
-    				}
-
-    				path.lineTo(x + 0.5, height - 20);
-    				context.fillText(text, Math.ceil(x) + 4.5, height - 15);
-    			} else if (graduationNo % (halfDivisions * scaleFactor) === 0) {
-    				path.lineTo(x + 0.5, height - 15);
-    			} else if (graduationNo % scaleFactor === 0) {
-    				path.lineTo(x + 0.5, height - 10);
-    			}
-
-    			x += step;
-    			graduationNo++;
-
-    			if (x > width) {
-    				break;
-    			}
-    		}
-
-    		context.stroke(path);
-    	}
-
-    	function computeTime(currentTime) {
-    		let time = Math.round(currentTime);
-    		let frame = Math.round(1000 / divisions);
-    		time = time - time % frame;
-    		let totalFrames = time / frame;
-    		let elapsedFrames = totalFrames % divisions;
-    		let elapsedSeconds = (totalFrames - elapsedFrames) / divisions;
-    		return Math.round(elapsedSeconds * 1000 + elapsedFrames * 1000 / divisions);
+    	function updateTheme(canvas) {
+    		return __awaiter(this, void 0, void 0, function* () {
+    			yield tick();
+    			const style = window.getComputedStyle(canvas);
+    			$$invalidate(13, background = style.getPropertyValue("--ruler-background") || "black");
+    			$$invalidate(12, foreground = style.getPropertyValue("--ruler-foreground") || "white");
+    			overlay = style.getPropertyValue("--ruler-overlay") || "gray";
+    		});
     	}
 
     	function playHeadPointerDown(event) {
@@ -23783,38 +25143,41 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			return;
     		}
 
-    		let delta = (event.x - playHeadPosition) / zoom / unit;
-    		currentTime += delta;
+    		currentTime += getDeltaTimeByX(event.x - playHeadPosition, zoom);
     		playHeadPosition = event.x;
-    		set_store_value(CurrentTime, $CurrentTime = canvasEngine.clamp(computeTime(currentTime), 0, Number.POSITIVE_INFINITY), $CurrentTime);
+    		set_store_value(CurrentTime, $CurrentTime = roundTime(currentTime, scaleFactor), $CurrentTime);
     	}
 
-    	function playHedPointerUp(event) {
+    	function playHeadPointerUp(event) {
     		playHead.releasePointerCapture(event.pointerId);
     		playHeadPosition = undefined;
     	}
 
+    	function onRulerClick(e) {
+    		set_store_value(CurrentTime, $CurrentTime = roundTime(getTimeAtX(e.clientX - bounds.x, scroll, zoom), scaleFactor), $CurrentTime);
+    	}
+
     	function setupCanvas() {
     		bounds = canvas.parentElement.getBoundingClientRect();
-    		$$invalidate(8, width = bounds.width);
-    		$$invalidate(9, height = bounds.height);
+    		$$invalidate(10, width = bounds.width);
+    		$$invalidate(11, height = bounds.height);
     		$$invalidate(0, canvas.width = width * dpi, canvas);
     		$$invalidate(0, canvas.height = height * dpi, canvas);
     		$$invalidate(0, canvas.style.width = width + "px", canvas);
     		$$invalidate(0, canvas.style.height = height + "px", canvas);
-    		$$invalidate(7, context = canvas.getContext("2d", { alpha: false }));
-    		$$invalidate(7, context.imageSmoothingEnabled = true, context);
-    		$$invalidate(7, context.imageSmoothingQuality = "high", context);
-    		$$invalidate(7, context.lineWidth = 1, context);
-    		$$invalidate(7, context.font = "10px sans-serif", context);
-    		$$invalidate(7, context.textAlign = "left", context);
-    		$$invalidate(7, context.textBaseline = "ideographic", context);
+    		$$invalidate(9, context = canvas.getContext("2d", { alpha: false }));
+    		$$invalidate(9, context.imageSmoothingEnabled = true, context);
+    		$$invalidate(9, context.imageSmoothingQuality = "high", context);
+    		$$invalidate(9, context.lineWidth = 1, context);
+    		$$invalidate(9, context.font = "10px sans-serif", context);
+    		$$invalidate(9, context.textAlign = "left", context);
+    		$$invalidate(9, context.textBaseline = "ideographic", context);
     	}
 
     	onMount(() => {
     		setTimeout(() => {
     			// next frame
-    			$$invalidate(12, paintReady = true);
+    			$$invalidate(14, paintReady = true);
     		});
 
     		setupCanvas();
@@ -23824,21 +25187,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			});
 
     		observer.observe(canvas.parentElement);
-    		playHead.addEventListener("pointerdown", playHeadPointerDown);
-    		playHead.addEventListener("pointermove", playHeadPointerMove);
-    		playHead.addEventListener("pointerup", playHedPointerUp);
-
-    		canvas.addEventListener("click", function (event) {
-    			const x = (event.clientX - bounds.x - padding + scroll) / zoom;
-    			set_store_value(CurrentTime, $CurrentTime = canvasEngine.clamp(computeTime(x / majorGraduationWidth * 1000), 0, Number.POSITIVE_INFINITY), $CurrentTime);
-    		});
 
     		return () => {
     			observer.disconnect();
     		};
     	});
 
-    	const writable_props = ["zoom", "scroll", "divisions", "padding", "majorGraduationWidth"];
+    	const writable_props = ["zoom", "scroll", "scaleFactor"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineRuler> was created with unknown prop '${key}'`);
@@ -23859,25 +25214,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$set = $$props => {
-    		if ("zoom" in $$props) $$invalidate(2, zoom = $$props.zoom);
-    		if ("scroll" in $$props) $$invalidate(3, scroll = $$props.scroll);
-    		if ("divisions" in $$props) $$invalidate(4, divisions = $$props.divisions);
-    		if ("padding" in $$props) $$invalidate(5, padding = $$props.padding);
-    		if ("majorGraduationWidth" in $$props) $$invalidate(6, majorGraduationWidth = $$props.majorGraduationWidth);
+    		if ("zoom" in $$props) $$invalidate(6, zoom = $$props.zoom);
+    		if ("scroll" in $$props) $$invalidate(7, scroll = $$props.scroll);
+    		if ("scaleFactor" in $$props) $$invalidate(8, scaleFactor = $$props.scaleFactor);
     	};
 
     	$$self.$capture_state = () => ({
+    		__awaiter,
     		onMount,
     		tick,
+    		renderRuler,
+    		roundTime,
+    		getTimeAtX,
+    		getDeltaTimeByX,
+    		getDurationBounds,
     		CurrentTheme,
     		CurrentTime,
-    		CurrentMaxTime,
-    		clamp: canvasEngine.clamp,
     		zoom,
     		scroll,
-    		divisions,
-    		padding,
-    		majorGraduationWidth,
+    		scaleFactor,
     		canvas,
     		context,
     		playHead,
@@ -23887,38 +25242,36 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		dpi,
     		foreground,
     		background,
+    		overlay,
     		paintReady,
     		playHeadPosition,
     		currentTime,
-    		minorGraduationWidth,
-    		halfDivisions,
-    		unit,
-    		render,
-    		computeTime,
+    		updateTheme,
     		playHeadPointerDown,
     		playHeadPointerMove,
-    		playHedPointerUp,
+    		playHeadPointerUp,
+    		onRulerClick,
     		setupCanvas,
-    		$CurrentTime,
-    		$CurrentTheme
+    		$CurrentTheme,
+    		$CurrentTime
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("zoom" in $$props) $$invalidate(2, zoom = $$props.zoom);
-    		if ("scroll" in $$props) $$invalidate(3, scroll = $$props.scroll);
-    		if ("divisions" in $$props) $$invalidate(4, divisions = $$props.divisions);
-    		if ("padding" in $$props) $$invalidate(5, padding = $$props.padding);
-    		if ("majorGraduationWidth" in $$props) $$invalidate(6, majorGraduationWidth = $$props.majorGraduationWidth);
+    		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    		if ("zoom" in $$props) $$invalidate(6, zoom = $$props.zoom);
+    		if ("scroll" in $$props) $$invalidate(7, scroll = $$props.scroll);
+    		if ("scaleFactor" in $$props) $$invalidate(8, scaleFactor = $$props.scaleFactor);
     		if ("canvas" in $$props) $$invalidate(0, canvas = $$props.canvas);
-    		if ("context" in $$props) $$invalidate(7, context = $$props.context);
+    		if ("context" in $$props) $$invalidate(9, context = $$props.context);
     		if ("playHead" in $$props) $$invalidate(1, playHead = $$props.playHead);
     		if ("bounds" in $$props) bounds = $$props.bounds;
-    		if ("width" in $$props) $$invalidate(8, width = $$props.width);
-    		if ("height" in $$props) $$invalidate(9, height = $$props.height);
-    		if ("dpi" in $$props) $$invalidate(20, dpi = $$props.dpi);
-    		if ("foreground" in $$props) $$invalidate(10, foreground = $$props.foreground);
-    		if ("background" in $$props) $$invalidate(11, background = $$props.background);
-    		if ("paintReady" in $$props) $$invalidate(12, paintReady = $$props.paintReady);
+    		if ("width" in $$props) $$invalidate(10, width = $$props.width);
+    		if ("height" in $$props) $$invalidate(11, height = $$props.height);
+    		if ("dpi" in $$props) $$invalidate(24, dpi = $$props.dpi);
+    		if ("foreground" in $$props) $$invalidate(12, foreground = $$props.foreground);
+    		if ("background" in $$props) $$invalidate(13, background = $$props.background);
+    		if ("overlay" in $$props) overlay = $$props.overlay;
+    		if ("paintReady" in $$props) $$invalidate(14, paintReady = $$props.paintReady);
     		if ("playHeadPosition" in $$props) playHeadPosition = $$props.playHeadPosition;
     		if ("currentTime" in $$props) currentTime = $$props.currentTime;
     	};
@@ -23928,24 +25281,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*paintReady, canvas, $CurrentTheme*/ 12289) {
-    			if (paintReady && canvas && $CurrentTheme) {
-    				const style = window.getComputedStyle(canvas);
-    				$$invalidate(11, background = style.getPropertyValue("--ruler-background") || "black");
-    				$$invalidate(10, foreground = style.getPropertyValue("--ruler-foreground") || "white");
+    		if ($$self.$$.dirty & /*canvas, $CurrentTheme*/ 32769) {
+    			if (canvas && $CurrentTheme) {
+    				updateTheme(canvas);
     			}
     		}
 
-    		if ($$self.$$.dirty & /*paintReady, context, width, height, background, foreground, scroll, zoom*/ 8076) {
+    		if ($$self.$$.dirty & /*paintReady, context, width, height, background, foreground, scroll, zoom, scaleFactor*/ 32704) {
     			if (paintReady && context) {
     				context.save();
     				context.scale(dpi, dpi);
     				context.clearRect(0, 0, width, height);
-    				$$invalidate(7, context.fillStyle = background, context);
-    				$$invalidate(7, context.strokeStyle = foreground, context);
+    				$$invalidate(9, context.fillStyle = background, context);
+    				$$invalidate(9, context.strokeStyle = foreground, context);
     				context.fillRect(0, 0, width, height);
-    				$$invalidate(7, context.fillStyle = foreground, context);
-    				render(context, width, height, scroll / zoom, zoom);
+
+    				// const dBounds = getDurationBounds($CurrentDocumentAnimation.startTime, $CurrentDocumentAnimation.endTime, width, scroll, zoom);
+    				// if (dBounds) {
+    				//     context.fillStyle = overlay;
+    				//     context.fillRect(dBounds[0], 0, dBounds[1] - dBounds[0], height);
+    				// }
+    				$$invalidate(9, context.fillStyle = foreground, context);
+
+    				renderRuler(context, width, height, scroll, zoom, scaleFactor);
     				context.restore();
     			}
     		}
@@ -23954,11 +25312,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return [
     		canvas,
     		playHead,
+    		playHeadPointerDown,
+    		playHeadPointerMove,
+    		playHeadPointerUp,
+    		onRulerClick,
     		zoom,
     		scroll,
-    		divisions,
-    		padding,
-    		majorGraduationWidth,
+    		scaleFactor,
     		context,
     		width,
     		height,
@@ -23974,14 +25334,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineRuler extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-
-    		init(this, options, instance$G, create_fragment$G, safe_not_equal, {
-    			zoom: 2,
-    			scroll: 3,
-    			divisions: 4,
-    			padding: 5,
-    			majorGraduationWidth: 6
-    		});
+    		init(this, options, instance$G, create_fragment$G, safe_not_equal, { zoom: 6, scroll: 7, scaleFactor: 8 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -24007,27 +25360,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	get divisions() {
+    	get scaleFactor() {
     		throw new Error("<TimelineRuler>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set divisions(value) {
-    		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get padding() {
-    		throw new Error("<TimelineRuler>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set padding(value) {
-    		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get majorGraduationWidth() {
-    		throw new Error("<TimelineRuler>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set majorGraduationWidth(value) {
+    	set scaleFactor(value) {
     		throw new Error("<TimelineRuler>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -24205,11 +25542,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     function get_each_context$5(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[48] = list[i];
+    	child_ctx[50] = list[i];
     	return child_ctx;
     }
 
-    // (226:4) {#if useTextbox || label}
+    // (236:4) {#if useTextbox || label}
     function create_if_block_6(ctx) {
     	let div;
     	let label_1;
@@ -24218,7 +25555,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let div_role_value;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*useTextbox*/ ctx[19]) return create_if_block_7;
+    		if (/*useTextbox*/ ctx[20]) return create_if_block_7;
     		return create_else_block_2;
     	}
 
@@ -24233,12 +25570,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t1 = space();
     			if_block.c();
     			attr_dev(label_1, "class", "spectrum-Slider-label");
-    			attr_dev(label_1, "id", /*labelId*/ ctx[21]);
-    			attr_dev(label_1, "for", /*inputId*/ ctx[22]);
-    			add_location(label_1, file$z, 227, 12, 6782);
+    			attr_dev(label_1, "id", /*labelId*/ ctx[22]);
+    			attr_dev(label_1, "for", /*inputId*/ ctx[23]);
+    			add_location(label_1, file$z, 237, 12, 6992);
     			attr_dev(div, "class", "spectrum-Slider-labelContainer");
     			attr_dev(div, "role", div_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
-    			add_location(div, file$z, 226, 8, 6681);
+    			add_location(div, file$z, 236, 8, 6891);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24276,14 +25613,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(226:4) {#if useTextbox || label}",
+    		source: "(236:4) {#if useTextbox || label}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (234:12) {:else}
+    // (244:12) {:else}
     function create_else_block_2(ctx) {
     	let div;
 
@@ -24300,8 +25637,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div, "class", "spectrum-Slider-value");
     			attr_dev(div, "role", "textbox");
     			attr_dev(div, "aria-readonly", "true");
-    			attr_dev(div, "aria-labelledby", /*labelId*/ ctx[21]);
-    			add_location(div, file$z, 234, 16, 7321);
+    			attr_dev(div, "aria-labelledby", /*labelId*/ ctx[22]);
+    			add_location(div, file$z, 244, 16, 7531);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24321,14 +25658,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(234:12) {:else}",
+    		source: "(244:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (229:12) {#if useTextbox}
+    // (239:12) {#if useTextbox}
     function create_if_block_7(ctx) {
     	let input;
     	let input_value_value;
@@ -24353,16 +25690,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "min", /*min*/ ctx[2]);
     			attr_dev(input, "max", input_max_value = /*allowOverflow*/ ctx[8] ? undefined : /*max*/ ctx[3]);
     			attr_dev(input, "step", /*step*/ ctx[4]);
-    			add_location(input, file$z, 229, 16, 6911);
+    			add_location(input, file$z, 239, 16, 7121);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "input", /*onNumberInput*/ ctx[27], false, false, false),
+    					listen_dev(input, "input", /*onNumberInput*/ ctx[28], false, false, false),
     					listen_dev(input, "keydown", self$1(onInputKeyDown), false, false, false),
-    					listen_dev(input, "blur", /*onInputBlur*/ ctx[28], false, false, false)
+    					listen_dev(input, "blur", /*onInputBlur*/ ctx[29], false, false, false)
     				];
 
     				mounted = true;
@@ -24401,14 +25738,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(229:12) {#if useTextbox}",
+    		source: "(239:12) {#if useTextbox}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (248:8) {:else}
+    // (258:8) {:else}
     function create_else_block_1(ctx) {
     	let div;
     	let div_style_value;
@@ -24418,7 +25755,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			attr_dev(div, "class", "spectrum-Slider-track");
     			attr_dev(div, "style", div_style_value = `width: ${/*track1*/ ctx[14]}%;`);
-    			add_location(div, file$z, 248, 12, 8090);
+    			add_location(div, file$z, 258, 12, 8300);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24437,14 +25774,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(248:8) {:else}",
+    		source: "(258:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (242:8) {#if !isRange && fill === 'ramp'}
+    // (252:8) {#if !isRange && fill === 'ramp'}
     function create_if_block_5(ctx) {
     	let div;
     	let svg;
@@ -24456,14 +25793,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			svg = svg_element("svg");
     			path = svg_element("path");
     			attr_dev(path, "d", "M240,4v8c0,2.3-1.9,4.1-4.2,4L1,9C0.4,9,0,8.5,0,8c0-0.5,0.4-1,1-1l234.8-7C238.1-0.1,240,1.7,240,4z");
-    			add_location(path, file$z, 244, 20, 7904);
+    			add_location(path, file$z, 254, 20, 8114);
     			attr_dev(svg, "viewBox", "0 0 240 16");
     			attr_dev(svg, "preserveAspectRatio", "none");
     			attr_dev(svg, "aria-hidden", "true");
     			attr_dev(svg, "focusable", "false");
-    			add_location(svg, file$z, 243, 16, 7793);
+    			add_location(svg, file$z, 253, 16, 8003);
     			attr_dev(div, "class", "spectrum-Slider-ramp");
-    			add_location(div, file$z, 242, 12, 7742);
+    			add_location(div, file$z, 252, 12, 7952);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24480,14 +25817,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(242:8) {#if !isRange && fill === 'ramp'}",
+    		source: "(252:8) {#if !isRange && fill === 'ramp'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (251:8) {#if hasTicks}
+    // (261:8) {#if hasTicks}
     function create_if_block_3$2(ctx) {
     	let div;
     	let each_value = /*tickLabels*/ ctx[9];
@@ -24507,7 +25844,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			attr_dev(div, "class", "spectrum-Slider-ticks");
-    			add_location(div, file$z, 251, 12, 8210);
+    			add_location(div, file$z, 261, 12, 8420);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24551,17 +25888,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_3$2.name,
     		type: "if",
-    		source: "(251:8) {#if hasTicks}",
+    		source: "(261:8) {#if hasTicks}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (255:24) {#if tick != null}
+    // (265:24) {#if tick != null}
     function create_if_block_4$2(ctx) {
     	let div;
-    	let t_value = /*tick*/ ctx[48] + "";
+    	let t_value = /*tick*/ ctx[50] + "";
     	let t;
 
     	const block = {
@@ -24569,14 +25906,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			t = text(t_value);
     			attr_dev(div, "class", "spectrum-Slider-tickLabel");
-    			add_location(div, file$z, 255, 28, 8415);
+    			add_location(div, file$z, 265, 28, 8625);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*tickLabels*/ 512 && t_value !== (t_value = /*tick*/ ctx[48] + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*tickLabels*/ 512 && t_value !== (t_value = /*tick*/ ctx[50] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
@@ -24587,18 +25924,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_4$2.name,
     		type: "if",
-    		source: "(255:24) {#if tick != null}",
+    		source: "(265:24) {#if tick != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (253:16) {#each tickLabels as tick}
+    // (263:16) {#each tickLabels as tick}
     function create_each_block$5(ctx) {
     	let div;
     	let t;
-    	let if_block = /*tick*/ ctx[48] != null && create_if_block_4$2(ctx);
+    	let if_block = /*tick*/ ctx[50] != null && create_if_block_4$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -24606,7 +25943,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			t = space();
     			attr_dev(div, "class", "spectrum-Slider-tick");
-    			add_location(div, file$z, 253, 20, 8309);
+    			add_location(div, file$z, 263, 20, 8519);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24614,7 +25951,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			append_dev(div, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (/*tick*/ ctx[48] != null) {
+    			if (/*tick*/ ctx[50] != null) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
@@ -24637,14 +25974,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_each_block$5.name,
     		type: "each",
-    		source: "(253:16) {#each tickLabels as tick}",
+    		source: "(263:16) {#each tickLabels as tick}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (280:8) {:else}
+    // (290:8) {:else}
     function create_else_block$3(ctx) {
     	let div;
     	let input;
@@ -24657,7 +25994,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			div = element("div");
     			input = element("input");
-    			attr_dev(input, "id", /*inputId*/ ctx[22]);
+    			attr_dev(input, "id", /*inputId*/ ctx[23]);
     			attr_dev(input, "type", "range");
     			attr_dev(input, "class", "spectrum-Slider-input");
     			input.disabled = /*disabled*/ ctx[7];
@@ -24665,12 +26002,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "step", /*step*/ ctx[4]);
     			attr_dev(input, "min", /*min*/ ctx[2]);
     			attr_dev(input, "max", /*max*/ ctx[3]);
-    			add_location(input, file$z, 283, 16, 10299);
+    			add_location(input, file$z, 293, 16, 10509);
     			attr_dev(div, "class", "spectrum-Slider-handle");
     			attr_dev(div, "style", div_style_value = `left: ${/*percent*/ ctx[10]}%;`);
     			toggle_class(div, "is-dragged", /*dragged*/ ctx[17] !== 0);
     			toggle_class(div, "is-focused", /*focused*/ ctx[16] !== 0);
-    			add_location(div, file$z, 280, 12, 10018);
+    			add_location(div, file$z, 290, 12, 10228);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24678,14 +26015,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "focus", /*onFocus*/ ctx[23], false, false, false),
-    					listen_dev(input, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
-    					listen_dev(input, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					listen_dev(input, "focus", /*onFocus*/ ctx[24], false, false, false),
+    					listen_dev(input, "blur", /*onSliderBlur*/ ctx[25], false, false, false),
+    					listen_dev(input, "keydown", /*onSliderKeyDown*/ ctx[27], false, false, false),
     					action_destroyer(dragAction_action = dragAction.call(null, div, {
     						surface: /*surface*/ ctx[18],
-    						move: /*dragAction_function_4*/ ctx[40],
-    						start: /*dragAction_function_5*/ ctx[41],
-    						end: /*onDragEnd*/ ctx[31]
+    						move: /*dragAction_function_4*/ ctx[42],
+    						start: /*dragAction_function_5*/ ctx[43],
+    						end: /*onDragEnd*/ ctx[32]
     					}))
     				];
 
@@ -24719,9 +26056,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 262144) dragAction_action.update.call(null, {
     				surface: /*surface*/ ctx[18],
-    				move: /*dragAction_function_4*/ ctx[40],
-    				start: /*dragAction_function_5*/ ctx[41],
-    				end: /*onDragEnd*/ ctx[31]
+    				move: /*dragAction_function_4*/ ctx[42],
+    				start: /*dragAction_function_5*/ ctx[43],
+    				end: /*onDragEnd*/ ctx[32]
     			});
 
     			if (dirty[0] & /*dragged*/ 131072) {
@@ -24743,14 +26080,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_else_block$3.name,
     		type: "else",
-    		source: "(280:8) {:else}",
+    		source: "(290:8) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (262:8) {#if isRange}
+    // (272:8) {#if isRange}
     function create_if_block_2$2(ctx) {
     	let div0;
     	let input0;
@@ -24778,7 +26115,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t1 = space();
     			div2 = element("div");
     			input1 = element("input");
-    			attr_dev(input0, "id", /*inputId*/ ctx[22]);
+    			attr_dev(input0, "id", /*inputId*/ ctx[23]);
     			attr_dev(input0, "type", "range");
     			attr_dev(input0, "class", "spectrum-Slider-input");
     			input0.disabled = /*disabled*/ ctx[7];
@@ -24786,18 +26123,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input0, "step", /*step*/ ctx[4]);
     			attr_dev(input0, "min", /*min*/ ctx[2]);
     			attr_dev(input0, "max", /*max*/ ctx[3]);
-    			add_location(input0, file$z, 266, 16, 8960);
+    			add_location(input0, file$z, 276, 16, 9170);
     			attr_dev(div0, "class", "spectrum-Slider-handle");
     			attr_dev(div0, "role", "presentation");
     			attr_dev(div0, "data-slider-name", "left");
     			attr_dev(div0, "style", div0_style_value = `left: ${/*percent*/ ctx[10][0]}%;`);
     			toggle_class(div0, "is-dragged", /*dragged*/ ctx[17] === 1);
     			toggle_class(div0, "is-focused", /*focused*/ ctx[16] === 1);
-    			add_location(div0, file$z, 262, 12, 8615);
+    			add_location(div0, file$z, 272, 12, 8825);
     			attr_dev(div1, "class", "spectrum-Slider-track");
     			attr_dev(div1, "style", div1_style_value = `left: ${/*track1*/ ctx[14]}%; right: ${/*track2*/ ctx[15]}%;`);
-    			add_location(div1, file$z, 270, 12, 9253);
-    			attr_dev(input1, "id", /*inputId*/ ctx[22] + "-alt");
+    			add_location(div1, file$z, 280, 12, 9463);
+    			attr_dev(input1, "id", /*inputId*/ ctx[23] + "-alt");
     			attr_dev(input1, "type", "range");
     			attr_dev(input1, "class", "spectrum-Slider-input");
     			input1.disabled = /*disabled*/ ctx[7];
@@ -24805,14 +26142,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input1, "step", /*step*/ ctx[4]);
     			attr_dev(input1, "min", /*min*/ ctx[2]);
     			attr_dev(input1, "max", /*max*/ ctx[3]);
-    			add_location(input1, file$z, 275, 16, 9700);
+    			add_location(input1, file$z, 285, 16, 9910);
     			attr_dev(div2, "class", "spectrum-Slider-handle");
     			attr_dev(div2, "role", "presentation");
     			attr_dev(div2, "data-slider-name", "right");
     			attr_dev(div2, "style", div2_style_value = `left: ${/*percent*/ ctx[10][1]}%;`);
     			toggle_class(div2, "is-dragged", /*dragged*/ ctx[17] === 2);
     			toggle_class(div2, "is-focused", /*focused*/ ctx[16] === 2);
-    			add_location(div2, file$z, 271, 12, 9354);
+    			add_location(div2, file$z, 281, 12, 9564);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -24825,23 +26162,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "focus", /*onFocus*/ ctx[23], false, false, false),
-    					listen_dev(input0, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
-    					listen_dev(input0, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					listen_dev(input0, "focus", /*onFocus*/ ctx[24], false, false, false),
+    					listen_dev(input0, "blur", /*onSliderBlur*/ ctx[25], false, false, false),
+    					listen_dev(input0, "keydown", /*onSliderKeyDown*/ ctx[27], false, false, false),
     					action_destroyer(dragAction_action = dragAction.call(null, div0, {
     						surface: /*surface*/ ctx[18],
-    						move: /*dragAction_function*/ ctx[36],
-    						start: /*dragAction_function_1*/ ctx[37],
-    						end: /*onDragEnd*/ ctx[31]
+    						move: /*dragAction_function*/ ctx[38],
+    						start: /*dragAction_function_1*/ ctx[39],
+    						end: /*onDragEnd*/ ctx[32]
     					})),
-    					listen_dev(input1, "focus", /*onFocus*/ ctx[23], false, false, false),
-    					listen_dev(input1, "blur", /*onSliderBlur*/ ctx[24], false, false, false),
-    					listen_dev(input1, "keydown", /*onSliderKeyDown*/ ctx[26], false, false, false),
+    					listen_dev(input1, "focus", /*onFocus*/ ctx[24], false, false, false),
+    					listen_dev(input1, "blur", /*onSliderBlur*/ ctx[25], false, false, false),
+    					listen_dev(input1, "keydown", /*onSliderKeyDown*/ ctx[27], false, false, false),
     					action_destroyer(dragAction_action_1 = dragAction.call(null, div2, {
     						surface: /*surface*/ ctx[18],
-    						move: /*dragAction_function_2*/ ctx[38],
-    						start: /*dragAction_function_3*/ ctx[39],
-    						end: /*onDragEnd*/ ctx[31]
+    						move: /*dragAction_function_2*/ ctx[40],
+    						start: /*dragAction_function_3*/ ctx[41],
+    						end: /*onDragEnd*/ ctx[32]
     					}))
     				];
 
@@ -24875,9 +26212,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (dragAction_action && is_function(dragAction_action.update) && dirty[0] & /*surface*/ 262144) dragAction_action.update.call(null, {
     				surface: /*surface*/ ctx[18],
-    				move: /*dragAction_function*/ ctx[36],
-    				start: /*dragAction_function_1*/ ctx[37],
-    				end: /*onDragEnd*/ ctx[31]
+    				move: /*dragAction_function*/ ctx[38],
+    				start: /*dragAction_function_1*/ ctx[39],
+    				end: /*onDragEnd*/ ctx[32]
     			});
 
     			if (dirty[0] & /*dragged*/ 131072) {
@@ -24918,9 +26255,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (dragAction_action_1 && is_function(dragAction_action_1.update) && dirty[0] & /*surface*/ 262144) dragAction_action_1.update.call(null, {
     				surface: /*surface*/ ctx[18],
-    				move: /*dragAction_function_2*/ ctx[38],
-    				start: /*dragAction_function_3*/ ctx[39],
-    				end: /*onDragEnd*/ ctx[31]
+    				move: /*dragAction_function_2*/ ctx[40],
+    				start: /*dragAction_function_3*/ ctx[41],
+    				end: /*onDragEnd*/ ctx[32]
     			});
 
     			if (dirty[0] & /*dragged*/ 131072) {
@@ -24946,14 +26283,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_2$2.name,
     		type: "if",
-    		source: "(262:8) {#if isRange}",
+    		source: "(272:8) {#if isRange}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (289:8) {#if isRange || fill !== 'ramp'}
+    // (299:8) {#if isRange || fill !== 'ramp'}
     function create_if_block_1$5(ctx) {
     	let div;
     	let div_style_value;
@@ -24963,7 +26300,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			attr_dev(div, "class", "spectrum-Slider-track");
     			attr_dev(div, "style", div_style_value = `width: ${/*track2*/ ctx[15]}%;`);
-    			add_location(div, file$z, 289, 12, 10644);
+    			add_location(div, file$z, 299, 12, 10854);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -24982,14 +26319,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_1$5.name,
     		type: "if",
-    		source: "(289:8) {#if isRange || fill !== 'ramp'}",
+    		source: "(299:8) {#if isRange || fill !== 'ramp'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (292:8) {#if !isRange && fill === 'middle'}
+    // (302:8) {#if !isRange && fill === 'middle'}
     function create_if_block$c(ctx) {
     	let div;
     	let div_style_value;
@@ -25001,27 +26338,27 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			attr_dev(div, "style", div_style_value = /*percent*/ ctx[10] === 50
     			? undefined
-    			: /*percent*/ ctx[10] < 50
-    				? `left: ${/*percent*/ ctx[10]}%; width: ${50 - /*percent*/ ctx[10]}%`
-    				: `left: 50%; width: ${/*percent*/ ctx[10] - 50}%`);
+    			: /*percent*/ ctx[10] < /*middlePercent*/ ctx[19]
+    				? `left: ${/*percent*/ ctx[10]}%; width: ${/*middlePercent*/ ctx[19] - /*percent*/ ctx[10]}%`
+    				: `left: 50%; width: ${/*percent*/ ctx[10] - /*middlePercent*/ ctx[19]}%`);
 
-    			toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > 50);
-    			add_location(div, file$z, 292, 12, 10785);
+    			toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > /*middlePercent*/ ctx[19]);
+    			add_location(div, file$z, 302, 12, 10995);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*percent*/ 1024 && div_style_value !== (div_style_value = /*percent*/ ctx[10] === 50
+    			if (dirty[0] & /*percent, middlePercent*/ 525312 && div_style_value !== (div_style_value = /*percent*/ ctx[10] === 50
     			? undefined
-    			: /*percent*/ ctx[10] < 50
-    				? `left: ${/*percent*/ ctx[10]}%; width: ${50 - /*percent*/ ctx[10]}%`
-    				: `left: 50%; width: ${/*percent*/ ctx[10] - 50}%`)) {
+    			: /*percent*/ ctx[10] < /*middlePercent*/ ctx[19]
+    				? `left: ${/*percent*/ ctx[10]}%; width: ${/*middlePercent*/ ctx[19] - /*percent*/ ctx[10]}%`
+    				: `left: 50%; width: ${/*percent*/ ctx[10] - /*middlePercent*/ ctx[19]}%`)) {
     				attr_dev(div, "style", div_style_value);
     			}
 
-    			if (dirty[0] & /*percent*/ 1024) {
-    				toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > 50);
+    			if (dirty[0] & /*percent, middlePercent*/ 525312) {
+    				toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > /*middlePercent*/ ctx[19]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -25033,7 +26370,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$c.name,
     		type: "if",
-    		source: "(292:8) {#if !isRange && fill === 'middle'}",
+    		source: "(302:8) {#if !isRange && fill === 'middle'}",
     		ctx
     	});
 
@@ -25053,7 +26390,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let div1_aria_labelledby_value;
     	let mounted;
     	let dispose;
-    	let if_block0 = (/*useTextbox*/ ctx[19] || /*label*/ ctx[1]) && create_if_block_6(ctx);
+    	let if_block0 = (/*useTextbox*/ ctx[20] || /*label*/ ctx[1]) && create_if_block_6(ctx);
 
     	function select_block_type_1(ctx, dirty) {
     		if (!/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "ramp") return create_if_block_5;
@@ -25075,14 +26412,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let if_block5 = !/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "middle" && create_if_block$c(ctx);
 
     	let div1_levels = [
-    		/*$$restProps*/ ctx[32],
-    		{ class: /*computedClass*/ ctx[20] },
+    		/*$$restProps*/ ctx[33],
+    		{ class: /*computedClass*/ ctx[21] },
     		{
     			role: div1_role_value = /*isRange*/ ctx[11] ? "group" : undefined
     		},
     		{
     			"aria-labelledby": div1_aria_labelledby_value = /*isRange*/ ctx[11] && /*label*/ ctx[1]
-    			? /*labelId*/ ctx[21]
+    			? /*labelId*/ ctx[22]
     			: undefined
     		}
     	];
@@ -25110,9 +26447,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block5) if_block5.c();
     			attr_dev(div0, "class", "spectrum-Slider-controls");
     			attr_dev(div0, "role", div0_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
-    			add_location(div0, file$z, 240, 4, 7586);
+    			add_location(div0, file$z, 250, 4, 7796);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$z, 222, 0, 6474);
+    			add_location(div1, file$z, 232, 0, 6684);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -25131,15 +26468,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block4) if_block4.m(div0, null);
     			append_dev(div0, t4);
     			if (if_block5) if_block5.m(div0, null);
-    			/*div1_binding*/ ctx[42](div1);
+    			/*div1_binding*/ ctx[44](div1);
 
     			if (!mounted) {
-    				dispose = listen_dev(div0, "click", /*onClick*/ ctx[25], false, false, false);
+    				dispose = listen_dev(div0, "click", /*onClick*/ ctx[26], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (/*useTextbox*/ ctx[19] || /*label*/ ctx[1]) {
+    			if (/*useTextbox*/ ctx[20] || /*label*/ ctx[1]) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
@@ -25220,11 +26557,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			set_attributes(div1, div1_data = get_spread_update(div1_levels, [
-    				dirty[1] & /*$$restProps*/ 2 && /*$$restProps*/ ctx[32],
-    				dirty[0] & /*computedClass*/ 1048576 && { class: /*computedClass*/ ctx[20] },
+    				dirty[1] & /*$$restProps*/ 4 && /*$$restProps*/ ctx[33],
+    				dirty[0] & /*computedClass*/ 2097152 && { class: /*computedClass*/ ctx[21] },
     				dirty[0] & /*isRange*/ 2048 && div1_role_value !== (div1_role_value = /*isRange*/ ctx[11] ? "group" : undefined) && { role: div1_role_value },
     				dirty[0] & /*isRange, label*/ 2050 && div1_aria_labelledby_value !== (div1_aria_labelledby_value = /*isRange*/ ctx[11] && /*label*/ ctx[1]
-    				? /*labelId*/ ctx[21]
+    				? /*labelId*/ ctx[22]
     				: undefined) && {
     					"aria-labelledby": div1_aria_labelledby_value
     				}
@@ -25240,7 +26577,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if_block3.d();
     			if (if_block4) if_block4.d();
     			if (if_block5) if_block5.d();
-    			/*div1_binding*/ ctx[42](null);
+    			/*div1_binding*/ ctx[44](null);
     			mounted = false;
     			dispose();
     		}
@@ -25273,7 +26610,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let computedClass;
 
     	const omit_props_names = [
-    		"label","value","min","max","step","round","digits","fill","ticks","disabled","editable","allowOverflow"
+    		"label","value","min","max","step","round","digits","fill","ticks","disabled","editable","allowOverflow","middle"
     	];
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -25292,6 +26629,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { disabled = false } = $$props;
     	let { editable = false } = $$props;
     	let { allowOverflow = false } = $$props;
+    	let { middle = null } = $$props;
     	const genId = nextId();
     	const labelId = `spectrum-slider-label-${genId}`;
     	const inputId = `spectrum-slider-input-${genId}`;
@@ -25498,6 +26836,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		dispatch("done");
     	}
 
+    	let middlePercent;
     	const dragAction_function = v => onDrag(v.x, 1);
     	const dragAction_function_1 = () => onDragStart(1);
     	const dragAction_function_2 = v => onDrag(v.x, 2);
@@ -25513,20 +26852,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$set = $$new_props => {
-    		$$invalidate(47, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(32, $$restProps = compute_rest_props($$props, omit_props_names));
+    		$$invalidate(49, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(33, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("label" in $$new_props) $$invalidate(1, label = $$new_props.label);
     		if ("value" in $$new_props) $$invalidate(0, value = $$new_props.value);
     		if ("min" in $$new_props) $$invalidate(2, min = $$new_props.min);
     		if ("max" in $$new_props) $$invalidate(3, max = $$new_props.max);
     		if ("step" in $$new_props) $$invalidate(4, step = $$new_props.step);
-    		if ("round" in $$new_props) $$invalidate(33, round = $$new_props.round);
+    		if ("round" in $$new_props) $$invalidate(34, round = $$new_props.round);
     		if ("digits" in $$new_props) $$invalidate(5, digits = $$new_props.digits);
     		if ("fill" in $$new_props) $$invalidate(6, fill = $$new_props.fill);
-    		if ("ticks" in $$new_props) $$invalidate(34, ticks = $$new_props.ticks);
+    		if ("ticks" in $$new_props) $$invalidate(35, ticks = $$new_props.ticks);
     		if ("disabled" in $$new_props) $$invalidate(7, disabled = $$new_props.disabled);
-    		if ("editable" in $$new_props) $$invalidate(35, editable = $$new_props.editable);
+    		if ("editable" in $$new_props) $$invalidate(36, editable = $$new_props.editable);
     		if ("allowOverflow" in $$new_props) $$invalidate(8, allowOverflow = $$new_props.allowOverflow);
+    		if ("middle" in $$new_props) $$invalidate(37, middle = $$new_props.middle);
     	};
 
     	$$self.$capture_state = () => ({
@@ -25552,6 +26892,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		disabled,
     		editable,
     		allowOverflow,
+    		middle,
     		genId,
     		labelId,
     		inputId,
@@ -25574,6 +26915,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		onDragStart,
     		onDrag,
     		onDragEnd,
+    		middlePercent,
     		isRange,
     		computedValue,
     		hasTicks,
@@ -25582,19 +26924,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		$$invalidate(47, $$props = assign(assign({}, $$props), $$new_props));
+    		$$invalidate(49, $$props = assign(assign({}, $$props), $$new_props));
     		if ("label" in $$props) $$invalidate(1, label = $$new_props.label);
     		if ("value" in $$props) $$invalidate(0, value = $$new_props.value);
     		if ("min" in $$props) $$invalidate(2, min = $$new_props.min);
     		if ("max" in $$props) $$invalidate(3, max = $$new_props.max);
     		if ("step" in $$props) $$invalidate(4, step = $$new_props.step);
-    		if ("round" in $$props) $$invalidate(33, round = $$new_props.round);
+    		if ("round" in $$props) $$invalidate(34, round = $$new_props.round);
     		if ("digits" in $$props) $$invalidate(5, digits = $$new_props.digits);
     		if ("fill" in $$props) $$invalidate(6, fill = $$new_props.fill);
-    		if ("ticks" in $$props) $$invalidate(34, ticks = $$new_props.ticks);
+    		if ("ticks" in $$props) $$invalidate(35, ticks = $$new_props.ticks);
     		if ("disabled" in $$props) $$invalidate(7, disabled = $$new_props.disabled);
-    		if ("editable" in $$props) $$invalidate(35, editable = $$new_props.editable);
+    		if ("editable" in $$props) $$invalidate(36, editable = $$new_props.editable);
     		if ("allowOverflow" in $$props) $$invalidate(8, allowOverflow = $$new_props.allowOverflow);
+    		if ("middle" in $$props) $$invalidate(37, middle = $$new_props.middle);
     		if ("tickLabels" in $$props) $$invalidate(9, tickLabels = $$new_props.tickLabels);
     		if ("track1" in $$props) $$invalidate(14, track1 = $$new_props.track1);
     		if ("track2" in $$props) $$invalidate(15, track2 = $$new_props.track2);
@@ -25603,11 +26946,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("dragged" in $$props) $$invalidate(17, dragged = $$new_props.dragged);
     		if ("started" in $$props) started = $$new_props.started;
     		if ("surface" in $$props) $$invalidate(18, surface = $$new_props.surface);
+    		if ("middlePercent" in $$props) $$invalidate(19, middlePercent = $$new_props.middlePercent);
     		if ("isRange" in $$props) $$invalidate(11, isRange = $$new_props.isRange);
     		if ("computedValue" in $$props) $$invalidate(12, computedValue = $$new_props.computedValue);
     		if ("hasTicks" in $$props) $$invalidate(13, hasTicks = $$new_props.hasTicks);
-    		if ("useTextbox" in $$props) $$invalidate(19, useTextbox = $$new_props.useTextbox);
-    		if ("computedClass" in $$props) $$invalidate(20, computedClass = $$new_props.computedClass);
+    		if ("useTextbox" in $$props) $$invalidate(20, useTextbox = $$new_props.useTextbox);
+    		if ("computedClass" in $$props) $$invalidate(21, computedClass = $$new_props.computedClass);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -25619,17 +26963,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$invalidate(11, isRange = Array.isArray(value));
     		}
 
-    		if ($$self.$$.dirty[0] & /*isRange, value, min, max, step*/ 2077 | $$self.$$.dirty[1] & /*round*/ 4) {
+    		if ($$self.$$.dirty[0] & /*isRange, value, min, max, step*/ 2077 | $$self.$$.dirty[1] & /*round*/ 8) {
     			$$invalidate(12, computedValue = isRange
     			? clampRange(value)
     			: clampStep(value, min, max, round !== null && round !== void 0 ? round : step));
     		}
 
-    		if ($$self.$$.dirty[1] & /*ticks*/ 8) {
+    		if ($$self.$$.dirty[1] & /*ticks*/ 16) {
     			$$invalidate(13, hasTicks = Array.isArray(ticks) ? ticks.length > 0 : ticks > 0);
     		}
 
-    		if ($$self.$$.dirty[0] & /*tickLabels*/ 512 | $$self.$$.dirty[1] & /*ticks*/ 8) {
+    		if ($$self.$$.dirty[0] & /*tickLabels*/ 512 | $$self.$$.dirty[1] & /*ticks*/ 16) {
     			{
     				if (Array.isArray(ticks)) {
     					$$invalidate(9, tickLabels = ticks);
@@ -25661,11 +27005,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
     		}
 
-    		if ($$self.$$.dirty[0] & /*isRange*/ 2048 | $$self.$$.dirty[1] & /*editable*/ 16) {
-    			$$invalidate(19, useTextbox = editable && !isRange);
+    		if ($$self.$$.dirty[0] & /*fill, min, max*/ 76 | $$self.$$.dirty[1] & /*middle*/ 64) {
+    			{
+    				if (middle == null || fill !== "middle") {
+    					$$invalidate(19, middlePercent = 50);
+    				} else {
+    					$$invalidate(19, middlePercent = (middle - min) * 100 / (max - min));
+    				}
+    			}
     		}
 
-    		$$invalidate(20, computedClass = mergeClasses(
+    		if ($$self.$$.dirty[0] & /*isRange*/ 2048 | $$self.$$.dirty[1] & /*editable*/ 32) {
+    			$$invalidate(20, useTextbox = editable && !isRange);
+    		}
+
+    		$$invalidate(21, computedClass = mergeClasses(
     			{
     				"spectrum-Slider": true,
     				"spectrum-Slider--filled": fill === "start",
@@ -25700,6 +27054,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		focused,
     		dragged,
     		surface,
+    		middlePercent,
     		useTextbox,
     		computedClass,
     		labelId,
@@ -25717,6 +27072,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		round,
     		ticks,
     		editable,
+    		middle,
     		dragAction_function,
     		dragAction_function_1,
     		dragAction_function_2,
@@ -25743,13 +27099,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				min: 2,
     				max: 3,
     				step: 4,
-    				round: 33,
+    				round: 34,
     				digits: 5,
     				fill: 6,
-    				ticks: 34,
+    				ticks: 35,
     				disabled: 7,
-    				editable: 35,
-    				allowOverflow: 8
+    				editable: 36,
+    				allowOverflow: 8,
+    				middle: 37
     			},
     			[-1, -1]
     		);
@@ -25857,6 +27214,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	set allowOverflow(value) {
     		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get middle() {
+    		throw new Error("<SpSlider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set middle(value) {
+    		throw new Error("<SpSlider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/Components/Timeline/TimelineActionBar.svelte generated by Svelte v3.38.3 */
@@ -25864,42 +27229,74 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     function create_fragment$E(ctx) {
     	let div1;
+    	let sp_action_button;
+    	let sp_icon;
+    	let t;
     	let div0;
     	let spslider;
     	let current;
+    	let mounted;
+    	let dispose;
 
     	spslider = new SpSlider({
     			props: {
-    				min: 0.1,
+    				min: 0.05,
     				max: 2,
     				step: 0.01,
-    				value: /*zoom*/ ctx[0]
+    				value: /*zoom*/ ctx[0],
+    				fill: "middle",
+    				middle: 1
     			},
     			$$inline: true
     		});
 
-    	spslider.$on("input", /*handleInput*/ ctx[1]);
+    	spslider.$on("input", /*handleInput*/ ctx[2]);
 
     	const block = {
     		c: function create() {
     			div1 = element("div");
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			t = space();
     			div0 = element("div");
     			create_component(spslider.$$.fragment);
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			set_custom_element_data(sp_icon, "size", "s");
+    			set_custom_element_data(sp_icon, "name", "workflow:Filter");
+    			add_location(sp_icon, file$y, 12, 8, 513);
+    			set_custom_element_data(sp_action_button, "class", "very-small");
+    			set_custom_element_data(sp_action_button, "selected", /*$ShowOnlySelectedElementsAnimations*/ ctx[1]);
+    			set_custom_element_data(sp_action_button, "size", "s");
+    			set_custom_element_data(sp_action_button, "quiet", "");
+    			set_custom_element_data(sp_action_button, "emphasized", "");
+    			add_location(sp_action_button, file$y, 8, 4, 266);
     			attr_dev(div0, "class", "timeline-action-bar-zoom-wrapper");
-    			add_location(div0, file$y, 7, 4, 199);
+    			add_location(div0, file$y, 14, 4, 605);
     			attr_dev(div1, "class", "timeline-action-bar");
-    			add_location(div1, file$y, 6, 0, 161);
+    			add_location(div1, file$y, 7, 0, 228);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
+    			append_dev(div1, sp_action_button);
+    			append_dev(sp_action_button, sp_icon);
+    			append_dev(div1, t);
     			append_dev(div1, div0);
     			mount_component(spslider, div0, null);
     			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_action_button, "click", /*click_handler*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*$ShowOnlySelectedElementsAnimations*/ 2) {
+    				set_custom_element_data(sp_action_button, "selected", /*$ShowOnlySelectedElementsAnimations*/ ctx[1]);
+    			}
+
     			const spslider_changes = {};
     			if (dirty & /*zoom*/ 1) spslider_changes.value = /*zoom*/ ctx[0];
     			spslider.$set(spslider_changes);
@@ -25916,6 +27313,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     			destroy_component(spslider);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -25931,6 +27330,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     function instance$E($$self, $$props, $$invalidate) {
+    	let $ShowOnlySelectedElementsAnimations;
+    	validate_store(ShowOnlySelectedElementsAnimations, "ShowOnlySelectedElementsAnimations");
+    	component_subscribe($$self, ShowOnlySelectedElementsAnimations, $$value => $$invalidate(1, $ShowOnlySelectedElementsAnimations = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineActionBar", slots, []);
     	let { zoom = 1 } = $$props;
@@ -25945,11 +27347,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<TimelineActionBar> was created with unknown prop '${key}'`);
     	});
 
+    	const click_handler = () => set_store_value(ShowOnlySelectedElementsAnimations, $ShowOnlySelectedElementsAnimations = !$ShowOnlySelectedElementsAnimations, $ShowOnlySelectedElementsAnimations);
+
     	$$self.$$set = $$props => {
     		if ("zoom" in $$props) $$invalidate(0, zoom = $$props.zoom);
     	};
 
-    	$$self.$capture_state = () => ({ SpSlider, zoom, handleInput });
+    	$$self.$capture_state = () => ({
+    		ShowOnlySelectedElementsAnimations,
+    		SpSlider,
+    		zoom,
+    		handleInput,
+    		$ShowOnlySelectedElementsAnimations
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ("zoom" in $$props) $$invalidate(0, zoom = $$props.zoom);
@@ -25959,7 +27369,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [zoom, handleInput];
+    	return [zoom, $ShowOnlySelectedElementsAnimations, handleInput, click_handler];
     }
 
     class TimelineActionBar extends SvelteComponentDev {
@@ -25993,43 +27403,37 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let timelinecontrols;
     	let t0;
     	let timelineruler;
-    	let updating_zoom;
     	let t1;
     	let timeline;
     	let updating_scrollTop;
     	let updating_scrollLeft;
     	let t2;
     	let timelineactionbar;
-    	let updating_zoom_1;
+    	let updating_zoom;
     	let current;
     	timelinecontrols = new TimelineControls({ $$inline: true });
 
-    	function timelineruler_zoom_binding(value) {
-    		/*timelineruler_zoom_binding*/ ctx[8](value);
-    	}
-
-    	let timelineruler_props = { scroll: /*scrollLeft*/ ctx[3] };
-
-    	if (/*zoom*/ ctx[0] !== void 0) {
-    		timelineruler_props.zoom = /*zoom*/ ctx[0];
-    	}
-
     	timelineruler = new TimelineRuler({
-    			props: timelineruler_props,
+    			props: {
+    				zoom: /*zoom*/ ctx[0],
+    				scaleFactor: /*scaleFactor*/ ctx[5],
+    				scroll: /*scrollLeft*/ ctx[3]
+    			},
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(timelineruler, "zoom", timelineruler_zoom_binding));
-
     	function timeline_scrollTop_binding(value) {
-    		/*timeline_scrollTop_binding*/ ctx[9](value);
+    		/*timeline_scrollTop_binding*/ ctx[8](value);
     	}
 
     	function timeline_scrollLeft_binding(value) {
-    		/*timeline_scrollLeft_binding*/ ctx[10](value);
+    		/*timeline_scrollLeft_binding*/ ctx[9](value);
     	}
 
-    	let timeline_props = {};
+    	let timeline_props = {
+    		zoom: /*zoom*/ ctx[0],
+    		scaleFactor: /*scaleFactor*/ ctx[5]
+    	};
 
     	if (/*scrollTop*/ ctx[2] !== void 0) {
     		timeline_props.scrollTop = /*scrollTop*/ ctx[2];
@@ -26044,7 +27448,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	binding_callbacks.push(() => bind(timeline, "scrollLeft", timeline_scrollLeft_binding));
 
     	function timelineactionbar_zoom_binding(value) {
-    		/*timelineactionbar_zoom_binding*/ ctx[11](value);
+    		/*timelineactionbar_zoom_binding*/ ctx[10](value);
     	}
 
     	let timelineactionbar_props = {};
@@ -26071,7 +27475,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t2 = space();
     			create_component(timelineactionbar.$$.fragment);
     			attr_dev(div, "class", "timeline-controls-wrapper");
-    			add_location(div, file$x, 27, 8, 883);
+    			add_location(div, file$x, 27, 8, 1138);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26086,16 +27490,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const timelineruler_changes = {};
+    			if (dirty & /*zoom*/ 1) timelineruler_changes.zoom = /*zoom*/ ctx[0];
+    			if (dirty & /*scaleFactor*/ 32) timelineruler_changes.scaleFactor = /*scaleFactor*/ ctx[5];
     			if (dirty & /*scrollLeft*/ 8) timelineruler_changes.scroll = /*scrollLeft*/ ctx[3];
-
-    			if (!updating_zoom && dirty & /*zoom*/ 1) {
-    				updating_zoom = true;
-    				timelineruler_changes.zoom = /*zoom*/ ctx[0];
-    				add_flush_callback(() => updating_zoom = false);
-    			}
-
     			timelineruler.$set(timelineruler_changes);
     			const timeline_changes = {};
+    			if (dirty & /*zoom*/ 1) timeline_changes.zoom = /*zoom*/ ctx[0];
+    			if (dirty & /*scaleFactor*/ 32) timeline_changes.scaleFactor = /*scaleFactor*/ ctx[5];
 
     			if (!updating_scrollTop && dirty & /*scrollTop*/ 4) {
     				updating_scrollTop = true;
@@ -26112,10 +27513,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			timeline.$set(timeline_changes);
     			const timelineactionbar_changes = {};
 
-    			if (!updating_zoom_1 && dirty & /*zoom*/ 1) {
-    				updating_zoom_1 = true;
+    			if (!updating_zoom && dirty & /*zoom*/ 1) {
+    				updating_zoom = true;
     				timelineactionbar_changes.zoom = /*zoom*/ ctx[0];
-    				add_flush_callback(() => updating_zoom_1 = false);
+    				add_flush_callback(() => updating_zoom = false);
     			}
 
     			timelineactionbar.$set(timelineactionbar_changes);
@@ -26167,8 +27568,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "timeline-wrapper");
-    			attr_dev(div, "style", /*style*/ ctx[4]);
-    			add_location(div, file$x, 25, 0, 807);
+    			add_location(div, file$x, 25, 0, 1058);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26176,6 +27576,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			if (if_block) if_block.m(div, null);
+    			/*div_binding*/ ctx[11](div);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -26201,10 +27602,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     				check_outros();
     			}
-
-    			if (!current || dirty & /*style*/ 16) {
-    				attr_dev(div, "style", /*style*/ ctx[4]);
-    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -26218,6 +27615,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			if (if_block) if_block.d();
+    			/*div_binding*/ ctx[11](null);
     		}
     	};
 
@@ -26233,8 +27631,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     function instance$D($$self, $$props, $$invalidate) {
-    	let unit;
-    	let style;
     	let $CurrentTime;
     	let $CurrentMaxTime;
     	validate_store(CurrentTime, "CurrentTime");
@@ -26245,18 +27641,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	validate_slots("Timeline", slots, []);
     	let { zoom = 1 } = $$props;
     	let { collapsed = false } = $$props;
+    	let scaleFactor;
     	let scrollTop = 0;
     	let scrollLeft = 0;
+    	let wrapper;
     	const writable_props = ["zoom", "collapsed"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Timeline> was created with unknown prop '${key}'`);
     	});
-
-    	function timelineruler_zoom_binding(value) {
-    		zoom = value;
-    		$$invalidate(0, zoom);
-    	}
 
     	function timeline_scrollTop_binding(value) {
     		scrollTop = value;
@@ -26273,6 +27666,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$invalidate(0, zoom);
     	}
 
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			wrapper = $$value;
+    			$$invalidate(4, wrapper);
+    		});
+    	}
+
     	$$self.$$set = $$props => {
     		if ("zoom" in $$props) $$invalidate(0, zoom = $$props.zoom);
     		if ("collapsed" in $$props) $$invalidate(1, collapsed = $$props.collapsed);
@@ -26285,12 +27685,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		CurrentTime,
     		CurrentMaxTime,
     		TimelineActionBar,
+    		getScaleFactor,
+    		UNIT,
     		zoom,
     		collapsed,
+    		scaleFactor,
     		scrollTop,
     		scrollLeft,
-    		unit,
-    		style,
+    		wrapper,
     		$CurrentTime,
     		$CurrentMaxTime
     	});
@@ -26298,10 +27700,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	$$self.$inject_state = $$props => {
     		if ("zoom" in $$props) $$invalidate(0, zoom = $$props.zoom);
     		if ("collapsed" in $$props) $$invalidate(1, collapsed = $$props.collapsed);
+    		if ("scaleFactor" in $$props) $$invalidate(5, scaleFactor = $$props.scaleFactor);
     		if ("scrollTop" in $$props) $$invalidate(2, scrollTop = $$props.scrollTop);
     		if ("scrollLeft" in $$props) $$invalidate(3, scrollLeft = $$props.scrollLeft);
-    		if ("unit" in $$props) $$invalidate(5, unit = $$props.unit);
-    		if ("style" in $$props) $$invalidate(4, style = $$props.style);
+    		if ("wrapper" in $$props) $$invalidate(4, wrapper = $$props.wrapper);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -26309,6 +27711,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*zoom*/ 1) {
+    			$$invalidate(5, scaleFactor = getScaleFactor(zoom));
+    		}
+
     		if ($$self.$$.dirty & /*collapsed*/ 2) {
     			{
     				if (collapsed) {
@@ -26318,19 +27724,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
     		}
 
-    		if ($$self.$$.dirty & /*zoom*/ 1) {
-    			$$invalidate(5, unit = zoom * 0.24);
+    		if ($$self.$$.dirty & /*wrapper, $CurrentTime*/ 80) {
+    			wrapper && wrapper.style.setProperty("--timeline-play-offset", $CurrentTime.toString());
     		}
 
-    		if ($$self.$$.dirty & /*$CurrentTime, scrollTop, scrollLeft, $CurrentMaxTime, unit*/ 236) {
-    			// TODO: use zoom and others
-    			$$invalidate(4, style = `
-        --timeline-play-offset: ${$CurrentTime};
-        --timeline-scroll-top: ${scrollTop}px;
-        --timeline-scroll-left: ${scrollLeft}px;
-        --timeline-max-offset: ${$CurrentMaxTime};
-        --timeline-ms-unit: ${unit}px;
-    `);
+    		if ($$self.$$.dirty & /*wrapper, $CurrentMaxTime*/ 144) {
+    			wrapper && wrapper.style.setProperty("--timeline-max-offset", $CurrentMaxTime.toString());
+    		}
+
+    		if ($$self.$$.dirty & /*wrapper, zoom*/ 17) {
+    			wrapper && wrapper.style.setProperty("--timeline-ms-unit", zoom * UNIT + "px");
+    		}
+
+    		if ($$self.$$.dirty & /*wrapper, scrollTop*/ 20) {
+    			wrapper && wrapper.style.setProperty("--timeline-scroll-top", scrollTop + "px");
+    		}
+
+    		if ($$self.$$.dirty & /*wrapper, scrollLeft*/ 24) {
+    			wrapper && wrapper.style.setProperty("--timeline-scroll-left", scrollLeft + "px");
     		}
     	};
 
@@ -26339,14 +27750,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		collapsed,
     		scrollTop,
     		scrollLeft,
-    		style,
-    		unit,
+    		wrapper,
+    		scaleFactor,
     		$CurrentTime,
     		$CurrentMaxTime,
-    		timelineruler_zoom_binding,
     		timeline_scrollTop_binding,
     		timeline_scrollLeft_binding,
-    		timelineactionbar_zoom_binding
+    		timelineactionbar_zoom_binding,
+    		div_binding
     	];
     }
 
@@ -28915,11 +30326,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
+    	child_ctx[11] = list[i];
     	return child_ctx;
     }
 
-    // (82:4) {#if !collapsed}
+    // (37:4) {#if !collapsed}
     function create_if_block$8(ctx) {
     	let div0;
     	let sptreeview;
@@ -28932,16 +30343,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				reverse: /*$ShowTreeReverse*/ ctx[3],
     				document: /*$CurrentDocument*/ ctx[4],
     				selection: /*$CurrentSelection*/ ctx[1],
-    				infoMap: /*infoMap*/ ctx[5]
+    				infoMap: ElementInfoMap
     			},
     			$$inline: true
     		});
 
-    	sptreeview.$on("drop", /*onDrop*/ ctx[7]);
-    	sptreeview.$on("lock", /*onLock*/ ctx[8]);
-    	sptreeview.$on("hide", /*onHide*/ ctx[9]);
+    	sptreeview.$on("drop", /*onDrop*/ ctx[6]);
+    	sptreeview.$on("lock", /*onLock*/ ctx[7]);
+    	sptreeview.$on("hide", /*onHide*/ ctx[8]);
     	sptreeview.$on("contextMenu", onContextMenu);
-    	sptreeview.$on("selection", /*onSelection*/ ctx[6]);
+    	sptreeview.$on("selection", /*onSelection*/ ctx[5]);
     	let if_block = /*$CurrentDocument*/ ctx[4] && create_if_block_1$3(ctx);
 
     	const block = {
@@ -28951,10 +30362,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t = space();
     			div1 = element("div");
     			if (if_block) if_block.c();
-    			attr_dev(div0, "class", "scroll scroll-no-hide svelte-17re6p");
-    			add_location(div0, file$q, 82, 8, 1975);
-    			attr_dev(div1, "class", "tree-tools svelte-17re6p");
-    			add_location(div1, file$q, 94, 8, 2453);
+    			attr_dev(div0, "class", "scroll scroll-no-hide svelte-xg1vgz");
+    			add_location(div0, file$q, 37, 8, 1146);
+    			attr_dev(div1, "class", "tree-tools svelte-xg1vgz");
+    			add_location(div1, file$q, 49, 8, 1631);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -29006,14 +30417,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block$8.name,
     		type: "if",
-    		source: "(82:4) {#if !collapsed}",
+    		source: "(37:4) {#if !collapsed}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (110:12) {#if $CurrentDocument}
+    // (65:12) {#if $CurrentDocument}
     function create_if_block_1$3(ctx) {
     	let sp_picker;
     	let each_blocks = [];
@@ -29021,7 +30432,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let sp_picker_value_value;
     	let each_value = Array.from(/*$CurrentProject*/ ctx[2].getDocuments());
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*doc*/ ctx[12].id;
+    	const get_key = ctx => /*doc*/ ctx[11].id;
     	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -29041,7 +30452,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_picker, "size", "s");
     			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*$CurrentDocument*/ ctx[4].id);
     			set_custom_element_data(sp_picker, "quiet", "");
-    			add_location(sp_picker, file$q, 110, 16, 3515);
+    			add_location(sp_picker, file$q, 65, 16, 2693);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_picker, anchor);
@@ -29075,17 +30486,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_1$3.name,
     		type: "if",
-    		source: "(110:12) {#if $CurrentDocument}",
+    		source: "(65:12) {#if $CurrentDocument}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (112:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}
+    // (67:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}
     function create_each_block$2(key_1, ctx) {
     	let sp_menu_item;
-    	let t_value = (/*doc*/ ctx[12].title || "(document)") + "";
+    	let t_value = (/*doc*/ ctx[11].title || "(document)") + "";
     	let t;
     	let sp_menu_item_value_value;
 
@@ -29095,8 +30506,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			sp_menu_item = element("sp-menu-item");
     			t = text(t_value);
-    			set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value = /*doc*/ ctx[12].id);
-    			add_location(sp_menu_item, file$q, 112, 24, 3683);
+    			set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value = /*doc*/ ctx[11].id);
+    			add_location(sp_menu_item, file$q, 67, 24, 2861);
     			this.first = sp_menu_item;
     		},
     		m: function mount(target, anchor) {
@@ -29105,9 +30516,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*$CurrentProject*/ 4 && t_value !== (t_value = (/*doc*/ ctx[12].title || "(document)") + "")) set_data_dev(t, t_value);
+    			if (dirty & /*$CurrentProject*/ 4 && t_value !== (t_value = (/*doc*/ ctx[11].title || "(document)") + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*$CurrentProject*/ 4 && sp_menu_item_value_value !== (sp_menu_item_value_value = /*doc*/ ctx[12].id)) {
+    			if (dirty & /*$CurrentProject*/ 4 && sp_menu_item_value_value !== (sp_menu_item_value_value = /*doc*/ ctx[11].id)) {
     				set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value);
     			}
     		},
@@ -29120,7 +30531,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_each_block$2.name,
     		type: "each",
-    		source: "(112:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}",
+    		source: "(67:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}",
     		ctx
     	});
 
@@ -29136,8 +30547,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			div = element("div");
     			if (if_block) if_block.c();
-    			attr_dev(div, "class", "tree-wrapper svelte-17re6p");
-    			add_location(div, file$q, 80, 0, 1919);
+    			attr_dev(div, "class", "tree-wrapper svelte-xg1vgz");
+    			add_location(div, file$q, 35, 0, 1090);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -29218,37 +30629,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	validate_slots("Tree", slots, []);
     	
     	let { collapsed = false } = $$props;
-
-    	const infoMap = {
-    		rect: {
-    			title: "Rectangle",
-    			icon: "expr:rectangle-tool"
-    		},
-    		ellipse: { title: "Ellipse", icon: "expr:ellipse" },
-    		star: { title: "Star", icon: "expr:star-tool" },
-    		"regular-polygon": {
-    			title: "Regular polygon",
-    			icon: "expr:polygon"
-    		},
-    		poly: {
-    			title: "Polyline",
-    			icon: "expr:polyline-tool"
-    		},
-    		path: { title: "Path", icon: "expr:path" },
-    		symbol: { title: "Symbol", icon: "expr:symbol" },
-    		group: { title: "Group", icon: "expr:group" },
-    		"clip-path": {
-    			title: "Clip path",
-    			icon: "expr:clip-path"
-    		},
-    		"mask": {
-    			title: "Mask",
-    			icon: null, // TODO
-    			
-    		},
-    		text: { title: "Text", icon: "expr:text-tool" }
-    	};
-
     	let noSelection;
 
     	function onSelection() {
@@ -29304,8 +30684,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		ShowTreeReverse,
     		notifySelectionChanged,
     		SpTreeView,
+    		ElementInfoMap,
     		collapsed,
-    		infoMap,
     		noSelection,
     		onSelection,
     		onDrop,
@@ -29340,7 +30720,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$CurrentProject,
     		$ShowTreeReverse,
     		$CurrentDocument,
-    		infoMap,
     		onSelection,
     		onDrop,
     		onLock,
@@ -42259,7 +43638,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     var CustomIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"path\" viewBox=\"0 0 16 16\">\n        <path d=\"M13,11a1.994,1.994,0,0,0-1.925,1.488c-1.586-.047-2.6-.354-3-.923-.528-.749-.056-2.1.4-3.4.54-1.543,1.1-3.139.266-4.312-.611-.86-1.832-1.287-3.8-1.342a2,2,0,1,0-.007,1c1.582.046,2.594.354,3,.925.533.748.061,2.1-.4,3.4-.54,1.543-1.1,3.139-.266,4.311.611.861,1.833,1.288,3.805,1.343A2,2,0,1,0,13,11ZM3,4A1,1,0,1,1,4,3,1,1,0,0,1,3,4ZM13,14a1,1,0,1,1,1-1A1,1,0,0,1,13,14Z\" />\n    </symbol>\n\n    <symbol id=\"text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n    <symbol id=\"transform-tool\" viewBox=\"0 0 16 16\">\n        <circle cx=\"10.75\" cy=\"10.763\" r=\"0.655\" />\n        <polygon\n                points=\"16 7.491 16 5.526 14.03 5.526 14.03 6.185 11.73 6.185 11.73 5.526 9.77 5.526 9.77 6.185 7.86 6.185 8.54 6.833 9.77 6.833 9.77 7.491 11.73 7.491 11.73 6.833 14.03 6.833 14.03 7.491 14.69 7.491 14.69 9.786 14.03 9.786 14.03 11.741 14.69 11.741 14.69 14.035 14.03 14.035 14.03 14.693 11.73 14.693 11.73 14.035 9.77 14.035 9.77 14.693 7.47 14.693 7.47 14.035 6.81 14.035 6.81 11.741 7.47 11.741 7.47 9.786 5.5 9.786 5.5 11.741 6.14 11.741 6.14 14.035 5.5 14.035 5.5 16 7.47 16 7.47 15.342 9.77 15.342 9.77 16 11.73 16 11.73 15.342 14.03 15.342 14.03 16 16 16 16 14.035 15.36 14.035 15.36 11.741 16 11.741 16 9.786 15.36 9.786 15.36 7.491 16 7.491\" />\n        <path\n                d=\"M6.81,9.047l2.34-.139a.2.2,0,0,0,.12-.349L7.47,6.843,6.08,5.526.33.06A.194.194,0,0,0,.2,0,.2.2,0,0,0,0,.2V12.569a.2.2,0,0,0,.2.2.211.211,0,0,0,.13-.05L3.86,9.267a.273.273,0,0,1,.12-.06l2.16-.13Z\" />\n    </symbol>\n\n    <symbol id=\"polyline-tool\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M1.465,15.035a.5.5,0,0,1-.5-.5V2.782l13,5.467L14,1.5a.5.5,0,0,1,.5-.5h0a.5.5,0,0,1,.5.5l-.039,8.249-13-5.464V14.535A.5.5,0,0,1,1.465,15.035Z\" />\n    </symbol>\n\n    <symbol id=\"swap-arrow-up-left\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M3.487,6.328H1.451a.2.2,0,0,1-.177-.3L3.935,1.152a.2.2,0,0,1,.354,0L6.949,6.03a.2.2,0,0,1-.176.3H4.737A7.383,7.383,0,0,0,12.112,13.7h2.014a.625.625,0,1,1,0,1.25H12.112A8.635,8.635,0,0,1,3.487,6.328Z\"/>\n    </symbol>\n    <symbol id=\"swap-arrow-down-right\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M9.672,12.513v2.036a.2.2,0,0,0,.3.177l4.878-2.661a.2.2,0,0,0,0-.354L9.97,9.051a.2.2,0,0,0-.3.176v2.036A7.383,7.383,0,0,1,2.3,3.888V1.874a.625.625,0,0,0-1.25,0V3.888A8.635,8.635,0,0,0,9.672,12.513Z\" />\n    </symbol>\n    <symbol id=\"swap-arrows\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M14.8,9.718H12.762V7.863A4.631,4.631,0,0,0,8.137,3.238H6.282V1.2a.2.2,0,0,0-.295-.175L1.1,3.688a.2.2,0,0,0,0,.351L5.987,6.7a.2.2,0,0,0,.295-.176V4.488H8.137a3.379,3.379,0,0,1,3.375,3.375V9.718H9.474a.2.2,0,0,0-.176.295L11.961,14.9a.2.2,0,0,0,.351,0l2.663-4.883A.2.2,0,0,0,14.8,9.718Z\" />\n    </symbol>\n    <symbol id=\"fill-radial-focal-gradient\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75a2.452,2.452,0,0,0-.27.02A1.8,1.8,0,0,0,.51.51a1.858,1.858,0,0,0-.46.82v.01c-.02.11-.03.21-.04.32A.277.277,0,0,0,0,1.75v12.5a.277.277,0,0,0,.01.09,1.648,1.648,0,0,0,.04.32v.01a1.66,1.66,0,0,0,.48.83,1.731,1.731,0,0,0,.95.48,2.452,2.452,0,0,0,.27.02h12.5a1.8,1.8,0,0,0,1.24-.51A1.756,1.756,0,0,0,16,14.25V1.75A1.725,1.725,0,0,0,15.5.53ZM15,14.25a.755.755,0,0,1-.75.75H1.75a.711.711,0,0,1-.51-.21A.734.734,0,0,1,1,14.25V1.75A.755.755,0,0,1,1.75,1h12.5a.734.734,0,0,1,.54.24.694.694,0,0,1,.21.51Z\" />\n        <path\n                d=\"M16,2.74V13.26a10.088,10.088,0,0,1-1.43,1.81,9.474,9.474,0,0,1-1.08.93H1.75a2.452,2.452,0,0,1-.27-.02,10.07,10.07,0,0,1-1.05-.91c-.13-.13-.25-.26-.38-.4v-.01a1.648,1.648,0,0,1-.04-.32A.277.277,0,0,1,0,14.25V1.75a.277.277,0,0,1,.01-.09c.01-.11.02-.21.04-.32V1.33c.13-.14.25-.27.38-.4A10.07,10.07,0,0,1,1.48.02,2.452,2.452,0,0,1,1.75,0H13.49A9.807,9.807,0,0,1,16,2.74Z\"\n                opacity=\"0.04\"/>\n        <path\n                d=\"M16,5.22v5.56a7.871,7.871,0,0,1-1,1.88,7.294,7.294,0,0,1-.84,1A7.672,7.672,0,0,1,12.36,15a7.95,7.95,0,0,1-7.72,0,7.672,7.672,0,0,1-1.8-1.34A8.072,8.072,0,0,1,1,10.78,7.978,7.978,0,0,1,1,5.22,8.072,8.072,0,0,1,2.84,2.34,7.672,7.672,0,0,1,4.64,1a7.95,7.95,0,0,1,7.72,0A7.98,7.98,0,0,1,16,5.22Z\"\n                opacity=\"0.08\"/>\n        <path\n                d=\"M9.065,1.83h0A5.835,5.835,0,0,1,14.9,7.665h0A5.835,5.835,0,0,1,9.065,13.5h0A5.834,5.834,0,0,1,3.23,7.665h0A5.834,5.834,0,0,1,9.065,1.83Z\"\n                opacity=\"0.15\"/>\n        <path\n                d=\"M10.114,3.494h0A4.506,4.506,0,0,1,14.621,8h0a4.506,4.506,0,0,1-4.507,4.506h0A4.505,4.505,0,0,1,5.608,8h0A4.505,4.505,0,0,1,10.114,3.494Z\"\n                opacity=\"0.2\"/>\n        <path\n                d=\"M11.226,4.822h0A3.178,3.178,0,0,1,14.4,8h0a3.178,3.178,0,0,1-3.178,3.178h0A3.178,3.178,0,0,1,8.048,8h0A3.178,3.178,0,0,1,11.226,4.822Z\"\n                opacity=\"0.4\"/>\n        <path\n                d=\"M12.35,6.026h0A1.973,1.973,0,0,1,14.323,8h0A1.973,1.973,0,0,1,12.35,9.974h0A1.974,1.974,0,0,1,10.376,8h0A1.974,1.974,0,0,1,12.35,6.026Z\"\n                opacity=\"0.5\"/>\n        <path d=\"M13.523,7.2h0a.8.8,0,0,1,.8.8h0a.8.8,0,0,1-.8.8h0a.8.8,0,0,1-.8-.8h0A.8.8,0,0,1,13.523,7.2Z\"/>\n    </symbol>\n</svg>";
 
-    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n    <symbol id=\"LockClosed\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H14V7A5,5,0,0,0,4,7V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM6,7a3,3,0,0,1,6,0V8H6Zm4,6.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"LockOpen\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H5.95V5.1765A3.1065,3.1065,0,0,1,8.9852,2.0003L9,2a3.0715,3.0715,0,0,1,2.754,1.7095c.155.3195.133.573.3885.573a.2541.2541,0,0,0,.093-.018L13.576,3.73a.25649.25649,0,0,0,.161-.2355A4.96,4.96,0,0,0,9,.05,5.16306,5.16306,0,0,0,4,5.146V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM10,13.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"Visibility\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.3065,4.29A7.48591,7.48591,0,0,0,9,3.4685c-4.332,0-7.875,4.3125-7.875,5.7115,0,1.5,3.729,5.35,7.843,5.35,4.15,0,7.907-3.853,7.907-5.35C16.875,8,14.768,5.5095,12.3065,4.29ZM9,13.6125A4.6125,4.6125,0,1,1,13.6125,9,4.6125,4.6125,0,0,1,9,13.6125Z\" />\n        <path class=\"a\" d=\"M10.3335,9.0415A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.46964,2.46964,0,0,0,9,6.469a2.5315,2.5315,0,1,0,2.5315,2.5315V9a2.35682,2.35682,0,0,0-.0875-.6A1.3125,1.3125,0,0,1,10.3335,9.0415Z\" />\n    </symbol>\n\n    <symbol id=\"VisibilityOff\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M7.2865,4.72A4.6075,4.6075,0,0,1,13.28,10.7135l1.4725,1.4725C16.05,11.0915,16.875,9.88,16.875,9.18c0-1.182-2.107-3.6705-4.5685-4.89A7.48591,7.48591,0,0,0,9,3.4685a7.18,7.18,0,0,0-2.4945.4705Z\" />\n        <path class=\"a\" d=\"M16.897,16.029l-5.733-5.733A2.511,2.511,0,0,0,11.531,9a2.35608,2.35608,0,0,0-.087-.6,1.31249,1.31249,0,0,1-1.1105.639A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.47276,2.47276,0,0,0,9,6.469a2.511,2.511,0,0,0-1.296.367L1.971,1.103a.40949.40949,0,0,0-.5785,0l-.289.2895a.4085.4085,0,0,0-.00079.57771L1.1035,1.971l3.173,3.173c-1.908,1.37-3.15,3.209-3.15,4.036,0,1.5,3.729,5.35,7.843,5.35a8.2275,8.2275,0,0,0,3.722-.974l3.3395,3.3395a.40851.40851,0,0,0,.57771.0008l.00079-.0008.289-.289A.409.409,0,0,0,16.897,16.029ZM9,13.6125A4.6,4.6,0,0,1,5.3395,6.207l1.497,1.497A2.50409,2.50409,0,0,0,6.469,9a2.531,2.531,0,0,0,2.5305,2.5315H9a2.50447,2.50447,0,0,0,1.296-.368l1.497,1.497A4.572,4.572,0,0,1,9,13.6125Z\" />\n    </symbol>\n\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
+    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n    <symbol id=\"LockClosed\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H14V7A5,5,0,0,0,4,7V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM6,7a3,3,0,0,1,6,0V8H6Zm4,6.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"LockOpen\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H5.95V5.1765A3.1065,3.1065,0,0,1,8.9852,2.0003L9,2a3.0715,3.0715,0,0,1,2.754,1.7095c.155.3195.133.573.3885.573a.2541.2541,0,0,0,.093-.018L13.576,3.73a.25649.25649,0,0,0,.161-.2355A4.96,4.96,0,0,0,9,.05,5.16306,5.16306,0,0,0,4,5.146V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM10,13.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"Visibility\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.3065,4.29A7.48591,7.48591,0,0,0,9,3.4685c-4.332,0-7.875,4.3125-7.875,5.7115,0,1.5,3.729,5.35,7.843,5.35,4.15,0,7.907-3.853,7.907-5.35C16.875,8,14.768,5.5095,12.3065,4.29ZM9,13.6125A4.6125,4.6125,0,1,1,13.6125,9,4.6125,4.6125,0,0,1,9,13.6125Z\" />\n        <path class=\"a\" d=\"M10.3335,9.0415A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.46964,2.46964,0,0,0,9,6.469a2.5315,2.5315,0,1,0,2.5315,2.5315V9a2.35682,2.35682,0,0,0-.0875-.6A1.3125,1.3125,0,0,1,10.3335,9.0415Z\" />\n    </symbol>\n\n    <symbol id=\"VisibilityOff\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M7.2865,4.72A4.6075,4.6075,0,0,1,13.28,10.7135l1.4725,1.4725C16.05,11.0915,16.875,9.88,16.875,9.18c0-1.182-2.107-3.6705-4.5685-4.89A7.48591,7.48591,0,0,0,9,3.4685a7.18,7.18,0,0,0-2.4945.4705Z\" />\n        <path class=\"a\" d=\"M16.897,16.029l-5.733-5.733A2.511,2.511,0,0,0,11.531,9a2.35608,2.35608,0,0,0-.087-.6,1.31249,1.31249,0,0,1-1.1105.639A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.47276,2.47276,0,0,0,9,6.469a2.511,2.511,0,0,0-1.296.367L1.971,1.103a.40949.40949,0,0,0-.5785,0l-.289.2895a.4085.4085,0,0,0-.00079.57771L1.1035,1.971l3.173,3.173c-1.908,1.37-3.15,3.209-3.15,4.036,0,1.5,3.729,5.35,7.843,5.35a8.2275,8.2275,0,0,0,3.722-.974l3.3395,3.3395a.40851.40851,0,0,0,.57771.0008l.00079-.0008.289-.289A.409.409,0,0,0,16.897,16.029ZM9,13.6125A4.6,4.6,0,0,1,5.3395,6.207l1.497,1.497A2.50409,2.50409,0,0,0,6.469,9a2.531,2.531,0,0,0,2.5305,2.5315H9a2.50447,2.50447,0,0,0,1.296-.368l1.497,1.497A4.572,4.572,0,0,1,9,13.6125Z\" />\n    </symbol>\n\n    <symbol id=\"AddToSelection\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.08,2.7215l.514-.8885a7.97354,7.97354,0,0,0-2.7-.803V2.063A6.94168,6.94168,0,0,1,12.08,2.7215Z\" />\n        <path class=\"a\" d=\"M14.765,5.033l.9-.5175a8.06649,8.06649,0,0,0-1.926-1.985l-.519.894A7.03319,7.03319,0,0,1,14.765,5.033Z\" />\n        <path class=\"a\" d=\"M15.9665,8.3315H17a7.95519,7.95519,0,0,0-.6895-2.6455L15.415,6.2A6.95,6.95,0,0,1,15.9665,8.3315Z\" />\n        <path class=\"a\" d=\"M15.9665,9.6685a6.95,6.95,0,0,1-.55,2.129l.8955.516A7.95513,7.95513,0,0,0,17,9.6685Z\" />\n        <path class=\"a\" d=\"M13.22,14.5755l.5165.894a8.06544,8.06544,0,0,0,1.926-1.985l-.9-.5175A7.033,7.033,0,0,1,13.22,14.5755Z\" />\n        <path class=\"a\" d=\"M9.8925,15.937V16.97a7.97354,7.97354,0,0,0,2.7-.803l-.5125-.8885A6.94146,6.94146,0,0,1,9.8925,15.937Z\" />\n        <path class=\"a\" d=\"M6.269,15.447l-.514.8885A7.99637,7.99637,0,0,0,8.5535,17V15.9775A6.96845,6.96845,0,0,1,6.269,15.447Z\" />\n        <path class=\"a\" d=\"M3.3695,13.1465l-.9.5175a8.06609,8.06609,0,0,0,2.107,2.031l.513-.8875A7.03548,7.03548,0,0,1,3.3695,13.1465Z\" />\n        <path class=\"a\" d=\"M2.0335,9.6685H1a7.94984,7.94984,0,0,0,.787,2.847L2.6825,12A6.94449,6.94449,0,0,1,2.0335,9.6685Z\" />\n        <path class=\"a\" d=\"M2.6825,6,1.787,5.4845A7.94984,7.94984,0,0,0,1,8.3315H2.0335A6.94449,6.94449,0,0,1,2.6825,6Z\" />\n        <path class=\"a\" d=\"M5.092,3.192l-.513-.8875a8.06609,8.06609,0,0,0-2.107,2.031l.9.5175A7.03639,7.03639,0,0,1,5.092,3.192Z\" />\n        <path class=\"a\" d=\"M8.5535,2.0225V1a7.99514,7.99514,0,0,0-2.8.6645l.5135.8885A6.96854,6.96854,0,0,1,8.5535,2.0225Z\" />\n        <path class=\"a\" d=\"M14,9.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"AddCircle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M9,1a8,8,0,1,0,8,8A8,8,0,0,0,9,1Zm5,8.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"Filter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M15.473,1H1.527a.5.5,0,0,0-.3935.8085L7,9.2945V16.95a.496.496,0,0,0,.84.412l1.9905-2.0765A.60949.60949,0,0,0,10,14.864V9.2945l5.8665-7.486A.5.5,0,0,0,15.473,1Z\" />\n    </symbol>\n\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
 
     /**
      *  Copyright 2018 Adobe. All rights reserved.
@@ -42375,6 +43754,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     a1.addKeyframeAtOffset(2000, new canvasEngine.Point(100, 0));
     a1.addKeyframeAtOffset(5000, new canvasEngine.Point(500, 0));
     doc.animation.addAnimation(rect, "position", a1);
+    const as1 = animators.createAnimation(rect, "strokeLineWidth");
+    as1.addKeyframeAtOffset(0, 10);
+    as1.addKeyframeAtOffset(2000, 20);
+    as1.addKeyframeAtOffset(4000, 30);
+    doc.animation.addAnimation(rect, "strokeLineWidth", as1);
     const rect2 = new canvasEngine.RectElement(new canvasEngine.RectShape(300, 300), doc);
     rect2.title = 'Rect 2';
     rect2.fill = new canvasEngine.SolidBrush(canvasEngine.Color.parse('yellow'));
