@@ -154,10 +154,11 @@
         overflow: hidden;
         background: var(--separator-color);
     }
+
     canvas-engine {
         touch-action: none;
-        --canvas-engine-background-color: var(--separator-color);
     }
+
     canvas-engine.hidden {
         display: none;
     }

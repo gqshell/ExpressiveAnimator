@@ -19,6 +19,14 @@ sp-action-button.very-small
     --spectrum-actionbutton-s-min-width: var(--spectrum-global-dimension-size-300);
 }
 
+canvas-engine, canvas-engine[theme="dark"] {
+    --canvas-engine-background-color: #252525;
+}
+
+canvas-engine[theme="light"] {
+    --canvas-engine-background-color: #e1e1e1;
+}
+
 /*sp-split-view[vertical] {*/
 
 /*    --spectrum-dragbar-gripper-height: 0;*/
@@ -83,7 +91,7 @@ sp-action-button.very-small
 
 
 overlay-trigger.svelte-1jj07za,sp-action-button.svelte-1jj07za{touch-action:none}
-.canvas-wrapper.svelte-6hby6z{box-sizing:border-box;overflow:hidden;background:var(--separator-color)}canvas-engine.svelte-6hby6z{touch-action:none;--canvas-engine-background-color:var(--separator-color)}canvas-engine.hidden.svelte-6hby6z{display:none}
+.canvas-wrapper.svelte-16t9hot{box-sizing:border-box;overflow:hidden;background:var(--separator-color)}canvas-engine.svelte-16t9hot{touch-action:none}canvas-engine.hidden.svelte-16t9hot{display:none}
 .timeline-controls{position:relative;box-sizing:border-box;width:240px;height:100%;border-right:1px solid var(--separator-color);border-bottom:1px solid var(--separator-color)}.timeline-controls-container{position:absolute;background:var(--spectrum-global-color-gray-75);width:100%;height:100%;z-index:5}.timeline-controls-time{padding:0 4px;line-height:32px;vertical-align:middle;font-size:12px;text-align:center;flex:1}.timeline-controls-recording{--spectrum-alias-icon-color:var(--spectrum-global-color-red-400)}.timeline-controls-recording:hover{--spectrum-alias-icon-color-hover:var(--spectrum-global-color-red-700)}
 .timeline-item{height:var(--timeline-item-height);max-height:var(--timeline-item-height);display:flex;flex-direction:row;align-items:center}.timeline-item.is-selected{background:var(--spectrum-alias-background-color-hover-overlay)}.timeline-item.is-alt{}.timeline-item.is-disabled{}.timeline-item.has-keyframes{position:relative;min-width:100%;padding-left:calc(var(--timeline-keyframe-size) / 2)}.timeline-item>.timeline-keyframes-line{width:100%;height:1px;position:absolute;left:0;top:50%;background:var(--spectrum-global-color-gray-400);user-select:none;pointer-events:none}
 .timeline-selection-rect{z-index:10;position:absolute;top:0;left:0;width:0;height:0;background:var(--spectrum-global-color-blue-700);opacity:0.50}

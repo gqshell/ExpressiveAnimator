@@ -20791,32 +20791,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             icon: 'expr:transform-tool',
             title: 'Transform tool (F)'
         },
-        [
-            {
-                tool: 'pen',
-                icon: 'expr:pen-tool',
-                title: 'Pen tool (P)',
-                disabled: true
-            },
-            // TODO:
-            /*
-            {
-                tool: 'pencil',
-                icon: 'expr:pen-tool',
-                title: 'Pencil tool (N)'
-            },*/
-            {
-                tool: 'poly',
-                icon: 'expr:polyline-tool',
-                title: 'Polyline tool (W)'
-            },
-            {
-                tool: 'line',
-                icon: 'expr:line-tool',
-                title: 'Line tool (L)',
-                disabled: true
-            },
-        ],
+        {
+            tool: 'pen',
+            icon: 'expr:pen-tool',
+            title: 'Pen tool (P)',
+            disabled: true
+        },
         [
             {
                 tool: 'rectangle',
@@ -20838,21 +20818,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
                 icon: 'expr:star-tool',
                 title: 'Star tool (S)'
             },
-        ],
-        [
             {
-                tool: 'gradient',
-                icon: 'expr:gradient-tool',
-                title: 'Gradient tool (G)',
-                disabled: true
+                tool: 'poly',
+                icon: 'expr:polyline-tool',
+                title: 'Polyline tool (W)'
             },
             {
-                tool: 'color-picker',
-                icon: 'expr:colorpicker-tool',
-                title: 'Eyedropper tool (I)',
+                tool: 'line',
+                icon: 'expr:line-tool',
+                title: 'Line tool (L)',
                 disabled: true
             },
         ],
+        {
+            tool: 'gradient',
+            icon: 'expr:gradient-tool',
+            title: 'Gradient tool (G)',
+            disabled: true
+        },
+        {
+            tool: 'color-picker',
+            icon: 'expr:colorpicker-tool',
+            title: 'Eyedropper tool (I)',
+            disabled: true
+        },
         // TODO: image tool info
         /*
         {
@@ -21296,10 +21285,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			canvas_engine = element("canvas-engine");
     			t = space();
     			if (if_block) if_block.c();
-    			set_custom_element_data(canvas_engine, "class", "svelte-6hby6z");
+    			set_custom_element_data(canvas_engine, "class", "svelte-16t9hot");
     			toggle_class(canvas_engine, "hidden", /*hidden*/ ctx[0]);
     			add_location(canvas_engine, file$J, 139, 4, 4540);
-    			attr_dev(div, "class", "canvas-wrapper svelte-6hby6z");
+    			attr_dev(div, "class", "canvas-wrapper svelte-16t9hot");
     			attr_dev(div, "tabindex", "0");
     			add_location(div, file$J, 138, 0, 4494);
     		},

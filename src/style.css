@@ -19,6 +19,13 @@ sp-action-button.very-small
     --spectrum-actionbutton-s-min-width: var(--spectrum-global-dimension-size-300);
 }
 
+canvas-engine, canvas-engine[theme="dark"] {
+    --canvas-engine-background-color: #252525;
+}
+canvas-engine[theme="light"] {
+    --canvas-engine-background-color: #e1e1e1;
+}
+
 /*sp-split-view[vertical] {*/
 /*    --spectrum-dragbar-gripper-height: 0;*/
 /*    --spectrum-dragbar-gripper-border-width-vertical: 0;*/
