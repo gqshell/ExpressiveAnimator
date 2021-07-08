@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {SingleBoardDocument, Size} from "@zindex/canvas-engine";
+import {Rectangle, SingleBoardDocument, Size} from "@zindex/canvas-engine";
 import type {DocumentAnimation} from "../Animation";
 
 export class AnimationDocument extends SingleBoardDocument {
@@ -23,6 +23,18 @@ export class AnimationDocument extends SingleBoardDocument {
 
     constructor(size: Size, id?: string|null) {
         super(size, id);
+    }
+
+    get board(): Rectangle {
+        return this._board;
+    }
+
+    set board(value: Rectangle) {
+        if (this._board.equals(value)) {
+            return;
+        }
+        this._board = value;
+        this.invalidateBoundsAndPicture();
     }
 
     get animation(): DocumentAnimation | null {

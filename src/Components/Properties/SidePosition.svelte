@@ -20,10 +20,10 @@
 
 </script>
 <overlay-trigger placement="left" type="modal">
-    <sp-action-button slot="trigger" quiet size="s">
+    <sp-action-button on:click={() => dispatch('input', {x: Position.Middle, y: Position.Middle})} slot="trigger" quiet size="s">
         <sp-icon name={icon} slot="icon"></sp-icon>
     </sp-action-button>
-    <sp-popover bind:this={popover} slot="click-content" open tip>
+    <sp-popover bind:this={popover} slot="longpress-content" open tip>
         <svg width={size + radius} height={size + radius} viewBox={`${-radius} ${-radius} ${size} ${size}`}>
             <rect x={0} y={0} width={size - 2 * radius} height={size - 2 * radius} stroke-width="2"/>
             {#each positions as x}

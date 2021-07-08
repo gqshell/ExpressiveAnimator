@@ -19,6 +19,7 @@ import {writable} from "svelte/store";
 export const IsFillSelected = writable<boolean>(true);
 export const CurrentColorMode = writable<string>('HEX');
 export const ProportionalScale = writable<boolean>(false);
+export const ProportionalSize = writable<boolean>(true);
 export const IsProjectSaved = writable<boolean>(false);
 export const ProjectFileHandle = writable<FileSystemFileHandle>(null);
 

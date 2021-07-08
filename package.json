@@ -14,8 +14,7 @@
     "@adobe/focus-ring-polyfill": "^0.1.5",
     "@ctrl/tinycolor": "^3.4.0",
     "@spectrum-web-components/bundle": "^0.21.1",
-    "@zindex/canvas-engine": "github:ExpressiveSuite/CanvasEngine#v0.3.0",
-    "@zindex/serialization": "github:zindex-software/serialization"
+    "@zindex/canvas-engine": "^0.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",

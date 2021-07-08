@@ -86,6 +86,7 @@
         </div>
         <div class="tree-tools">
             <sp-action-button
+                    title="Delete elements"
                     class="very-small"
                     disabled={noSelection}
                     on:click={onDelete} size="s" quiet>

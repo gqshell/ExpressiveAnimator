@@ -840,7 +840,7 @@ overlay-trigger.svelte-1jj07za,sp-action-button.svelte-1jj07za{touch-action:none
           }
 
 .spectrum-Slider{touch-action:none}.spectrum-Textfield-input.spectrum-Slider-value{width:42px;height:15px;background:transparent}
-.timeline-action-bar{display:flex;box-sizing:content-box !important;border-top:2px solid var(--separator-color);width:100%;height:var(--spectrum-alias-item-height-m);align-items:center}.timeline-action-bar-zoom-wrapper{margin-left:auto;padding:0 8px;width:240px}
+.timeline-action-bar{display:flex;box-sizing:content-box !important;border-top:2px solid var(--separator-color);width:100%;height:var(--spectrum-alias-item-height-m);align-items:center}.timeline-actions-left{width:240px}.timeline-actions-right{flex:1;display:flex;flex-direction:row;align-items:center;justify-items:space-between}.timeline-action-bar-zoom-wrapper{margin-left:auto;padding:0 8px;width:240px}
 .timeline-wrapper{display:flex;flex-direction:column;overflow:hidden}.timeline-wrapper *{user-select:none}.timeline-controls-wrapper{height:32px;max-height:32px;min-height:32px;display:flex;flex-direction:row}
 sp-popover.svelte-i3nypo{min-width:var(--cascade-menu-min-width, 200px)}
 sp-menu.svelte-g3osqm{min-width:var(--cascade-menu-min-width, 200px)}

@@ -25,6 +25,40 @@ import {equals} from "@zindex/canvas-engine";
 import type {AnimationDocument} from "./AnimationDocument";
 
 export class AnimationMiddleware extends Middleware<AnimationProject> {
+    deleteSelectedKeyframes(): boolean {
+        const selection = this._project.keyframeSelection;
+        if (selection.isEmpty) {
+            return false;
+        }
+
+        const documentAnimation = this._project.document.animation;
+
+        let changed: boolean = false;
+        let deleted: boolean;
+
+        for (const animation of documentAnimation.allAnimations()) {
+            deleted = false;
+            for (const keyframe of animation.keyframes) {
+                if (selection.isKeyframeSelected(keyframe)) {
+                    animation.removeKeyframe(keyframe);
+                    deleted = true;
+                }
+            }
+            if (deleted) {
+                changed = true;
+            }
+        }
+
+        if (!changed) {
+            return false;
+        }
+
+        selection.clear();
+        documentAnimation.removeEmptyAnimations();
+
+        return true;
+    }
+
     setTime(time: number): boolean {
         if (this.project.setTime(time)) {
             return this.updateAnimatedProperties(this.project.document);

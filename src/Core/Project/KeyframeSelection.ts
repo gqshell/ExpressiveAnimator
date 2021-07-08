@@ -29,6 +29,10 @@ export class KeyframeSelection implements Disposable {
     constructor() {
     }
 
+    get isEmpty(): boolean {
+        return this._selection.size === 0;
+    }
+
     dispose() {
         this._selection = null;
         this._document = null;

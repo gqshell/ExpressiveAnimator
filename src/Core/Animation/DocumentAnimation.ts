@@ -160,6 +160,24 @@ export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimatio
         return updated;
     }
 
+    removeEmptyAnimations(): boolean {
+        let changed: boolean = false;
+
+        for (const [id, properties] of this._map.entries()) {
+            for (const property of Object.keys(properties)) {
+                if (!properties[property].hasKeyframes) {
+                    delete properties[property];
+                    changed = true;
+                }
+            }
+            if (Object.keys(properties).length === 0) {
+                this._map.delete(id);
+            }
+        }
+
+        return changed;
+    }
+
     /**
      * Remove animated elements that are no longer present in document
      */
@@ -237,6 +255,14 @@ export class DocumentAnimation implements Disposable, Cloneable<DocumentAnimatio
         }
 
         return false;
+    }
+
+    *allAnimations(): Generator<Animation<any>> {
+        for (const properties of this._map.values()) {
+            for (const animation of Object.values(properties)) {
+                yield animation;
+            }
+        }
     }
 
     *allKeyframes(): Generator<Keyframe<any>> {

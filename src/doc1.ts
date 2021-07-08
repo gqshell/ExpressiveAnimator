@@ -14,8 +14,8 @@ import {DocumentAnimation, AnimatorSource, AnimationProject, AnimationDocument} 
 const animators = new AnimatorSource();
 const project = new AnimationProject(animators);
 
-const doc = new AnimationDocument(new Size(500, 800));
-doc.title = 'Test document 1';
+const doc = new AnimationDocument(new Size(1200, 800));
+doc.title = 'Main document';
 doc.animation = new DocumentAnimation(doc, 0, 10000);
 
 const rect = new RectElement(new RectShape(100, 100), doc);
