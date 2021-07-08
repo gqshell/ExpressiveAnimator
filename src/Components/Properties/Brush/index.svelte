@@ -57,27 +57,32 @@
         {
             value: BrushType.LinearGradient,
             title: 'Linear gradient',
-            icon: 'expr:fill-linear-gradient'
+            icon: 'expr:fill-linear-gradient',
+            disabled: true
         },
         {
             value: BrushType.RadialGradient,
             title: 'Radial gradient',
-            icon: 'expr:fill-radial-gradient'
+            icon: 'expr:fill-radial-gradient',
+            disabled: true
         },
         {
             value: BrushType.TwoPointGradient,
             title: 'Radial gradient with focal point',
-            icon: 'expr:fill-radial-focal-gradient'
+            icon: 'expr:fill-radial-focal-gradient',
+            disabled: true
         },
         {
             value: BrushType.ConicalGradient,
             title: 'Sweep gradient',
-            icon: 'expr:fill-conical-gradient'
+            icon: 'expr:fill-conical-gradient',
+            disabled: true
         },
         {
             value: BrushType.Pattern,
             title: 'Pattern',
-            icon: 'expr:fill-pattern'
+            icon: 'expr:fill-pattern',
+            disabled: true
         },
     ];
 </script>

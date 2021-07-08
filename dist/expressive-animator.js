@@ -5600,7 +5600,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
      * @element sp-menu
      *
      */
-    class Menu$1 extends SpectrumElement {
+    class Menu extends SpectrumElement {
         constructor() {
             super();
             this.selectable = false;
@@ -5820,7 +5820,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
     }
     __decorate([
         property({ type: Boolean, reflect: true })
-    ], Menu$1.prototype, "selectable", void 0);
+    ], Menu.prototype, "selectable", void 0);
 
     /*
     Copyright 2020 Adobe. All rights reserved.
@@ -5833,7 +5833,7 @@ var(--spectrum-alias-border-size-thin)))}::slotted(sp-menu){display:block}:host{
     OF ANY KIND, either express or implied. See the License for the specific language
     governing permissions and limitations under the License.
     */
-    customElements.define('sp-menu', Menu$1);
+    customElements.define('sp-menu', Menu);
 
     /*
     Copyright 2020 Adobe. All rights reserved.
@@ -10997,7 +10997,7 @@ var(--spectrum-global-dimension-static-size-200)) + var(--spectrum-dialog-confir
      * @slot button - Button elements addressed to this slot may be placed below the content when not delivered in a fullscreen mode
      * @fires close - Announces that the dialog has been closed.
      */
-    class Dialog extends FocusVisiblePolyfillMixin(ObserveSlotPresence(SpectrumElement, [
+    class Dialog$1 extends FocusVisiblePolyfillMixin(ObserveSlotPresence(SpectrumElement, [
         '[slot="hero"]',
         '[slot="footer"]',
         '[slot="button"]',
@@ -11134,22 +11134,22 @@ var(--spectrum-global-dimension-static-size-200)) + var(--spectrum-dialog-confir
     }
     __decorate([
         query('.content')
-    ], Dialog.prototype, "contentElement", void 0);
+    ], Dialog$1.prototype, "contentElement", void 0);
     __decorate([
         property({ type: Boolean, reflect: true })
-    ], Dialog.prototype, "error", void 0);
+    ], Dialog$1.prototype, "error", void 0);
     __decorate([
         property({ type: Boolean, reflect: true })
-    ], Dialog.prototype, "dismissable", void 0);
+    ], Dialog$1.prototype, "dismissable", void 0);
     __decorate([
         property({ type: Boolean, reflect: true, attribute: 'no-divider' })
-    ], Dialog.prototype, "noDivider", void 0);
+    ], Dialog$1.prototype, "noDivider", void 0);
     __decorate([
         property({ type: String, reflect: true })
-    ], Dialog.prototype, "mode", void 0);
+    ], Dialog$1.prototype, "mode", void 0);
     __decorate([
         property({ type: String, reflect: true })
-    ], Dialog.prototype, "size", void 0);
+    ], Dialog$1.prototype, "size", void 0);
 
     /*
     Copyright 2020 Adobe. All rights reserved.
@@ -11162,7 +11162,7 @@ var(--spectrum-global-dimension-static-size-200)) + var(--spectrum-dialog-confir
     OF ANY KIND, either express or implied. See the License for the specific language
     governing permissions and limitations under the License.
     */
-    customElements.define('sp-dialog', Dialog);
+    customElements.define('sp-dialog', Dialog$1);
 
     /*
     Copyright 2020 Adobe. All rights reserved.
@@ -12243,7 +12243,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
      * @element sp-menu-item
      * @slot value - content placed at the end of the Menu Item like values, keyboard shortcuts, etc.
      */
-    class MenuItem extends ActionButton {
+    class MenuItem$1 extends ActionButton {
         constructor() {
             super(...arguments);
             this.focused = false;
@@ -12292,7 +12292,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
             this.setAttribute('tabindex', '-1');
             super.firstUpdated(changes);
             if (!this.hasAttribute('id')) {
-                this.id = `sp-menu-item-${MenuItem.instanceCount++}`;
+                this.id = `sp-menu-item-${MenuItem$1.instanceCount++}`;
             }
         }
         updated(changes) {
@@ -12316,10 +12316,10 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
             }
         }
     }
-    MenuItem.instanceCount = 0;
+    MenuItem$1.instanceCount = 0;
     __decorate([
         property({ type: Boolean, reflect: true })
-    ], MenuItem.prototype, "focused", void 0);
+    ], MenuItem$1.prototype, "focused", void 0);
     __decorate([
         property({
             type: Boolean,
@@ -12329,7 +12329,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
                 return false;
             },
         })
-    ], MenuItem.prototype, "noWrap", void 0);
+    ], MenuItem$1.prototype, "noWrap", void 0);
 
     /*
     Copyright 2020 Adobe. All rights reserved.
@@ -12342,7 +12342,7 @@ var(--spectrum-global-dimension-size-225)))}#label{flex:1 1 auto;line-height:var
     OF ANY KIND, either express or implied. See the License for the specific language
     governing permissions and limitations under the License.
     */
-    customElements.define('sp-menu-item', MenuItem);
+    customElements.define('sp-menu-item', MenuItem$1);
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
     const previousValues = new WeakMap();
@@ -16156,6 +16156,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             }
         };
     }
+    function setContext(key, context) {
+        get_current_component().$$.context.set(key, context);
+    }
+    function getContext(key) {
+        return get_current_component().$$.context.get(key);
+    }
     function hasContext(key) {
         return get_current_component().$$.context.has(key);
     }
@@ -16411,6 +16417,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
                 update[key] = undefined;
         }
         return update;
+    }
+    function get_spread_object(spread_props) {
+        return typeof spread_props === 'object' && spread_props !== null ? spread_props : {};
     }
 
     function bind(component, name, callback) {
@@ -18335,6 +18344,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
             return this.project.time;
         }
         /**
+         * @inheritDoc
+         */
+        deleteElements(elements, dispose) {
+            var _a;
+            if (super.deleteElements(elements, dispose)) {
+                (_a = this.project.document.animation) === null || _a === void 0 ? void 0 : _a.cleanupAnimatedProperties();
+                return true;
+            }
+            return false;
+        }
+        /**
          * Updates the document animated properties
          */
         updateAnimatedProperties(document, time) {
@@ -20149,7 +20169,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
         highQuality: writable(true),
         snapping: writable({
             // Global flag
-            enabled: true,
+            enabled: false,
             // Individual flags
             grid: true,
             guides: true,
@@ -20349,16 +20369,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const ShowTreeReverse = writable(true);
 
     /* src/Components/Tools/SubTools.svelte generated by Svelte v3.38.3 */
-    const file$L = "src/Components/Tools/SubTools.svelte";
+    const file$U = "src/Components/Tools/SubTools.svelte";
 
-    function get_each_context$a(ctx, list, i) {
+    function get_each_context$c(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     // (33:16) {#if current !== button}
-    function create_if_block$i(ctx) {
+    function create_if_block$m(ctx) {
     	let sp_action_button;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -20377,12 +20397,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*button*/ ctx[12].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$L, 34, 24, 1574);
+    			add_location(sp_icon, file$U, 34, 24, 1574);
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*button*/ ctx[12].disabled);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*button*/ ctx[12].tool);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*button*/ ctx[12].title);
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$L, 33, 20, 1430);
+    			add_location(sp_action_button, file$U, 33, 20, 1430);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20420,7 +20440,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$i.name,
+    		id: create_if_block$m.name,
     		type: "if",
     		source: "(33:16) {#if current !== button}",
     		ctx
@@ -20430,10 +20450,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (32:12) {#each buttons as button (button.tool)}
-    function create_each_block$a(key_1, ctx) {
+    function create_each_block$c(key_1, ctx) {
     	let first;
     	let if_block_anchor;
-    	let if_block = /*current*/ ctx[3] !== /*button*/ ctx[12] && create_if_block$i(ctx);
+    	let if_block = /*current*/ ctx[3] !== /*button*/ ctx[12] && create_if_block$m(ctx);
 
     	const block = {
     		key: key_1,
@@ -20456,7 +20476,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$i(ctx);
+    					if_block = create_if_block$m(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -20474,7 +20494,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$a.name,
+    		id: create_each_block$c.name,
     		type: "each",
     		source: "(32:12) {#each buttons as button (button.tool)}",
     		ctx
@@ -20483,7 +20503,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$T(ctx) {
+    function create_fragment$11(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -20501,12 +20521,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = /*buttons*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*button*/ ctx[12].tool;
-    	validate_each_keys(ctx, each_value, get_each_context$a, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$c, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$a(ctx, each_value, i);
+    		let child_ctx = get_each_context$c(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$a(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$c(key, child_ctx));
     	}
 
     	const block = {
@@ -20525,7 +20545,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*current*/ ctx[3].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$L, 27, 8, 1046);
+    			add_location(sp_icon, file$U, 27, 8, 1046);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*current*/ ctx[3].title);
     			set_custom_element_data(sp_action_button, "data-tool-name", sp_action_button_data_tool_name_value = /*current*/ ctx[3].tool);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = !/*disabled*/ ctx[0] && /*$CurrentTool*/ ctx[4].name === /*current*/ ctx[3].tool);
@@ -20533,19 +20553,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_button, "hold-affordance", "");
     			set_custom_element_data(sp_action_button, "slot", "trigger");
     			set_custom_element_data(sp_action_button, "class", "svelte-1jj07za");
-    			add_location(sp_action_button, file$L, 24, 4, 772);
+    			add_location(sp_action_button, file$U, 24, 4, 772);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_style(sp_action_group, "padding", "var(--spectrum-global-dimension-size-50)");
-    			add_location(sp_action_group, file$L, 30, 8, 1235);
+    			add_location(sp_action_group, file$U, 30, 8, 1235);
     			set_custom_element_data(sp_popover, "slot", "longpress-content");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_style(sp_popover, "--spectrum-popover-dialog-min-width", "0");
-    			add_location(sp_popover, file$L, 29, 4, 1137);
+    			add_location(sp_popover, file$U, 29, 4, 1137);
     			set_custom_element_data(overlay_trigger, "type", "modal");
     			set_custom_element_data(overlay_trigger, "placement", /*placement*/ ctx[2]);
     			set_custom_element_data(overlay_trigger, "disabled", /*disabled*/ ctx[0]);
     			set_custom_element_data(overlay_trigger, "class", "svelte-1jj07za");
-    			add_location(overlay_trigger, file$L, 20, 0, 591);
+    			add_location(overlay_trigger, file$U, 20, 0, 591);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -20596,8 +20616,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (dirty & /*buttons, selectTool, current*/ 74) {
     				each_value = /*buttons*/ ctx[1];
     				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$a, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$a, null, get_each_context$a);
+    				validate_each_keys(ctx, each_value, get_each_context$c, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$c, null, get_each_context$c);
     			}
 
     			if (dirty & /*placement*/ 4) {
@@ -20624,7 +20644,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$T.name,
+    		id: create_fragment$11.name,
     		type: "component",
     		source: "",
     		ctx
@@ -20633,7 +20653,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$T($$self, $$props, $$invalidate) {
+    function instance$11($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(4, $CurrentTool = $$value));
@@ -20724,13 +20744,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SubTools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$T, create_fragment$T, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
+    		init(this, options, instance$11, create_fragment$11, safe_not_equal, { disabled: 0, buttons: 1, placement: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SubTools",
     			options,
-    			id: create_fragment$T.name
+    			id: create_fragment$11.name
     		});
     	}
 
@@ -20868,16 +20888,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     ];
 
     /* src/Components/Tools/index.svelte generated by Svelte v3.38.3 */
-    const file$K = "src/Components/Tools/index.svelte";
+    const file$T = "src/Components/Tools/index.svelte";
 
-    function get_each_context$9(ctx, list, i) {
+    function get_each_context$b(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[3] = list[i];
     	return child_ctx;
     }
 
     // (13:8) {:else}
-    function create_else_block$4(ctx) {
+    function create_else_block$6(ctx) {
     	let sp_action_button;
     	let sp_icon;
     	let t;
@@ -20894,12 +20914,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", /*button*/ ctx[3].icon);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$K, 14, 16, 697);
+    			add_location(sp_icon, file$T, 14, 16, 697);
     			set_custom_element_data(sp_action_button, "title", /*button*/ ctx[3].title);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = !/*disabled*/ ctx[0] && /*button*/ ctx[3].tool === /*$CurrentTool*/ ctx[1].name);
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*disabled*/ ctx[0] || /*button*/ ctx[3].disabled);
     			set_custom_element_data(sp_action_button, "data-tool-name", /*button*/ ctx[3].tool);
-    			add_location(sp_action_button, file$K, 13, 12, 491);
+    			add_location(sp_action_button, file$T, 13, 12, 491);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -20931,7 +20951,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$4.name,
+    		id: create_else_block$6.name,
     		type: "else",
     		source: "(13:8) {:else}",
     		ctx
@@ -20941,7 +20961,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (11:8) {#if Array.isArray(button)}
-    function create_if_block$h(ctx) {
+    function create_if_block$l(ctx) {
     	let subtools;
     	let current;
 
@@ -20982,7 +21002,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$h.name,
+    		id: create_if_block$l.name,
     		type: "if",
     		source: "(11:8) {#if Array.isArray(button)}",
     		ctx
@@ -20992,12 +21012,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (10:4) {#each buttons as button}
-    function create_each_block$9(ctx) {
+    function create_each_block$b(ctx) {
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
     	let current;
-    	const if_block_creators = [create_if_block$h, create_else_block$4];
+    	const if_block_creators = [create_if_block$l, create_else_block$6];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -21038,7 +21058,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$9.name,
+    		id: create_each_block$b.name,
     		type: "each",
     		source: "(10:4) {#each buttons as button}",
     		ctx
@@ -21047,7 +21067,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$S(ctx) {
+    function create_fragment$10(ctx) {
     	let sp_action_group;
     	let current;
     	let each_value = buttons;
@@ -21055,7 +21075,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$9(get_each_context$9(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$b(get_each_context$b(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -21073,7 +21093,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_group, "vertical", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "emphasized", "");
-    			add_location(sp_action_group, file$K, 8, 0, 272);
+    			add_location(sp_action_group, file$T, 8, 0, 272);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21094,13 +21114,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$9(ctx, each_value, i);
+    					const child_ctx = get_each_context$b(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$9(child_ctx);
+    						each_blocks[i] = create_each_block$b(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(sp_action_group, null);
@@ -21142,7 +21162,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$S.name,
+    		id: create_fragment$10.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21151,7 +21171,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$S($$self, $$props, $$invalidate) {
+    function instance$10($$self, $$props, $$invalidate) {
     	let $CurrentTool;
     	validate_store(CurrentTool, "CurrentTool");
     	component_subscribe($$self, CurrentTool, $$value => $$invalidate(1, $CurrentTool = $$value));
@@ -21196,13 +21216,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Tools extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$S, create_fragment$S, safe_not_equal, { disabled: 0 });
+    		init(this, options, instance$10, create_fragment$10, safe_not_equal, { disabled: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Tools",
     			options,
-    			id: create_fragment$S.name
+    			id: create_fragment$10.name
     		});
     	}
 
@@ -21219,10 +21239,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const { console: console_1$1 } = globals;
 
-    const file$J = "src/Components/Canvas.svelte";
+    const file$S = "src/Components/Canvas.svelte";
 
-    // (155:4) {#if hidden}
-    function create_if_block$g(ctx) {
+    // (156:4) {#if hidden}
+    function create_if_block$k(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[30].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[29], null);
@@ -21261,23 +21281,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$g.name,
+    		id: create_if_block$k.name,
     		type: "if",
-    		source: "(155:4) {#if hidden}",
+    		source: "(156:4) {#if hidden}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$R(ctx) {
+    function create_fragment$$(ctx) {
     	let div;
     	let canvas_engine;
     	let t;
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*hidden*/ ctx[0] && create_if_block$g(ctx);
+    	let if_block = /*hidden*/ ctx[0] && create_if_block$k(ctx);
 
     	const block = {
     		c: function create() {
@@ -21287,10 +21307,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			set_custom_element_data(canvas_engine, "class", "svelte-16t9hot");
     			toggle_class(canvas_engine, "hidden", /*hidden*/ ctx[0]);
-    			add_location(canvas_engine, file$J, 139, 4, 4540);
+    			add_location(canvas_engine, file$S, 140, 4, 4583);
     			attr_dev(div, "class", "canvas-wrapper svelte-16t9hot");
     			attr_dev(div, "tabindex", "0");
-    			add_location(div, file$J, 138, 0, 4494);
+    			add_location(div, file$S, 139, 0, 4537);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21334,7 +21354,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$g(ctx);
+    					if_block = create_if_block$k(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div, null);
@@ -21369,7 +21389,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$R.name,
+    		id: create_fragment$$.name,
     		type: "component",
     		source: "",
     		ctx
@@ -21378,7 +21398,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$R($$self, $$props, $$invalidate) {
+    function instance$$($$self, $$props, $$invalidate) {
     	let $CurrentTheme;
     	let $CurrentTool;
     	let $showRuler;
@@ -21473,11 +21493,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		$$invalidate(1, canvas.tool = $CurrentTool, canvas);
     		canvas.allowSurfaceDisposal();
     		$$invalidate(1, canvas.project = $CurrentProject, canvas);
-
-    		CurrentProject.subscribe(p => {
-    			$$invalidate(1, canvas.project = p, canvas);
-    		});
-    	});
+    		CurrentProject.forceUpdate();
+    	}); // CurrentProject.subscribe(p => {
+    	//     canvas.project = p;
+    	// });
 
     	onDestroy(() => {
     		$$invalidate(1, canvas.project = null, canvas);
@@ -21693,8 +21712,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ($$self.$$.dirty[0] & /*canvas, $CurrentProject, $CurrentTime*/ 402653186) {
     			{
     				if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) {
-    					notifyPropertiesChanged();
     					canvas.invalidate();
+    					notifyPropertiesChanged();
     				}
     			}
     		}
@@ -21739,13 +21758,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Canvas extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$R, create_fragment$R, safe_not_equal, { hidden: 0 }, [-1, -1]);
+    		init(this, options, instance$$, create_fragment$$, safe_not_equal, { hidden: 0 }, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Canvas",
     			options,
-    			id: create_fragment$R.name
+    			id: create_fragment$$.name
     		});
     	}
 
@@ -21888,9 +21907,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/TimelineControls.svelte generated by Svelte v3.38.3 */
-    const file$I = "src/Components/Timeline/TimelineControls.svelte";
+    const file$R = "src/Components/Timeline/TimelineControls.svelte";
 
-    function create_fragment$Q(ctx) {
+    function create_fragment$_(ctx) {
     	let div2;
     	let div1;
     	let sp_action_group;
@@ -21941,16 +21960,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon0, "name", "expr:player-record");
     			set_custom_element_data(sp_icon0, "slot", "icon");
     			set_custom_element_data(sp_icon0, "size", "s");
-    			add_location(sp_icon0, file$I, 44, 16, 1591);
+    			add_location(sp_icon0, file$R, 44, 16, 1591);
     			set_custom_element_data(sp_action_button0, "title", "Record");
     			toggle_class(sp_action_button0, "timeline-controls-recording", /*isRecording*/ ctx[0]);
-    			add_location(sp_action_button0, file$I, 41, 12, 1406);
+    			add_location(sp_action_button0, file$R, 41, 12, 1406);
     			set_custom_element_data(sp_icon1, "name", "expr:player-start");
     			set_custom_element_data(sp_icon1, "slot", "icon");
     			set_custom_element_data(sp_icon1, "size", "s");
-    			add_location(sp_icon1, file$I, 47, 16, 1778);
+    			add_location(sp_icon1, file$R, 47, 16, 1778);
     			set_custom_element_data(sp_action_button1, "title", "Go to start");
-    			add_location(sp_action_button1, file$I, 46, 12, 1702);
+    			add_location(sp_action_button1, file$R, 46, 12, 1702);
 
     			set_custom_element_data(sp_icon2, "name", sp_icon2_name_value = /*isPlaying*/ ctx[1]
     			? "expr:player-stop"
@@ -21958,31 +21977,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			set_custom_element_data(sp_icon2, "slot", "icon");
     			set_custom_element_data(sp_icon2, "size", "s");
-    			add_location(sp_icon2, file$I, 50, 16, 1961);
+    			add_location(sp_icon2, file$R, 50, 16, 1961);
     			set_custom_element_data(sp_action_button2, "title", "Play");
-    			add_location(sp_action_button2, file$I, 49, 12, 1888);
+    			add_location(sp_action_button2, file$R, 49, 12, 1888);
     			set_custom_element_data(sp_icon3, "name", "expr:player-end");
     			set_custom_element_data(sp_icon3, "slot", "icon");
     			set_custom_element_data(sp_icon3, "size", "s");
-    			add_location(sp_icon3, file$I, 53, 16, 2179);
+    			add_location(sp_icon3, file$R, 53, 16, 2179);
     			set_custom_element_data(sp_action_button3, "title", "Go to end");
-    			add_location(sp_action_button3, file$I, 52, 12, 2107);
+    			add_location(sp_action_button3, file$R, 52, 12, 2107);
     			attr_dev(div0, "class", "timeline-controls-time");
-    			add_location(div0, file$I, 55, 12, 2287);
+    			add_location(div0, file$R, 55, 12, 2287);
     			set_custom_element_data(sp_icon4, "name", "expr:add-color");
     			set_custom_element_data(sp_icon4, "slot", "icon");
     			set_custom_element_data(sp_icon4, "size", "s");
-    			add_location(sp_icon4, file$I, 57, 16, 2433);
+    			add_location(sp_icon4, file$R, 57, 16, 2433);
     			set_custom_element_data(sp_action_button4, "title", "Add animator");
     			set_custom_element_data(sp_action_button4, "disabled", "");
-    			add_location(sp_action_button4, file$I, 56, 12, 2368);
+    			add_location(sp_action_button4, file$R, 56, 12, 2368);
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "compact", "");
-    			add_location(sp_action_group, file$I, 40, 8, 1362);
+    			add_location(sp_action_group, file$R, 40, 8, 1362);
     			attr_dev(div1, "class", "timeline-controls-container");
-    			add_location(div1, file$I, 39, 4, 1312);
+    			add_location(div1, file$R, 39, 4, 1312);
     			attr_dev(div2, "class", "timeline-controls");
-    			add_location(div2, file$I, 38, 0, 1276);
+    			add_location(div2, file$R, 38, 0, 1276);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -22044,7 +22063,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$Q.name,
+    		id: create_fragment$_.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22053,7 +22072,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$Q($$self, $$props, $$invalidate) {
+    function instance$_($$self, $$props, $$invalidate) {
     	let isRecording;
     	let isPlaying;
     	let $CurrentProject;
@@ -22172,30 +22191,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineControls extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$Q, create_fragment$Q, safe_not_equal, {});
+    		init(this, options, instance$_, create_fragment$_, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineControls",
     			options,
-    			id: create_fragment$Q.name
+    			id: create_fragment$_.name
     		});
     	}
     }
 
     /* src/Components/Timeline/TimelineItem.svelte generated by Svelte v3.38.3 */
 
-    const file$H = "src/Components/Timeline/TimelineItem.svelte";
+    const file$Q = "src/Components/Timeline/TimelineItem.svelte";
 
     // (11:4) {#if keyframes}
-    function create_if_block$f(ctx) {
+    function create_if_block$j(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "timeline-keyframes-line");
-    			add_location(div, file$H, 11, 8, 329);
+    			add_location(div, file$Q, 11, 8, 329);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -22207,7 +22226,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$f.name,
+    		id: create_if_block$j.name,
     		type: "if",
     		source: "(11:4) {#if keyframes}",
     		ctx
@@ -22216,11 +22235,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$P(ctx) {
+    function create_fragment$Z(ctx) {
     	let div;
     	let t;
     	let current;
-    	let if_block = /*keyframes*/ ctx[2] && create_if_block$f(ctx);
+    	let if_block = /*keyframes*/ ctx[2] && create_if_block$j(ctx);
     	const default_slot_template = /*#slots*/ ctx[5].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
 
@@ -22235,7 +22254,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			toggle_class(div, "is-alt", /*isAlt*/ ctx[3]);
     			toggle_class(div, "is-disabled", /*disabled*/ ctx[0]);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$H, 5, 0, 142);
+    			add_location(div, file$Q, 5, 0, 142);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -22254,7 +22273,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, [dirty]) {
     			if (/*keyframes*/ ctx[2]) {
     				if (if_block) ; else {
-    					if_block = create_if_block$f(ctx);
+    					if_block = create_if_block$j(ctx);
     					if_block.c();
     					if_block.m(div, t);
     				}
@@ -22303,7 +22322,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$P.name,
+    		id: create_fragment$Z.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22312,7 +22331,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$P($$self, $$props, $$invalidate) {
+    function instance$Z($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineItem", slots, ['default']);
     	let { disabled = false } = $$props;
@@ -22353,7 +22372,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$P, create_fragment$P, safe_not_equal, {
+    		init(this, options, instance$Z, create_fragment$Z, safe_not_equal, {
     			disabled: 0,
     			selected: 1,
     			keyframes: 2,
@@ -22364,7 +22383,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "TimelineItem",
     			options,
-    			id: create_fragment$P.name
+    			id: create_fragment$Z.name
     		});
     	}
 
@@ -22403,10 +22422,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Timeline/TimelineSelectionRect.svelte generated by Svelte v3.38.3 */
 
-    const file$G = "src/Components/Timeline/TimelineSelectionRect.svelte";
+    const file$P = "src/Components/Timeline/TimelineSelectionRect.svelte";
 
     // (4:0) {#if rect && rect.isVisible}
-    function create_if_block$e(ctx) {
+    function create_if_block$i(ctx) {
     	let div;
     	let div_style_value;
 
@@ -22415,7 +22434,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			attr_dev(div, "class", "timeline-selection-rect");
     			attr_dev(div, "style", div_style_value = `top: ${/*rect*/ ctx[0].top}px; left: ${/*rect*/ ctx[0].left}px; width: ${/*rect*/ ctx[0].width}px; height: ${/*rect*/ ctx[0].height}px;`);
-    			add_location(div, file$G, 4, 0, 83);
+    			add_location(div, file$P, 4, 0, 83);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -22432,7 +22451,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$e.name,
+    		id: create_if_block$i.name,
     		type: "if",
     		source: "(4:0) {#if rect && rect.isVisible}",
     		ctx
@@ -22441,9 +22460,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$O(ctx) {
+    function create_fragment$Y(ctx) {
     	let if_block_anchor;
-    	let if_block = /*rect*/ ctx[0] && /*rect*/ ctx[0].isVisible && create_if_block$e(ctx);
+    	let if_block = /*rect*/ ctx[0] && /*rect*/ ctx[0].isVisible && create_if_block$i(ctx);
 
     	const block = {
     		c: function create() {
@@ -22462,7 +22481,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$e(ctx);
+    					if_block = create_if_block$i(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -22481,7 +22500,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$O.name,
+    		id: create_fragment$Y.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22490,7 +22509,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$O($$self, $$props, $$invalidate) {
+    function instance$Y($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineSelectionRect", slots, []);
     	
@@ -22521,13 +22540,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineSelectionRect extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$O, create_fragment$O, safe_not_equal, { rect: 0 });
+    		init(this, options, instance$Y, create_fragment$Y, safe_not_equal, { rect: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineSelectionRect",
     			options,
-    			id: create_fragment$O.name
+    			id: create_fragment$Y.name
     		});
     	}
 
@@ -22595,9 +22614,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/TimelineElement.svelte generated by Svelte v3.38.3 */
-    const file$F = "src/Components/Timeline/TimelineElement.svelte";
+    const file$O = "src/Components/Timeline/TimelineElement.svelte";
 
-    function create_fragment$N(ctx) {
+    function create_fragment$X(ctx) {
     	let div;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -22617,13 +22636,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t1 = text(t1_value);
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = getElementIcon(/*element*/ ctx[0]));
     			set_custom_element_data(sp_icon, "size", "s");
-    			add_location(sp_icon, file$F, 12, 4, 462);
+    			add_location(sp_icon, file$O, 12, 4, 462);
     			attr_dev(span, "class", "timeline-element-title");
-    			add_location(span, file$F, 13, 4, 526);
+    			add_location(span, file$O, 13, 4, 526);
     			attr_dev(div, "class", "timeline-item is-alt timeline-element-item");
     			toggle_class(div, "is-disabled", /*disabled*/ ctx[1]);
     			toggle_class(div, "is-selected", /*selected*/ ctx[2]);
-    			add_location(div, file$F, 8, 0, 260);
+    			add_location(div, file$O, 8, 0, 260);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -22666,7 +22685,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$N.name,
+    		id: create_fragment$X.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22675,7 +22694,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$N($$self, $$props, $$invalidate) {
+    function instance$X($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineElement", slots, []);
     	
@@ -22723,13 +22742,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineElement extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$N, create_fragment$N, safe_not_equal, { element: 0, disabled: 1, selected: 2 });
+    		init(this, options, instance$X, create_fragment$X, safe_not_equal, { element: 0, disabled: 1, selected: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineElement",
     			options,
-    			id: create_fragment$N.name
+    			id: create_fragment$X.name
     		});
 
     		const { ctx } = this.$$;
@@ -22766,9 +22785,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/TimelineProperty.svelte generated by Svelte v3.38.3 */
-    const file$E = "src/Components/Timeline/TimelineProperty.svelte";
+    const file$N = "src/Components/Timeline/TimelineProperty.svelte";
 
-    function create_fragment$M(ctx) {
+    function create_fragment$W(ctx) {
     	let div;
     	let span;
     	let t0_value = /*animated*/ ctx[0].animator.title + "";
@@ -22790,21 +22809,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			attr_dev(span, "class", "svelte-s70d20");
     			toggle_class(span, "is-selected", /*selectedKeyframes*/ ctx[2]);
-    			add_location(span, file$E, 11, 4, 555);
+    			add_location(span, file$N, 11, 4, 555);
     			set_custom_element_data(sp_icon, "name", "workflow:AddCircle");
     			set_custom_element_data(sp_icon, "slot", "icon");
     			set_custom_element_data(sp_icon, "size", "s");
-    			add_location(sp_icon, file$E, 13, 8, 908);
+    			add_location(sp_icon, file$N, 13, 8, 908);
     			set_custom_element_data(sp_action_button, "title", "Add keyframe");
     			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*animated*/ ctx[0].animation.disabled);
     			set_custom_element_data(sp_action_button, "class", "very-small");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "size", "s");
-    			add_location(sp_action_button, file$E, 12, 4, 744);
+    			add_location(sp_action_button, file$N, 12, 4, 744);
     			attr_dev(div, "class", "timeline-item timeline-property-item svelte-s70d20");
     			toggle_class(div, "is-disabled", /*animated*/ ctx[0].animation.disabled);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$E, 7, 0, 208);
+    			add_location(div, file$N, 7, 0, 208);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -22856,7 +22875,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$M.name,
+    		id: create_fragment$W.name,
     		type: "component",
     		source: "",
     		ctx
@@ -22865,7 +22884,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$M($$self, $$props, $$invalidate) {
+    function instance$W($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineProperty", slots, []);
     	
@@ -22924,7 +22943,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$M, create_fragment$M, safe_not_equal, {
+    		init(this, options, instance$W, create_fragment$W, safe_not_equal, {
     			animated: 0,
     			selected: 1,
     			selectedKeyframes: 2
@@ -22934,7 +22953,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "TimelineProperty",
     			options,
-    			id: create_fragment$M.name
+    			id: create_fragment$W.name
     		});
 
     		const { ctx } = this.$$;
@@ -22972,14 +22991,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Timeline/TimelineElementWrapper.svelte generated by Svelte v3.38.3 */
 
-    function get_each_context$8(ctx, list, i) {
+    function get_each_context$a(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[7] = list[i];
     	return child_ctx;
     }
 
     // (16:0) {#each animated.animatedProperties as animatedProperty (animatedProperty.animator.id)}
-    function create_each_block$8(key_1, ctx) {
+    function create_each_block$a(key_1, ctx) {
     	let first;
     	let timelineproperty;
     	let current;
@@ -23034,7 +23053,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$8.name,
+    		id: create_each_block$a.name,
     		type: "each",
     		source: "(16:0) {#each animated.animatedProperties as animatedProperty (animatedProperty.animator.id)}",
     		ctx
@@ -23043,7 +23062,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$L(ctx) {
+    function create_fragment$V(ctx) {
     	let timelineelement;
     	let t;
     	let each_blocks = [];
@@ -23063,12 +23082,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = /*animated*/ ctx[0].animatedProperties;
     	validate_each_argument(each_value);
     	const get_key = ctx => /*animatedProperty*/ ctx[7].animator.id;
-    	validate_each_keys(ctx, each_value, get_each_context$8, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$a, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$8(ctx, each_value, i);
+    		let child_ctx = get_each_context$a(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$8(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$a(key, child_ctx));
     	}
 
     	const block = {
@@ -23106,8 +23125,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				each_value = /*animated*/ ctx[0].animatedProperties;
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$8, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$8, each_1_anchor, get_each_context$8);
+    				validate_each_keys(ctx, each_value, get_each_context$a, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$a, each_1_anchor, get_each_context$a);
     				check_outros();
     			}
     		},
@@ -23144,7 +23163,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$L.name,
+    		id: create_fragment$V.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23153,7 +23172,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$L($$self, $$props, $$invalidate) {
+    function instance$V($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineElementWrapper", slots, []);
     	
@@ -23219,13 +23238,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineElementWrapper extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { animated: 0, selected: 1, selection: 2 });
+    		init(this, options, instance$V, create_fragment$V, safe_not_equal, { animated: 0, selected: 1, selection: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineElementWrapper",
     			options,
-    			id: create_fragment$L.name
+    			id: create_fragment$V.name
     		});
 
     		const { ctx } = this.$$;
@@ -23267,9 +23286,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Timeline/TimelineKeyframe.svelte generated by Svelte v3.38.3 */
 
-    const file$D = "src/Components/Timeline/TimelineKeyframe.svelte";
+    const file$M = "src/Components/Timeline/TimelineKeyframe.svelte";
 
-    function create_fragment$K(ctx) {
+    function create_fragment$U(ctx) {
     	let div;
     	let div_style_value;
     	let mounted;
@@ -23282,7 +23301,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div, "class", "timeline-keyframe");
     			attr_dev(div, "style", div_style_value = `--keyframe-offset: ${/*offset*/ ctx[0] <= 0 ? 0 : /*offset*/ ctx[0]}`);
     			toggle_class(div, "is-selected", /*selected*/ ctx[2]);
-    			add_location(div, file$D, 4, 0, 91);
+    			add_location(div, file$M, 4, 0, 91);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -23319,7 +23338,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$K.name,
+    		id: create_fragment$U.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23328,7 +23347,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$K($$self, $$props, $$invalidate) {
+    function instance$U($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineKeyframe", slots, []);
     	let { offset } = $$props;
@@ -23368,13 +23387,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineKeyframe extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$K, create_fragment$K, safe_not_equal, { offset: 0, id: 1, selected: 2 });
+    		init(this, options, instance$U, create_fragment$U, safe_not_equal, { offset: 0, id: 1, selected: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineKeyframe",
     			options,
-    			id: create_fragment$K.name
+    			id: create_fragment$U.name
     		});
 
     		const { ctx } = this.$$;
@@ -23416,10 +23435,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Timeline/TimelineEasing.svelte generated by Svelte v3.38.3 */
 
-    const file$C = "src/Components/Timeline/TimelineEasing.svelte";
+    const file$L = "src/Components/Timeline/TimelineEasing.svelte";
 
     // (22:0) {#if end != null}
-    function create_if_block$d(ctx) {
+    function create_if_block$h(ctx) {
     	let div;
     	let div_style_value;
     	let mounted;
@@ -23431,7 +23450,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div, "class", "timeline-easing");
     			attr_dev(div, "style", div_style_value = `--timeline-keyframe-easing-start: ${/*min*/ ctx[2]}; --timeline-keyframe-easing-end: ${/*max*/ ctx[3]}`);
     			toggle_class(div, "is-selected", /*selected*/ ctx[1]);
-    			add_location(div, file$C, 22, 0, 366);
+    			add_location(div, file$L, 22, 0, 366);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -23459,7 +23478,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$d.name,
+    		id: create_if_block$h.name,
     		type: "if",
     		source: "(22:0) {#if end != null}",
     		ctx
@@ -23468,9 +23487,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$J(ctx) {
+    function create_fragment$T(ctx) {
     	let if_block_anchor;
-    	let if_block = /*end*/ ctx[0] != null && create_if_block$d(ctx);
+    	let if_block = /*end*/ ctx[0] != null && create_if_block$h(ctx);
 
     	const block = {
     		c: function create() {
@@ -23489,7 +23508,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$d(ctx);
+    					if_block = create_if_block$h(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -23508,7 +23527,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$J.name,
+    		id: create_fragment$T.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23517,7 +23536,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$J($$self, $$props, $$invalidate) {
+    function instance$T($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("TimelineEasing", slots, []);
     	let { start = 0 } = $$props;
@@ -23582,13 +23601,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineEasing extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$J, create_fragment$J, safe_not_equal, { start: 4, end: 0, selected: 1 });
+    		init(this, options, instance$T, create_fragment$T, safe_not_equal, { start: 4, end: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineEasing",
     			options,
-    			id: create_fragment$J.name
+    			id: create_fragment$T.name
     		});
     	}
 
@@ -23619,7 +23638,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Timeline/TimelineKeyfreamesLine.svelte generated by Svelte v3.38.3 */
 
-    function get_each_context$7(ctx, list, i) {
+    function get_each_context$9(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[8] = list[i];
     	child_ctx[10] = i;
@@ -23627,7 +23646,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (16:0) {#each keyframes as keyframe, index (keyframe.id)}
-    function create_each_block$7(key_1, ctx) {
+    function create_each_block$9(key_1, ctx) {
     	let first;
     	let timelinekeyframe;
     	let t;
@@ -23715,7 +23734,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$7.name,
+    		id: create_each_block$9.name,
     		type: "each",
     		source: "(16:0) {#each keyframes as keyframe, index (keyframe.id)}",
     		ctx
@@ -23724,7 +23743,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$I(ctx) {
+    function create_fragment$S(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let each_1_anchor;
@@ -23732,12 +23751,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_value = /*keyframes*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*keyframe*/ ctx[8].id;
-    	validate_each_keys(ctx, each_value, get_each_context$7, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$9, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$7(ctx, each_value, i);
+    		let child_ctx = get_each_context$9(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$7(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$9(key, child_ctx));
     	}
 
     	const block = {
@@ -23764,8 +23783,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				each_value = /*keyframes*/ ctx[1];
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$7, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$7, each_1_anchor, get_each_context$7);
+    				validate_each_keys(ctx, each_value, get_each_context$9, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$9, each_1_anchor, get_each_context$9);
     				check_outros();
     			}
     		},
@@ -23796,7 +23815,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$I.name,
+    		id: create_fragment$S.name,
     		type: "component",
     		source: "",
     		ctx
@@ -23811,7 +23830,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	: animation.keyframes;
     }
 
-    function instance$I($$self, $$props, $$invalidate) {
+    function instance$S($$self, $$props, $$invalidate) {
     	let $CurrentKeyframeSelection;
     	validate_store(CurrentKeyframeSelection, "CurrentKeyframeSelection");
     	component_subscribe($$self, CurrentKeyframeSelection, $$value => $$invalidate(0, $CurrentKeyframeSelection = $$value));
@@ -23884,13 +23903,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineKeyfreamesLine extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { animation: 3, moving: 4, renderId: 5 });
+    		init(this, options, instance$S, create_fragment$S, safe_not_equal, { animation: 3, moving: 4, renderId: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineKeyfreamesLine",
     			options,
-    			id: create_fragment$I.name
+    			id: create_fragment$S.name
     		});
     	}
 
@@ -23920,9 +23939,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/Timeline.svelte generated by Svelte v3.38.3 */
-    const file$B = "src/Components/Timeline/Timeline.svelte";
+    const file$K = "src/Components/Timeline/Timeline.svelte";
 
-    function get_each_context$6(ctx, list, i) {
+    function get_each_context$8(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[45] = list[i];
     	return child_ctx;
@@ -24007,7 +24026,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (249:20) <TimelineItem keyframes={true} disabled={animatedProperty.animation.disabled}>
-    function create_default_slot$6(ctx) {
+    function create_default_slot$8(ctx) {
     	let timelinekeyfreamesline;
     	let t;
     	let current;
@@ -24067,7 +24086,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$6.name,
+    		id: create_default_slot$8.name,
     		type: "slot",
     		source: "(249:20) <TimelineItem keyframes={true} disabled={animatedProperty.animation.disabled}>",
     		ctx
@@ -24085,7 +24104,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			props: {
     				keyframes: true,
     				disabled: /*animatedProperty*/ ctx[48].animation.disabled,
-    				$$slots: { default: [create_default_slot$6] },
+    				$$slots: { default: [create_default_slot$8] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -24135,7 +24154,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (244:12) {#each $CurrentAnimatedElements as animated}
-    function create_each_block$6(ctx) {
+    function create_each_block$8(ctx) {
     	let timelineitem;
     	let t;
     	let each_1_anchor;
@@ -24234,7 +24253,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$6.name,
+    		id: create_each_block$8.name,
     		type: "each",
     		source: "(244:12) {#each $CurrentAnimatedElements as animated}",
     		ctx
@@ -24243,7 +24262,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$H(ctx) {
+    function create_fragment$R(ctx) {
     	let div4;
     	let div0;
     	let each_blocks_1 = [];
@@ -24274,7 +24293,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$6(get_each_context$6(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$8(get_each_context$8(ctx, each_value, i));
     	}
 
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
@@ -24309,15 +24328,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div2 = element("div");
     			attr_dev(div0, "class", "timeline-elements scroll scroll-invisible scroll-no-padding");
     			attr_dev(div0, "hidden-x", "");
-    			add_location(div0, file$B, 228, 4, 8361);
+    			add_location(div0, file$K, 228, 4, 8361);
     			attr_dev(div1, "class", "timeline-items-wrapper");
-    			add_location(div1, file$B, 242, 8, 9159);
+    			add_location(div1, file$K, 242, 8, 9159);
     			attr_dev(div2, "class", "timeline-play-line");
-    			add_location(div2, file$B, 261, 8, 10346);
+    			add_location(div2, file$K, 261, 8, 10346);
     			attr_dev(div3, "class", "timeline-keyframes scroll scroll-no-hide scroll-no-padding");
-    			add_location(div3, file$B, 240, 4, 8987);
+    			add_location(div3, file$K, 240, 4, 8987);
     			attr_dev(div4, "class", "timeline");
-    			add_location(div4, file$B, 227, 0, 8334);
+    			add_location(div4, file$K, 227, 0, 8334);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -24372,13 +24391,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$6(ctx, each_value, i);
+    					const child_ctx = get_each_context$8(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block$6(child_ctx);
+    						each_blocks[i] = create_each_block$8(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(div1, null);
@@ -24444,7 +24463,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$H.name,
+    		id: create_fragment$R.name,
     		type: "component",
     		source: "",
     		ctx
@@ -24467,7 +24486,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    function instance$H($$self, $$props, $$invalidate) {
+    function instance$R($$self, $$props, $$invalidate) {
     	let $CurrentKeyframeSelection;
     	let $CurrentProject;
     	let $CurrentTime;
@@ -24916,8 +24935,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		init(
     			this,
     			options,
-    			instance$H,
-    			create_fragment$H,
+    			instance$R,
+    			create_fragment$R,
     			safe_not_equal,
     			{
     				zoom: 17,
@@ -24933,7 +24952,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "Timeline",
     			options,
-    			id: create_fragment$H.name
+    			id: create_fragment$R.name
     		});
     	}
 
@@ -24979,9 +24998,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/TimelineRuler.svelte generated by Svelte v3.38.3 */
-    const file$A = "src/Components/Timeline/TimelineRuler.svelte";
+    const file$J = "src/Components/Timeline/TimelineRuler.svelte";
 
-    function create_fragment$G(ctx) {
+    function create_fragment$Q(ctx) {
     	let div1;
     	let canvas_1;
     	let t;
@@ -24995,11 +25014,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			canvas_1 = element("canvas");
     			t = space();
     			div0 = element("div");
-    			add_location(canvas_1, file$A, 108, 4, 3905);
+    			add_location(canvas_1, file$J, 108, 4, 3905);
     			attr_dev(div0, "class", "timeline-ruler-play-head");
-    			add_location(div0, file$A, 109, 4, 3970);
+    			add_location(div0, file$J, 109, 4, 3970);
     			attr_dev(div1, "class", "timeline-ruler");
-    			add_location(div1, file$A, 107, 0, 3872);
+    			add_location(div1, file$J, 107, 0, 3872);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -25037,7 +25056,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$G.name,
+    		id: create_fragment$Q.name,
     		type: "component",
     		source: "",
     		ctx
@@ -25046,7 +25065,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$G($$self, $$props, $$invalidate) {
+    function instance$Q($$self, $$props, $$invalidate) {
     	let $CurrentTheme;
     	let $CurrentTime;
     	validate_store(CurrentTheme, "CurrentTheme");
@@ -25323,13 +25342,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineRuler extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$G, create_fragment$G, safe_not_equal, { zoom: 6, scroll: 7, scaleFactor: 8 });
+    		init(this, options, instance$Q, create_fragment$Q, safe_not_equal, { zoom: 6, scroll: 7, scaleFactor: 8 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineRuler",
     			options,
-    			id: create_fragment$G.name
+    			id: create_fragment$Q.name
     		});
     	}
 
@@ -25527,9 +25546,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpSlider.svelte generated by Svelte v3.38.3 */
-    const file$z = "src/Controls/SpSlider.svelte";
+    const file$I = "src/Controls/SpSlider.svelte";
 
-    function get_each_context$5(ctx, list, i) {
+    function get_each_context$7(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[50] = list[i];
     	return child_ctx;
@@ -25561,10 +25580,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(label_1, "class", "spectrum-Slider-label");
     			attr_dev(label_1, "id", /*labelId*/ ctx[22]);
     			attr_dev(label_1, "for", /*inputId*/ ctx[23]);
-    			add_location(label_1, file$z, 237, 12, 6992);
+    			add_location(label_1, file$I, 237, 12, 6992);
     			attr_dev(div, "class", "spectrum-Slider-labelContainer");
     			attr_dev(div, "role", div_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
-    			add_location(div, file$z, 236, 8, 6891);
+    			add_location(div, file$I, 236, 8, 6891);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25627,7 +25646,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div, "role", "textbox");
     			attr_dev(div, "aria-readonly", "true");
     			attr_dev(div, "aria-labelledby", /*labelId*/ ctx[22]);
-    			add_location(div, file$z, 244, 16, 7531);
+    			add_location(div, file$I, 244, 16, 7531);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25679,7 +25698,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "min", /*min*/ ctx[2]);
     			attr_dev(input, "max", input_max_value = /*allowOverflow*/ ctx[8] ? undefined : /*max*/ ctx[3]);
     			attr_dev(input, "step", /*step*/ ctx[4]);
-    			add_location(input, file$z, 239, 16, 7121);
+    			add_location(input, file$I, 239, 16, 7121);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -25744,7 +25763,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			attr_dev(div, "class", "spectrum-Slider-track");
     			attr_dev(div, "style", div_style_value = `width: ${/*track1*/ ctx[14]}%;`);
-    			add_location(div, file$z, 258, 12, 8300);
+    			add_location(div, file$I, 258, 12, 8300);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25782,14 +25801,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			svg = svg_element("svg");
     			path = svg_element("path");
     			attr_dev(path, "d", "M240,4v8c0,2.3-1.9,4.1-4.2,4L1,9C0.4,9,0,8.5,0,8c0-0.5,0.4-1,1-1l234.8-7C238.1-0.1,240,1.7,240,4z");
-    			add_location(path, file$z, 254, 20, 8114);
+    			add_location(path, file$I, 254, 20, 8114);
     			attr_dev(svg, "viewBox", "0 0 240 16");
     			attr_dev(svg, "preserveAspectRatio", "none");
     			attr_dev(svg, "aria-hidden", "true");
     			attr_dev(svg, "focusable", "false");
-    			add_location(svg, file$z, 253, 16, 8003);
+    			add_location(svg, file$I, 253, 16, 8003);
     			attr_dev(div, "class", "spectrum-Slider-ramp");
-    			add_location(div, file$z, 252, 12, 7952);
+    			add_location(div, file$I, 252, 12, 7952);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25814,14 +25833,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (261:8) {#if hasTicks}
-    function create_if_block_3$2(ctx) {
+    function create_if_block_3$3(ctx) {
     	let div;
     	let each_value = /*tickLabels*/ ctx[9];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$5(get_each_context$5(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$7(get_each_context$7(ctx, each_value, i));
     	}
 
     	const block = {
@@ -25833,7 +25852,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			attr_dev(div, "class", "spectrum-Slider-ticks");
-    			add_location(div, file$z, 261, 12, 8420);
+    			add_location(div, file$I, 261, 12, 8420);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25849,12 +25868,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$5(ctx, each_value, i);
+    					const child_ctx = get_each_context$7(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks[i] = create_each_block$5(child_ctx);
+    						each_blocks[i] = create_each_block$7(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(div, null);
     					}
@@ -25875,7 +25894,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3$2.name,
+    		id: create_if_block_3$3.name,
     		type: "if",
     		source: "(261:8) {#if hasTicks}",
     		ctx
@@ -25895,7 +25914,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			t = text(t_value);
     			attr_dev(div, "class", "spectrum-Slider-tickLabel");
-    			add_location(div, file$z, 265, 28, 8625);
+    			add_location(div, file$I, 265, 28, 8625);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25921,7 +25940,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (263:16) {#each tickLabels as tick}
-    function create_each_block$5(ctx) {
+    function create_each_block$7(ctx) {
     	let div;
     	let t;
     	let if_block = /*tick*/ ctx[50] != null && create_if_block_4$2(ctx);
@@ -25932,7 +25951,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			t = space();
     			attr_dev(div, "class", "spectrum-Slider-tick");
-    			add_location(div, file$z, 263, 20, 8519);
+    			add_location(div, file$I, 263, 20, 8519);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -25961,7 +25980,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$5.name,
+    		id: create_each_block$7.name,
     		type: "each",
     		source: "(263:16) {#each tickLabels as tick}",
     		ctx
@@ -25971,7 +25990,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (290:8) {:else}
-    function create_else_block$3(ctx) {
+    function create_else_block$5(ctx) {
     	let div;
     	let input;
     	let div_style_value;
@@ -25991,12 +26010,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "step", /*step*/ ctx[4]);
     			attr_dev(input, "min", /*min*/ ctx[2]);
     			attr_dev(input, "max", /*max*/ ctx[3]);
-    			add_location(input, file$z, 293, 16, 10509);
+    			add_location(input, file$I, 293, 16, 10509);
     			attr_dev(div, "class", "spectrum-Slider-handle");
     			attr_dev(div, "style", div_style_value = `left: ${/*percent*/ ctx[10]}%;`);
     			toggle_class(div, "is-dragged", /*dragged*/ ctx[17] !== 0);
     			toggle_class(div, "is-focused", /*focused*/ ctx[16] !== 0);
-    			add_location(div, file$z, 290, 12, 10228);
+    			add_location(div, file$I, 290, 12, 10228);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26067,7 +26086,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$3.name,
+    		id: create_else_block$5.name,
     		type: "else",
     		source: "(290:8) {:else}",
     		ctx
@@ -26077,7 +26096,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (272:8) {#if isRange}
-    function create_if_block_2$2(ctx) {
+    function create_if_block_2$3(ctx) {
     	let div0;
     	let input0;
     	let input0_value_value;
@@ -26112,17 +26131,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input0, "step", /*step*/ ctx[4]);
     			attr_dev(input0, "min", /*min*/ ctx[2]);
     			attr_dev(input0, "max", /*max*/ ctx[3]);
-    			add_location(input0, file$z, 276, 16, 9170);
+    			add_location(input0, file$I, 276, 16, 9170);
     			attr_dev(div0, "class", "spectrum-Slider-handle");
     			attr_dev(div0, "role", "presentation");
     			attr_dev(div0, "data-slider-name", "left");
     			attr_dev(div0, "style", div0_style_value = `left: ${/*percent*/ ctx[10][0]}%;`);
     			toggle_class(div0, "is-dragged", /*dragged*/ ctx[17] === 1);
     			toggle_class(div0, "is-focused", /*focused*/ ctx[16] === 1);
-    			add_location(div0, file$z, 272, 12, 8825);
+    			add_location(div0, file$I, 272, 12, 8825);
     			attr_dev(div1, "class", "spectrum-Slider-track");
     			attr_dev(div1, "style", div1_style_value = `left: ${/*track1*/ ctx[14]}%; right: ${/*track2*/ ctx[15]}%;`);
-    			add_location(div1, file$z, 280, 12, 9463);
+    			add_location(div1, file$I, 280, 12, 9463);
     			attr_dev(input1, "id", /*inputId*/ ctx[23] + "-alt");
     			attr_dev(input1, "type", "range");
     			attr_dev(input1, "class", "spectrum-Slider-input");
@@ -26131,14 +26150,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input1, "step", /*step*/ ctx[4]);
     			attr_dev(input1, "min", /*min*/ ctx[2]);
     			attr_dev(input1, "max", /*max*/ ctx[3]);
-    			add_location(input1, file$z, 285, 16, 9910);
+    			add_location(input1, file$I, 285, 16, 9910);
     			attr_dev(div2, "class", "spectrum-Slider-handle");
     			attr_dev(div2, "role", "presentation");
     			attr_dev(div2, "data-slider-name", "right");
     			attr_dev(div2, "style", div2_style_value = `left: ${/*percent*/ ctx[10][1]}%;`);
     			toggle_class(div2, "is-dragged", /*dragged*/ ctx[17] === 2);
     			toggle_class(div2, "is-focused", /*focused*/ ctx[16] === 2);
-    			add_location(div2, file$z, 281, 12, 9564);
+    			add_location(div2, file$I, 281, 12, 9564);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -26270,7 +26289,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2$2.name,
+    		id: create_if_block_2$3.name,
     		type: "if",
     		source: "(272:8) {#if isRange}",
     		ctx
@@ -26280,7 +26299,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (299:8) {#if isRange || fill !== 'ramp'}
-    function create_if_block_1$5(ctx) {
+    function create_if_block_1$7(ctx) {
     	let div;
     	let div_style_value;
 
@@ -26289,7 +26308,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			attr_dev(div, "class", "spectrum-Slider-track");
     			attr_dev(div, "style", div_style_value = `width: ${/*track2*/ ctx[15]}%;`);
-    			add_location(div, file$z, 299, 12, 10854);
+    			add_location(div, file$I, 299, 12, 10854);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26306,7 +26325,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$5.name,
+    		id: create_if_block_1$7.name,
     		type: "if",
     		source: "(299:8) {#if isRange || fill !== 'ramp'}",
     		ctx
@@ -26316,7 +26335,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (302:8) {#if !isRange && fill === 'middle'}
-    function create_if_block$c(ctx) {
+    function create_if_block$g(ctx) {
     	let div;
     	let div_style_value;
 
@@ -26332,7 +26351,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				: `left: 50%; width: ${/*percent*/ ctx[10] - /*middlePercent*/ ctx[19]}%`);
 
     			toggle_class(div, "spectrum-Slider-fill--right", /*percent*/ ctx[10] > /*middlePercent*/ ctx[19]);
-    			add_location(div, file$z, 302, 12, 10995);
+    			add_location(div, file$I, 302, 12, 10995);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -26357,7 +26376,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$c.name,
+    		id: create_if_block$g.name,
     		type: "if",
     		source: "(302:8) {#if !isRange && fill === 'middle'}",
     		ctx
@@ -26366,7 +26385,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$F(ctx) {
+    function create_fragment$P(ctx) {
     	let div1;
     	let t0;
     	let div0;
@@ -26388,17 +26407,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	let current_block_type = select_block_type_1(ctx);
     	let if_block1 = current_block_type(ctx);
-    	let if_block2 = /*hasTicks*/ ctx[13] && create_if_block_3$2(ctx);
+    	let if_block2 = /*hasTicks*/ ctx[13] && create_if_block_3$3(ctx);
 
     	function select_block_type_2(ctx, dirty) {
-    		if (/*isRange*/ ctx[11]) return create_if_block_2$2;
-    		return create_else_block$3;
+    		if (/*isRange*/ ctx[11]) return create_if_block_2$3;
+    		return create_else_block$5;
     	}
 
     	let current_block_type_1 = select_block_type_2(ctx);
     	let if_block3 = current_block_type_1(ctx);
-    	let if_block4 = (/*isRange*/ ctx[11] || /*fill*/ ctx[6] !== "ramp") && create_if_block_1$5(ctx);
-    	let if_block5 = !/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "middle" && create_if_block$c(ctx);
+    	let if_block4 = (/*isRange*/ ctx[11] || /*fill*/ ctx[6] !== "ramp") && create_if_block_1$7(ctx);
+    	let if_block5 = !/*isRange*/ ctx[11] && /*fill*/ ctx[6] === "middle" && create_if_block$g(ctx);
 
     	let div1_levels = [
     		/*$$restProps*/ ctx[33],
@@ -26436,9 +26455,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block5) if_block5.c();
     			attr_dev(div0, "class", "spectrum-Slider-controls");
     			attr_dev(div0, "role", div0_role_value = /*isRange*/ ctx[11] ? "presentation" : undefined);
-    			add_location(div0, file$z, 250, 4, 7796);
+    			add_location(div0, file$I, 250, 4, 7796);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$z, 232, 0, 6684);
+    			add_location(div1, file$I, 232, 0, 6684);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -26494,7 +26513,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
-    					if_block2 = create_if_block_3$2(ctx);
+    					if_block2 = create_if_block_3$3(ctx);
     					if_block2.c();
     					if_block2.m(div0, t2);
     				}
@@ -26519,7 +26538,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block4) {
     					if_block4.p(ctx, dirty);
     				} else {
-    					if_block4 = create_if_block_1$5(ctx);
+    					if_block4 = create_if_block_1$7(ctx);
     					if_block4.c();
     					if_block4.m(div0, t4);
     				}
@@ -26532,7 +26551,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block5) {
     					if_block5.p(ctx, dirty);
     				} else {
-    					if_block5 = create_if_block$c(ctx);
+    					if_block5 = create_if_block$g(ctx);
     					if_block5.c();
     					if_block5.m(div0, null);
     				}
@@ -26574,7 +26593,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$F.name,
+    		id: create_fragment$P.name,
     		type: "component",
     		source: "",
     		ctx
@@ -26591,7 +26610,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    function instance$F($$self, $$props, $$invalidate) {
+    function instance$P($$self, $$props, $$invalidate) {
     	let isRange;
     	let computedValue;
     	let hasTicks;
@@ -27079,8 +27098,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		init(
     			this,
     			options,
-    			instance$F,
-    			create_fragment$F,
+    			instance$P,
+    			create_fragment$P,
     			safe_not_equal,
     			{
     				label: 1,
@@ -27104,7 +27123,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpSlider",
     			options,
-    			id: create_fragment$F.name
+    			id: create_fragment$P.name
     		});
     	}
 
@@ -27214,9 +27233,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/TimelineActionBar.svelte generated by Svelte v3.38.3 */
-    const file$y = "src/Components/Timeline/TimelineActionBar.svelte";
+    const file$H = "src/Components/Timeline/TimelineActionBar.svelte";
 
-    function create_fragment$E(ctx) {
+    function create_fragment$O(ctx) {
     	let div1;
     	let sp_action_button;
     	let sp_icon;
@@ -27252,17 +27271,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "slot", "icon");
     			set_custom_element_data(sp_icon, "size", "s");
     			set_custom_element_data(sp_icon, "name", "workflow:Filter");
-    			add_location(sp_icon, file$y, 12, 8, 513);
+    			add_location(sp_icon, file$H, 12, 8, 513);
     			set_custom_element_data(sp_action_button, "class", "very-small");
     			set_custom_element_data(sp_action_button, "selected", /*$ShowOnlySelectedElementsAnimations*/ ctx[1]);
     			set_custom_element_data(sp_action_button, "size", "s");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "emphasized", "");
-    			add_location(sp_action_button, file$y, 8, 4, 266);
+    			add_location(sp_action_button, file$H, 8, 4, 266);
     			attr_dev(div0, "class", "timeline-action-bar-zoom-wrapper");
-    			add_location(div0, file$y, 14, 4, 605);
+    			add_location(div0, file$H, 14, 4, 605);
     			attr_dev(div1, "class", "timeline-action-bar");
-    			add_location(div1, file$y, 7, 0, 228);
+    			add_location(div1, file$H, 7, 0, 228);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -27309,7 +27328,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$E.name,
+    		id: create_fragment$O.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27318,7 +27337,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$E($$self, $$props, $$invalidate) {
+    function instance$O($$self, $$props, $$invalidate) {
     	let $ShowOnlySelectedElementsAnimations;
     	validate_store(ShowOnlySelectedElementsAnimations, "ShowOnlySelectedElementsAnimations");
     	component_subscribe($$self, ShowOnlySelectedElementsAnimations, $$value => $$invalidate(1, $ShowOnlySelectedElementsAnimations = $$value));
@@ -27364,13 +27383,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class TimelineActionBar extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$E, create_fragment$E, safe_not_equal, { zoom: 0 });
+    		init(this, options, instance$O, create_fragment$O, safe_not_equal, { zoom: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TimelineActionBar",
     			options,
-    			id: create_fragment$E.name
+    			id: create_fragment$O.name
     		});
     	}
 
@@ -27384,10 +27403,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Timeline/index.svelte generated by Svelte v3.38.3 */
-    const file$x = "src/Components/Timeline/index.svelte";
+    const file$G = "src/Components/Timeline/index.svelte";
 
     // (27:4) {#if !collapsed}
-    function create_if_block$b(ctx) {
+    function create_if_block$f(ctx) {
     	let div;
     	let timelinecontrols;
     	let t0;
@@ -27464,7 +27483,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t2 = space();
     			create_component(timelineactionbar.$$.fragment);
     			attr_dev(div, "class", "timeline-controls-wrapper");
-    			add_location(div, file$x, 27, 8, 1138);
+    			add_location(div, file$G, 27, 8, 1138);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -27538,7 +27557,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$b.name,
+    		id: create_if_block$f.name,
     		type: "if",
     		source: "(27:4) {#if !collapsed}",
     		ctx
@@ -27547,17 +27566,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$D(ctx) {
+    function create_fragment$N(ctx) {
     	let div;
     	let current;
-    	let if_block = !/*collapsed*/ ctx[1] && create_if_block$b(ctx);
+    	let if_block = !/*collapsed*/ ctx[1] && create_if_block$f(ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "timeline-wrapper");
-    			add_location(div, file$x, 25, 0, 1058);
+    			add_location(div, file$G, 25, 0, 1058);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -27577,7 +27596,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$b(ctx);
+    					if_block = create_if_block$f(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div, null);
@@ -27610,7 +27629,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$D.name,
+    		id: create_fragment$N.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27619,7 +27638,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$D($$self, $$props, $$invalidate) {
+    function instance$N($$self, $$props, $$invalidate) {
     	let $CurrentTime;
     	let $CurrentMaxTime;
     	validate_store(CurrentTime, "CurrentTime");
@@ -27753,13 +27772,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Timeline_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$D, create_fragment$D, safe_not_equal, { zoom: 0, collapsed: 1 });
+    		init(this, options, instance$N, create_fragment$N, safe_not_equal, { zoom: 0, collapsed: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Timeline_1",
     			options,
-    			id: create_fragment$D.name
+    			id: create_fragment$N.name
     		});
     	}
 
@@ -27780,16 +27799,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    /* src/Components/Menu.svelte generated by Svelte v3.38.3 */
+    /* src/Components/Logo.svelte generated by Svelte v3.38.3 */
 
-    const file$w = "src/Components/Menu.svelte";
+    const file$F = "src/Components/Logo.svelte";
 
-    function create_fragment$C(ctx) {
-    	let overlay_trigger;
+    function create_fragment$M(ctx) {
     	let div;
     	let svg;
     	let title;
-    	let t0;
+    	let t;
     	let g3;
     	let rect;
     	let path0;
@@ -27809,19 +27827,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let path11;
     	let path12;
     	let path13;
-    	let t1;
-    	let sp_popover;
-    	let sp_dialog;
-    	let h2;
-    	let t3;
 
     	const block = {
     		c: function create() {
-    			overlay_trigger = element("overlay-trigger");
     			div = element("div");
     			svg = svg_element("svg");
     			title = svg_element("title");
-    			t0 = text("Expressive Animator");
+    			t = text("Expressive Animator");
     			g3 = svg_element("g");
     			rect = svg_element("rect");
     			path0 = svg_element("path");
@@ -27841,93 +27853,76 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			path11 = svg_element("path");
     			path12 = svg_element("path");
     			path13 = svg_element("path");
-    			t1 = space();
-    			sp_popover = element("sp-popover");
-    			sp_dialog = element("sp-dialog");
-    			h2 = element("h2");
-    			h2.textContent = "Expressive Animator";
-    			t3 = text("\n            ...");
-    			add_location(title, file$w, 3, 12, 200);
+    			add_location(title, file$F, 2, 8, 139);
     			attr_dev(rect, "y", "14.6");
     			attr_dev(rect, "width", "96");
     			attr_dev(rect, "height", "96");
     			attr_dev(rect, "rx", "20");
     			attr_dev(rect, "fill", "#6e25f2");
-    			add_location(rect, file$w, 5, 16, 267);
+    			add_location(rect, file$F, 4, 12, 198);
     			attr_dev(path0, "d", "M96,34.6v56a20,20,0,0,1-20,20H20A20.2,20.2,0,0,1,.6,95.6a20.7,20.7,0,0,1-.6-5v-56a20.1,20.1,0,0,1,20-20H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path0, "fill", "none");
-    			add_location(path0, file$w, 6, 16, 346);
+    			add_location(path0, file$F, 5, 12, 273);
     			attr_dev(path1, "d", "M53,19.6v56a20,20,0,0,1-20,20H.6a20.7,20.7,0,0,1-.6-5v-56a20.1,20.1,0,0,1,20-20H52.4A20.7,20.7,0,0,1,53,19.6Z");
     			attr_dev(path1, "fill", "#813dfc");
-    			add_location(path1, file$w, 8, 20, 542);
+    			add_location(path1, file$F, 7, 16, 461);
     			attr_dev(path2, "d", "M45,14.6v52a20,20,0,0,1-20,20H0v-52a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path2, "fill", "#c93dfc");
-    			add_location(path2, file$w, 9, 20, 699);
+    			add_location(path2, file$F, 8, 16, 614);
     			attr_dev(path3, "d", "M37,14.6v41a20,20,0,0,1-20,20H0v-41a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path3, "fill", "#fc3dd7");
-    			add_location(path3, file$w, 10, 20, 805);
+    			add_location(path3, file$F, 9, 16, 716);
     			attr_dev(path4, "d", "M28,14.6v26a20,20,0,0,1-20,20H0v-26a20.1,20.1,0,0,1,20-20Z");
     			attr_dev(path4, "fill", "#ff60ce");
-    			add_location(path4, file$w, 11, 20, 911);
-    			add_location(g0, file$w, 7, 16, 518);
+    			add_location(path4, file$F, 10, 16, 818);
+    			add_location(g0, file$F, 6, 12, 441);
     			attr_dev(path5, "d", "M96,34.6v56a20.7,20.7,0,0,1-.6,5,20.1,20.1,0,0,1-19.4,15H20a20,20,0,0,1-20-20v-56a20.1,20.1,0,0,1,20-20H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path5, "fill", "none");
-    			add_location(path5, file$w, 13, 16, 1034);
+    			add_location(path5, file$F, 12, 12, 933);
     			attr_dev(path6, "d", "M96,34.6v56a20.7,20.7,0,0,1-.6,5H63a20,20,0,0,1-20-20v-56a20.7,20.7,0,0,1,.6-5H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path6, "fill", "#813dfc");
-    			add_location(path6, file$w, 15, 20, 1230);
+    			add_location(path6, file$F, 14, 16, 1121);
     			attr_dev(path7, "d", "M96,34.6v52H71a20,20,0,0,1-20-20v-52H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path7, "fill", "#c93dfc");
-    			add_location(path7, file$w, 16, 20, 1384);
+    			add_location(path7, file$F, 15, 16, 1271);
     			attr_dev(path8, "d", "M96,34.6v41H79a20,20,0,0,1-20-20v-41H76A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path8, "fill", "#fc3dd7");
-    			add_location(path8, file$w, 17, 20, 1496);
+    			add_location(path8, file$F, 16, 16, 1379);
     			attr_dev(path9, "d", "M96,34.6v26H88a20,20,0,0,1-20-20v-26h8A20.1,20.1,0,0,1,96,34.6Z");
     			attr_dev(path9, "fill", "#ff60ce");
-    			add_location(path9, file$w, 18, 20, 1608);
-    			add_location(g1, file$w, 14, 16, 1206);
+    			add_location(path9, file$F, 17, 16, 1487);
+    			add_location(g1, file$F, 13, 12, 1101);
     			attr_dev(path10, "d", "M74.2,24.6C72.8,16.5,67.5,3.8,49.6,3H48.1c-7,0-15.7,1.7-26.8,6h.1c2.5,3.6,2.6,8.2,1.2,12.4a26.8,26.8,0,0,0-.7,2.7c0,.2,0,.3-.1.4A12,12,0,0,0,10,36.6v52a12,12,0,0,0,12,12H74a12,12,0,0,0,12-12v-52A12,12,0,0,0,74.2,24.6Z");
     			attr_dev(path10, "fill", "#39157b");
-    			add_location(path10, file$w, 20, 16, 1736);
+    			add_location(path10, file$F, 19, 12, 1607);
     			attr_dev(path11, "d", "M37.2,65.9,28.8,88.6h4.9l1.6-4.7h8.2l1.6,4.7h5L41.6,65.9Zm-.6,14.2,2.8-8.5,2.9,8.5Z");
     			attr_dev(path11, "fill", "#fff");
-    			add_location(path11, file$w, 22, 20, 2021);
+    			add_location(path11, file$F, 21, 16, 1884);
     			attr_dev(path12, "d", "M60.3,71.4a5.9,5.9,0,0,0-4.8,2.3l-.2-2H51.1V88.6h4.5V76.7a3,3,0,0,1,2.8-1.6,2.2,2.2,0,0,1,2.7,2.7V88.6h4.6V77.7c-.1-2.1-.5-3.7-1.4-4.7A4.8,4.8,0,0,0,60.3,71.4Z");
     			attr_dev(path12, "fill", "#fff");
-    			add_location(path12, file$w, 23, 20, 2149);
+    			add_location(path12, file$F, 22, 16, 2008);
     			attr_dev(path13, "d", "M73.3,34.7a28.7,28.7,0,0,0-2.8-23.2,21.6,21.6,0,0,0-9.6-8.8C55.9.2,50.2-.3,44.7.1,36.6.7,28.8,3.1,21.3,6a13.9,13.9,0,0,1,1.6,11.4,37,37,0,0,0-1.6,10.4,32.1,32.1,0,0,0,2.2,10.1,22.7,22.7,0,0,0,8.4,10.9c5,3.5,11.1,4.6,17.1,4.5,8.8-.2,17.5-2.9,25.6-6.1C72.1,43.5,72,38.9,73.3,34.7ZM48.3,47A20.1,20.1,0,0,1,28.5,32.6c5,8.5,17.5,12,25.5,5.5a15,15,0,0,0,5.6-10.3c.4-5-1.6-9.9-6.1-12.4a11.4,11.4,0,0,0-10.6-.2c-3.2,1.8-5.2,5.9-3.9,9.5A7.2,7.2,0,0,1,43.9,18a8,8,0,0,1,7.4,1.7,8.3,8.3,0,0,1,1.1,10,8.6,8.6,0,0,1-5.8,4.4,12.1,12.1,0,0,1-13.3-6.4A14.8,14.8,0,0,1,33.7,14,15.6,15.6,0,0,1,46.4,6.4a20,20,0,0,1,15.9,5.7,20.8,20.8,0,0,1,6,13.9A20.8,20.8,0,0,1,52,46.5,22,22,0,0,1,48.3,47Z");
     			attr_dev(path13, "fill", "#fff");
-    			add_location(path13, file$w, 24, 20, 2353);
-    			add_location(g2, file$w, 21, 16, 1997);
-    			add_location(g3, file$w, 4, 12, 247);
+    			add_location(path13, file$F, 23, 16, 2208);
+    			add_location(g2, file$F, 20, 12, 1864);
+    			add_location(g3, file$F, 3, 8, 182);
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "viewBox", "0 0 96 110.6");
     			attr_dev(svg, "width", "32");
     			attr_dev(svg, "height", "32");
-    			add_location(svg, file$w, 2, 8, 101);
-    			attr_dev(div, "slot", "trigger");
-    			attr_dev(div, "class", "logo svelte-xbdewj");
-    			add_location(div, file$w, 1, 4, 59);
-    			attr_dev(h2, "slot", "heading");
-    			add_location(h2, file$w, 31, 12, 3203);
-    			set_custom_element_data(sp_dialog, "size", "small");
-    			add_location(sp_dialog, file$w, 30, 8, 3166);
-    			set_custom_element_data(sp_popover, "slot", "click-content");
-    			set_custom_element_data(sp_popover, "open", "");
-    			add_location(sp_popover, file$w, 29, 4, 3119);
-    			set_custom_element_data(overlay_trigger, "placement", "right-start");
-    			set_custom_element_data(overlay_trigger, "type", "modal");
-    			add_location(overlay_trigger, file$w, 0, 0, 0);
+    			add_location(svg, file$F, 1, 4, 44);
+    			set_style(div, "width", "32px");
+    			set_style(div, "height", "32px");
+    			add_location(div, file$F, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, overlay_trigger, anchor);
-    			append_dev(overlay_trigger, div);
+    			insert_dev(target, div, anchor);
     			append_dev(div, svg);
     			append_dev(svg, title);
-    			append_dev(title, t0);
+    			append_dev(title, t);
     			append_dev(svg, g3);
     			append_dev(g3, rect);
     			append_dev(g3, path0);
@@ -27947,23 +27942,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			append_dev(g2, path11);
     			append_dev(g2, path12);
     			append_dev(g2, path13);
-    			append_dev(overlay_trigger, t1);
-    			append_dev(overlay_trigger, sp_popover);
-    			append_dev(sp_popover, sp_dialog);
-    			append_dev(sp_dialog, h2);
-    			append_dev(sp_dialog, t3);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(overlay_trigger);
+    			if (detaching) detach_dev(div);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$C.name,
+    		id: create_fragment$M.name,
     		type: "component",
     		source: "",
     		ctx
@@ -27972,36 +27962,1452 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$C($$self, $$props) {
+    function instance$M($$self, $$props) {
     	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Menu", slots, []);
+    	validate_slots("Logo", slots, []);
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Menu> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Logo> was created with unknown prop '${key}'`);
     	});
 
     	return [];
     }
 
-    class Menu extends SvelteComponentDev {
+    class Logo extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$C, create_fragment$C, safe_not_equal, {});
+    		init(this, options, instance$M, create_fragment$M, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "Menu",
+    			tagName: "Logo",
     			options,
-    			id: create_fragment$C.name
+    			id: create_fragment$M.name
+    		});
+    	}
+    }
+
+    /* src/Components/CascadeMenu/Shortcut.svelte generated by Svelte v3.38.3 */
+
+    function create_fragment$L(ctx) {
+    	let t_value = /*value*/ ctx[0].join("+") + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*value*/ 1 && t_value !== (t_value = /*value*/ ctx[0].join("+") + "")) set_data_dev(t, t_value);
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$L.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$L($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Shortcut", slots, []);
+    	let { value } = $$props;
+    	const writable_props = ["value"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Shortcut> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    	};
+
+    	$$self.$capture_state = () => ({ value });
+
+    	$$self.$inject_state = $$props => {
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [value];
+    }
+
+    class Shortcut extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$L, create_fragment$L, safe_not_equal, { value: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Shortcut",
+    			options,
+    			id: create_fragment$L.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*value*/ ctx[0] === undefined && !("value" in props)) {
+    			console.warn("<Shortcut> was created without expected prop 'value'");
+    		}
+    	}
+
+    	get value() {
+    		throw new Error("<Shortcut>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<Shortcut>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/CascadeMenu/MenuItem.svelte generated by Svelte v3.38.3 */
+    const file$E = "src/Components/CascadeMenu/MenuItem.svelte";
+
+    // (16:28) 
+    function create_if_block_1$6(ctx) {
+    	let kbd;
+    	let shortcut;
+    	let current;
+
+    	shortcut = new Shortcut({
+    			props: { value: /*item*/ ctx[1].shortcut },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			kbd = element("kbd");
+    			create_component(shortcut.$$.fragment);
+    			attr_dev(kbd, "slot", "value");
+    			add_location(kbd, file$E, 16, 8, 634);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, kbd, anchor);
+    			mount_component(shortcut, kbd, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const shortcut_changes = {};
+    			if (dirty & /*item*/ 2) shortcut_changes.value = /*item*/ ctx[1].shortcut;
+    			shortcut.$set(shortcut_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(shortcut.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(shortcut.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(kbd);
+    			destroy_component(shortcut);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$6.name,
+    		type: "if",
+    		source: "(16:28) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (14:4) {#if item.children}
+    function create_if_block$e(ctx) {
+    	let sp_icon;
+    	let sp_icon_disabled_value;
+
+    	const block = {
+    		c: function create() {
+    			sp_icon = element("sp-icon");
+    			set_custom_element_data(sp_icon, "disabled", sp_icon_disabled_value = /*item*/ ctx[1].disabled);
+    			set_custom_element_data(sp_icon, "name", "workflow:ChevronRight");
+    			set_custom_element_data(sp_icon, "slot", "value");
+    			add_location(sp_icon, file$E, 14, 8, 510);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_icon, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*item*/ 2 && sp_icon_disabled_value !== (sp_icon_disabled_value = /*item*/ ctx[1].disabled)) {
+    				set_custom_element_data(sp_icon, "disabled", sp_icon_disabled_value);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_icon);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$e.name,
+    		type: "if",
+    		source: "(14:4) {#if item.children}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$K(ctx) {
+    	let sp_menu_item;
+    	let t0_value = /*item*/ ctx[1].title + "";
+    	let t0;
+    	let t1;
+    	let current_block_type_index;
+    	let if_block;
+    	let sp_menu_item_disabled_value;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const if_block_creators = [create_if_block$e, create_if_block_1$6];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*item*/ ctx[1].children) return 0;
+    		if (/*item*/ ctx[1].shortcut) return 1;
+    		return -1;
+    	}
+
+    	if (~(current_block_type_index = select_block_type(ctx))) {
+    		if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			sp_menu_item = element("sp-menu-item");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			set_custom_element_data(sp_menu_item, "disabled", sp_menu_item_disabled_value = /*item*/ ctx[1].disabled);
+    			add_location(sp_menu_item, file$E, 7, 0, 211);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_menu_item, anchor);
+    			append_dev(sp_menu_item, t0);
+    			append_dev(sp_menu_item, t1);
+
+    			if (~current_block_type_index) {
+    				if_blocks[current_block_type_index].m(sp_menu_item, null);
+    			}
+
+    			/*sp_menu_item_binding*/ ctx[5](sp_menu_item);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_menu_item, "pointerenter", /*pointerenter_handler*/ ctx[3], false, false, false),
+    					listen_dev(sp_menu_item, "pointerleave", /*pointerleave_handler*/ ctx[4], false, false, false),
+    					listen_dev(
+    						sp_menu_item,
+    						"click",
+    						function () {
+    							if (is_function(/*item*/ ctx[1].disabled !== true && /*item*/ ctx[1].action != null
+    							? /*click_handler*/ ctx[6]
+    							: undefined)) (/*item*/ ctx[1].disabled !== true && /*item*/ ctx[1].action != null
+    							? /*click_handler*/ ctx[6]
+    							: undefined).apply(this, arguments);
+    						},
+    						false,
+    						false,
+    						false
+    					)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, [dirty]) {
+    			ctx = new_ctx;
+    			if ((!current || dirty & /*item*/ 2) && t0_value !== (t0_value = /*item*/ ctx[1].title + "")) set_data_dev(t0, t0_value);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if (~current_block_type_index) {
+    					if_blocks[current_block_type_index].p(ctx, dirty);
+    				}
+    			} else {
+    				if (if_block) {
+    					group_outros();
+
+    					transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    						if_blocks[previous_block_index] = null;
+    					});
+
+    					check_outros();
+    				}
+
+    				if (~current_block_type_index) {
+    					if_block = if_blocks[current_block_type_index];
+
+    					if (!if_block) {
+    						if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    						if_block.c();
+    					} else {
+    						if_block.p(ctx, dirty);
+    					}
+
+    					transition_in(if_block, 1);
+    					if_block.m(sp_menu_item, null);
+    				} else {
+    					if_block = null;
+    				}
+    			}
+
+    			if (!current || dirty & /*item*/ 2 && sp_menu_item_disabled_value !== (sp_menu_item_disabled_value = /*item*/ ctx[1].disabled)) {
+    				set_custom_element_data(sp_menu_item, "disabled", sp_menu_item_disabled_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_menu_item);
+
+    			if (~current_block_type_index) {
+    				if_blocks[current_block_type_index].d();
+    			}
+
+    			/*sp_menu_item_binding*/ ctx[5](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$K.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$K($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("MenuItem", slots, []);
+    	
+    	const dispatch = createEventDispatcher();
+    	let { item } = $$props;
+    	let { element = undefined } = $$props;
+    	const writable_props = ["item", "element"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<MenuItem> was created with unknown prop '${key}'`);
+    	});
+
+    	function pointerenter_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function pointerleave_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function sp_menu_item_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			element = $$value;
+    			$$invalidate(0, element);
+    		});
+    	}
+
+    	const click_handler = () => dispatch("action", item);
+
+    	$$self.$$set = $$props => {
+    		if ("item" in $$props) $$invalidate(1, item = $$props.item);
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Shortcut,
+    		createEventDispatcher,
+    		dispatch,
+    		item,
+    		element
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("item" in $$props) $$invalidate(1, item = $$props.item);
+    		if ("element" in $$props) $$invalidate(0, element = $$props.element);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		element,
+    		item,
+    		dispatch,
+    		pointerenter_handler,
+    		pointerleave_handler,
+    		sp_menu_item_binding,
+    		click_handler
+    	];
+    }
+
+    class MenuItem extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$K, create_fragment$K, safe_not_equal, { item: 1, element: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "MenuItem",
+    			options,
+    			id: create_fragment$K.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*item*/ ctx[1] === undefined && !("item" in props)) {
+    			console.warn("<MenuItem> was created without expected prop 'item'");
+    		}
+    	}
+
+    	get item() {
+    		throw new Error("<MenuItem>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set item(value) {
+    		throw new Error("<MenuItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get element() {
+    		throw new Error("<MenuItem>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set element(value) {
+    		throw new Error("<MenuItem>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/CascadeMenu/MenuOverlay.svelte generated by Svelte v3.38.3 */
+    const file$D = "src/Components/CascadeMenu/MenuOverlay.svelte";
+    const get_default_slot_changes$1 = dirty => ({});
+    const get_default_slot_context$1 = ctx => ({ onAction: /*onAction*/ ctx[5] });
+
+    function create_fragment$J(ctx) {
+    	let menuitem;
+    	let updating_element;
+    	let t;
+    	let sp_popover;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	function menuitem_element_binding(value) {
+    		/*menuitem_element_binding*/ ctx[8](value);
+    	}
+
+    	let menuitem_props = { item: /*item*/ ctx[0] };
+
+    	if (/*trigger*/ ctx[1] !== void 0) {
+    		menuitem_props.element = /*trigger*/ ctx[1];
+    	}
+
+    	menuitem = new MenuItem({ props: menuitem_props, $$inline: true });
+    	binding_callbacks.push(() => bind(menuitem, "element", menuitem_element_binding));
+    	menuitem.$on("pointerenter", /*onEnter*/ ctx[3]);
+    	menuitem.$on("pointerleave", /*onLeave*/ ctx[4]);
+    	menuitem.$on("action", /*onAction*/ ctx[5]);
+    	const default_slot_template = /*#slots*/ ctx[7].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[6], get_default_slot_context$1);
+
+    	const block = {
+    		c: function create() {
+    			create_component(menuitem.$$.fragment);
+    			t = space();
+    			sp_popover = element("sp-popover");
+    			if (default_slot) default_slot.c();
+    			set_custom_element_data(sp_popover, "class", "svelte-i3nypo");
+    			add_location(sp_popover, file$D, 62, 0, 1399);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(menuitem, target, anchor);
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, sp_popover, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(sp_popover, null);
+    			}
+
+    			/*sp_popover_binding*/ ctx[9](sp_popover);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_popover, "pointerenter", /*onEnter*/ ctx[3], false, false, false),
+    					listen_dev(sp_popover, "pointerleave", /*onLeave*/ ctx[4], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const menuitem_changes = {};
+    			if (dirty & /*item*/ 1) menuitem_changes.item = /*item*/ ctx[0];
+
+    			if (!updating_element && dirty & /*trigger*/ 2) {
+    				updating_element = true;
+    				menuitem_changes.element = /*trigger*/ ctx[1];
+    				add_flush_callback(() => updating_element = false);
+    			}
+
+    			menuitem.$set(menuitem_changes);
+
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 64)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[6], !current ? -1 : dirty, get_default_slot_changes$1, get_default_slot_context$1);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(menuitem.$$.fragment, local);
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(menuitem.$$.fragment, local);
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(menuitem, detaching);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(sp_popover);
+    			if (default_slot) default_slot.d(detaching);
+    			/*sp_popover_binding*/ ctx[9](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$J.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    const DELAY = 300;
+
+    function instance$J($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("MenuOverlay", slots, ['default']);
+    	
+    	let { item } = $$props;
+    	const dispatch = createEventDispatcher();
+    	let trigger, content;
+    	let closeOverlayPromise;
+    	let isOpen = false;
+    	let hovers = 0;
+
+    	function open() {
+    		if (content.open) {
+    			return;
+    		}
+
+    		$$invalidate(2, content.open = isOpen = true, content);
+    		closeOverlayPromise = Overlay.open(trigger, "inline", content, { offset: -18, placement: "auto-end" }); //notImmediatelyClosable: true
+    	}
+
+    	function close() {
+    		if (!content || !content.open) {
+    			return;
+    		}
+
+    		closeOverlayPromise.then(close => {
+    			close();
+    			closeOverlayPromise = null;
+    			$$invalidate(2, content.open = isOpen = false, content);
+    			hovers = 0;
+    		});
+    	}
+
+    	function onEnter() {
+    		hovers++;
+
+    		setTimeout(
+    			() => {
+    				if (hovers === 1) {
+    					open();
+    				}
+    			},
+    			DELAY
+    		);
+    	}
+
+    	function onLeave() {
+    		hovers--;
+
+    		setTimeout(
+    			() => {
+    				if (hovers === 0) {
+    					close();
+    				}
+    			},
+    			DELAY / 2
+    		);
+    	}
+
+    	function onAction(e) {
+    		close();
+    		dispatch("action", e.detail);
+    	}
+
+    	onDestroy(() => {
+    		close();
+    	});
+
+    	const writable_props = ["item"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<MenuOverlay> was created with unknown prop '${key}'`);
+    	});
+
+    	function menuitem_element_binding(value) {
+    		trigger = value;
+    		$$invalidate(1, trigger);
+    	}
+
+    	function sp_popover_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			content = $$value;
+    			$$invalidate(2, content);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("item" in $$props) $$invalidate(0, item = $$props.item);
+    		if ("$$scope" in $$props) $$invalidate(6, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Overlay,
+    		onDestroy,
+    		createEventDispatcher,
+    		MenuItem,
+    		item,
+    		dispatch,
+    		DELAY,
+    		trigger,
+    		content,
+    		closeOverlayPromise,
+    		isOpen,
+    		hovers,
+    		open,
+    		close,
+    		onEnter,
+    		onLeave,
+    		onAction
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("item" in $$props) $$invalidate(0, item = $$props.item);
+    		if ("trigger" in $$props) $$invalidate(1, trigger = $$props.trigger);
+    		if ("content" in $$props) $$invalidate(2, content = $$props.content);
+    		if ("closeOverlayPromise" in $$props) closeOverlayPromise = $$props.closeOverlayPromise;
+    		if ("isOpen" in $$props) isOpen = $$props.isOpen;
+    		if ("hovers" in $$props) hovers = $$props.hovers;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		item,
+    		trigger,
+    		content,
+    		onEnter,
+    		onLeave,
+    		onAction,
+    		$$scope,
+    		slots,
+    		menuitem_element_binding,
+    		sp_popover_binding
+    	];
+    }
+
+    class MenuOverlay extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$J, create_fragment$J, safe_not_equal, { item: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "MenuOverlay",
+    			options,
+    			id: create_fragment$J.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*item*/ ctx[0] === undefined && !("item" in props)) {
+    			console.warn("<MenuOverlay> was created without expected prop 'item'");
+    		}
+    	}
+
+    	get item() {
+    		throw new Error("<MenuOverlay>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set item(value) {
+    		throw new Error("<MenuOverlay>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/CascadeMenu/index.svelte generated by Svelte v3.38.3 */
+    const file$C = "src/Components/CascadeMenu/index.svelte";
+
+    function get_each_context$6(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[5] = list[i];
+    	return child_ctx;
+    }
+
+    // (16:8) {:else}
+    function create_else_block$4(ctx) {
+    	let menuitem;
+    	let current;
+
+    	menuitem = new MenuItem({
+    			props: { item: /*item*/ ctx[5] },
+    			$$inline: true
+    		});
+
+    	menuitem.$on("action", /*action_handler_1*/ ctx[4]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(menuitem.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(menuitem, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const menuitem_changes = {};
+    			if (dirty & /*items*/ 1) menuitem_changes.item = /*item*/ ctx[5];
+    			menuitem.$set(menuitem_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(menuitem.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(menuitem.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(menuitem, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$4.name,
+    		type: "else",
+    		source: "(16:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (10:50) 
+    function create_if_block_1$5(ctx) {
+    	let menuoverlay;
+    	let current;
+
+    	menuoverlay = new MenuOverlay({
+    			props: {
+    				item: /*item*/ ctx[5],
+    				$$slots: {
+    					default: [
+    						create_default_slot$7,
+    						({ onAction }) => ({ 8: onAction }),
+    						({ onAction }) => onAction ? 256 : 0
+    					]
+    				},
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	menuoverlay.$on("action", /*action_handler*/ ctx[3]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(menuoverlay.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(menuoverlay, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const menuoverlay_changes = {};
+    			if (dirty & /*items*/ 1) menuoverlay_changes.item = /*item*/ ctx[5];
+
+    			if (dirty & /*$$scope, items, onAction*/ 769) {
+    				menuoverlay_changes.$$scope = { dirty, ctx };
+    			}
+
+    			menuoverlay.$set(menuoverlay_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(menuoverlay.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(menuoverlay.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(menuoverlay, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$5.name,
+    		type: "if",
+    		source: "(10:50) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (8:8) {#if item == null}
+    function create_if_block$d(ctx) {
+    	let sp_menu_divider;
+
+    	const block = {
+    		c: function create() {
+    			sp_menu_divider = element("sp-menu-divider");
+    			add_location(sp_menu_divider, file$C, 8, 12, 245);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_menu_divider, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_menu_divider);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$d.name,
+    		type: "if",
+    		source: "(8:8) {#if item == null}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (12:16) <svelte:fragment let:onAction>
+    function create_default_slot$7(ctx) {
+    	let cascademenu;
+    	let t;
+    	let current;
+
+    	cascademenu = new CascadeMenu({
+    			props: { items: /*item*/ ctx[5].children },
+    			$$inline: true
+    		});
+
+    	cascademenu.$on("action", function () {
+    		if (is_function(/*onAction*/ ctx[8])) /*onAction*/ ctx[8].apply(this, arguments);
+    	});
+
+    	const block = {
+    		c: function create() {
+    			create_component(cascademenu.$$.fragment);
+    			t = space();
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(cascademenu, target, anchor);
+    			insert_dev(target, t, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const cascademenu_changes = {};
+    			if (dirty & /*items*/ 1) cascademenu_changes.items = /*item*/ ctx[5].children;
+    			cascademenu.$set(cascademenu_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(cascademenu.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(cascademenu.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(cascademenu, detaching);
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$7.name,
+    		type: "slot",
+    		source: "(12:16) <svelte:fragment let:onAction>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (7:4) {#each items as item}
+    function create_each_block$6(ctx) {
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block$d, create_if_block_1$5, create_else_block$4];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*item*/ ctx[5] == null) return 0;
+    		if (/*item*/ ctx[5].children && !/*item*/ ctx[5].disabled) return 1;
+    		return 2;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$6.name,
+    		type: "each",
+    		source: "(7:4) {#each items as item}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$I(ctx) {
+    	let sp_menu;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	let each_value = /*items*/ ctx[0];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block$6(get_each_context$6(ctx, each_value, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			sp_menu = element("sp-menu");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			set_custom_element_data(sp_menu, "class", "svelte-g3osqm");
+    			add_location(sp_menu, file$C, 5, 0, 138);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_menu, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(sp_menu, null);
+    			}
+
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_menu, "pointerenter", /*pointerenter_handler*/ ctx[1], false, false, false),
+    					listen_dev(sp_menu, "pointerleave", /*pointerleave_handler*/ ctx[2], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*items, onAction*/ 257) {
+    				each_value = /*items*/ ctx[0];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$6(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block$6(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(sp_menu, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_menu);
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$I.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$I($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("CascadeMenu", slots, []);
+    	
+    	let { items } = $$props;
+    	const writable_props = ["items"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<CascadeMenu> was created with unknown prop '${key}'`);
+    	});
+
+    	function pointerenter_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function pointerleave_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function action_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function action_handler_1(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("items" in $$props) $$invalidate(0, items = $$props.items);
+    	};
+
+    	$$self.$capture_state = () => ({ MenuItem, MenuOverlay, items });
+
+    	$$self.$inject_state = $$props => {
+    		if ("items" in $$props) $$invalidate(0, items = $$props.items);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		items,
+    		pointerenter_handler,
+    		pointerleave_handler,
+    		action_handler,
+    		action_handler_1
+    	];
+    }
+
+    class CascadeMenu extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$I, create_fragment$I, safe_not_equal, { items: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "CascadeMenu",
+    			options,
+    			id: create_fragment$I.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*items*/ ctx[0] === undefined && !("items" in props)) {
+    			console.warn("<CascadeMenu> was created without expected prop 'items'");
+    		}
+    	}
+
+    	get items() {
+    		throw new Error("<CascadeMenu>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set items(value) {
+    		throw new Error("<CascadeMenu>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/MenuBar/GlobalMenu.svelte generated by Svelte v3.38.3 */
+    const file$B = "src/Components/MenuBar/GlobalMenu.svelte";
+
+    // (28:4) {#if open}
+    function create_if_block$c(ctx) {
+    	let sp_popover;
+    	let cascademenu;
+    	let current;
+
+    	cascademenu = new CascadeMenu({
+    			props: { items: /*items*/ ctx[1] },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			sp_popover = element("sp-popover");
+    			create_component(cascademenu.$$.fragment);
+    			set_custom_element_data(sp_popover, "open", /*open*/ ctx[0]);
+    			set_custom_element_data(sp_popover, "slot", "click-content");
+    			add_location(sp_popover, file$B, 28, 8, 732);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_popover, anchor);
+    			mount_component(cascademenu, sp_popover, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!current || dirty & /*open*/ 1) {
+    				set_custom_element_data(sp_popover, "open", /*open*/ ctx[0]);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(cascademenu.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(cascademenu.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_popover);
+    			destroy_component(cascademenu);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$c.name,
+    		type: "if",
+    		source: "(28:4) {#if open}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$H(ctx) {
+    	let overlay_trigger;
+    	let sp_action_button;
+    	let sp_icon;
+    	let t;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	let if_block = /*open*/ ctx[0] && create_if_block$c(ctx);
+
+    	const block = {
+    		c: function create() {
+    			overlay_trigger = element("overlay-trigger");
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			t = space();
+    			if (if_block) if_block.c();
+    			set_custom_element_data(sp_icon, "size", "s");
+    			set_custom_element_data(sp_icon, "name", "workflow:More");
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			add_location(sp_icon, file$B, 25, 8, 623);
+    			set_custom_element_data(sp_action_button, "slot", "trigger");
+    			add_location(sp_action_button, file$B, 24, 4, 552);
+    			set_custom_element_data(overlay_trigger, "placement", "bottom-end");
+    			set_custom_element_data(overlay_trigger, "type", "modal");
+    			set_custom_element_data(overlay_trigger, "open", "click");
+    			set_custom_element_data(overlay_trigger, "offset", -6);
+    			add_location(overlay_trigger, file$B, 18, 0, 362);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, overlay_trigger, anchor);
+    			append_dev(overlay_trigger, sp_action_button);
+    			append_dev(sp_action_button, sp_icon);
+    			append_dev(overlay_trigger, t);
+    			if (if_block) if_block.m(overlay_trigger, null);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_action_button, "click", /*click_handler*/ ctx[2], false, false, false),
+    					listen_dev(overlay_trigger, "sp-closed", /*sp_closed_handler*/ ctx[3], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (/*open*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*open*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$c(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(overlay_trigger, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(overlay_trigger);
+    			if (if_block) if_block.d();
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$H.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$H($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("GlobalMenu", slots, []);
+    	let open = false;
+
+    	const items = [
+    		{
+    			title: "File",
+    			children: [
+    				{ title: "Open", action: () => null },
+    				{ title: "Save", action: () => null }
+    			]
+    		}
+    	];
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<GlobalMenu> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = () => $$invalidate(0, open = true);
+    	const sp_closed_handler = () => $$invalidate(0, open = false);
+    	$$self.$capture_state = () => ({ CascadeMenu, open, items });
+
+    	$$self.$inject_state = $$props => {
+    		if ("open" in $$props) $$invalidate(0, open = $$props.open);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [open, items, click_handler, sp_closed_handler];
+    }
+
+    class GlobalMenu extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$H, create_fragment$H, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "GlobalMenu",
+    			options,
+    			id: create_fragment$H.name
     		});
     	}
     }
 
     /* src/Components/MenuBar/ProjectState.svelte generated by Svelte v3.38.3 */
-    const file$v = "src/Components/MenuBar/ProjectState.svelte";
+    const file$A = "src/Components/MenuBar/ProjectState.svelte";
 
-    function create_fragment$B(ctx) {
+    function create_fragment$G(ctx) {
     	let sp_action_group;
     	let sp_action_button0;
     	let sp_icon0;
@@ -28036,32 +29442,32 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon0, "size", "s");
     			set_custom_element_data(sp_icon0, "name", "workflow:FolderOpen");
     			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$v, 77, 8, 2872);
+    			add_location(sp_icon0, file$A, 79, 8, 2944);
     			set_custom_element_data(sp_action_button0, "title", "Open");
-    			add_location(sp_action_button0, file$v, 75, 4, 2794);
+    			add_location(sp_action_button0, file$A, 77, 4, 2866);
     			set_custom_element_data(sp_icon1, "size", "s");
     			set_custom_element_data(sp_icon1, "name", "workflow:SaveFloppy");
     			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$v, 80, 8, 3024);
+    			add_location(sp_icon1, file$A, 82, 8, 3096);
     			set_custom_element_data(sp_action_button1, "title", "Save");
-    			add_location(sp_action_button1, file$v, 79, 4, 2968);
+    			add_location(sp_action_button1, file$A, 81, 4, 3040);
     			set_custom_element_data(sp_icon2, "size", "s");
     			set_custom_element_data(sp_icon2, "name", "workflow:Undo");
     			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$v, 85, 8, 3286);
+    			add_location(sp_icon2, file$A, 87, 8, 3358);
     			set_custom_element_data(sp_action_button2, "title", "Undo");
     			set_custom_element_data(sp_action_button2, "disabled", sp_action_button2_disabled_value = !/*$CurrentProjectState*/ ctx[0] || !/*$CurrentProjectState*/ ctx[0].canUndo);
-    			add_location(sp_action_button2, file$v, 82, 4, 3120);
+    			add_location(sp_action_button2, file$A, 84, 4, 3192);
     			set_custom_element_data(sp_icon3, "size", "s");
     			set_custom_element_data(sp_icon3, "name", "workflow:Redo");
     			set_custom_element_data(sp_icon3, "slot", "icon");
-    			add_location(sp_icon3, file$v, 90, 8, 3542);
+    			add_location(sp_icon3, file$A, 92, 8, 3614);
     			set_custom_element_data(sp_action_button3, "title", "Redo");
     			set_custom_element_data(sp_action_button3, "disabled", sp_action_button3_disabled_value = !/*$CurrentProjectState*/ ctx[0] || !/*$CurrentProjectState*/ ctx[0].canRedo);
-    			add_location(sp_action_button3, file$v, 87, 4, 3376);
+    			add_location(sp_action_button3, file$A, 89, 4, 3448);
     			set_custom_element_data(sp_action_group, "compact", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
-    			add_location(sp_action_group, file$v, 74, 0, 2758);
+    			add_location(sp_action_group, file$A, 75, 0, 2804);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -28111,7 +29517,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$B.name,
+    		id: create_fragment$G.name,
     		type: "component",
     		source: "",
     		ctx
@@ -28120,7 +29526,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$B($$self, $$props, $$invalidate) {
+    function instance$G($$self, $$props, $$invalidate) {
     	let $CurrentProject;
     	let $IsProjectSaved;
     	let $ProjectFileHandle;
@@ -28255,6 +29661,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		IsProjectSaved,
     		NativeAnimationExporter,
     		NativeAnimationImporter,
+    		GlobalMenu,
     		undo,
     		redo,
     		open,
@@ -28279,21 +29686,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class ProjectState extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$B, create_fragment$B, safe_not_equal, {});
+    		init(this, options, instance$G, create_fragment$G, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ProjectState",
     			options,
-    			id: create_fragment$B.name
+    			id: create_fragment$G.name
     		});
     	}
     }
 
     /* src/Components/MenuBar/AlignSelection.svelte generated by Svelte v3.38.3 */
-    const file$u = "src/Components/MenuBar/AlignSelection.svelte";
+    const file$z = "src/Components/MenuBar/AlignSelection.svelte";
 
-    function create_fragment$A(ctx) {
+    function create_fragment$F(ctx) {
     	let sp_action_group;
     	let sp_action_button0;
     	let sp_icon0;
@@ -28354,77 +29761,77 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon0, "size", "s");
     			set_custom_element_data(sp_icon0, "name", "workflow:AlignTop");
     			set_custom_element_data(sp_icon0, "slot", "icon");
-    			add_location(sp_icon0, file$u, 33, 8, 1068);
+    			add_location(sp_icon0, file$z, 52, 8, 1804);
     			set_custom_element_data(sp_action_button0, "data-position", "top");
     			set_custom_element_data(sp_action_button0, "title", "Align top");
     			set_custom_element_data(sp_action_button0, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button0, file$u, 32, 4, 961);
+    			add_location(sp_action_button0, file$z, 51, 4, 1697);
     			set_custom_element_data(sp_icon1, "size", "s");
     			set_custom_element_data(sp_icon1, "name", "workflow:AlignMiddle");
     			set_custom_element_data(sp_icon1, "slot", "icon");
-    			add_location(sp_icon1, file$u, 36, 8, 1275);
+    			add_location(sp_icon1, file$z, 55, 8, 2011);
     			set_custom_element_data(sp_action_button1, "data-position", "middle");
     			set_custom_element_data(sp_action_button1, "title", "Align middle");
     			set_custom_element_data(sp_action_button1, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button1, file$u, 35, 4, 1162);
+    			add_location(sp_action_button1, file$z, 54, 4, 1898);
     			set_custom_element_data(sp_icon2, "size", "s");
     			set_custom_element_data(sp_icon2, "name", "workflow:AlignBottom");
     			set_custom_element_data(sp_icon2, "slot", "icon");
-    			add_location(sp_icon2, file$u, 39, 8, 1485);
+    			add_location(sp_icon2, file$z, 58, 8, 2221);
     			set_custom_element_data(sp_action_button2, "data-position", "bottom");
     			set_custom_element_data(sp_action_button2, "title", "Align bottom");
     			set_custom_element_data(sp_action_button2, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button2, file$u, 38, 4, 1372);
+    			add_location(sp_action_button2, file$z, 57, 4, 2108);
     			set_custom_element_data(sp_icon3, "size", "s");
     			set_custom_element_data(sp_icon3, "name", "workflow:DistributeHorizontally");
     			set_custom_element_data(sp_icon3, "slot", "icon");
-    			add_location(sp_icon3, file$u, 42, 8, 1721);
+    			add_location(sp_icon3, file$z, 61, 8, 2457);
     			set_custom_element_data(sp_action_button3, "data-position", "horizontally");
     			set_custom_element_data(sp_action_button3, "title", "Distribute horizontally");
     			set_custom_element_data(sp_action_button3, "disabled", /*disableDistribute*/ ctx[1]);
-    			add_location(sp_action_button3, file$u, 41, 4, 1582);
+    			add_location(sp_action_button3, file$z, 60, 4, 2318);
     			set_custom_element_data(sp_divider, "size", "s");
     			set_custom_element_data(sp_divider, "vertical", "");
     			set_style(sp_divider, "height", "32px");
     			set_style(sp_divider, "margin", "0 auto");
-    			add_location(sp_divider, file$u, 45, 4, 1830);
+    			add_location(sp_divider, file$z, 64, 4, 2566);
     			set_custom_element_data(sp_icon4, "size", "s");
     			set_custom_element_data(sp_icon4, "name", "workflow:AlignLeft");
     			set_custom_element_data(sp_icon4, "slot", "icon");
-    			add_location(sp_icon4, file$u, 48, 8, 2025);
+    			add_location(sp_icon4, file$z, 67, 8, 2761);
     			set_custom_element_data(sp_action_button4, "data-position", "left");
     			set_custom_element_data(sp_action_button4, "title", "Align left");
     			set_custom_element_data(sp_action_button4, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button4, file$u, 47, 4, 1916);
+    			add_location(sp_action_button4, file$z, 66, 4, 2652);
     			set_custom_element_data(sp_icon5, "size", "s");
     			set_custom_element_data(sp_icon5, "name", "workflow:AlignCenter");
     			set_custom_element_data(sp_icon5, "slot", "icon");
-    			add_location(sp_icon5, file$u, 51, 8, 2233);
+    			add_location(sp_icon5, file$z, 70, 8, 2969);
     			set_custom_element_data(sp_action_button5, "data-position", "center");
     			set_custom_element_data(sp_action_button5, "title", "Align center");
     			set_custom_element_data(sp_action_button5, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button5, file$u, 50, 4, 2120);
+    			add_location(sp_action_button5, file$z, 69, 4, 2856);
     			set_custom_element_data(sp_icon6, "size", "s");
     			set_custom_element_data(sp_icon6, "name", "workflow:AlignRight");
     			set_custom_element_data(sp_icon6, "slot", "icon");
-    			add_location(sp_icon6, file$u, 54, 8, 2441);
+    			add_location(sp_icon6, file$z, 73, 8, 3177);
     			set_custom_element_data(sp_action_button6, "data-position", "right");
     			set_custom_element_data(sp_action_button6, "title", "Align right");
     			set_custom_element_data(sp_action_button6, "disabled", /*disabledAlign*/ ctx[0]);
-    			add_location(sp_action_button6, file$u, 53, 4, 2330);
+    			add_location(sp_action_button6, file$z, 72, 4, 3066);
     			set_custom_element_data(sp_icon7, "size", "s");
     			set_custom_element_data(sp_icon7, "name", "workflow:DistributeVertically");
     			set_custom_element_data(sp_icon7, "slot", "icon");
-    			add_location(sp_icon7, file$u, 57, 8, 2672);
+    			add_location(sp_icon7, file$z, 76, 8, 3408);
     			set_custom_element_data(sp_action_button7, "data-position", "vertically");
     			set_custom_element_data(sp_action_button7, "title", "Distribute vertically");
     			set_custom_element_data(sp_action_button7, "disabled", /*disableDistribute*/ ctx[1]);
-    			add_location(sp_action_button7, file$u, 56, 4, 2537);
+    			add_location(sp_action_button7, file$z, 75, 4, 3273);
     			set_style(sp_action_group, "width", "260px");
     			set_custom_element_data(sp_action_group, "compact", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
     			set_custom_element_data(sp_action_group, "class", "svelte-17xpgvs");
-    			add_location(sp_action_group, file$u, 31, 0, 903);
+    			add_location(sp_action_group, file$z, 50, 0, 1639);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -28462,11 +29869,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     					listen_dev(sp_action_button0, "click", /*align*/ ctx[2], false, false, false),
     					listen_dev(sp_action_button1, "click", /*align*/ ctx[2], false, false, false),
     					listen_dev(sp_action_button2, "click", /*align*/ ctx[2], false, false, false),
-    					listen_dev(sp_action_button3, "click", distribute, false, false, false),
+    					listen_dev(sp_action_button3, "click", /*distribute*/ ctx[3], false, false, false),
     					listen_dev(sp_action_button4, "click", /*align*/ ctx[2], false, false, false),
     					listen_dev(sp_action_button5, "click", /*align*/ ctx[2], false, false, false),
     					listen_dev(sp_action_button6, "click", /*align*/ ctx[2], false, false, false),
-    					listen_dev(sp_action_button7, "click", distribute, false, false, false)
+    					listen_dev(sp_action_button7, "click", /*distribute*/ ctx[3], false, false, false)
     				];
 
     				mounted = true;
@@ -28516,7 +29923,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$A.name,
+    		id: create_fragment$F.name,
     		type: "component",
     		source: "",
     		ctx
@@ -28525,17 +29932,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function distribute(e) {
-    	
-    }
-
-    function instance$A($$self, $$props, $$invalidate) {
+    function instance$F($$self, $$props, $$invalidate) {
     	let $CurrentSelection;
     	let $CurrentProject;
     	validate_store(CurrentSelection, "CurrentSelection");
-    	component_subscribe($$self, CurrentSelection, $$value => $$invalidate(3, $CurrentSelection = $$value));
+    	component_subscribe($$self, CurrentSelection, $$value => $$invalidate(4, $CurrentSelection = $$value));
     	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(4, $CurrentProject = $$value));
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(5, $CurrentProject = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("AlignSelection", slots, []);
     	
@@ -28550,22 +29953,49 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			return;
     		}
 
-    		//console.log(middleware.alignElementToRectangle());
+    		let x = canvasEngine.Position.None, y = canvasEngine.Position.None;
+
     		switch (e.target.getAttribute("data-position")) {
     			case "left":
+    				x = canvasEngine.Position.Start;
     				break;
     			case "center":
+    				x = canvasEngine.Position.Middle;
     				break;
     			case "right":
+    				x = canvasEngine.Position.End;
     				break;
     			case "top":
+    				y = canvasEngine.Position.Start;
     				break;
     			case "middle":
+    				y = canvasEngine.Position.Middle;
     				break;
     			case "bottom":
+    				y = canvasEngine.Position.End;
     				break;
     			default:
     				return;
+    		}
+
+    		if (middleware.alignSelectionToRectangle(x, y, e.altKey)) {
+    			middleware.project.state.snapshot();
+    		}
+    	}
+
+    	function distribute(e) {
+    		const middleware = $CurrentProject === null || $CurrentProject === void 0
+    		? void 0
+    		: $CurrentProject.middleware;
+
+    		if (!middleware) {
+    			return;
+    		}
+
+    		const vertically = e.target.getAttribute("data-position") === "vertically";
+
+    		if (middleware.distributeSelection(vertically, e.altKey)) {
+    			middleware.project.state.snapshot();
     		}
     	}
 
@@ -28578,6 +30008,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	$$self.$capture_state = () => ({
     		CurrentProject,
     		CurrentSelection,
+    		Position: canvasEngine.Position,
     		disabledAlign,
     		disableDistribute,
     		align,
@@ -28596,36 +30027,37 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$CurrentSelection*/ 8) {
+    		if ($$self.$$.dirty & /*$CurrentSelection*/ 16) {
     			$$invalidate(0, disabledAlign = !$CurrentSelection || $CurrentSelection.isEmpty);
     		}
 
-    		if ($$self.$$.dirty & /*$CurrentSelection*/ 8) {
-    			$$invalidate(1, disableDistribute = !$CurrentSelection || $CurrentSelection.length < 3);
+    		if ($$self.$$.dirty & /*$CurrentSelection*/ 16) {
+    			// TODO: finish distribute
+    			$$invalidate(1, disableDistribute = true  );
     		}
     	};
 
-    	return [disabledAlign, disableDistribute, align, $CurrentSelection];
+    	return [disabledAlign, disableDistribute, align, distribute, $CurrentSelection];
     }
 
     class AlignSelection extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$A, create_fragment$A, safe_not_equal, {});
+    		init(this, options, instance$F, create_fragment$F, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "AlignSelection",
     			options,
-    			id: create_fragment$A.name
+    			id: create_fragment$F.name
     		});
     	}
     }
 
     /* src/Controls/SpDropIndicator.svelte generated by Svelte v3.38.3 */
-    const file$t = "src/Controls/SpDropIndicator.svelte";
+    const file$y = "src/Controls/SpDropIndicator.svelte";
 
-    function create_fragment$z(ctx) {
+    function create_fragment$E(ctx) {
     	let div;
     	let current;
     	const default_slot_template = /*#slots*/ ctx[4].default;
@@ -28642,7 +30074,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			if (default_slot) default_slot.c();
     			set_attributes(div, div_data);
-    			add_location(div, file$t, 8, 0, 314);
+    			add_location(div, file$y, 8, 0, 314);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -28685,7 +30117,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$z.name,
+    		id: create_fragment$E.name,
     		type: "component",
     		source: "",
     		ctx
@@ -28694,7 +30126,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$z($$self, $$props, $$invalidate) {
+    function instance$E($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["vertical"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -28738,13 +30170,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpDropIndicator extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$z, create_fragment$z, safe_not_equal, { vertical: 2 });
+    		init(this, options, instance$E, create_fragment$E, safe_not_equal, { vertical: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpDropIndicator",
     			options,
-    			id: create_fragment$z.name
+    			id: create_fragment$E.name
     		});
     	}
 
@@ -28758,11 +30190,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpTreeView/SpTreeViewItem.svelte generated by Svelte v3.38.3 */
-    const file$s = "src/Controls/SpTreeView/SpTreeViewItem.svelte";
+    const file$x = "src/Controls/SpTreeView/SpTreeViewItem.svelte";
 
-    function get_each_context$4(ctx, list, i) {
+    function get_each_context$5(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[27] = list[i];
+    	child_ctx[29] = list[i];
     	return child_ctx;
     }
 
@@ -28800,8 +30232,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let mounted;
     	let dispose;
     	let if_block0 = /*isMoveTarget*/ ctx[10] && /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.BEFORE && create_if_block_4$1(ctx);
-    	let if_block1 = /*element*/ ctx[1].supportsChildren && create_if_block_3$1(ctx);
-    	let if_block2 = /*isMoveTarget*/ ctx[10] && /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.AFTER && create_if_block_2$1(ctx);
+    	let if_block1 = /*element*/ ctx[1].supportsChildren && create_if_block_3$2(ctx);
+    	let if_block2 = /*isMoveTarget*/ ctx[10] && /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.AFTER && create_if_block_2$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -28827,42 +30259,42 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if_block2_anchor = empty();
     			set_custom_element_data(sp_icon0, "name", sp_icon0_name_value = /*getIcon*/ ctx[13](/*element*/ ctx[1]));
     			set_custom_element_data(sp_icon0, "class", "spectrum-TreeView-itemIcon");
-    			add_location(sp_icon0, file$s, 50, 12, 2035);
+    			add_location(sp_icon0, file$x, 51, 12, 2055);
     			attr_dev(span, "class", "spectrum-TreeView-itemLabel");
-    			add_location(span, file$s, 51, 12, 2128);
+    			add_location(span, file$x, 52, 12, 2148);
 
     			set_custom_element_data(sp_icon1, "name", sp_icon1_name_value = /*element*/ ctx[1].hidden
     			? "workflow:VisibilityOff"
     			: "workflow:Visibility");
 
     			set_custom_element_data(sp_icon1, "size", "s");
-    			add_location(sp_icon1, file$s, 54, 20, 2509);
+    			add_location(sp_icon1, file$x, 55, 20, 2529);
     			set_custom_element_data(sp_action_button0, "title", sp_action_button0_title_value = /*element*/ ctx[1].hidden ? "Show" : "Hide");
     			set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value = /*element*/ ctx[1].hidden);
     			set_custom_element_data(sp_action_button0, "size", "s");
-    			add_location(sp_action_button0, file$s, 53, 16, 2349);
+    			add_location(sp_action_button0, file$x, 54, 16, 2369);
 
     			set_custom_element_data(sp_icon2, "name", sp_icon2_name_value = /*element*/ ctx[1].locked
     			? "workflow:LockClosed"
     			: "workflow:LockOpen");
 
     			set_custom_element_data(sp_icon2, "size", "s");
-    			add_location(sp_icon2, file$s, 57, 20, 2827);
+    			add_location(sp_icon2, file$x, 58, 20, 2847);
     			set_custom_element_data(sp_action_button1, "title", sp_action_button1_title_value = /*element*/ ctx[1].locked ? "Unlock" : "Lock");
     			set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value = /*element*/ ctx[1].locked);
     			set_custom_element_data(sp_action_button1, "size", "s");
-    			add_location(sp_action_button1, file$s, 56, 16, 2665);
+    			add_location(sp_action_button1, file$x, 57, 16, 2685);
     			set_custom_element_data(sp_action_group, "class", "spectrum-TreeView-itemActions");
     			set_custom_element_data(sp_action_group, "compact", "");
     			set_custom_element_data(sp_action_group, "quiet", "");
     			toggle_class(sp_action_group, "show-actions", /*element*/ ctx[1].locked || /*element*/ ctx[1].hidden);
-    			add_location(sp_action_group, file$s, 52, 12, 2209);
+    			add_location(sp_action_group, file$x, 53, 12, 2229);
     			attr_dev(a, "tabindex", "0");
     			attr_dev(a, "data-element-id", a_data_element_id_value = /*element*/ ctx[1].id);
     			attr_dev(a, "draggable", false);
     			attr_dev(a, "class", "spectrum-TreeView-itemLink");
     			attr_dev(a, "href", "javascript:void(0);");
-    			add_location(a, file$s, 42, 8, 1579);
+    			add_location(a, file$x, 43, 8, 1599);
     			attr_dev(li, "class", "spectrum-TreeView-item");
     			attr_dev(li, "draggable", li_draggable_value = !/*dragging*/ ctx[5] && /*isSelected*/ ctx[9]);
     			attr_dev(li, "style", li_style_value = "--spectrum-treeview-item-indent: " + /*indent*/ ctx[3]);
@@ -28870,7 +30302,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			toggle_class(li, "is-open", /*element*/ ctx[1].supportsChildren && /*open*/ ctx[0]);
     			toggle_class(li, "is-dragged", /*isSelected*/ ctx[9] && /*dragging*/ ctx[5]);
     			toggle_class(li, "is-drop-target", /*isMoveTarget*/ ctx[10] && (/*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.APPEND || /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.PREPEND));
-    			add_location(li, file$s, 30, 4, 1071);
+    			add_location(li, file$x, 30, 4, 1071);
     		},
     		m: function mount(target, anchor) {
     			if (if_block0) if_block0.m(target, anchor);
@@ -28897,12 +30329,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(sp_action_button0, "click", /*click_handler_1*/ ctx[19], false, false, false),
-    					listen_dev(sp_action_button1, "click", /*click_handler_2*/ ctx[20], false, false, false),
-    					listen_dev(li, "pointerdown", /*pointerdown_handler*/ ctx[14], false, false, false),
-    					listen_dev(li, "dragend", /*dragend_handler*/ ctx[15], false, false, false),
-    					listen_dev(li, "dragover", /*dragover_handler*/ ctx[16], false, false, false),
-    					listen_dev(li, "dragleave", /*dragleave_handler*/ ctx[17], false, false, false)
+    					listen_dev(sp_action_button0, "click", /*click_handler_1*/ ctx[20], false, false, false),
+    					listen_dev(sp_action_button1, "click", /*click_handler_2*/ ctx[21], false, false, false),
+    					listen_dev(li, "dblclick", /*dblclick_handler*/ ctx[14], false, false, false),
+    					listen_dev(li, "pointerdown", /*pointerdown_handler*/ ctx[15], false, false, false),
+    					listen_dev(li, "dragend", /*dragend_handler*/ ctx[16], false, false, false),
+    					listen_dev(li, "dragover", /*dragover_handler*/ ctx[17], false, false, false),
+    					listen_dev(li, "dragleave", /*dragleave_handler*/ ctx[18], false, false, false)
     				];
 
     				mounted = true;
@@ -28911,7 +30344,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, dirty) {
     			if (/*isMoveTarget*/ ctx[10] && /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.BEFORE) {
     				if (if_block0) {
-    					if (dirty & /*isMoveTarget, moveMode*/ 1088) {
+    					if (dirty[0] & /*isMoveTarget, moveMode*/ 1088) {
     						transition_in(if_block0, 1);
     					}
     				} else {
@@ -28934,7 +30367,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_3$1(ctx);
+    					if_block1 = create_if_block_3$2(ctx);
     					if_block1.c();
     					if_block1.m(a, t1);
     				}
@@ -28943,79 +30376,79 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if_block1 = null;
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_icon0_name_value !== (sp_icon0_name_value = /*getIcon*/ ctx[13](/*element*/ ctx[1]))) {
+    			if (!current || dirty[0] & /*element*/ 2 && sp_icon0_name_value !== (sp_icon0_name_value = /*getIcon*/ ctx[13](/*element*/ ctx[1]))) {
     				set_custom_element_data(sp_icon0, "name", sp_icon0_name_value);
     			}
 
-    			if ((!current || dirty & /*element*/ 2) && t3_value !== (t3_value = /*getTitle*/ ctx[12](/*element*/ ctx[1]) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty[0] & /*element*/ 2) && t3_value !== (t3_value = /*getTitle*/ ctx[12](/*element*/ ctx[1]) + "")) set_data_dev(t3, t3_value);
 
-    			if (!current || dirty & /*element*/ 2 && sp_icon1_name_value !== (sp_icon1_name_value = /*element*/ ctx[1].hidden
+    			if (!current || dirty[0] & /*element*/ 2 && sp_icon1_name_value !== (sp_icon1_name_value = /*element*/ ctx[1].hidden
     			? "workflow:VisibilityOff"
     			: "workflow:Visibility")) {
     				set_custom_element_data(sp_icon1, "name", sp_icon1_name_value);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_action_button0_title_value !== (sp_action_button0_title_value = /*element*/ ctx[1].hidden ? "Show" : "Hide")) {
+    			if (!current || dirty[0] & /*element*/ 2 && sp_action_button0_title_value !== (sp_action_button0_title_value = /*element*/ ctx[1].hidden ? "Show" : "Hide")) {
     				set_custom_element_data(sp_action_button0, "title", sp_action_button0_title_value);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*element*/ ctx[1].hidden)) {
+    			if (!current || dirty[0] & /*element*/ 2 && sp_action_button0_selected_value !== (sp_action_button0_selected_value = /*element*/ ctx[1].hidden)) {
     				set_custom_element_data(sp_action_button0, "selected", sp_action_button0_selected_value);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_icon2_name_value !== (sp_icon2_name_value = /*element*/ ctx[1].locked
+    			if (!current || dirty[0] & /*element*/ 2 && sp_icon2_name_value !== (sp_icon2_name_value = /*element*/ ctx[1].locked
     			? "workflow:LockClosed"
     			: "workflow:LockOpen")) {
     				set_custom_element_data(sp_icon2, "name", sp_icon2_name_value);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_action_button1_title_value !== (sp_action_button1_title_value = /*element*/ ctx[1].locked ? "Unlock" : "Lock")) {
+    			if (!current || dirty[0] & /*element*/ 2 && sp_action_button1_title_value !== (sp_action_button1_title_value = /*element*/ ctx[1].locked ? "Unlock" : "Lock")) {
     				set_custom_element_data(sp_action_button1, "title", sp_action_button1_title_value);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*element*/ ctx[1].locked)) {
+    			if (!current || dirty[0] & /*element*/ 2 && sp_action_button1_selected_value !== (sp_action_button1_selected_value = /*element*/ ctx[1].locked)) {
     				set_custom_element_data(sp_action_button1, "selected", sp_action_button1_selected_value);
     			}
 
-    			if (dirty & /*element*/ 2) {
+    			if (dirty[0] & /*element*/ 2) {
     				toggle_class(sp_action_group, "show-actions", /*element*/ ctx[1].locked || /*element*/ ctx[1].hidden);
     			}
 
-    			if (!current || dirty & /*element*/ 2 && a_data_element_id_value !== (a_data_element_id_value = /*element*/ ctx[1].id)) {
+    			if (!current || dirty[0] & /*element*/ 2 && a_data_element_id_value !== (a_data_element_id_value = /*element*/ ctx[1].id)) {
     				attr_dev(a, "data-element-id", a_data_element_id_value);
     			}
 
-    			if (!current || dirty & /*dragging, isSelected*/ 544 && li_draggable_value !== (li_draggable_value = !/*dragging*/ ctx[5] && /*isSelected*/ ctx[9])) {
+    			if (!current || dirty[0] & /*dragging, isSelected*/ 544 && li_draggable_value !== (li_draggable_value = !/*dragging*/ ctx[5] && /*isSelected*/ ctx[9])) {
     				attr_dev(li, "draggable", li_draggable_value);
     			}
 
-    			if (!current || dirty & /*indent*/ 8 && li_style_value !== (li_style_value = "--spectrum-treeview-item-indent: " + /*indent*/ ctx[3])) {
+    			if (!current || dirty[0] & /*indent*/ 8 && li_style_value !== (li_style_value = "--spectrum-treeview-item-indent: " + /*indent*/ ctx[3])) {
     				attr_dev(li, "style", li_style_value);
     			}
 
-    			if (dirty & /*isSelected*/ 512) {
+    			if (dirty[0] & /*isSelected*/ 512) {
     				toggle_class(li, "is-selected", /*isSelected*/ ctx[9]);
     			}
 
-    			if (dirty & /*element, open*/ 3) {
+    			if (dirty[0] & /*element, open*/ 3) {
     				toggle_class(li, "is-open", /*element*/ ctx[1].supportsChildren && /*open*/ ctx[0]);
     			}
 
-    			if (dirty & /*isSelected, dragging*/ 544) {
+    			if (dirty[0] & /*isSelected, dragging*/ 544) {
     				toggle_class(li, "is-dragged", /*isSelected*/ ctx[9] && /*dragging*/ ctx[5]);
     			}
 
-    			if (dirty & /*isMoveTarget, moveMode, MoveElementMode*/ 1088) {
+    			if (dirty[0] & /*isMoveTarget, moveMode*/ 1088) {
     				toggle_class(li, "is-drop-target", /*isMoveTarget*/ ctx[10] && (/*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.APPEND || /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.PREPEND));
     			}
 
     			if (/*isMoveTarget*/ ctx[10] && /*moveMode*/ ctx[6] === canvasEngine.MoveElementMode.AFTER) {
     				if (if_block2) {
-    					if (dirty & /*isMoveTarget, moveMode*/ 1088) {
+    					if (dirty[0] & /*isMoveTarget, moveMode*/ 1088) {
     						transition_in(if_block2, 1);
     					}
     				} else {
-    					if_block2 = create_if_block_2$1(ctx);
+    					if_block2 = create_if_block_2$2(ctx);
     					if_block2.c();
     					transition_in(if_block2, 1);
     					if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
@@ -29104,8 +30537,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    // (44:12) {#if element.supportsChildren}
-    function create_if_block_3$1(ctx) {
+    // (45:12) {#if element.supportsChildren}
+    function create_if_block_3$2(ctx) {
     	let sp_icon;
     	let mounted;
     	let dispose;
@@ -29115,13 +30548,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", "workflow:ChevronRight");
     			set_custom_element_data(sp_icon, "class", "spectrum-TreeView-itemIndicator");
-    			add_location(sp_icon, file$s, 44, 16, 1766);
+    			add_location(sp_icon, file$x, 45, 16, 1786);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(sp_icon, "click", stop_propagation(prevent_default(/*click_handler*/ ctx[18])), false, true, true);
+    				dispose = listen_dev(sp_icon, "click", stop_propagation(prevent_default(/*click_handler*/ ctx[19])), false, true, true);
     				mounted = true;
     			}
     		},
@@ -29135,17 +30568,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3$1.name,
+    		id: create_if_block_3$2.name,
     		type: "if",
-    		source: "(44:12) {#if element.supportsChildren}",
+    		source: "(45:12) {#if element.supportsChildren}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (63:4) {#if isMoveTarget && moveMode === MoveElementMode.AFTER}
-    function create_if_block_2$1(ctx) {
+    // (64:4) {#if isMoveTarget && moveMode === MoveElementMode.AFTER}
+    function create_if_block_2$2(ctx) {
     	let spdropindicator;
     	let current;
     	spdropindicator = new SpDropIndicator({ $$inline: true });
@@ -29174,30 +30607,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2$1.name,
+    		id: create_if_block_2$2.name,
     		type: "if",
-    		source: "(63:4) {#if isMoveTarget && moveMode === MoveElementMode.AFTER}",
+    		source: "(64:4) {#if isMoveTarget && moveMode === MoveElementMode.AFTER}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:0) {#if open && element.supportsChildren && element.hasChildren}
-    function create_if_block$a(ctx) {
+    // (68:0) {#if open && element.supportsChildren && element.hasChildren && !(dragging && isSelected)}
+    function create_if_block$b(ctx) {
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let each_1_anchor;
     	let current;
     	let each_value = Array.from(/*element*/ ctx[1].children(/*reverse*/ ctx[4]));
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*child*/ ctx[27].id;
-    	validate_each_keys(ctx, each_value, get_each_context$4, get_key);
+    	const get_key = ctx => /*child*/ ctx[29].id;
+    	validate_each_keys(ctx, each_value, get_each_context$5, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$4(ctx, each_value, i);
+    		let child_ctx = get_each_context$5(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$4(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$5(key, child_ctx));
     	}
 
     	const block = {
@@ -29217,12 +30650,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Array, element, reverse, selection, indent, dragging, moveMode, moveTarget, infoMap*/ 510) {
+    			if (dirty[0] & /*element, reverse, selection, indent, dragging, moveMode, moveTarget, infoMap*/ 510) {
     				each_value = Array.from(/*element*/ ctx[1].children(/*reverse*/ ctx[4]));
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$4, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$4, each_1_anchor, get_each_context$4);
+    				validate_each_keys(ctx, each_value, get_each_context$5, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, outro_and_destroy_block, create_each_block$5, each_1_anchor, get_each_context$5);
     				check_outros();
     			}
     		},
@@ -29253,24 +30686,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$a.name,
+    		id: create_if_block$b.name,
     		type: "if",
-    		source: "(67:0) {#if open && element.supportsChildren && element.hasChildren}",
+    		source: "(68:0) {#if open && element.supportsChildren && element.hasChildren && !(dragging && isSelected)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (68:4) {#each Array.from(element.children(reverse)) as child (child.id)}
-    function create_each_block$4(key_1, ctx) {
+    // (69:4) {#each Array.from(element.children(reverse)) as child (child.id)}
+    function create_each_block$5(key_1, ctx) {
     	let first;
     	let sptreeviewitem;
     	let current;
 
     	sptreeviewitem = new SpTreeViewItem({
     			props: {
-    				element: /*child*/ ctx[27],
+    				element: /*child*/ ctx[29],
     				selection: /*selection*/ ctx[2],
     				indent: /*indent*/ ctx[3] + 1,
     				reverse: /*reverse*/ ctx[4],
@@ -29282,12 +30715,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	sptreeviewitem.$on("hide", /*hide_handler*/ ctx[21]);
-    	sptreeviewitem.$on("lock", /*lock_handler*/ ctx[22]);
-    	sptreeviewitem.$on("pointerdown", /*pointerdown_handler_1*/ ctx[23]);
-    	sptreeviewitem.$on("dragend", /*dragend_handler_1*/ ctx[24]);
-    	sptreeviewitem.$on("dragover", /*dragover_handler_1*/ ctx[25]);
-    	sptreeviewitem.$on("dragleave", /*dragleave_handler_1*/ ctx[26]);
+    	sptreeviewitem.$on("hide", /*hide_handler*/ ctx[22]);
+    	sptreeviewitem.$on("lock", /*lock_handler*/ ctx[23]);
+    	sptreeviewitem.$on("dblclick", /*dblclick_handler_1*/ ctx[24]);
+    	sptreeviewitem.$on("pointerdown", /*pointerdown_handler_1*/ ctx[25]);
+    	sptreeviewitem.$on("dragend", /*dragend_handler_1*/ ctx[26]);
+    	sptreeviewitem.$on("dragover", /*dragover_handler_1*/ ctx[27]);
+    	sptreeviewitem.$on("dragleave", /*dragleave_handler_1*/ ctx[28]);
 
     	const block = {
     		key: key_1,
@@ -29305,14 +30739,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
     			const sptreeviewitem_changes = {};
-    			if (dirty & /*element, reverse*/ 18) sptreeviewitem_changes.element = /*child*/ ctx[27];
-    			if (dirty & /*selection*/ 4) sptreeviewitem_changes.selection = /*selection*/ ctx[2];
-    			if (dirty & /*indent*/ 8) sptreeviewitem_changes.indent = /*indent*/ ctx[3] + 1;
-    			if (dirty & /*reverse*/ 16) sptreeviewitem_changes.reverse = /*reverse*/ ctx[4];
-    			if (dirty & /*dragging*/ 32) sptreeviewitem_changes.dragging = /*dragging*/ ctx[5];
-    			if (dirty & /*moveMode*/ 64) sptreeviewitem_changes.moveMode = /*moveMode*/ ctx[6];
-    			if (dirty & /*moveTarget*/ 128) sptreeviewitem_changes.moveTarget = /*moveTarget*/ ctx[7];
-    			if (dirty & /*infoMap*/ 256) sptreeviewitem_changes.infoMap = /*infoMap*/ ctx[8];
+    			if (dirty[0] & /*element, reverse*/ 18) sptreeviewitem_changes.element = /*child*/ ctx[29];
+    			if (dirty[0] & /*selection*/ 4) sptreeviewitem_changes.selection = /*selection*/ ctx[2];
+    			if (dirty[0] & /*indent*/ 8) sptreeviewitem_changes.indent = /*indent*/ ctx[3] + 1;
+    			if (dirty[0] & /*reverse*/ 16) sptreeviewitem_changes.reverse = /*reverse*/ ctx[4];
+    			if (dirty[0] & /*dragging*/ 32) sptreeviewitem_changes.dragging = /*dragging*/ ctx[5];
+    			if (dirty[0] & /*moveMode*/ 64) sptreeviewitem_changes.moveMode = /*moveMode*/ ctx[6];
+    			if (dirty[0] & /*moveTarget*/ 128) sptreeviewitem_changes.moveTarget = /*moveTarget*/ ctx[7];
+    			if (dirty[0] & /*infoMap*/ 256) sptreeviewitem_changes.infoMap = /*infoMap*/ ctx[8];
     			sptreeviewitem.$set(sptreeviewitem_changes);
     		},
     		i: function intro(local) {
@@ -29332,21 +30766,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$4.name,
+    		id: create_each_block$5.name,
     		type: "each",
-    		source: "(68:4) {#each Array.from(element.children(reverse)) as child (child.id)}",
+    		source: "(69:4) {#each Array.from(element.children(reverse)) as child (child.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$y(ctx) {
+    function create_fragment$D(ctx) {
     	let t;
     	let if_block1_anchor;
     	let current;
     	let if_block0 = /*element*/ ctx[1].isElement && create_if_block_1$4(ctx);
-    	let if_block1 = /*open*/ ctx[0] && /*element*/ ctx[1].supportsChildren && /*element*/ ctx[1].hasChildren && create_if_block$a(ctx);
+    	let if_block1 = /*open*/ ctx[0] && /*element*/ ctx[1].supportsChildren && /*element*/ ctx[1].hasChildren && !(/*dragging*/ ctx[5] && /*isSelected*/ ctx[9]) && create_if_block$b(ctx);
 
     	const block = {
     		c: function create() {
@@ -29365,12 +30799,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			insert_dev(target, if_block1_anchor, anchor);
     			current = true;
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			if (/*element*/ ctx[1].isElement) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
 
-    					if (dirty & /*element*/ 2) {
+    					if (dirty[0] & /*element*/ 2) {
     						transition_in(if_block0, 1);
     					}
     				} else {
@@ -29389,15 +30823,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				check_outros();
     			}
 
-    			if (/*open*/ ctx[0] && /*element*/ ctx[1].supportsChildren && /*element*/ ctx[1].hasChildren) {
+    			if (/*open*/ ctx[0] && /*element*/ ctx[1].supportsChildren && /*element*/ ctx[1].hasChildren && !(/*dragging*/ ctx[5] && /*isSelected*/ ctx[9])) {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
 
-    					if (dirty & /*open, element*/ 3) {
+    					if (dirty[0] & /*open, element, dragging, isSelected*/ 547) {
     						transition_in(if_block1, 1);
     					}
     				} else {
-    					if_block1 = create_if_block$a(ctx);
+    					if_block1 = create_if_block$b(ctx);
     					if_block1.c();
     					transition_in(if_block1, 1);
     					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
@@ -29433,7 +30867,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$y.name,
+    		id: create_fragment$D.name,
     		type: "component",
     		source: "",
     		ctx
@@ -29442,7 +30876,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$y($$self, $$props, $$invalidate) {
+    function instance$D($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SpTreeViewItem", slots, []);
     	
@@ -29490,6 +30924,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SpTreeViewItem> was created with unknown prop '${key}'`);
     	});
 
+    	function dblclick_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
     	function pointerdown_handler(event) {
     		bubble.call(this, $$self, event);
     	}
@@ -29515,6 +30953,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	function lock_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	function dblclick_handler_1(event) {
     		bubble.call(this, $$self, event);
     	}
 
@@ -29585,11 +31027,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*selection, element*/ 6) {
+    		if ($$self.$$.dirty[0] & /*selection, element*/ 6) {
     			$$invalidate(9, isSelected = selection.isSelected(element));
     		}
 
-    		if ($$self.$$.dirty & /*dragging, moveTarget, element*/ 162) {
+    		if ($$self.$$.dirty[0] & /*dragging, moveTarget, element*/ 162) {
     			$$invalidate(10, isMoveTarget = dragging && moveTarget === element.id);
     		}
     	};
@@ -29609,6 +31051,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		dispatch,
     		getTitle,
     		getIcon,
+    		dblclick_handler,
     		pointerdown_handler,
     		dragend_handler,
     		dragover_handler,
@@ -29618,6 +31061,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		click_handler_2,
     		hide_handler,
     		lock_handler,
+    		dblclick_handler_1,
     		pointerdown_handler_1,
     		dragend_handler_1,
     		dragover_handler_1,
@@ -29629,23 +31073,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$y, create_fragment$y, safe_not_equal, {
-    			element: 1,
-    			selection: 2,
-    			indent: 3,
-    			open: 0,
-    			reverse: 4,
-    			dragging: 5,
-    			moveMode: 6,
-    			moveTarget: 7,
-    			infoMap: 8
-    		});
+    		init(
+    			this,
+    			options,
+    			instance$D,
+    			create_fragment$D,
+    			safe_not_equal,
+    			{
+    				element: 1,
+    				selection: 2,
+    				indent: 3,
+    				open: 0,
+    				reverse: 4,
+    				dragging: 5,
+    				moveMode: 6,
+    				moveTarget: 7,
+    				infoMap: 8
+    			},
+    			[-1, -1]
+    		);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpTreeViewItem",
     			options,
-    			id: create_fragment$y.name
+    			id: create_fragment$D.name
     		});
 
     		const { ctx } = this.$$;
@@ -29734,16 +31186,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpTreeView/index.svelte generated by Svelte v3.38.3 */
-    const file$r = "src/Controls/SpTreeView/index.svelte";
+    const file$w = "src/Controls/SpTreeView/index.svelte";
 
-    function get_each_context$3(ctx, list, i) {
+    function get_each_context$4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[17] = list[i];
+    	child_ctx[18] = list[i];
     	return child_ctx;
     }
 
-    // (130:0) {#if document != null}
-    function create_if_block$9(ctx) {
+    // (138:0) {#if document != null}
+    function create_if_block$a(ctx) {
     	let ul;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
@@ -29752,13 +31204,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let dispose;
     	let each_value = Array.from(/*document*/ ctx[0].children(/*reverse*/ ctx[2]));
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*child*/ ctx[17].id;
-    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+    	const get_key = ctx => /*child*/ ctx[18].id;
+    	validate_each_keys(ctx, each_value, get_each_context$4, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$3(ctx, each_value, i);
+    		let child_ctx = get_each_context$4(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$4(key, child_ctx));
     	}
 
     	const block = {
@@ -29771,7 +31223,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			attr_dev(ul, "class", "spectrum-TreeView");
     			toggle_class(ul, "is-dragged", /*dragging*/ ctx[4]);
-    			add_location(ul, file$r, 130, 4, 4652);
+    			add_location(ul, file$w, 138, 4, 4797);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, ul, anchor);
@@ -29783,17 +31235,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(ul, "dragstart", /*onDragStart*/ ctx[8], false, false, false);
+    				dispose = listen_dev(ul, "dragstart", /*onDragStart*/ ctx[9], false, false, false);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*Array, document, reverse, selection, dragging, moveMode, moveTarget, infoMap, onPointerDown, onDragEnd, onDragLeave, onDragOver*/ 3839) {
+    			if (dirty & /*Array, document, reverse, selection, dragging, moveMode, moveTarget, infoMap, onTitle, onPointerDown, onDragEnd, onDragLeave, onDragOver*/ 7679) {
     				each_value = Array.from(/*document*/ ctx[0].children(/*reverse*/ ctx[2]));
     				validate_each_argument(each_value);
     				group_outros();
-    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, outro_and_destroy_block, create_each_block$3, null, get_each_context$3);
+    				validate_each_keys(ctx, each_value, get_each_context$4, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, outro_and_destroy_block, create_each_block$4, null, get_each_context$4);
     				check_outros();
     			}
 
@@ -29831,24 +31283,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$9.name,
+    		id: create_if_block$a.name,
     		type: "if",
-    		source: "(130:0) {#if document != null}",
+    		source: "(138:0) {#if document != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (132:8) {#each Array.from(document.children(reverse)) as child (child.id)}
-    function create_each_block$3(key_1, ctx) {
+    // (140:8) {#each Array.from(document.children(reverse)) as child (child.id)}
+    function create_each_block$4(key_1, ctx) {
     	let first;
     	let sptreeviewitem;
     	let current;
 
     	sptreeviewitem = new SpTreeViewItem({
     			props: {
-    				element: /*child*/ ctx[17],
+    				element: /*child*/ ctx[18],
     				selection: /*selection*/ ctx[1],
     				reverse: /*reverse*/ ctx[2],
     				dragging: /*dragging*/ ctx[4],
@@ -29859,12 +31311,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	sptreeviewitem.$on("hide", /*hide_handler*/ ctx[12]);
-    	sptreeviewitem.$on("lock", /*lock_handler*/ ctx[13]);
-    	sptreeviewitem.$on("pointerdown", /*onPointerDown*/ ctx[7]);
-    	sptreeviewitem.$on("dragend", /*onDragEnd*/ ctx[10]);
-    	sptreeviewitem.$on("dragleave", /*onDragLeave*/ ctx[11]);
-    	sptreeviewitem.$on("dragover", /*onDragOver*/ ctx[9]);
+    	sptreeviewitem.$on("hide", /*hide_handler*/ ctx[13]);
+    	sptreeviewitem.$on("lock", /*lock_handler*/ ctx[14]);
+    	sptreeviewitem.$on("dblclick", /*onTitle*/ ctx[7]);
+    	sptreeviewitem.$on("pointerdown", /*onPointerDown*/ ctx[8]);
+    	sptreeviewitem.$on("dragend", /*onDragEnd*/ ctx[11]);
+    	sptreeviewitem.$on("dragleave", /*onDragLeave*/ ctx[12]);
+    	sptreeviewitem.$on("dragover", /*onDragOver*/ ctx[10]);
 
     	const block = {
     		key: key_1,
@@ -29882,7 +31335,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
     			const sptreeviewitem_changes = {};
-    			if (dirty & /*document, reverse*/ 5) sptreeviewitem_changes.element = /*child*/ ctx[17];
+    			if (dirty & /*document, reverse*/ 5) sptreeviewitem_changes.element = /*child*/ ctx[18];
     			if (dirty & /*selection*/ 2) sptreeviewitem_changes.selection = /*selection*/ ctx[1];
     			if (dirty & /*reverse*/ 4) sptreeviewitem_changes.reverse = /*reverse*/ ctx[2];
     			if (dirty & /*dragging*/ 16) sptreeviewitem_changes.dragging = /*dragging*/ ctx[4];
@@ -29908,19 +31361,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$3.name,
+    		id: create_each_block$4.name,
     		type: "each",
-    		source: "(132:8) {#each Array.from(document.children(reverse)) as child (child.id)}",
+    		source: "(140:8) {#each Array.from(document.children(reverse)) as child (child.id)}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$x(ctx) {
+    function create_fragment$C(ctx) {
     	let if_block_anchor;
     	let current;
-    	let if_block = /*document*/ ctx[0] != null && create_if_block$9(ctx);
+    	let if_block = /*document*/ ctx[0] != null && create_if_block$a(ctx);
 
     	const block = {
     		c: function create() {
@@ -29944,7 +31397,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$9(ctx);
+    					if_block = create_if_block$a(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -29976,7 +31429,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$x.name,
+    		id: create_fragment$C.name,
     		type: "component",
     		source: "",
     		ctx
@@ -29988,7 +31441,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     const ONE_PIXEL = new Image();
     ONE_PIXEL.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
-    function instance$x($$self, $$props, $$invalidate) {
+    function instance$C($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SpTreeView", slots, []);
 
@@ -30034,12 +31487,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { selection } = $$props;
     	let { reverse = false } = $$props;
     	let { infoMap = null } = $$props;
+
+    	function onTitle(e) {
+    		const id = e.target.getAttribute("data-element-id");
+
+    		if (!id) {
+    			return;
+    		}
+
+    		const element = document === null || document === void 0
+    		? void 0
+    		: document.getElementById(id);
+
+    		if (!element) {
+    			return;
+    		}
+
+    		dispatch("title", element);
+    	}
+
     	let dragging = false;
     	let moveMode = null;
     	let moveTarget = null;
 
     	function onPointerDown(e) {
-    		if (e.button !== canvasEngine.MouseButton.Left && e.button !== canvasEngine.MouseButton.Right) {
+    		if (e.button !== canvasEngine.MouseButton.Left) {
     			return;
     		}
 
@@ -30059,10 +31531,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     		if (selection.toggle(element, e.shiftKey)) {
     			dispatch("selection");
-    		}
-
-    		if (e.button === canvasEngine.MouseButton.Right && !selection.isEmpty) {
-    			dispatch("contextMenu", selection);
     		}
     	}
 
@@ -30207,6 +31675,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		selection,
     		reverse,
     		infoMap,
+    		onTitle,
     		dragging,
     		moveMode,
     		moveTarget,
@@ -30241,6 +31710,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		dragging,
     		moveMode,
     		moveTarget,
+    		onTitle,
     		onPointerDown,
     		onDragStart,
     		onDragOver,
@@ -30255,7 +31725,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$x, create_fragment$x, safe_not_equal, {
+    		init(this, options, instance$C, create_fragment$C, safe_not_equal, {
     			document: 0,
     			selection: 1,
     			reverse: 2,
@@ -30266,7 +31736,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpTreeView",
     			options,
-    			id: create_fragment$x.name
+    			id: create_fragment$C.name
     		});
 
     		const { ctx } = this.$$;
@@ -30310,438 +31780,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    /* src/Components/Tree.svelte generated by Svelte v3.38.3 */
-    const file$q = "src/Components/Tree.svelte";
-
-    function get_each_context$2(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
-    	return child_ctx;
-    }
-
-    // (37:4) {#if !collapsed}
-    function create_if_block$8(ctx) {
-    	let div0;
-    	let sptreeview;
-    	let t;
-    	let div1;
-    	let current;
-
-    	sptreeview = new SpTreeView({
-    			props: {
-    				reverse: /*$ShowTreeReverse*/ ctx[3],
-    				document: /*$CurrentDocument*/ ctx[4],
-    				selection: /*$CurrentSelection*/ ctx[1],
-    				infoMap: ElementInfoMap
-    			},
-    			$$inline: true
-    		});
-
-    	sptreeview.$on("drop", /*onDrop*/ ctx[6]);
-    	sptreeview.$on("lock", /*onLock*/ ctx[7]);
-    	sptreeview.$on("hide", /*onHide*/ ctx[8]);
-    	sptreeview.$on("contextMenu", onContextMenu);
-    	sptreeview.$on("selection", /*onSelection*/ ctx[5]);
-    	let if_block = /*$CurrentDocument*/ ctx[4] && create_if_block_1$3(ctx);
-
-    	const block = {
-    		c: function create() {
-    			div0 = element("div");
-    			create_component(sptreeview.$$.fragment);
-    			t = space();
-    			div1 = element("div");
-    			if (if_block) if_block.c();
-    			attr_dev(div0, "class", "scroll scroll-no-hide svelte-xg1vgz");
-    			add_location(div0, file$q, 37, 8, 1146);
-    			attr_dev(div1, "class", "tree-tools svelte-xg1vgz");
-    			add_location(div1, file$q, 49, 8, 1631);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div0, anchor);
-    			mount_component(sptreeview, div0, null);
-    			insert_dev(target, t, anchor);
-    			insert_dev(target, div1, anchor);
-    			if (if_block) if_block.m(div1, null);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const sptreeview_changes = {};
-    			if (dirty & /*$ShowTreeReverse*/ 8) sptreeview_changes.reverse = /*$ShowTreeReverse*/ ctx[3];
-    			if (dirty & /*$CurrentDocument*/ 16) sptreeview_changes.document = /*$CurrentDocument*/ ctx[4];
-    			if (dirty & /*$CurrentSelection*/ 2) sptreeview_changes.selection = /*$CurrentSelection*/ ctx[1];
-    			sptreeview.$set(sptreeview_changes);
-
-    			if (/*$CurrentDocument*/ ctx[4]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_1$3(ctx);
-    					if_block.c();
-    					if_block.m(div1, null);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(sptreeview.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(sptreeview.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div0);
-    			destroy_component(sptreeview);
-    			if (detaching) detach_dev(t);
-    			if (detaching) detach_dev(div1);
-    			if (if_block) if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$8.name,
-    		type: "if",
-    		source: "(37:4) {#if !collapsed}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (65:12) {#if $CurrentDocument}
-    function create_if_block_1$3(ctx) {
-    	let sp_picker;
-    	let each_blocks = [];
-    	let each_1_lookup = new Map();
-    	let sp_picker_value_value;
-    	let each_value = Array.from(/*$CurrentProject*/ ctx[2].getDocuments());
-    	validate_each_argument(each_value);
-    	const get_key = ctx => /*doc*/ ctx[11].id;
-    	validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context$2(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			sp_picker = element("sp-picker");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			set_custom_element_data(sp_picker, "size", "s");
-    			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*$CurrentDocument*/ ctx[4].id);
-    			set_custom_element_data(sp_picker, "quiet", "");
-    			add_location(sp_picker, file$q, 65, 16, 2693);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, sp_picker, anchor);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(sp_picker, null);
-    			}
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*Array, $CurrentProject*/ 4) {
-    				each_value = Array.from(/*$CurrentProject*/ ctx[2].getDocuments());
-    				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context$2, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_picker, destroy_block, create_each_block$2, null, get_each_context$2);
-    			}
-
-    			if (dirty & /*$CurrentDocument*/ 16 && sp_picker_value_value !== (sp_picker_value_value = /*$CurrentDocument*/ ctx[4].id)) {
-    				set_custom_element_data(sp_picker, "value", sp_picker_value_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_picker);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
-    			}
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1$3.name,
-    		type: "if",
-    		source: "(65:12) {#if $CurrentDocument}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (67:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}
-    function create_each_block$2(key_1, ctx) {
-    	let sp_menu_item;
-    	let t_value = (/*doc*/ ctx[11].title || "(document)") + "";
-    	let t;
-    	let sp_menu_item_value_value;
-
-    	const block = {
-    		key: key_1,
-    		first: null,
-    		c: function create() {
-    			sp_menu_item = element("sp-menu-item");
-    			t = text(t_value);
-    			set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value = /*doc*/ ctx[11].id);
-    			add_location(sp_menu_item, file$q, 67, 24, 2861);
-    			this.first = sp_menu_item;
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, sp_menu_item, anchor);
-    			append_dev(sp_menu_item, t);
-    		},
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			if (dirty & /*$CurrentProject*/ 4 && t_value !== (t_value = (/*doc*/ ctx[11].title || "(document)") + "")) set_data_dev(t, t_value);
-
-    			if (dirty & /*$CurrentProject*/ 4 && sp_menu_item_value_value !== (sp_menu_item_value_value = /*doc*/ ctx[11].id)) {
-    				set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(sp_menu_item);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$2.name,
-    		type: "each",
-    		source: "(67:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$w(ctx) {
-    	let div;
-    	let current;
-    	let if_block = !/*collapsed*/ ctx[0] && create_if_block$8(ctx);
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			if (if_block) if_block.c();
-    			attr_dev(div, "class", "tree-wrapper svelte-xg1vgz");
-    			add_location(div, file$q, 35, 0, 1090);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			if (if_block) if_block.m(div, null);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (!/*collapsed*/ ctx[0]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-
-    					if (dirty & /*collapsed*/ 1) {
-    						transition_in(if_block, 1);
-    					}
-    				} else {
-    					if_block = create_if_block$8(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(div, null);
-    				}
-    			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(if_block);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if (if_block) if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$w.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function onContextMenu(e) {
-    	
-    } // TODO: implement context-menu
-
-    function instance$w($$self, $$props, $$invalidate) {
-    	let $CurrentSelection;
-    	let $CurrentProject;
-    	let $ShowTreeReverse;
-    	let $CurrentDocument;
-    	validate_store(CurrentSelection, "CurrentSelection");
-    	component_subscribe($$self, CurrentSelection, $$value => $$invalidate(1, $CurrentSelection = $$value));
-    	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(2, $CurrentProject = $$value));
-    	validate_store(ShowTreeReverse, "ShowTreeReverse");
-    	component_subscribe($$self, ShowTreeReverse, $$value => $$invalidate(3, $ShowTreeReverse = $$value));
-    	validate_store(CurrentDocument, "CurrentDocument");
-    	component_subscribe($$self, CurrentDocument, $$value => $$invalidate(4, $CurrentDocument = $$value));
-    	let { $$slots: slots = {}, $$scope } = $$props;
-    	validate_slots("Tree", slots, []);
-    	
-    	let { collapsed = false } = $$props;
-    	let noSelection;
-
-    	function onSelection() {
-    		var _a;
-
-    		(_a = $CurrentProject.engine) === null || _a === void 0
-    		? void 0
-    		: _a.invalidate();
-
-    		notifySelectionChanged();
-    	}
-
-    	function onDrop(e) {
-    		if ($CurrentProject.middleware.sendToTarget(e.detail.element, e.detail.target, e.detail.mode, e.detail.selection)) {
-    			snapshot();
-    		}
-    	}
-
-    	function onLock(e) {
-    		e.detail.locked = !e.detail.locked;
-    		snapshot();
-    	}
-
-    	function onHide(e) {
-    		e.detail.hidden = !e.detail.hidden;
-    		snapshot();
-    	}
-
-    	function snapshot() {
-    		var _a;
-    		const project = $CurrentProject;
-    		project.state.snapshot();
-
-    		(_a = project.engine) === null || _a === void 0
-    		? void 0
-    		: _a.invalidate();
-    	}
-
-    	const writable_props = ["collapsed"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Tree> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$$set = $$props => {
-    		if ("collapsed" in $$props) $$invalidate(0, collapsed = $$props.collapsed);
-    	};
-
-    	$$self.$capture_state = () => ({
-    		CurrentProject,
-    		CurrentDocument,
-    		CurrentSelection,
-    		ShowTreeReverse,
-    		notifySelectionChanged,
-    		SpTreeView,
-    		ElementInfoMap,
-    		collapsed,
-    		noSelection,
-    		onSelection,
-    		onDrop,
-    		onLock,
-    		onHide,
-    		onContextMenu,
-    		snapshot,
-    		$CurrentSelection,
-    		$CurrentProject,
-    		$ShowTreeReverse,
-    		$CurrentDocument
-    	});
-
-    	$$self.$inject_state = $$props => {
-    		if ("collapsed" in $$props) $$invalidate(0, collapsed = $$props.collapsed);
-    		if ("noSelection" in $$props) noSelection = $$props.noSelection;
-    	};
-
-    	if ($$props && "$$inject" in $$props) {
-    		$$self.$inject_state($$props.$$inject);
-    	}
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*$CurrentSelection*/ 2) {
-    			noSelection = !$CurrentSelection || $CurrentSelection.isEmpty;
-    		}
-    	};
-
-    	return [
-    		collapsed,
-    		$CurrentSelection,
-    		$CurrentProject,
-    		$ShowTreeReverse,
-    		$CurrentDocument,
-    		onSelection,
-    		onDrop,
-    		onLock,
-    		onHide
-    	];
-    }
-
-    class Tree extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$w, create_fragment$w, safe_not_equal, { collapsed: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Tree",
-    			options,
-    			id: create_fragment$w.name
-    		});
-    	}
-
-    	get collapsed() {
-    		throw new Error("<Tree>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set collapsed(value) {
-    		throw new Error("<Tree>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
     /* src/Controls/SpClearButton.svelte generated by Svelte v3.38.3 */
-    const file$p = "src/Controls/SpClearButton.svelte";
+    const file$v = "src/Controls/SpClearButton.svelte";
 
-    function create_fragment$v(ctx) {
+    function create_fragment$B(ctx) {
     	let button;
     	let sp_icon;
     	let sp_icon_name_value;
@@ -30767,9 +31809,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = `spectrum-css-icon-Cross${/*iconSize*/ ctx[1]}`);
     			set_custom_element_data(sp_icon, "class", sp_icon_class_value = `spectrum-UIIcon-Cross${/*iconSize*/ ctx[1]}`);
-    			add_location(sp_icon, file$p, 14, 4, 540);
+    			add_location(sp_icon, file$v, 14, 4, 540);
     			set_attributes(button, button_data);
-    			add_location(button, file$p, 12, 0, 404);
+    			add_location(button, file$v, 12, 0, 404);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30816,7 +31858,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$v.name,
+    		id: create_fragment$B.name,
     		type: "component",
     		source: "",
     		ctx
@@ -30825,7 +31867,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$v($$self, $$props, $$invalidate) {
+    function instance$B($$self, $$props, $$invalidate) {
     	let iconSize;
     	let computedClass;
     	const omit_props_names = ["disabled","variant","small"];
@@ -30921,13 +31963,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpClearButton extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$v, create_fragment$v, safe_not_equal, { disabled: 0, variant: 4, small: 5 });
+    		init(this, options, instance$B, create_fragment$B, safe_not_equal, { disabled: 0, variant: 4, small: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpClearButton",
     			options,
-    			id: create_fragment$v.name
+    			id: create_fragment$B.name
     		});
     	}
 
@@ -30957,9 +31999,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpTextField.svelte generated by Svelte v3.38.3 */
-    const file$o = "src/Controls/SpTextField.svelte";
+    const file$u = "src/Controls/SpTextField.svelte";
 
-    // (130:4) {#if icon}
+    // (131:4) {#if icon}
     function create_if_block_4(ctx) {
     	let sp_icon;
 
@@ -30969,7 +32011,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "size", /*size*/ ctx[4]);
     			set_custom_element_data(sp_icon, "name", /*icon*/ ctx[2]);
     			set_custom_element_data(sp_icon, "class", "spectrum-Textfield-icon");
-    			add_location(sp_icon, file$o, 130, 8, 3562);
+    			add_location(sp_icon, file$u, 131, 8, 3591);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -30992,15 +32034,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(130:4) {#if icon}",
+    		source: "(131:4) {#if icon}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (133:4) {#if status === 'valid'}
-    function create_if_block_3(ctx) {
+    // (134:4) {#if status === 'valid'}
+    function create_if_block_3$1(ctx) {
     	let sp_icon;
 
     	const block = {
@@ -31008,7 +32050,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", "spectrum-css-icon-Checkmark100");
     			set_custom_element_data(sp_icon, "class", "spectrum-UIIcon-Checkmark100 spectrum-Textfield-validationIcon");
-    			add_location(sp_icon, file$o, 133, 8, 3679);
+    			add_location(sp_icon, file$u, 134, 8, 3708);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -31020,17 +32062,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3.name,
+    		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(133:4) {#if status === 'valid'}",
+    		source: "(134:4) {#if status === 'valid'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (136:4) {#if status === 'invalid'}
-    function create_if_block_2(ctx) {
+    // (137:4) {#if status === 'invalid'}
+    function create_if_block_2$1(ctx) {
     	let sp_icon;
 
     	const block = {
@@ -31038,7 +32080,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_icon = element("sp-icon");
     			set_custom_element_data(sp_icon, "name", "spectrum-icon-18-Alert");
     			set_custom_element_data(sp_icon, "class", "spectrum-Textfield-validationIcon");
-    			add_location(sp_icon, file$o, 136, 8, 3848);
+    			add_location(sp_icon, file$u, 137, 8, 3877);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_icon, anchor);
@@ -31050,17 +32092,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2.name,
+    		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(136:4) {#if status === 'invalid'}",
+    		source: "(137:4) {#if status === 'invalid'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (145:4) {:else}
-    function create_else_block$2(ctx) {
+    // (146:4) {:else}
+    function create_else_block$3(ctx) {
     	let input;
     	let input_value_value;
     	let mounted;
@@ -31068,19 +32110,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	let input_levels = [
     		{
-    			value: input_value_value = /*isNumberInput*/ ctx[16]
-    			? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[12])
+    			value: input_value_value = /*isNumberInput*/ ctx[17]
+    			? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[13])
     			: /*value*/ ctx[1]
     		},
-    		{ tabindex: /*tabindex*/ ctx[14] },
-    		{ class: /*computedInputClass*/ ctx[18] },
+    		{ tabindex: /*tabindex*/ ctx[15] },
+    		{ class: /*computedInputClass*/ ctx[19] },
     		{ type: /*type*/ ctx[5] },
     		{ placeholder: /*placeholder*/ ctx[8] },
     		{ autocomplete: /*autocomplete*/ ctx[10] },
     		{ spellcheck: /*spellcheck*/ ctx[11] },
     		{ name: /*name*/ ctx[9] },
-    		{ disabled: /*disabled*/ ctx[13] },
-    		/*attributes*/ ctx[19]
+    		{ disabled: /*disabled*/ ctx[14] },
+    		{ readOnly: /*readonly*/ ctx[12] },
+    		/*attributes*/ ctx[20]
     	];
 
     	let input_data = {};
@@ -31093,7 +32136,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			input = element("input");
     			set_attributes(input, input_data);
-    			add_location(input, file$o, 145, 8, 4318);
+    			add_location(input, file$u, 146, 8, 4367);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -31101,10 +32144,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "focus", /*onFocus*/ ctx[20], false, false, false),
-    					listen_dev(input, "blur", /*onBlur*/ ctx[21], false, false, false),
-    					listen_dev(input, "input", /*onInput*/ ctx[22], false, false, false),
-    					listen_dev(input, "change", /*onChange*/ ctx[23], false, false, false),
+    					listen_dev(input, "focus", /*onFocus*/ ctx[21], false, false, false),
+    					listen_dev(input, "blur", /*onBlur*/ ctx[22], false, false, false),
+    					listen_dev(input, "input", /*onInput*/ ctx[23], false, false, false),
+    					listen_dev(input, "change", /*onChange*/ ctx[24], false, false, false),
     					listen_dev(input, "keyup", onKeyUp, false, false, false)
     				];
 
@@ -31113,18 +32156,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			set_attributes(input, input_data = get_spread_update(input_levels, [
-    				dirty[0] & /*isNumberInput, value, digits*/ 69634 && input_value_value !== (input_value_value = /*isNumberInput*/ ctx[16]
-    				? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[12])
+    				dirty[0] & /*isNumberInput, value, digits*/ 139266 && input_value_value !== (input_value_value = /*isNumberInput*/ ctx[17]
+    				? formatNumber(/*value*/ ctx[1], /*digits*/ ctx[13])
     				: /*value*/ ctx[1]) && input.value !== input_value_value && { value: input_value_value },
-    				dirty[0] & /*tabindex*/ 16384 && { tabindex: /*tabindex*/ ctx[14] },
-    				dirty[0] & /*computedInputClass*/ 262144 && { class: /*computedInputClass*/ ctx[18] },
+    				dirty[0] & /*tabindex*/ 32768 && { tabindex: /*tabindex*/ ctx[15] },
+    				dirty[0] & /*computedInputClass*/ 524288 && { class: /*computedInputClass*/ ctx[19] },
     				dirty[0] & /*type*/ 32 && { type: /*type*/ ctx[5] },
     				dirty[0] & /*placeholder*/ 256 && { placeholder: /*placeholder*/ ctx[8] },
     				dirty[0] & /*autocomplete*/ 1024 && { autocomplete: /*autocomplete*/ ctx[10] },
     				dirty[0] & /*spellcheck*/ 2048 && { spellcheck: /*spellcheck*/ ctx[11] },
     				dirty[0] & /*name*/ 512 && { name: /*name*/ ctx[9] },
-    				dirty[0] & /*disabled*/ 8192 && { disabled: /*disabled*/ ctx[13] },
-    				dirty[0] & /*attributes*/ 524288 && /*attributes*/ ctx[19]
+    				dirty[0] & /*disabled*/ 16384 && { disabled: /*disabled*/ ctx[14] },
+    				dirty[0] & /*readonly*/ 4096 && { readOnly: /*readonly*/ ctx[12] },
+    				dirty[0] & /*attributes*/ 1048576 && /*attributes*/ ctx[20]
     			]));
 
     			if ("value" in input_data) {
@@ -31140,30 +32184,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$3.name,
     		type: "else",
-    		source: "(145:4) {:else}",
+    		source: "(146:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (139:4) {#if multiline}
-    function create_if_block_1$2(ctx) {
+    // (140:4) {#if multiline}
+    function create_if_block_1$3(ctx) {
     	let textarea;
     	let mounted;
     	let dispose;
 
     	let textarea_levels = [
     		{ value: /*value*/ ctx[1] },
-    		{ tabindex: /*tabindex*/ ctx[14] },
-    		{ class: /*computedInputClass*/ ctx[18] },
+    		{ tabindex: /*tabindex*/ ctx[15] },
+    		{ class: /*computedInputClass*/ ctx[19] },
     		{ placeholder: /*placeholder*/ ctx[8] },
     		{ name: /*name*/ ctx[9] },
     		{ spellcheck: /*spellcheck*/ ctx[11] },
-    		{ disabled: /*disabled*/ ctx[13] },
-    		/*attributes*/ ctx[19]
+    		{ disabled: /*disabled*/ ctx[14] },
+    		{ readOnly: /*readonly*/ ctx[12] },
+    		/*attributes*/ ctx[20]
     	];
 
     	let textarea_data = {};
@@ -31176,17 +32221,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		c: function create() {
     			textarea = element("textarea");
     			set_attributes(textarea, textarea_data);
-    			add_location(textarea, file$o, 139, 8, 3969);
+    			add_location(textarea, file$u, 140, 8, 3998);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, textarea, anchor);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(textarea, "focus", /*onFocus*/ ctx[20], false, false, false),
-    					listen_dev(textarea, "blur", /*onBlur*/ ctx[21], false, false, false),
-    					listen_dev(textarea, "input", /*onInput*/ ctx[22], false, false, false),
-    					listen_dev(textarea, "change", /*onChange*/ ctx[23], false, false, false)
+    					listen_dev(textarea, "focus", /*onFocus*/ ctx[21], false, false, false),
+    					listen_dev(textarea, "blur", /*onBlur*/ ctx[22], false, false, false),
+    					listen_dev(textarea, "input", /*onInput*/ ctx[23], false, false, false),
+    					listen_dev(textarea, "change", /*onChange*/ ctx[24], false, false, false)
     				];
 
     				mounted = true;
@@ -31195,13 +32240,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		p: function update(ctx, dirty) {
     			set_attributes(textarea, textarea_data = get_spread_update(textarea_levels, [
     				dirty[0] & /*value*/ 2 && { value: /*value*/ ctx[1] },
-    				dirty[0] & /*tabindex*/ 16384 && { tabindex: /*tabindex*/ ctx[14] },
-    				dirty[0] & /*computedInputClass*/ 262144 && { class: /*computedInputClass*/ ctx[18] },
+    				dirty[0] & /*tabindex*/ 32768 && { tabindex: /*tabindex*/ ctx[15] },
+    				dirty[0] & /*computedInputClass*/ 524288 && { class: /*computedInputClass*/ ctx[19] },
     				dirty[0] & /*placeholder*/ 256 && { placeholder: /*placeholder*/ ctx[8] },
     				dirty[0] & /*name*/ 512 && { name: /*name*/ ctx[9] },
     				dirty[0] & /*spellcheck*/ 2048 && { spellcheck: /*spellcheck*/ ctx[11] },
-    				dirty[0] & /*disabled*/ 8192 && { disabled: /*disabled*/ ctx[13] },
-    				dirty[0] & /*attributes*/ 524288 && /*attributes*/ ctx[19]
+    				dirty[0] & /*disabled*/ 16384 && { disabled: /*disabled*/ ctx[14] },
+    				dirty[0] & /*readonly*/ 4096 && { readOnly: /*readonly*/ ctx[12] },
+    				dirty[0] & /*attributes*/ 1048576 && /*attributes*/ ctx[20]
     			]));
     		},
     		d: function destroy(detaching) {
@@ -31213,29 +32259,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$2.name,
+    		id: create_if_block_1$3.name,
     		type: "if",
-    		source: "(139:4) {#if multiline}",
+    		source: "(140:4) {#if multiline}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (153:4) {#if clearable && !focused}
-    function create_if_block$7(ctx) {
+    // (154:4) {#if clearable && !focused}
+    function create_if_block$9(ctx) {
     	let spclearbutton;
     	let current;
 
     	spclearbutton = new SpClearButton({
     			props: {
-    				disabled: /*disabled*/ ctx[13],
-    				class: /*clearClass*/ ctx[15]
+    				disabled: /*disabled*/ ctx[14],
+    				class: /*clearClass*/ ctx[16]
     			},
     			$$inline: true
     		});
 
-    	spclearbutton.$on("click", /*onClear*/ ctx[24]);
+    	spclearbutton.$on("click", /*onClear*/ ctx[25]);
 
     	const block = {
     		c: function create() {
@@ -31247,8 +32293,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const spclearbutton_changes = {};
-    			if (dirty[0] & /*disabled*/ 8192) spclearbutton_changes.disabled = /*disabled*/ ctx[13];
-    			if (dirty[0] & /*clearClass*/ 32768) spclearbutton_changes.class = /*clearClass*/ ctx[15];
+    			if (dirty[0] & /*disabled*/ 16384) spclearbutton_changes.disabled = /*disabled*/ ctx[14];
+    			if (dirty[0] & /*clearClass*/ 65536) spclearbutton_changes.class = /*clearClass*/ ctx[16];
     			spclearbutton.$set(spclearbutton_changes);
     		},
     		i: function intro(local) {
@@ -31267,16 +32313,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$7.name,
+    		id: create_if_block$9.name,
     		type: "if",
-    		source: "(153:4) {#if clearable && !focused}",
+    		source: "(154:4) {#if clearable && !focused}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$u(ctx) {
+    function create_fragment$A(ctx) {
     	let div;
     	let t0;
     	let t1;
@@ -31284,18 +32330,18 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let t3;
     	let current;
     	let if_block0 = /*icon*/ ctx[2] && create_if_block_4(ctx);
-    	let if_block1 = /*status*/ ctx[3] === "valid" && create_if_block_3(ctx);
-    	let if_block2 = /*status*/ ctx[3] === "invalid" && create_if_block_2(ctx);
+    	let if_block1 = /*status*/ ctx[3] === "valid" && create_if_block_3$1(ctx);
+    	let if_block2 = /*status*/ ctx[3] === "invalid" && create_if_block_2$1(ctx);
 
     	function select_block_type(ctx, dirty) {
-    		if (/*multiline*/ ctx[6]) return create_if_block_1$2;
-    		return create_else_block$2;
+    		if (/*multiline*/ ctx[6]) return create_if_block_1$3;
+    		return create_else_block$3;
     	}
 
     	let current_block_type = select_block_type(ctx);
     	let if_block3 = current_block_type(ctx);
-    	let if_block4 = /*clearable*/ ctx[7] && !/*focused*/ ctx[0] && create_if_block$7(ctx);
-    	let div_levels = [/*$$restProps*/ ctx[25], { class: /*computedClass*/ ctx[17] }];
+    	let if_block4 = /*clearable*/ ctx[7] && !/*focused*/ ctx[0] && create_if_block$9(ctx);
+    	let div_levels = [/*$$restProps*/ ctx[26], { class: /*computedClass*/ ctx[18] }];
     	let div_data = {};
 
     	for (let i = 0; i < div_levels.length; i += 1) {
@@ -31315,7 +32361,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t3 = space();
     			if (if_block4) if_block4.c();
     			set_attributes(div, div_data);
-    			add_location(div, file$o, 128, 0, 3494);
+    			add_location(div, file$u, 129, 0, 3523);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -31349,7 +32395,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (/*status*/ ctx[3] === "valid") {
     				if (if_block1) ; else {
-    					if_block1 = create_if_block_3(ctx);
+    					if_block1 = create_if_block_3$1(ctx);
     					if_block1.c();
     					if_block1.m(div, t1);
     				}
@@ -31360,7 +32406,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (/*status*/ ctx[3] === "invalid") {
     				if (if_block2) ; else {
-    					if_block2 = create_if_block_2(ctx);
+    					if_block2 = create_if_block_2$1(ctx);
     					if_block2.c();
     					if_block2.m(div, t2);
     				}
@@ -31389,7 +32435,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block4, 1);
     					}
     				} else {
-    					if_block4 = create_if_block$7(ctx);
+    					if_block4 = create_if_block$9(ctx);
     					if_block4.c();
     					transition_in(if_block4, 1);
     					if_block4.m(div, null);
@@ -31405,8 +32451,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			set_attributes(div, div_data = get_spread_update(div_levels, [
-    				dirty[0] & /*$$restProps*/ 33554432 && /*$$restProps*/ ctx[25],
-    				(!current || dirty[0] & /*computedClass*/ 131072) && { class: /*computedClass*/ ctx[17] }
+    				dirty[0] & /*$$restProps*/ 67108864 && /*$$restProps*/ ctx[26],
+    				(!current || dirty[0] & /*computedClass*/ 262144) && { class: /*computedClass*/ ctx[18] }
     			]));
     		},
     		i: function intro(local) {
@@ -31430,7 +32476,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$u.name,
+    		id: create_fragment$A.name,
     		type: "component",
     		source: "",
     		ctx
@@ -31445,9 +32491,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    function instance$u($$self, $$props, $$invalidate) {
+    function instance$A($$self, $$props, $$invalidate) {
     	const omit_props_names = [
-    		"value","icon","status","size","type","multiline","clearable","placeholder","name","autocomplete","spellcheck","centerText","pattern","minlength","maxlength","min","max","step","round","digits","quiet","disabled","focused","kbFocused","tabindex","inputClass","clearClass"
+    		"value","icon","status","size","type","multiline","clearable","placeholder","name","autocomplete","spellcheck","readonly","centerText","pattern","minlength","maxlength","min","max","step","round","digits","quiet","disabled","focused","kbFocused","tabindex","inputClass","clearClass"
     	];
 
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -31467,6 +32513,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let { name = undefined } = $$props;
     	let { autocomplete = undefined } = $$props;
     	let { spellcheck = undefined } = $$props;
+    	let { readonly = false } = $$props;
     	let { centerText = true } = $$props;
     	let { pattern = undefined } = $$props;
     	let { minlength = undefined } = $$props;
@@ -31559,8 +32606,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let attributes;
 
     	$$self.$$set = $$new_props => {
-    		$$invalidate(41, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
-    		$$invalidate(25, $$restProps = compute_rest_props($$props, omit_props_names));
+    		$$invalidate(42, $$props = assign(assign({}, $$props), exclude_internal_props($$new_props)));
+    		$$invalidate(26, $$restProps = compute_rest_props($$props, omit_props_names));
     		if ("value" in $$new_props) $$invalidate(1, value = $$new_props.value);
     		if ("icon" in $$new_props) $$invalidate(2, icon = $$new_props.icon);
     		if ("status" in $$new_props) $$invalidate(3, status = $$new_props.status);
@@ -31572,22 +32619,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("name" in $$new_props) $$invalidate(9, name = $$new_props.name);
     		if ("autocomplete" in $$new_props) $$invalidate(10, autocomplete = $$new_props.autocomplete);
     		if ("spellcheck" in $$new_props) $$invalidate(11, spellcheck = $$new_props.spellcheck);
-    		if ("centerText" in $$new_props) $$invalidate(26, centerText = $$new_props.centerText);
-    		if ("pattern" in $$new_props) $$invalidate(27, pattern = $$new_props.pattern);
-    		if ("minlength" in $$new_props) $$invalidate(28, minlength = $$new_props.minlength);
-    		if ("maxlength" in $$new_props) $$invalidate(29, maxlength = $$new_props.maxlength);
-    		if ("min" in $$new_props) $$invalidate(30, min = $$new_props.min);
-    		if ("max" in $$new_props) $$invalidate(31, max = $$new_props.max);
-    		if ("step" in $$new_props) $$invalidate(32, step = $$new_props.step);
-    		if ("round" in $$new_props) $$invalidate(33, round = $$new_props.round);
-    		if ("digits" in $$new_props) $$invalidate(12, digits = $$new_props.digits);
-    		if ("quiet" in $$new_props) $$invalidate(34, quiet = $$new_props.quiet);
-    		if ("disabled" in $$new_props) $$invalidate(13, disabled = $$new_props.disabled);
+    		if ("readonly" in $$new_props) $$invalidate(12, readonly = $$new_props.readonly);
+    		if ("centerText" in $$new_props) $$invalidate(27, centerText = $$new_props.centerText);
+    		if ("pattern" in $$new_props) $$invalidate(28, pattern = $$new_props.pattern);
+    		if ("minlength" in $$new_props) $$invalidate(29, minlength = $$new_props.minlength);
+    		if ("maxlength" in $$new_props) $$invalidate(30, maxlength = $$new_props.maxlength);
+    		if ("min" in $$new_props) $$invalidate(31, min = $$new_props.min);
+    		if ("max" in $$new_props) $$invalidate(32, max = $$new_props.max);
+    		if ("step" in $$new_props) $$invalidate(33, step = $$new_props.step);
+    		if ("round" in $$new_props) $$invalidate(34, round = $$new_props.round);
+    		if ("digits" in $$new_props) $$invalidate(13, digits = $$new_props.digits);
+    		if ("quiet" in $$new_props) $$invalidate(35, quiet = $$new_props.quiet);
+    		if ("disabled" in $$new_props) $$invalidate(14, disabled = $$new_props.disabled);
     		if ("focused" in $$new_props) $$invalidate(0, focused = $$new_props.focused);
-    		if ("kbFocused" in $$new_props) $$invalidate(35, kbFocused = $$new_props.kbFocused);
-    		if ("tabindex" in $$new_props) $$invalidate(14, tabindex = $$new_props.tabindex);
-    		if ("inputClass" in $$new_props) $$invalidate(36, inputClass = $$new_props.inputClass);
-    		if ("clearClass" in $$new_props) $$invalidate(15, clearClass = $$new_props.clearClass);
+    		if ("kbFocused" in $$new_props) $$invalidate(36, kbFocused = $$new_props.kbFocused);
+    		if ("tabindex" in $$new_props) $$invalidate(15, tabindex = $$new_props.tabindex);
+    		if ("inputClass" in $$new_props) $$invalidate(37, inputClass = $$new_props.inputClass);
+    		if ("clearClass" in $$new_props) $$invalidate(16, clearClass = $$new_props.clearClass);
     	};
 
     	$$self.$capture_state = () => ({
@@ -31610,6 +32658,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		name,
     		autocomplete,
     		spellcheck,
+    		readonly,
     		centerText,
     		pattern,
     		minlength,
@@ -31641,7 +32690,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	});
 
     	$$self.$inject_state = $$new_props => {
-    		$$invalidate(41, $$props = assign(assign({}, $$props), $$new_props));
+    		$$invalidate(42, $$props = assign(assign({}, $$props), $$new_props));
     		if ("value" in $$props) $$invalidate(1, value = $$new_props.value);
     		if ("icon" in $$props) $$invalidate(2, icon = $$new_props.icon);
     		if ("status" in $$props) $$invalidate(3, status = $$new_props.status);
@@ -31653,28 +32702,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		if ("name" in $$props) $$invalidate(9, name = $$new_props.name);
     		if ("autocomplete" in $$props) $$invalidate(10, autocomplete = $$new_props.autocomplete);
     		if ("spellcheck" in $$props) $$invalidate(11, spellcheck = $$new_props.spellcheck);
-    		if ("centerText" in $$props) $$invalidate(26, centerText = $$new_props.centerText);
-    		if ("pattern" in $$props) $$invalidate(27, pattern = $$new_props.pattern);
-    		if ("minlength" in $$props) $$invalidate(28, minlength = $$new_props.minlength);
-    		if ("maxlength" in $$props) $$invalidate(29, maxlength = $$new_props.maxlength);
-    		if ("min" in $$props) $$invalidate(30, min = $$new_props.min);
-    		if ("max" in $$props) $$invalidate(31, max = $$new_props.max);
-    		if ("step" in $$props) $$invalidate(32, step = $$new_props.step);
-    		if ("round" in $$props) $$invalidate(33, round = $$new_props.round);
-    		if ("digits" in $$props) $$invalidate(12, digits = $$new_props.digits);
-    		if ("quiet" in $$props) $$invalidate(34, quiet = $$new_props.quiet);
-    		if ("disabled" in $$props) $$invalidate(13, disabled = $$new_props.disabled);
+    		if ("readonly" in $$props) $$invalidate(12, readonly = $$new_props.readonly);
+    		if ("centerText" in $$props) $$invalidate(27, centerText = $$new_props.centerText);
+    		if ("pattern" in $$props) $$invalidate(28, pattern = $$new_props.pattern);
+    		if ("minlength" in $$props) $$invalidate(29, minlength = $$new_props.minlength);
+    		if ("maxlength" in $$props) $$invalidate(30, maxlength = $$new_props.maxlength);
+    		if ("min" in $$props) $$invalidate(31, min = $$new_props.min);
+    		if ("max" in $$props) $$invalidate(32, max = $$new_props.max);
+    		if ("step" in $$props) $$invalidate(33, step = $$new_props.step);
+    		if ("round" in $$props) $$invalidate(34, round = $$new_props.round);
+    		if ("digits" in $$props) $$invalidate(13, digits = $$new_props.digits);
+    		if ("quiet" in $$props) $$invalidate(35, quiet = $$new_props.quiet);
+    		if ("disabled" in $$props) $$invalidate(14, disabled = $$new_props.disabled);
     		if ("focused" in $$props) $$invalidate(0, focused = $$new_props.focused);
-    		if ("kbFocused" in $$props) $$invalidate(35, kbFocused = $$new_props.kbFocused);
-    		if ("tabindex" in $$props) $$invalidate(14, tabindex = $$new_props.tabindex);
-    		if ("inputClass" in $$props) $$invalidate(36, inputClass = $$new_props.inputClass);
-    		if ("clearClass" in $$props) $$invalidate(15, clearClass = $$new_props.clearClass);
-    		if ("computedClass" in $$props) $$invalidate(17, computedClass = $$new_props.computedClass);
-    		if ("computedInputClass" in $$props) $$invalidate(18, computedInputClass = $$new_props.computedInputClass);
-    		if ("isNumberInput" in $$props) $$invalidate(16, isNumberInput = $$new_props.isNumberInput);
+    		if ("kbFocused" in $$props) $$invalidate(36, kbFocused = $$new_props.kbFocused);
+    		if ("tabindex" in $$props) $$invalidate(15, tabindex = $$new_props.tabindex);
+    		if ("inputClass" in $$props) $$invalidate(37, inputClass = $$new_props.inputClass);
+    		if ("clearClass" in $$props) $$invalidate(16, clearClass = $$new_props.clearClass);
+    		if ("computedClass" in $$props) $$invalidate(18, computedClass = $$new_props.computedClass);
+    		if ("computedInputClass" in $$props) $$invalidate(19, computedInputClass = $$new_props.computedInputClass);
+    		if ("isNumberInput" in $$props) $$invalidate(17, isNumberInput = $$new_props.isNumberInput);
     		if ("isSearchInput" in $$props) isSearchInput = $$new_props.isSearchInput;
     		if ("started" in $$props) started = $$new_props.started;
-    		if ("attributes" in $$props) $$invalidate(19, attributes = $$new_props.attributes);
+    		if ("attributes" in $$props) $$invalidate(20, attributes = $$new_props.attributes);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -31682,8 +32732,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty[1] & /*inputClass*/ 32) {
-    			$$invalidate(18, computedInputClass = mergeClasses(
+    		if ($$self.$$.dirty[1] & /*inputClass*/ 64) {
+    			$$invalidate(19, computedInputClass = mergeClasses(
     				{
     					"spectrum-Textfield-input": true,
     					"spectrum-InputGroup-input": inputGroup
@@ -31693,24 +32743,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		}
 
     		if ($$self.$$.dirty[0] & /*multiline, type*/ 96) {
-    			$$invalidate(16, isNumberInput = !multiline && type === "number");
+    			$$invalidate(17, isNumberInput = !multiline && type === "number");
     		}
 
     		if ($$self.$$.dirty[0] & /*multiline, type*/ 96) {
     			isSearchInput = !multiline && type === "search";
     		}
 
-    		if ($$self.$$.dirty[0] & /*isNumberInput, pattern, min, minlength, maxlength*/ 2013331456 | $$self.$$.dirty[1] & /*max, step*/ 3) {
+    		if ($$self.$$.dirty[0] & /*isNumberInput, pattern, minlength, maxlength*/ 1879179264 | $$self.$$.dirty[1] & /*min, max, step*/ 7) {
     			{
     				if (isNumberInput) {
-    					$$invalidate(19, attributes = { pattern, min, max, step });
+    					$$invalidate(20, attributes = { pattern, min, max, step });
     				} else {
-    					$$invalidate(19, attributes = { pattern, minlength, maxlength });
+    					$$invalidate(20, attributes = { pattern, minlength, maxlength });
     				}
     			}
     		}
 
-    		$$invalidate(17, computedClass = mergeClasses(
+    		$$invalidate(18, computedClass = mergeClasses(
     			{
     				"spectrum-Textfield": true,
     				"spectrum-Textfield--size": size,
@@ -31743,6 +32793,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		name,
     		autocomplete,
     		spellcheck,
+    		readonly,
     		digits,
     		disabled,
     		tabindex,
@@ -31778,8 +32829,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		init(
     			this,
     			options,
-    			instance$u,
-    			create_fragment$u,
+    			instance$A,
+    			create_fragment$A,
     			safe_not_equal,
     			{
     				value: 1,
@@ -31793,22 +32844,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				name: 9,
     				autocomplete: 10,
     				spellcheck: 11,
-    				centerText: 26,
-    				pattern: 27,
-    				minlength: 28,
-    				maxlength: 29,
-    				min: 30,
-    				max: 31,
-    				step: 32,
-    				round: 33,
-    				digits: 12,
-    				quiet: 34,
-    				disabled: 13,
+    				readonly: 12,
+    				centerText: 27,
+    				pattern: 28,
+    				minlength: 29,
+    				maxlength: 30,
+    				min: 31,
+    				max: 32,
+    				step: 33,
+    				round: 34,
+    				digits: 13,
+    				quiet: 35,
+    				disabled: 14,
     				focused: 0,
-    				kbFocused: 35,
-    				tabindex: 14,
-    				inputClass: 36,
-    				clearClass: 15
+    				kbFocused: 36,
+    				tabindex: 15,
+    				inputClass: 37,
+    				clearClass: 16
     			},
     			[-1, -1]
     		);
@@ -31817,7 +32869,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpTextField",
     			options,
-    			id: create_fragment$u.name
+    			id: create_fragment$A.name
     		});
     	}
 
@@ -31906,6 +32958,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
 
     	set spellcheck(value) {
+    		throw new Error("<SpTextField>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get readonly() {
+    		throw new Error("<SpTextField>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set readonly(value) {
     		throw new Error("<SpTextField>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
@@ -32038,18 +33098,742 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
+    /* src/Components/Dialogs/EditElementNameDialog.svelte generated by Svelte v3.38.3 */
+
+    function create_fragment$z(ctx) {
+    	let sptextfield;
+    	let updating_value;
+    	let current;
+
+    	function sptextfield_value_binding(value) {
+    		/*sptextfield_value_binding*/ ctx[3](value);
+    	}
+
+    	let sptextfield_props = {
+    		style: "width: 100%",
+    		centerText: false,
+    		type: "text"
+    	};
+
+    	if (/*value*/ ctx[0] !== void 0) {
+    		sptextfield_props.value = /*value*/ ctx[0];
+    	}
+
+    	sptextfield = new SpTextField({ props: sptextfield_props, $$inline: true });
+    	binding_callbacks.push(() => bind(sptextfield, "value", sptextfield_value_binding));
+
+    	const block = {
+    		c: function create() {
+    			create_component(sptextfield.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(sptextfield, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const sptextfield_changes = {};
+
+    			if (!updating_value && dirty & /*value*/ 1) {
+    				updating_value = true;
+    				sptextfield_changes.value = /*value*/ ctx[0];
+    				add_flush_callback(() => updating_value = false);
+    			}
+
+    			sptextfield.$set(sptextfield_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(sptextfield.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(sptextfield.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(sptextfield, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$z.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$z($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("EditElementNameDialog", slots, []);
+    	let { value } = $$props;
+    	let { isWorking } = $$props;
+    	let { closeDialog } = $$props;
+    	const writable_props = ["value", "isWorking", "closeDialog"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<EditElementNameDialog> was created with unknown prop '${key}'`);
+    	});
+
+    	function sptextfield_value_binding(value$1) {
+    		value = value$1;
+    		$$invalidate(0, value);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("isWorking" in $$props) $$invalidate(1, isWorking = $$props.isWorking);
+    		if ("closeDialog" in $$props) $$invalidate(2, closeDialog = $$props.closeDialog);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		SpTextField,
+    		value,
+    		isWorking,
+    		closeDialog
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("isWorking" in $$props) $$invalidate(1, isWorking = $$props.isWorking);
+    		if ("closeDialog" in $$props) $$invalidate(2, closeDialog = $$props.closeDialog);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [value, isWorking, closeDialog, sptextfield_value_binding];
+    }
+
+    class EditElementNameDialog extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$z, create_fragment$z, safe_not_equal, { value: 0, isWorking: 1, closeDialog: 2 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "EditElementNameDialog",
+    			options,
+    			id: create_fragment$z.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*value*/ ctx[0] === undefined && !("value" in props)) {
+    			console.warn("<EditElementNameDialog> was created without expected prop 'value'");
+    		}
+
+    		if (/*isWorking*/ ctx[1] === undefined && !("isWorking" in props)) {
+    			console.warn("<EditElementNameDialog> was created without expected prop 'isWorking'");
+    		}
+
+    		if (/*closeDialog*/ ctx[2] === undefined && !("closeDialog" in props)) {
+    			console.warn("<EditElementNameDialog> was created without expected prop 'closeDialog'");
+    		}
+    	}
+
+    	get value() {
+    		throw new Error("<EditElementNameDialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<EditElementNameDialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get isWorking() {
+    		throw new Error("<EditElementNameDialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isWorking(value) {
+    		throw new Error("<EditElementNameDialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get closeDialog() {
+    		throw new Error("<EditElementNameDialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set closeDialog(value) {
+    		throw new Error("<EditElementNameDialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Tree.svelte generated by Svelte v3.38.3 */
+    const file$t = "src/Components/Tree.svelte";
+
+    function get_each_context$3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[17] = list[i];
+    	return child_ctx;
+    }
+
+    // (74:4) {#if !collapsed}
+    function create_if_block$8(ctx) {
+    	let div0;
+    	let sptreeview;
+    	let t0;
+    	let div1;
+    	let sp_action_button;
+    	let sp_icon;
+    	let t1;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	sptreeview = new SpTreeView({
+    			props: {
+    				reverse: /*$ShowTreeReverse*/ ctx[4],
+    				document: /*$CurrentDocument*/ ctx[5],
+    				selection: /*$CurrentSelection*/ ctx[1],
+    				infoMap: ElementInfoMap
+    			},
+    			$$inline: true
+    		});
+
+    	sptreeview.$on("title", /*onEditTitle*/ ctx[10]);
+    	sptreeview.$on("drop", /*onDrop*/ ctx[7]);
+    	sptreeview.$on("lock", /*onLock*/ ctx[8]);
+    	sptreeview.$on("hide", /*onHide*/ ctx[9]);
+    	sptreeview.$on("selection", /*onSelection*/ ctx[6]);
+    	let if_block = /*$CurrentDocument*/ ctx[5] && create_if_block_1$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			create_component(sptreeview.$$.fragment);
+    			t0 = space();
+    			div1 = element("div");
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			attr_dev(div0, "class", "scroll scroll-no-hide svelte-g72ir1");
+    			add_location(div0, file$t, 74, 8, 2676);
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			set_custom_element_data(sp_icon, "size", "s");
+    			set_custom_element_data(sp_icon, "name", "workflow:Delete");
+    			add_location(sp_icon, file$t, 91, 16, 3438);
+    			set_custom_element_data(sp_action_button, "class", "very-small svelte-g72ir1");
+    			set_custom_element_data(sp_action_button, "disabled", /*noSelection*/ ctx[2]);
+    			set_custom_element_data(sp_action_button, "size", "s");
+    			set_custom_element_data(sp_action_button, "quiet", "");
+    			add_location(sp_action_button, file$t, 87, 12, 3266);
+    			attr_dev(div1, "class", "tree-tools svelte-g72ir1");
+    			add_location(div1, file$t, 86, 8, 3229);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			mount_component(sptreeview, div0, null);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, sp_action_button);
+    			append_dev(sp_action_button, sp_icon);
+    			append_dev(div1, t1);
+    			if (if_block) if_block.m(div1, null);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div0, "click", self$1(/*click_handler*/ ctx[13]), false, false, false),
+    					listen_dev(sp_action_button, "click", /*onDelete*/ ctx[11], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			const sptreeview_changes = {};
+    			if (dirty & /*$ShowTreeReverse*/ 16) sptreeview_changes.reverse = /*$ShowTreeReverse*/ ctx[4];
+    			if (dirty & /*$CurrentDocument*/ 32) sptreeview_changes.document = /*$CurrentDocument*/ ctx[5];
+    			if (dirty & /*$CurrentSelection*/ 2) sptreeview_changes.selection = /*$CurrentSelection*/ ctx[1];
+    			sptreeview.$set(sptreeview_changes);
+
+    			if (!current || dirty & /*noSelection*/ 4) {
+    				set_custom_element_data(sp_action_button, "disabled", /*noSelection*/ ctx[2]);
+    			}
+
+    			if (/*$CurrentDocument*/ ctx[5]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1$2(ctx);
+    					if_block.c();
+    					if_block.m(div1, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(sptreeview.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(sptreeview.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div0);
+    			destroy_component(sptreeview);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
+    			if (if_block) if_block.d();
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$8.name,
+    		type: "if",
+    		source: "(74:4) {#if !collapsed}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (108:12) {#if $CurrentDocument}
+    function create_if_block_1$2(ctx) {
+    	let sp_picker;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
+    	let sp_picker_value_value;
+    	let each_value = Array.from(/*$CurrentProject*/ ctx[3].getDocuments());
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*doc*/ ctx[17].id;
+    	validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context$3(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$3(key, child_ctx));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			sp_picker = element("sp-picker");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			set_custom_element_data(sp_picker, "size", "s");
+    			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*$CurrentDocument*/ ctx[5].id);
+    			set_custom_element_data(sp_picker, "quiet", "");
+    			set_custom_element_data(sp_picker, "class", "svelte-g72ir1");
+    			add_location(sp_picker, file$t, 108, 16, 4571);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_picker, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(sp_picker, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*Array, $CurrentProject*/ 8) {
+    				each_value = Array.from(/*$CurrentProject*/ ctx[3].getDocuments());
+    				validate_each_argument(each_value);
+    				validate_each_keys(ctx, each_value, get_each_context$3, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_picker, destroy_block, create_each_block$3, null, get_each_context$3);
+    			}
+
+    			if (dirty & /*$CurrentDocument*/ 32 && sp_picker_value_value !== (sp_picker_value_value = /*$CurrentDocument*/ ctx[5].id)) {
+    				set_custom_element_data(sp_picker, "value", sp_picker_value_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_picker);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$2.name,
+    		type: "if",
+    		source: "(108:12) {#if $CurrentDocument}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (110:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}
+    function create_each_block$3(key_1, ctx) {
+    	let sp_menu_item;
+    	let t_value = (/*doc*/ ctx[17].title || "(document)") + "";
+    	let t;
+    	let sp_menu_item_value_value;
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			sp_menu_item = element("sp-menu-item");
+    			t = text(t_value);
+    			set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value = /*doc*/ ctx[17].id);
+    			add_location(sp_menu_item, file$t, 110, 24, 4739);
+    			this.first = sp_menu_item;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_menu_item, anchor);
+    			append_dev(sp_menu_item, t);
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*$CurrentProject*/ 8 && t_value !== (t_value = (/*doc*/ ctx[17].title || "(document)") + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*$CurrentProject*/ 8 && sp_menu_item_value_value !== (sp_menu_item_value_value = /*doc*/ ctx[17].id)) {
+    				set_custom_element_data(sp_menu_item, "value", sp_menu_item_value_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_menu_item);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$3.name,
+    		type: "each",
+    		source: "(110:20) {#each Array.from($CurrentProject.getDocuments()) as doc (doc.id)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$y(ctx) {
+    	let div;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	let if_block = !/*collapsed*/ ctx[0] && create_if_block$8(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			if (if_block) if_block.c();
+    			attr_dev(div, "class", "tree-wrapper svelte-g72ir1");
+    			add_location(div, file$t, 72, 0, 2605);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			if (if_block) if_block.m(div, null);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(div, "contextmenu", /*contextmenu_handler*/ ctx[12], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (!/*collapsed*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*collapsed*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$8(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (if_block) if_block.d();
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$y.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$y($$self, $$props, $$invalidate) {
+    	let $CurrentSelection;
+    	let $CurrentProject;
+    	let $ShowTreeReverse;
+    	let $CurrentDocument;
+    	validate_store(CurrentSelection, "CurrentSelection");
+    	component_subscribe($$self, CurrentSelection, $$value => $$invalidate(1, $CurrentSelection = $$value));
+    	validate_store(CurrentProject, "CurrentProject");
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(3, $CurrentProject = $$value));
+    	validate_store(ShowTreeReverse, "ShowTreeReverse");
+    	component_subscribe($$self, ShowTreeReverse, $$value => $$invalidate(4, $ShowTreeReverse = $$value));
+    	validate_store(CurrentDocument, "CurrentDocument");
+    	component_subscribe($$self, CurrentDocument, $$value => $$invalidate(5, $CurrentDocument = $$value));
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Tree", slots, []);
+
+    	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+    		function adopt(value) {
+    			return value instanceof P
+    			? value
+    			: new P(function (resolve) {
+    						resolve(value);
+    					});
+    		}
+
+    		return new (P || (P = Promise))(function (resolve, reject) {
+    				function fulfilled(value) {
+    					try {
+    						step(generator.next(value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function rejected(value) {
+    					try {
+    						step(generator["throw"](value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function step(result) {
+    					result.done
+    					? resolve(result.value)
+    					: adopt(result.value).then(fulfilled, rejected);
+    				}
+
+    				step((generator = generator.apply(thisArg, _arguments || [])).next());
+    			});
+    	};
+
+    	
+    	
+    	const openDialog = getContext("openDialog");
+    	let { collapsed = false } = $$props;
+    	let noSelection;
+
+    	function onSelection() {
+    		var _a;
+
+    		(_a = $CurrentProject.engine) === null || _a === void 0
+    		? void 0
+    		: _a.invalidate();
+
+    		notifySelectionChanged();
+    	}
+
+    	function onDrop(e) {
+    		if ($CurrentProject.middleware.sendToTarget(e.detail.element, e.detail.target, e.detail.mode, e.detail.selection)) {
+    			snapshot();
+    		}
+    	}
+
+    	function onLock(e) {
+    		e.detail.locked = !e.detail.locked;
+    		snapshot();
+    	}
+
+    	function onHide(e) {
+    		e.detail.hidden = !e.detail.hidden;
+    		snapshot();
+    	}
+
+    	function onEditTitle(e) {
+    		openDialog(
+    			{
+    				title: "Rename element",
+    				value: e.detail.title || "",
+    				dismissable: false,
+    				size: "small",
+    				confirm: {
+    					label: "Rename",
+    					action: value => __awaiter(this, void 0, void 0, function* () {
+    						value = value.trim();
+
+    						if (e.detail.title === value) {
+    							return;
+    						}
+
+    						e.detail.title = value;
+    						$CurrentProject.state.snapshot();
+    					})
+    				},
+    				cancel: { label: "Cancel" }
+    			},
+    			EditElementNameDialog
+    		);
+    	}
+
+    	function onDelete() {
+    		if ($CurrentProject.middleware.deleteSelectedElements()) {
+    			snapshot();
+    		}
+    	}
+
+    	function snapshot() {
+    		var _a;
+    		const project = $CurrentProject;
+    		project.state.snapshot();
+
+    		(_a = project.engine) === null || _a === void 0
+    		? void 0
+    		: _a.invalidate();
+    	}
+
+    	const writable_props = ["collapsed"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Tree> was created with unknown prop '${key}'`);
+    	});
+
+    	function contextmenu_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
+    	const click_handler = () => $CurrentSelection.clear() && notifySelectionChanged();
+
+    	$$self.$$set = $$props => {
+    		if ("collapsed" in $$props) $$invalidate(0, collapsed = $$props.collapsed);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		__awaiter,
+    		CurrentProject,
+    		CurrentDocument,
+    		CurrentSelection,
+    		ShowTreeReverse,
+    		notifySelectionChanged,
+    		SpTreeView,
+    		ElementInfoMap,
+    		EditElementNameDialog,
+    		getContext,
+    		openDialog,
+    		collapsed,
+    		noSelection,
+    		onSelection,
+    		onDrop,
+    		onLock,
+    		onHide,
+    		onEditTitle,
+    		onDelete,
+    		snapshot,
+    		$CurrentSelection,
+    		$CurrentProject,
+    		$ShowTreeReverse,
+    		$CurrentDocument
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    		if ("collapsed" in $$props) $$invalidate(0, collapsed = $$props.collapsed);
+    		if ("noSelection" in $$props) $$invalidate(2, noSelection = $$props.noSelection);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$CurrentSelection*/ 2) {
+    			$$invalidate(2, noSelection = !$CurrentSelection || $CurrentSelection.isEmpty);
+    		}
+    	};
+
+    	return [
+    		collapsed,
+    		$CurrentSelection,
+    		noSelection,
+    		$CurrentProject,
+    		$ShowTreeReverse,
+    		$CurrentDocument,
+    		onSelection,
+    		onDrop,
+    		onLock,
+    		onHide,
+    		onEditTitle,
+    		onDelete,
+    		contextmenu_handler,
+    		click_handler
+    	];
+    }
+
+    class Tree extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$y, create_fragment$y, safe_not_equal, { collapsed: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Tree",
+    			options,
+    			id: create_fragment$y.name
+    		});
+    	}
+
+    	get collapsed() {
+    		throw new Error("<Tree>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set collapsed(value) {
+    		throw new Error("<Tree>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
     /* src/Components/Properties/NumberPair.svelte generated by Svelte v3.38.3 */
-    const file$n = "src/Components/Properties/NumberPair.svelte";
+    const file$s = "src/Components/Properties/NumberPair.svelte";
 
     // (53:4) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$2(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "action-wrapper svelte-1gmpf9x");
-    			add_location(div, file$n, 53, 8, 1785);
+    			add_location(div, file$s, 53, 8, 1785);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -32064,7 +33848,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$2.name,
     		type: "else",
     		source: "(53:4) {:else}",
     		ctx
@@ -32074,7 +33858,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (51:4) {#if $$slots.default}
-    function create_if_block$6(ctx) {
+    function create_if_block$7(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[13].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[12], null);
@@ -32113,7 +33897,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$6.name,
+    		id: create_if_block$7.name,
     		type: "if",
     		source: "(51:4) {#if $$slots.default}",
     		ctx
@@ -32122,7 +33906,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$t(ctx) {
+    function create_fragment$x(ctx) {
     	let div1;
     	let sp_field_label;
     	let t0;
@@ -32173,7 +33957,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	sptextfield1.$on("input", /*input_handler_1*/ ctx[17]);
     	sptextfield1.$on("blur", /*blur_handler_1*/ ctx[18]);
     	sptextfield1.$on("start", /*start_handler_1*/ ctx[19]);
-    	const if_block_creators = [create_if_block$6, create_else_block$1];
+    	const if_block_creators = [create_if_block$7, create_else_block$2];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -32197,11 +33981,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t3 = space();
     			if_block.c();
     			set_custom_element_data(sp_field_label, "class", "svelte-1gmpf9x");
-    			add_location(sp_field_label, file$n, 29, 4, 836);
+    			add_location(sp_field_label, file$s, 29, 4, 836);
     			attr_dev(div0, "class", "number-pair svelte-1gmpf9x");
-    			add_location(div0, file$n, 30, 4, 881);
+    			add_location(div0, file$s, 30, 4, 881);
     			attr_dev(div1, "class", "number-pair-wrapper svelte-1gmpf9x");
-    			add_location(div1, file$n, 28, 0, 798);
+    			add_location(div1, file$s, 28, 0, 798);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -32286,7 +34070,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$t.name,
+    		id: create_fragment$x.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32295,7 +34079,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$t($$self, $$props, $$invalidate) {
+    function instance$x($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("NumberPair", slots, ['default']);
     	const $$slots = compute_slots(slots);
@@ -32427,7 +34211,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$t, create_fragment$t, safe_not_equal, {
+    		init(this, options, instance$x, create_fragment$x, safe_not_equal, {
     			label: 0,
     			value: 1,
     			proportions: 11,
@@ -32443,7 +34227,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "NumberPair",
     			options,
-    			id: create_fragment$t.name
+    			id: create_fragment$x.name
     		});
 
     		const { ctx } = this.$$;
@@ -32529,10 +34313,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/PropertyGroup.svelte generated by Svelte v3.38.3 */
 
-    const file$m = "src/Components/Properties/PropertyGroup.svelte";
+    const file$r = "src/Components/Properties/PropertyGroup.svelte";
 
     // (4:4) {#if title !== ''}
-    function create_if_block$5(ctx) {
+    function create_if_block$6(ctx) {
     	let div;
     	let t;
 
@@ -32541,7 +34325,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			t = text(/*title*/ ctx[0]);
     			attr_dev(div, "class", "property-title svelte-xrqic6");
-    			add_location(div, file$m, 4, 8, 111);
+    			add_location(div, file$r, 4, 8, 111);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -32557,7 +34341,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block$6.name,
     		type: "if",
     		source: "(4:4) {#if title !== ''}",
     		ctx
@@ -32566,12 +34350,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$s(ctx) {
+    function create_fragment$w(ctx) {
     	let div1;
     	let t;
     	let div0;
     	let current;
-    	let if_block = /*title*/ ctx[0] !== "" && create_if_block$5(ctx);
+    	let if_block = /*title*/ ctx[0] !== "" && create_if_block$6(ctx);
     	const default_slot_template = /*#slots*/ ctx[2].default;
     	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
 
@@ -32583,9 +34367,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div0 = element("div");
     			if (default_slot) default_slot.c();
     			attr_dev(div0, "class", "properties svelte-xrqic6");
-    			add_location(div0, file$m, 6, 4, 167);
+    			add_location(div0, file$r, 6, 4, 167);
     			attr_dev(div1, "class", "property-group svelte-xrqic6");
-    			add_location(div1, file$m, 2, 0, 51);
+    			add_location(div1, file$r, 2, 0, 51);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -32607,7 +34391,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block$5(ctx);
+    					if_block = create_if_block$6(ctx);
     					if_block.c();
     					if_block.m(div1, t);
     				}
@@ -32640,7 +34424,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$s.name,
+    		id: create_fragment$w.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32649,7 +34433,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$s($$self, $$props, $$invalidate) {
+    function instance$w($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("PropertyGroup", slots, ['default']);
     	let { title = "" } = $$props;
@@ -32680,13 +34464,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class PropertyGroup extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$s, create_fragment$s, safe_not_equal, { title: 0 });
+    		init(this, options, instance$w, create_fragment$w, safe_not_equal, { title: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "PropertyGroup",
     			options,
-    			id: create_fragment$s.name
+    			id: create_fragment$w.name
     		});
     	}
 
@@ -32700,9 +34484,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/SidePosition.svelte generated by Svelte v3.38.3 */
-    const file$l = "src/Components/Properties/SidePosition.svelte";
+    const file$q = "src/Components/Properties/SidePosition.svelte";
 
-    function get_each_context$1(ctx, list, i) {
+    function get_each_context$2(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[10] = list[i];
     	return child_ctx;
@@ -32733,7 +34517,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(circle, "cy", circle_cy_value = (/*y*/ ctx[13] - 1) * /*half*/ ctx[4]);
     			attr_dev(circle, "r", /*radius*/ ctx[2]);
     			attr_dev(circle, "class", "svelte-1sysvix");
-    			add_location(circle, file$l, 23, 20, 1030);
+    			add_location(circle, file$q, 23, 20, 1030);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, circle, anchor);
@@ -32777,7 +34561,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (22:12) {#each positions as x}
-    function create_each_block$1(ctx) {
+    function create_each_block$2(ctx) {
     	let each_1_anchor;
     	let each_value_1 = /*positions*/ ctx[5];
     	validate_each_argument(each_value_1);
@@ -32835,7 +34619,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block$1.name,
+    		id: create_each_block$2.name,
     		type: "each",
     		source: "(22:12) {#each positions as x}",
     		ctx
@@ -32844,7 +34628,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$r(ctx) {
+    function create_fragment$v(ctx) {
     	let overlay_trigger;
     	let sp_action_button;
     	let sp_icon;
@@ -32862,7 +34646,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
     	}
 
     	const block = {
@@ -32881,31 +34665,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			set_custom_element_data(sp_icon, "name", /*icon*/ ctx[0]);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$l, 16, 8, 590);
+    			add_location(sp_icon, file$q, 16, 8, 590);
     			set_custom_element_data(sp_action_button, "slot", "trigger");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "size", "s");
-    			add_location(sp_action_button, file$l, 15, 4, 533);
+    			add_location(sp_action_button, file$q, 15, 4, 533);
     			attr_dev(rect, "x", 0);
     			attr_dev(rect, "y", 0);
     			attr_dev(rect, "width", rect_width_value = /*size*/ ctx[1] - 2 * /*radius*/ ctx[2]);
     			attr_dev(rect, "height", rect_height_value = /*size*/ ctx[1] - 2 * /*radius*/ ctx[2]);
     			attr_dev(rect, "stroke-width", "2");
     			attr_dev(rect, "class", "svelte-1sysvix");
-    			add_location(rect, file$l, 20, 12, 846);
+    			add_location(rect, file$q, 20, 12, 846);
     			attr_dev(svg, "width", svg_width_value = /*size*/ ctx[1] + /*radius*/ ctx[2]);
     			attr_dev(svg, "height", svg_height_value = /*size*/ ctx[1] + /*radius*/ ctx[2]);
     			attr_dev(svg, "viewBox", svg_viewBox_value = `${-/*radius*/ ctx[2]} ${-/*radius*/ ctx[2]} ${/*size*/ ctx[1]} ${/*size*/ ctx[1]}`);
     			attr_dev(svg, "class", "svelte-1sysvix");
-    			add_location(svg, file$l, 19, 8, 733);
+    			add_location(svg, file$q, 19, 8, 733);
     			set_custom_element_data(sp_popover, "slot", "click-content");
     			set_custom_element_data(sp_popover, "open", "");
     			set_custom_element_data(sp_popover, "tip", "");
     			set_custom_element_data(sp_popover, "class", "svelte-1sysvix");
-    			add_location(sp_popover, file$l, 18, 4, 662);
+    			add_location(sp_popover, file$q, 18, 4, 662);
     			set_custom_element_data(overlay_trigger, "placement", "left");
     			set_custom_element_data(overlay_trigger, "type", "modal");
-    			add_location(overlay_trigger, file$l, 14, 0, 481);
+    			add_location(overlay_trigger, file$q, 14, 0, 481);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -32944,12 +34728,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
+    					const child_ctx = get_each_context$2(ctx, each_value, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(child_ctx, dirty);
     					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i] = create_each_block$2(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(svg, null);
     					}
@@ -32985,7 +34769,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$r.name,
+    		id: create_fragment$v.name,
     		type: "component",
     		source: "",
     		ctx
@@ -32994,7 +34778,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$r($$self, $$props, $$invalidate) {
+    function instance$v($$self, $$props, $$invalidate) {
     	let half;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SidePosition", slots, []);
@@ -33078,13 +34862,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SidePosition extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$r, create_fragment$r, safe_not_equal, { icon: 0, size: 1, radius: 2 });
+    		init(this, options, instance$v, create_fragment$v, safe_not_equal, { icon: 0, size: 1, radius: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SidePosition",
     			options,
-    			id: create_fragment$r.name
+    			id: create_fragment$v.name
     		});
 
     		const { ctx } = this.$$;
@@ -33121,7 +34905,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/Transform.svelte generated by Svelte v3.38.3 */
-    const file$k = "src/Components/Properties/Transform.svelte";
+    const file$p = "src/Components/Properties/Transform.svelte";
 
     // (26:4) <NumberPair on:done                 on:start={() => onStart('position')}                 on:input={e => onUpdate('position', Point.fromObject(e.detail))}                 value={element.position} label="Position" xTitle="X" yTitle="Y">
     function create_default_slot_4$1(ctx) {
@@ -33230,13 +35014,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "slot", "icon");
     			set_custom_element_data(sp_icon, "name", "expr:rotate");
     			set_custom_element_data(sp_icon, "size", "s");
-    			add_location(sp_icon, file$k, 49, 12, 2323);
+    			add_location(sp_icon, file$p, 49, 12, 2323);
     			set_custom_element_data(sp_action_button, "title", "Auto rotate");
     			set_custom_element_data(sp_action_button, "size", "s");
     			set_custom_element_data(sp_action_button, "emphasized", "");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*element*/ ctx[1].orientation !== canvasEngine.Orientation.None);
-    			add_location(sp_action_button, file$k, 45, 8, 2025);
+    			add_location(sp_action_button, file$p, 45, 8, 2025);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -33289,13 +35073,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			: "expr:maintain-unchecked");
 
     			set_custom_element_data(sp_icon, "size", "s");
-    			add_location(sp_icon, file$k, 58, 12, 2881);
+    			add_location(sp_icon, file$p, 58, 12, 2881);
     			set_custom_element_data(sp_action_button, "title", "Proportional scale");
     			set_custom_element_data(sp_action_button, "size", "s");
     			set_custom_element_data(sp_action_button, "emphasized", "");
     			set_custom_element_data(sp_action_button, "quiet", "");
     			set_custom_element_data(sp_action_button, "selected", /*proportionalScale*/ ctx[0]);
-    			add_location(sp_action_button, file$k, 57, 8, 2712);
+    			add_location(sp_action_button, file$p, 57, 8, 2712);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_action_button, anchor);
@@ -33336,7 +35120,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (25:0) <PropertyGroup title="Transform">
-    function create_default_slot$5(ctx) {
+    function create_default_slot$6(ctx) {
     	let numberpair0;
     	let t0;
     	let numberpair1;
@@ -33536,7 +35320,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$5.name,
+    		id: create_default_slot$6.name,
     		type: "slot",
     		source: "(25:0) <PropertyGroup title=\\\"Transform\\\">",
     		ctx
@@ -33545,14 +35329,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$q(ctx) {
+    function create_fragment$u(ctx) {
     	let propertygroup;
     	let current;
 
     	propertygroup = new PropertyGroup({
     			props: {
     				title: "Transform",
-    				$$slots: { default: [create_default_slot$5] },
+    				$$slots: { default: [create_default_slot$6] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -33594,7 +35378,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$q.name,
+    		id: create_fragment$u.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33611,7 +35395,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return project.middleware.alignOriginToElement(element, value.x, value.y);
     }
 
-    function instance$q($$self, $$props, $$invalidate) {
+    function instance$u($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Transform", slots, []);
     	
@@ -33746,13 +35530,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Transform extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$q, create_fragment$q, safe_not_equal, { element: 1, proportionalScale: 0 });
+    		init(this, options, instance$u, create_fragment$u, safe_not_equal, { element: 1, proportionalScale: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Transform",
     			options,
-    			id: create_fragment$q.name
+    			id: create_fragment$u.name
     		});
 
     		const { ctx } = this.$$;
@@ -33782,9 +35566,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/PropertyItem.svelte generated by Svelte v3.38.3 */
 
-    const file$j = "src/Components/Properties/PropertyItem.svelte";
+    const file$o = "src/Components/Properties/PropertyItem.svelte";
 
-    function create_fragment$p(ctx) {
+    function create_fragment$t(ctx) {
     	let div;
     	let sp_field_label;
     	let t0;
@@ -33801,9 +35585,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t1 = space();
     			if (default_slot) default_slot.c();
     			set_custom_element_data(sp_field_label, "class", "svelte-bnpazb");
-    			add_location(sp_field_label, file$j, 3, 4, 78);
+    			add_location(sp_field_label, file$o, 3, 4, 78);
     			attr_dev(div, "class", "property-item svelte-bnpazb");
-    			add_location(div, file$j, 2, 0, 46);
+    			add_location(div, file$o, 2, 0, 46);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -33846,7 +35630,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$p.name,
+    		id: create_fragment$t.name,
     		type: "component",
     		source: "",
     		ctx
@@ -33855,7 +35639,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$p($$self, $$props, $$invalidate) {
+    function instance$t($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("PropertyItem", slots, ['default']);
     	let { title } = $$props;
@@ -33886,13 +35670,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class PropertyItem extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$p, create_fragment$p, safe_not_equal, { title: 0 });
+    		init(this, options, instance$t, create_fragment$t, safe_not_equal, { title: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "PropertyItem",
     			options,
-    			id: create_fragment$p.name
+    			id: create_fragment$t.name
     		});
 
     		const { ctx } = this.$$;
@@ -33913,7 +35697,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/Compositing.svelte generated by Svelte v3.38.3 */
-    const file$i = "src/Components/Properties/Compositing.svelte";
+    const file$n = "src/Components/Properties/Compositing.svelte";
 
     // (16:4) <PropertyItem title="Blend">
     function create_default_slot_2$1(ctx) {
@@ -34044,47 +35828,47 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_menu_item15 = element("sp-menu-item");
     			t36 = text("Screen");
     			set_custom_element_data(sp_menu_item0, "value", canvasEngine.BlendMode.Normal.toString());
-    			add_location(sp_menu_item0, file$i, 18, 12, 930);
-    			add_location(sp_menu_divider0, file$i, 19, 12, 1014);
+    			add_location(sp_menu_item0, file$n, 18, 12, 930);
+    			add_location(sp_menu_divider0, file$n, 19, 12, 1014);
     			set_custom_element_data(sp_menu_item1, "value", canvasEngine.BlendMode.Color.toString());
-    			add_location(sp_menu_item1, file$i, 20, 12, 1062);
+    			add_location(sp_menu_item1, file$n, 20, 12, 1062);
     			set_custom_element_data(sp_menu_item2, "value", canvasEngine.BlendMode.ColorBurn.toString());
-    			add_location(sp_menu_item2, file$i, 21, 12, 1144);
+    			add_location(sp_menu_item2, file$n, 21, 12, 1144);
     			set_custom_element_data(sp_menu_item3, "value", canvasEngine.BlendMode.ColorDodge.toString());
-    			add_location(sp_menu_item3, file$i, 22, 12, 1235);
-    			add_location(sp_menu_divider1, file$i, 23, 12, 1328);
+    			add_location(sp_menu_item3, file$n, 22, 12, 1235);
+    			add_location(sp_menu_divider1, file$n, 23, 12, 1328);
     			set_custom_element_data(sp_menu_item4, "value", canvasEngine.BlendMode.Darken.toString());
-    			add_location(sp_menu_item4, file$i, 24, 12, 1376);
+    			add_location(sp_menu_item4, file$n, 24, 12, 1376);
     			set_custom_element_data(sp_menu_item5, "value", canvasEngine.BlendMode.Lighten.toString());
-    			add_location(sp_menu_item5, file$i, 25, 12, 1460);
-    			add_location(sp_menu_divider2, file$i, 26, 12, 1546);
+    			add_location(sp_menu_item5, file$n, 25, 12, 1460);
+    			add_location(sp_menu_divider2, file$n, 26, 12, 1546);
     			set_custom_element_data(sp_menu_item6, "value", canvasEngine.BlendMode.Difference.toString());
-    			add_location(sp_menu_item6, file$i, 27, 12, 1594);
+    			add_location(sp_menu_item6, file$n, 27, 12, 1594);
     			set_custom_element_data(sp_menu_item7, "value", canvasEngine.BlendMode.Exclusion.toString());
-    			add_location(sp_menu_item7, file$i, 28, 12, 1686);
+    			add_location(sp_menu_item7, file$n, 28, 12, 1686);
     			set_custom_element_data(sp_menu_item8, "value", canvasEngine.BlendMode.Multiply.toString());
-    			add_location(sp_menu_item8, file$i, 29, 12, 1776);
-    			add_location(sp_menu_divider3, file$i, 30, 12, 1864);
+    			add_location(sp_menu_item8, file$n, 29, 12, 1776);
+    			add_location(sp_menu_divider3, file$n, 30, 12, 1864);
     			set_custom_element_data(sp_menu_item9, "value", canvasEngine.BlendMode.SoftLight.toString());
-    			add_location(sp_menu_item9, file$i, 31, 12, 1912);
+    			add_location(sp_menu_item9, file$n, 31, 12, 1912);
     			set_custom_element_data(sp_menu_item10, "value", canvasEngine.BlendMode.HardLight.toString());
-    			add_location(sp_menu_item10, file$i, 32, 12, 2002);
-    			add_location(sp_menu_divider4, file$i, 33, 12, 2092);
+    			add_location(sp_menu_item10, file$n, 32, 12, 2002);
+    			add_location(sp_menu_divider4, file$n, 33, 12, 2092);
     			set_custom_element_data(sp_menu_item11, "value", canvasEngine.BlendMode.Hue.toString());
-    			add_location(sp_menu_item11, file$i, 34, 12, 2140);
+    			add_location(sp_menu_item11, file$n, 34, 12, 2140);
     			set_custom_element_data(sp_menu_item12, "value", canvasEngine.BlendMode.Saturation.toString());
-    			add_location(sp_menu_item12, file$i, 35, 12, 2218);
+    			add_location(sp_menu_item12, file$n, 35, 12, 2218);
     			set_custom_element_data(sp_menu_item13, "value", canvasEngine.BlendMode.Luminosity.toString());
-    			add_location(sp_menu_item13, file$i, 36, 12, 2310);
-    			add_location(sp_menu_divider5, file$i, 37, 12, 2402);
+    			add_location(sp_menu_item13, file$n, 36, 12, 2310);
+    			add_location(sp_menu_divider5, file$n, 37, 12, 2402);
     			set_custom_element_data(sp_menu_item14, "value", canvasEngine.BlendMode.Overlay.toString());
-    			add_location(sp_menu_item14, file$i, 38, 12, 2450);
+    			add_location(sp_menu_item14, file$n, 38, 12, 2450);
     			set_custom_element_data(sp_menu_item15, "value", canvasEngine.BlendMode.Screen.toString());
-    			add_location(sp_menu_item15, file$i, 39, 12, 2536);
+    			add_location(sp_menu_item15, file$n, 39, 12, 2536);
     			set_custom_element_data(sp_picker, "value", sp_picker_value_value = /*element*/ ctx[0].blend.toString());
     			set_style(sp_picker, "flex", "1");
     			set_custom_element_data(sp_picker, "size", "s");
-    			add_location(sp_picker, file$i, 16, 8, 739);
+    			add_location(sp_picker, file$n, 16, 8, 739);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_picker, anchor);
@@ -34192,9 +35976,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			set_custom_element_data(sp_switch, "checked", sp_switch_checked_value = /*element*/ ctx[0].isolate);
     			set_style(sp_switch, "width", "var(--spectrum-switch-track-width)");
-    			add_location(sp_switch, file$i, 43, 8, 2692);
+    			add_location(sp_switch, file$n, 43, 8, 2692);
     			set_style(div, "flex", "1");
-    			add_location(div, file$i, 46, 8, 2922);
+    			add_location(div, file$n, 46, 8, 2922);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, sp_switch, anchor);
@@ -34232,7 +36016,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (10:0) <PropertyGroup title="Compositing">
-    function create_default_slot$4(ctx) {
+    function create_default_slot$5(ctx) {
     	let spslider;
     	let t0;
     	let propertyitem0;
@@ -34332,7 +36116,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$4.name,
+    		id: create_default_slot$5.name,
     		type: "slot",
     		source: "(10:0) <PropertyGroup title=\\\"Compositing\\\">",
     		ctx
@@ -34341,14 +36125,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$o(ctx) {
+    function create_fragment$s(ctx) {
     	let propertygroup;
     	let current;
 
     	propertygroup = new PropertyGroup({
     			props: {
     				title: "Compositing",
-    				$$slots: { default: [create_default_slot$4] },
+    				$$slots: { default: [create_default_slot$5] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -34390,7 +36174,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$o.name,
+    		id: create_fragment$s.name,
     		type: "component",
     		source: "",
     		ctx
@@ -34399,7 +36183,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$o($$self, $$props, $$invalidate) {
+    function instance$s($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Compositing", slots, []);
     	
@@ -34471,13 +36255,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Compositing extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$o, create_fragment$o, safe_not_equal, { element: 0 });
+    		init(this, options, instance$s, create_fragment$s, safe_not_equal, { element: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Compositing",
     			options,
-    			id: create_fragment$o.name
+    			id: create_fragment$s.name
     		});
 
     		const { ctx } = this.$$;
@@ -34498,9 +36282,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/FillAndStroke/BrushSwitch.svelte generated by Svelte v3.38.3 */
-    const file$h = "src/Components/Properties/FillAndStroke/BrushSwitch.svelte";
+    const file$m = "src/Components/Properties/FillAndStroke/BrushSwitch.svelte";
 
-    function create_fragment$n(ctx) {
+    function create_fragment$r(ctx) {
     	let div3;
     	let div2;
     	let sp_thumbnail0;
@@ -34536,9 +36320,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	spslider.$on("done", /*done_handler*/ ctx[12]);
-    	spslider.$on("input", /*input_handler*/ ctx[13]);
-    	spslider.$on("start", /*start_handler*/ ctx[14]);
+    	spslider.$on("done", /*done_handler*/ ctx[9]);
+    	spslider.$on("input", /*input_handler*/ ctx[10]);
+    	spslider.$on("start", /*start_handler*/ ctx[11]);
 
     	const block = {
     		c: function create() {
@@ -34559,12 +36343,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_thumbnail0, "background", sp_thumbnail0_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].fill, /*value*/ ctx[1].fillOpacity));
     			set_custom_element_data(sp_thumbnail0, "selected", sp_thumbnail0_selected_value = /*showFill*/ ctx[0] ? "" : undefined);
     			set_custom_element_data(sp_thumbnail0, "class", "fill svelte-mm4k7e");
-    			add_location(sp_thumbnail0, file$h, 61, 8, 2339);
+    			add_location(sp_thumbnail0, file$m, 75, 8, 2657);
     			set_custom_element_data(sp_thumbnail1, "title", "Stroke");
     			set_custom_element_data(sp_thumbnail1, "background", sp_thumbnail1_background_value = /*getBackground*/ ctx[4](/*value*/ ctx[1].strokeBrush, /*value*/ ctx[1].strokeOpacity));
     			set_custom_element_data(sp_thumbnail1, "selected", sp_thumbnail1_selected_value = !/*showFill*/ ctx[0] ? "" : undefined);
     			set_custom_element_data(sp_thumbnail1, "class", "stroke svelte-mm4k7e");
-    			add_location(sp_thumbnail1, file$h, 62, 8, 2533);
+    			add_location(sp_thumbnail1, file$m, 76, 8, 2851);
 
     			set_custom_element_data(sp_icon0, "name", sp_icon0_name_value = /*showFill*/ ctx[0]
     			? "expr:swap-arrow-up-left"
@@ -34572,25 +36356,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			set_custom_element_data(sp_icon0, "size", "s");
     			set_custom_element_data(sp_icon0, "class", "svelte-mm4k7e");
-    			add_location(sp_icon0, file$h, 65, 12, 2965);
+    			add_location(sp_icon0, file$m, 79, 12, 3205);
     			attr_dev(div0, "class", "action-icon svelte-mm4k7e");
     			attr_dev(div0, "title", div0_title_value = /*showFill*/ ctx[0] ? "Copy Stroke" : "Copy Fill");
     			set_style(div0, "bottom", "0");
     			set_style(div0, "left", "0");
-    			add_location(div0, file$h, 63, 8, 2742);
+    			add_location(div0, file$m, 77, 8, 3060);
     			set_custom_element_data(sp_icon1, "name", "expr:swap-arrows");
     			set_custom_element_data(sp_icon1, "size", "s");
     			set_custom_element_data(sp_icon1, "class", "svelte-mm4k7e");
-    			add_location(sp_icon1, file$h, 69, 12, 3266);
+    			add_location(sp_icon1, file$m, 83, 12, 3455);
     			attr_dev(div1, "class", "action-icon svelte-mm4k7e");
     			attr_dev(div1, "title", "Swap Fill & Stroke");
     			set_style(div1, "top", "0");
     			set_style(div1, "right", "0");
-    			add_location(div1, file$h, 67, 8, 3094);
+    			add_location(div1, file$m, 81, 8, 3334);
     			attr_dev(div2, "class", "thumbnail-wrapper svelte-mm4k7e");
-    			add_location(div2, file$h, 60, 4, 2299);
+    			add_location(div2, file$m, 74, 4, 2617);
     			attr_dev(div3, "class", "brush-switch svelte-mm4k7e");
-    			add_location(div3, file$h, 59, 0, 2268);
+    			add_location(div3, file$m, 73, 0, 2586);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -34613,10 +36397,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(sp_thumbnail0, "click", /*click_handler*/ ctx[8], false, false, false),
-    					listen_dev(sp_thumbnail1, "click", /*click_handler_1*/ ctx[9], false, false, false),
-    					listen_dev(div0, "click", /*click_handler_2*/ ctx[10], false, false, false),
-    					listen_dev(div1, "click", /*click_handler_3*/ ctx[11], false, false, false)
+    					listen_dev(sp_thumbnail0, "click", /*click_handler*/ ctx[7], false, false, false),
+    					listen_dev(sp_thumbnail1, "click", /*click_handler_1*/ ctx[8], false, false, false),
+    					listen_dev(div0, "click", /*onCopy*/ ctx[5], false, false, false),
+    					listen_dev(div1, "click", /*onSwap*/ ctx[6], false, false, false)
     				];
 
     				mounted = true;
@@ -34673,7 +36457,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$n.name,
+    		id: create_fragment$r.name,
     		type: "component",
     		source: "",
     		ctx
@@ -34682,7 +36466,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$n($$self, $$props, $$invalidate) {
+    function instance$r($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushSwitch", slots, []);
     	
@@ -34749,6 +36533,22 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		return project.middleware.copyFillToStroke([element], copyOpacity);
     	}
 
+    	function onCopy(e) {
+    		dispatch("action", {
+    			action: showFill ? copyStroke : copyFill,
+    			type: showFill ? "copyStroke" : "copyFill",
+    			value: e.altKey
+    		});
+    	}
+
+    	function onSwap(e) {
+    		dispatch("action", {
+    			action: swap,
+    			type: "swapFillStroke",
+    			value: !e.altKey
+    		});
+    	}
+
     	const writable_props = ["value", "showFill"];
 
     	Object.keys($$props).forEach(key => {
@@ -34757,13 +36557,6 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	const click_handler = () => $$invalidate(0, showFill = true);
     	const click_handler_1 = () => $$invalidate(0, showFill = false);
-
-    	const click_handler_2 = e => dispatch("action", {
-    		action: showFill ? copyStroke : copyFill,
-    		value: e.altKey
-    	});
-
-    	const click_handler_3 = e => dispatch("action", { action: swap, value: !e.altKey });
 
     	function done_handler(event) {
     		bubble.call(this, $$self, event);
@@ -34797,7 +36590,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		getBackground,
     		swap,
     		copyStroke,
-    		copyFill
+    		copyFill,
+    		onCopy,
+    		onSwap
     	});
 
     	$$self.$inject_state = $$props => {
@@ -34822,13 +36617,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		opacityProperty,
     		dispatch,
     		getBackground,
-    		swap,
-    		copyStroke,
-    		copyFill,
+    		onCopy,
+    		onSwap,
     		click_handler,
     		click_handler_1,
-    		click_handler_2,
-    		click_handler_3,
     		done_handler,
     		input_handler,
     		start_handler
@@ -34838,13 +36630,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushSwitch extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$n, create_fragment$n, safe_not_equal, { value: 1, showFill: 0 });
+    		init(this, options, instance$r, create_fragment$r, safe_not_equal, { value: 1, showFill: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushSwitch",
     			options,
-    			id: create_fragment$n.name
+    			id: create_fragment$r.name
     		});
 
     		const { ctx } = this.$$;
@@ -34874,9 +36666,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushEmpty.svelte generated by Svelte v3.38.3 */
 
-    const file$g = "src/Components/Properties/Brush/BrushEmpty.svelte";
+    const file$l = "src/Components/Properties/Brush/BrushEmpty.svelte";
 
-    function create_fragment$m(ctx) {
+    function create_fragment$q(ctx) {
     	let p;
 
     	const block = {
@@ -34885,7 +36677,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			p.textContent = "No paint";
     			set_style(p, "text-align", "center");
     			set_style(p, "color", "var(--spectrum-global-color-gray-700)");
-    			add_location(p, file$g, 4, 0, 82);
+    			add_location(p, file$l, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -34903,7 +36695,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$m.name,
+    		id: create_fragment$q.name,
     		type: "component",
     		source: "",
     		ctx
@@ -34912,7 +36704,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$m($$self, $$props, $$invalidate) {
+    function instance$q($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushEmpty", slots, []);
     	
@@ -34946,13 +36738,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushEmpty extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$m, create_fragment$m, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$q, create_fragment$q, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushEmpty",
     			options,
-    			id: create_fragment$m.name
+    			id: create_fragment$q.name
     		});
 
     		const { ctx } = this.$$;
@@ -36098,7 +37890,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }());
 
     /* src/Controls/SpColorLoupe.svelte generated by Svelte v3.38.3 */
-    const file$f = "src/Controls/SpColorLoupe.svelte";
+    const file$k = "src/Controls/SpColorLoupe.svelte";
 
     // (12:4) {#if checkerboard}
     function create_if_block_1$1(ctx) {
@@ -36122,25 +37914,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(rect0, "width", "12");
     			attr_dev(rect0, "height", "16");
     			set_style(rect0, "fill", "var(--spectrum-global-color-static-gray-500)");
-    			add_location(rect0, file$f, 14, 16, 589);
+    			add_location(rect0, file$k, 14, 16, 589);
     			attr_dev(rect1, "x", "12");
     			attr_dev(rect1, "y", "0");
     			attr_dev(rect1, "width", "12");
     			attr_dev(rect1, "height", "16");
     			set_style(rect1, "fill", "var(--spectrum-global-color-static-white)");
-    			add_location(rect1, file$f, 15, 16, 708);
+    			add_location(rect1, file$k, 15, 16, 708);
     			attr_dev(rect2, "x", "0");
     			attr_dev(rect2, "y", "16");
     			attr_dev(rect2, "width", "12");
     			attr_dev(rect2, "height", "16");
     			set_style(rect2, "fill", "var(--spectrum-global-color-static-white)");
-    			add_location(rect2, file$f, 16, 16, 825);
+    			add_location(rect2, file$k, 16, 16, 825);
     			attr_dev(rect3, "x", "12");
     			attr_dev(rect3, "y", "16");
     			attr_dev(rect3, "width", "12");
     			attr_dev(rect3, "height", "16");
     			set_style(rect3, "fill", "var(--spectrum-global-color-static-gray-500)");
-    			add_location(rect3, file$f, 17, 16, 942);
+    			add_location(rect3, file$k, 17, 16, 942);
     			attr_dev(pattern, "id", "spectrum-ColorLoupe-checkerboard");
     			attr_dev(pattern, "shape-rendering", "geometricPrecision");
     			attr_dev(pattern, "color-rendering", "optimizeQuality");
@@ -36148,8 +37940,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(pattern, "y", "0");
     			attr_dev(pattern, "width", "50%");
     			attr_dev(pattern, "height", "50%");
-    			add_location(pattern, file$f, 13, 12, 417);
-    			add_location(defs, file$f, 12, 8, 398);
+    			add_location(pattern, file$k, 13, 12, 417);
+    			add_location(defs, file$k, 12, 8, 398);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, defs, anchor);
@@ -36176,7 +37968,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (23:8) {#if checkerboard}
-    function create_if_block$4(ctx) {
+    function create_if_block$5(ctx) {
     	let path;
 
     	const block = {
@@ -36184,7 +37976,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			path = svg_element("path");
     			attr_dev(path, "fill", "url(#spectrum-ColorLoupe-checkerboard)");
     			attr_dev(path, "d", "M24,0A24,24,0,0,1,48,24c0,16.255-24,40-24,40S0,40.255,0,24A24,24,0,0,1,24,0Z");
-    			add_location(path, file$f, 23, 12, 1170);
+    			add_location(path, file$k, 23, 12, 1170);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, path, anchor);
@@ -36196,7 +37988,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$4.name,
+    		id: create_if_block$5.name,
     		type: "if",
     		source: "(23:8) {#if checkerboard}",
     		ctx
@@ -36205,13 +37997,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$l(ctx) {
+    function create_fragment$p(ctx) {
     	let svg;
     	let g;
     	let path0;
     	let path1;
     	let if_block0 = /*checkerboard*/ ctx[1] && create_if_block_1$1(ctx);
-    	let if_block1 = /*checkerboard*/ ctx[1] && create_if_block$4(ctx);
+    	let if_block1 = /*checkerboard*/ ctx[1] && create_if_block$5(ctx);
     	let svg_levels = [/*$$restProps*/ ctx[3], { class: /*computedClass*/ ctx[2] }];
     	let svg_data = {};
 
@@ -36230,14 +38022,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(path0, "fill", /*color*/ ctx[0]);
     			attr_dev(path0, "class", "spectrum-ColorLoupe-inner");
     			attr_dev(path0, "d", "M24,0A24,24,0,0,1,48,24c0,16.255-24,40-24,40S0,40.255,0,24A24,24,0,0,1,24,0Z");
-    			add_location(path0, file$f, 25, 8, 1328);
+    			add_location(path0, file$k, 25, 8, 1328);
     			attr_dev(path1, "class", "spectrum-ColorLoupe-outer");
     			attr_dev(path1, "d", "M24,2A21.98,21.98,0,0,0,2,24c0,6.2,4,14.794,11.568,24.853A144.233,144.233,0,0,0,24,61.132,144.085,144.085,0,0,0,34.4,48.893C41.99,38.816,46,30.209,46,24A21.98,21.98,0,0,0,24,2m0-2A24,24,0,0,1,48,24c0,16.255-24,40-24,40S0,40.255,0,24A24,24,0,0,1,24,0Z");
-    			add_location(path1, file$f, 26, 8, 1473);
+    			add_location(path1, file$k, 26, 8, 1473);
     			attr_dev(g, "transform", "translate(1 1)");
-    			add_location(g, file$f, 21, 4, 1100);
+    			add_location(g, file$k, 21, 4, 1100);
     			set_svg_attributes(svg, svg_data);
-    			add_location(svg, file$f, 10, 0, 322);
+    			add_location(svg, file$k, 10, 0, 322);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36264,7 +38056,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     			if (/*checkerboard*/ ctx[1]) {
     				if (if_block1) ; else {
-    					if_block1 = create_if_block$4(ctx);
+    					if_block1 = create_if_block$5(ctx);
     					if_block1.c();
     					if_block1.m(g, path0);
     				}
@@ -36293,7 +38085,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$l.name,
+    		id: create_fragment$p.name,
     		type: "component",
     		source: "",
     		ctx
@@ -36302,7 +38094,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$l($$self, $$props, $$invalidate) {
+    function instance$p($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["open","color","checkerboard"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -36357,13 +38149,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpColorLoupe extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$l, create_fragment$l, safe_not_equal, { open: 4, color: 0, checkerboard: 1 });
+    		init(this, options, instance$p, create_fragment$p, safe_not_equal, { open: 4, color: 0, checkerboard: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpColorLoupe",
     			options,
-    			id: create_fragment$l.name
+    			id: create_fragment$p.name
     		});
     	}
 
@@ -36393,10 +38185,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorHandle.svelte generated by Svelte v3.38.3 */
-    const file$e = "src/Controls/SpColorHandle.svelte";
+    const file$j = "src/Controls/SpColorHandle.svelte";
 
     // (43:4) {#if loupe && !disabled}
-    function create_if_block$3(ctx) {
+    function create_if_block$4(ctx) {
     	let div;
     	let spcolorloupe;
     	let current;
@@ -36415,7 +38207,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div = element("div");
     			create_component(spcolorloupe.$$.fragment);
     			attr_dev(div, "class", "spectrum-ColorLoupe--wrapper");
-    			add_location(div, file$e, 43, 8, 1399);
+    			add_location(div, file$j, 43, 8, 1399);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -36446,7 +38238,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$3.name,
+    		id: create_if_block$4.name,
     		type: "if",
     		source: "(43:4) {#if loupe && !disabled}",
     		ctx
@@ -36455,7 +38247,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$k(ctx) {
+    function create_fragment$o(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -36464,7 +38256,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let current;
     	let mounted;
     	let dispose;
-    	let if_block = /*loupe*/ ctx[3] && !/*disabled*/ ctx[1] && create_if_block$3(ctx);
+    	let if_block = /*loupe*/ ctx[3] && !/*disabled*/ ctx[1] && create_if_block$4(ctx);
     	let div1_levels = [/*$$restProps*/ ctx[12], { class: /*computedClass*/ ctx[8] }];
     	let div1_data = {};
 
@@ -36480,9 +38272,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "spectrum-ColorHandle-color");
     			attr_dev(div0, "style", div0_style_value = `background-color: ${/*color*/ ctx[5]};`);
-    			add_location(div0, file$e, 41, 4, 1277);
+    			add_location(div0, file$j, 41, 4, 1277);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$e, 39, 0, 1100);
+    			add_location(div1, file$j, 39, 0, 1100);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36520,7 +38312,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$3(ctx);
+    					if_block = create_if_block$4(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -36562,7 +38354,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$k.name,
+    		id: create_fragment$o.name,
     		type: "component",
     		source: "",
     		ctx
@@ -36571,7 +38363,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$k($$self, $$props, $$invalidate) {
+    function instance$o($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["disabled","open","loupe","loupeCheckerboard","color","dragOptions","element"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -36705,7 +38497,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
+    		init(this, options, instance$o, create_fragment$o, safe_not_equal, {
     			disabled: 1,
     			open: 2,
     			loupe: 3,
@@ -36719,7 +38511,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorHandle",
     			options,
-    			id: create_fragment$k.name
+    			id: create_fragment$o.name
     		});
     	}
 
@@ -36781,9 +38573,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorWheel.svelte generated by Svelte v3.38.3 */
-    const file$d = "src/Controls/SpColorWheel.svelte";
+    const file$i = "src/Controls/SpColorWheel.svelte";
 
-    function create_fragment$j(ctx) {
+    function create_fragment$n(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -36857,9 +38649,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			create_component(spcolorhandle.$$.fragment);
     			attr_dev(div0, "class", "spectrum-ColorWheel-gradient");
     			attr_dev(div0, "style", div0_style_value = `clip-path: path(evenodd, "${/*clipPath*/ ctx[8]}");`);
-    			add_location(div0, file$d, 110, 4, 3158);
+    			add_location(div0, file$i, 110, 4, 3158);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$d, 109, 0, 2998);
+    			add_location(div1, file$i, 109, 0, 2998);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36947,7 +38739,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$j.name,
+    		id: create_fragment$n.name,
     		type: "component",
     		source: "",
     		ctx
@@ -36956,7 +38748,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$j($$self, $$props, $$invalidate) {
+    function instance$n($$self, $$props, $$invalidate) {
     	let handlerSize;
     	let radius;
     	let computedClass;
@@ -37223,8 +39015,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		init(
     			this,
     			options,
-    			instance$j,
-    			create_fragment$j,
+    			instance$n,
+    			create_fragment$n,
     			safe_not_equal,
     			{
     				value: 0,
@@ -37241,7 +39033,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorWheel",
     			options,
-    			id: create_fragment$j.name
+    			id: create_fragment$n.name
     		});
     	}
 
@@ -37295,9 +39087,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorArea.svelte generated by Svelte v3.38.3 */
-    const file$c = "src/Controls/SpColorArea.svelte";
+    const file$h = "src/Controls/SpColorArea.svelte";
 
-    function create_fragment$i(ctx) {
+    function create_fragment$m(ctx) {
     	let div1;
     	let div0;
     	let div0_style_value;
@@ -37359,7 +39151,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			input1 = element("input");
     			attr_dev(div0, "class", "spectrum-ColorArea-gradient");
     			attr_dev(div0, "style", div0_style_value = `background: linear-gradient(to top, black 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(to right, white 0%, rgba(0, 0, 0, 0) 100%), hsl(${/*hue*/ ctx[2]}, 100%, 50%);`);
-    			add_location(div0, file$c, 140, 4, 3339);
+    			add_location(div0, file$h, 140, 4, 3339);
     			attr_dev(input0, "tabindex", "-1");
     			input0.value = /*saturation*/ ctx[0];
     			attr_dev(input0, "type", "range");
@@ -37369,7 +39161,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input0, "min", "0");
     			attr_dev(input0, "max", "1");
     			attr_dev(input0, "step", "0.01");
-    			add_location(input0, file$c, 145, 4, 3917);
+    			add_location(input0, file$h, 145, 4, 3917);
     			attr_dev(input1, "tabindex", "-1");
     			input1.value = /*value*/ ctx[1];
     			attr_dev(input1, "type", "range");
@@ -37379,9 +39171,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input1, "min", "0");
     			attr_dev(input1, "max", "1");
     			attr_dev(input1, "step", "0.01");
-    			add_location(input1, file$c, 146, 4, 4080);
+    			add_location(input1, file$h, 146, 4, 4080);
     			set_attributes(div1, div1_data);
-    			add_location(div1, file$c, 139, 0, 3244);
+    			add_location(div1, file$h, 139, 0, 3244);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -37457,7 +39249,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$i.name,
+    		id: create_fragment$m.name,
     		type: "component",
     		source: "",
     		ctx
@@ -37480,7 +39272,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return Math.round(value * 100) / 100;
     }
 
-    function instance$i($$self, $$props, $$invalidate) {
+    function instance$m($$self, $$props, $$invalidate) {
     	let computedClass;
     	const omit_props_names = ["hue","saturation","value","disabled","loupe"];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
@@ -37758,7 +39550,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
+    		init(this, options, instance$m, create_fragment$m, safe_not_equal, {
     			hue: 2,
     			saturation: 0,
     			value: 1,
@@ -37770,7 +39562,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorArea",
     			options,
-    			id: create_fragment$i.name
+    			id: create_fragment$m.name
     		});
     	}
 
@@ -37816,9 +39608,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/SpColorSliderBase.svelte generated by Svelte v3.38.3 */
-    const file$b = "src/Controls/SpColorSliderBase.svelte";
+    const file$g = "src/Controls/SpColorSliderBase.svelte";
 
-    function create_fragment$h(ctx) {
+    function create_fragment$l(ctx) {
     	let div2;
     	let div1;
     	let div0;
@@ -37886,10 +39678,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(div0, "class", "spectrum-ColorSlider-gradient");
     			attr_dev(div0, "role", "presentation");
     			attr_dev(div0, "style", /*bg*/ ctx[9]);
-    			add_location(div0, file$b, 111, 8, 2911);
+    			add_location(div0, file$g, 111, 8, 2911);
     			attr_dev(div1, "class", "spectrum-ColorSlider-checkerboard");
     			attr_dev(div1, "role", "presentation");
-    			add_location(div1, file$b, 110, 4, 2811);
+    			add_location(div1, file$g, 110, 4, 2811);
     			attr_dev(input, "tabindex", "-1");
     			attr_dev(input, "type", "range");
     			attr_dev(input, "class", "spectrum-ColorSlider-slider");
@@ -37897,9 +39689,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			attr_dev(input, "min", /*min*/ ctx[5]);
     			attr_dev(input, "max", /*max*/ ctx[6]);
     			attr_dev(input, "step", /*step*/ ctx[7]);
-    			add_location(input, file$b, 118, 4, 3475);
+    			add_location(input, file$g, 118, 4, 3475);
     			set_attributes(div2, div2_data);
-    			add_location(div2, file$b, 109, 0, 2742);
+    			add_location(div2, file$g, 109, 0, 2742);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -37993,7 +39785,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$h.name,
+    		id: create_fragment$l.name,
     		type: "component",
     		source: "",
     		ctx
@@ -38002,7 +39794,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$h($$self, $$props, $$invalidate) {
+    function instance$l($$self, $$props, $$invalidate) {
     	let computedClass;
 
     	const omit_props_names = [
@@ -38278,7 +40070,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {
+    		init(this, options, instance$l, create_fragment$l, safe_not_equal, {
     			vertical: 1,
     			invert: 22,
     			disabled: 2,
@@ -38297,7 +40089,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpColorSliderBase",
     			options,
-    			id: create_fragment$h.name
+    			id: create_fragment$l.name
     		});
     	}
 
@@ -38400,7 +40192,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Controls/SpAlphaSlider.svelte generated by Svelte v3.38.3 */
 
-    function create_fragment$g(ctx) {
+    function create_fragment$k(ctx) {
     	let spcolorsliderbase;
     	let updating_value;
     	let current;
@@ -38484,7 +40276,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$g.name,
+    		id: create_fragment$k.name,
     		type: "component",
     		source: "",
     		ctx
@@ -38497,7 +40289,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return template.replace("%alpha", alpha.toString());
     }
 
-    function instance$g($$self, $$props, $$invalidate) {
+    function instance$k($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("SpAlphaSlider", slots, []);
     	let { value = 0 } = $$props;
@@ -38600,7 +40392,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
+    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
     			value: 0,
     			step: 1,
     			small: 2,
@@ -38614,7 +40406,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "SpAlphaSlider",
     			options,
-    			id: create_fragment$g.name
+    			id: create_fragment$k.name
     		});
     	}
 
@@ -38676,10 +40468,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/ColorControl.svelte generated by Svelte v3.38.3 */
-    const file$a = "src/Controls/ColorControl.svelte";
+    const file$f = "src/Controls/ColorControl.svelte";
 
     // (71:8) <SpColorWheel on:start on:done on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>
-    function create_default_slot$3(ctx) {
+    function create_default_slot$4(ctx) {
     	let spcolorarea;
     	let updating_hue;
     	let updating_saturation;
@@ -38768,7 +40560,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$3.name,
+    		id: create_default_slot$4.name,
     		type: "slot",
     		source: "(71:8) <SpColorWheel on:start on:done on:input={onChange} bind:value={hsva.h} step={1} size={size} loupe={loupe} small>",
     		ctx
@@ -38778,7 +40570,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (77:4) {#if details}
-    function create_if_block$2(ctx) {
+    function create_if_block$3(ctx) {
     	let div;
     	let sptextfield;
     	let t0;
@@ -38824,19 +40616,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			sp_menu_item3 = element("sp-menu-item");
     			sp_menu_item3.textContent = "HSL";
     			set_custom_element_data(sp_menu_item0, "value", "HEX");
-    			add_location(sp_menu_item0, file$a, 85, 16, 3052);
+    			add_location(sp_menu_item0, file$f, 85, 16, 3052);
     			set_custom_element_data(sp_menu_item1, "value", "RGB");
-    			add_location(sp_menu_item1, file$a, 86, 16, 3113);
+    			add_location(sp_menu_item1, file$f, 86, 16, 3113);
     			set_custom_element_data(sp_menu_item2, "value", "HSV");
-    			add_location(sp_menu_item2, file$a, 87, 16, 3174);
+    			add_location(sp_menu_item2, file$f, 87, 16, 3174);
     			set_custom_element_data(sp_menu_item3, "value", "HSL");
-    			add_location(sp_menu_item3, file$a, 88, 16, 3235);
+    			add_location(sp_menu_item3, file$f, 88, 16, 3235);
     			set_custom_element_data(sp_picker, "value", /*mode*/ ctx[0]);
     			set_custom_element_data(sp_picker, "size", "s");
     			set_custom_element_data(sp_picker, "class", "svelte-pvdbx0");
-    			add_location(sp_picker, file$a, 84, 12, 2961);
+    			add_location(sp_picker, file$f, 84, 12, 2961);
     			attr_dev(div, "class", "color-control-details svelte-pvdbx0");
-    			add_location(div, file$a, 77, 8, 2701);
+    			add_location(div, file$f, 77, 8, 2701);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -38885,7 +40677,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$2.name,
+    		id: create_if_block$3.name,
     		type: "if",
     		source: "(77:4) {#if details}",
     		ctx
@@ -38894,7 +40686,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$f(ctx) {
+    function create_fragment$j(ctx) {
     	let div1;
     	let div0;
     	let spcolorwheel;
@@ -38915,7 +40707,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		size: /*size*/ ctx[1],
     		loupe: /*loupe*/ ctx[3],
     		small: true,
-    		$$slots: { default: [create_default_slot$3] },
+    		$$slots: { default: [create_default_slot$4] },
     		$$scope: { ctx }
     	};
 
@@ -38957,7 +40749,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	spalphaslider.$on("start", /*start_handler_2*/ ctx[20]);
     	spalphaslider.$on("done", /*done_handler_2*/ ctx[21]);
     	spalphaslider.$on("input", /*onChange*/ ctx[7]);
-    	let if_block = /*details*/ ctx[2] && create_if_block$2(ctx);
+    	let if_block = /*details*/ ctx[2] && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
@@ -38970,9 +40762,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (if_block) if_block.c();
     			attr_dev(div0, "class", "color-control-wheel svelte-pvdbx0");
     			attr_dev(div0, "style", div0_style_value = `--color-control-slider-size: ${/*size*/ ctx[1] - 2 * 16}px;`);
-    			add_location(div0, file$a, 69, 4, 2126);
+    			add_location(div0, file$f, 69, 4, 2126);
     			attr_dev(div1, "class", "color-control svelte-pvdbx0");
-    			add_location(div1, file$a, 68, 0, 2094);
+    			add_location(div1, file$f, 68, 0, 2094);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -39026,7 +40818,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block$2(ctx);
+    					if_block = create_if_block$3(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(div1, null);
@@ -39064,7 +40856,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$f.name,
+    		id: create_fragment$j.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39088,7 +40880,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	}
     }
 
-    function instance$f($$self, $$props, $$invalidate) {
+    function instance$j($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("ColorControl", slots, []);
     	const dispatch = createEventDispatcher();
@@ -39309,7 +41101,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {
+    		init(this, options, instance$j, create_fragment$j, safe_not_equal, {
     			value: 9,
     			size: 1,
     			details: 2,
@@ -39321,7 +41113,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			component: this,
     			tagName: "ColorControl",
     			options,
-    			id: create_fragment$f.name
+    			id: create_fragment$j.name
     		});
 
     		const { ctx } = this.$$;
@@ -39375,7 +41167,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/Color.svelte generated by Svelte v3.38.3 */
 
-    function create_fragment$e(ctx) {
+    function create_fragment$i(ctx) {
     	let colorcontrol;
     	let updating_mode;
     	let current;
@@ -39439,7 +41231,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$e.name,
+    		id: create_fragment$i.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39448,7 +41240,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$e($$self, $$props, $$invalidate) {
+    function instance$i($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Color", slots, []);
     	const dispatch = createEventDispatcher();
@@ -39525,13 +41317,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Color_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$i, create_fragment$i, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Color_1",
     			options,
-    			id: create_fragment$e.name
+    			id: create_fragment$i.name
     		});
 
     		const { ctx } = this.$$;
@@ -39561,7 +41353,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushSolid.svelte generated by Svelte v3.38.3 */
 
-    function create_fragment$d(ctx) {
+    function create_fragment$h(ctx) {
     	let colorcontrol;
     	let updating_colorMode;
     	let current;
@@ -39625,7 +41417,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$d.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39634,7 +41426,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$d($$self, $$props, $$invalidate) {
+    function instance$h($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushSolid", slots, []);
     	
@@ -39702,13 +41494,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushSolid extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$h, create_fragment$h, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushSolid",
     			options,
-    			id: create_fragment$d.name
+    			id: create_fragment$h.name
     		});
 
     		const { ctx } = this.$$;
@@ -39738,16 +41530,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushPattern.svelte generated by Svelte v3.38.3 */
 
-    const file$9 = "src/Components/Properties/Brush/BrushPattern.svelte";
+    const file$e = "src/Components/Properties/Brush/BrushPattern.svelte";
 
-    function create_fragment$c(ctx) {
+    function create_fragment$g(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Pattern brush";
-    			add_location(div, file$9, 4, 0, 82);
+    			add_location(div, file$e, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -39765,7 +41557,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39774,7 +41566,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$c($$self, $$props, $$invalidate) {
+    function instance$g($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushPattern", slots, []);
     	
@@ -39808,13 +41600,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushPattern extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$g, create_fragment$g, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushPattern",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$g.name
     		});
 
     		const { ctx } = this.$$;
@@ -39844,16 +41636,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushConicalGradient.svelte generated by Svelte v3.38.3 */
 
-    const file$8 = "src/Components/Properties/Brush/BrushConicalGradient.svelte";
+    const file$d = "src/Components/Properties/Brush/BrushConicalGradient.svelte";
 
-    function create_fragment$b(ctx) {
+    function create_fragment$f(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Conical gradient";
-    			add_location(div, file$8, 4, 0, 82);
+    			add_location(div, file$d, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -39871,7 +41663,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39880,7 +41672,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$b($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushConicalGradient", slots, []);
     	
@@ -39914,13 +41706,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushConicalGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$f, create_fragment$f, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushConicalGradient",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$f.name
     		});
 
     		const { ctx } = this.$$;
@@ -39950,16 +41742,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushLinearGradient.svelte generated by Svelte v3.38.3 */
 
-    const file$7 = "src/Components/Properties/Brush/BrushLinearGradient.svelte";
+    const file$c = "src/Components/Properties/Brush/BrushLinearGradient.svelte";
 
-    function create_fragment$a(ctx) {
+    function create_fragment$e(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Linear gradient";
-    			add_location(div, file$7, 4, 0, 82);
+    			add_location(div, file$c, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -39977,7 +41769,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -39986,7 +41778,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$a($$self, $$props, $$invalidate) {
+    function instance$e($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushLinearGradient", slots, []);
     	
@@ -40020,13 +41812,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushLinearGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushLinearGradient",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$e.name
     		});
 
     		const { ctx } = this.$$;
@@ -40056,16 +41848,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushRadialGradient.svelte generated by Svelte v3.38.3 */
 
-    const file$6 = "src/Components/Properties/Brush/BrushRadialGradient.svelte";
+    const file$b = "src/Components/Properties/Brush/BrushRadialGradient.svelte";
 
-    function create_fragment$9(ctx) {
+    function create_fragment$d(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Radial gradient";
-    			add_location(div, file$6, 4, 0, 82);
+    			add_location(div, file$b, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -40083,7 +41875,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -40092,7 +41884,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$d($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushRadialGradient", slots, []);
     	
@@ -40126,13 +41918,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushRadialGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushRadialGradient",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$d.name
     		});
 
     		const { ctx } = this.$$;
@@ -40162,16 +41954,16 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     /* src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte generated by Svelte v3.38.3 */
 
-    const file$5 = "src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte";
+    const file$a = "src/Components/Properties/Brush/BrushTwoPointConicalGradient.svelte";
 
-    function create_fragment$8(ctx) {
+    function create_fragment$c(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Two point conical gradient";
-    			add_location(div, file$5, 4, 0, 82);
+    			add_location(div, file$a, 4, 0, 82);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -40189,7 +41981,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$8.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -40198,7 +41990,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$8($$self, $$props, $$invalidate) {
+    function instance$c($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BrushTwoPointConicalGradient", slots, []);
     	
@@ -40232,13 +42024,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class BrushTwoPointConicalGradient extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { value: 0, colorMode: 1 });
+    		init(this, options, instance$c, create_fragment$c, safe_not_equal, { value: 0, colorMode: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "BrushTwoPointConicalGradient",
     			options,
-    			id: create_fragment$8.name
+    			id: create_fragment$c.name
     		});
 
     		const { ctx } = this.$$;
@@ -40267,22 +42059,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Controls/IconSwitch.svelte generated by Svelte v3.38.3 */
-    const file$4 = "src/Controls/IconSwitch.svelte";
+    const file$9 = "src/Controls/IconSwitch.svelte";
 
-    function get_each_context(ctx, list, i) {
+    function get_each_context$1(ctx, list, i) {
     	const child_ctx = ctx.slice();
     	child_ctx[6] = list[i];
     	return child_ctx;
     }
 
     // (15:4) {#each items as item (item.value)}
-    function create_each_block(key_1, ctx) {
+    function create_each_block$1(key_1, ctx) {
     	let sp_action_button;
     	let sp_icon;
     	let sp_icon_name_value;
     	let t;
     	let sp_action_button_selected_value;
     	let sp_action_button_title_value;
+    	let sp_action_button_disabled_value;
     	let mounted;
     	let dispose;
 
@@ -40300,11 +42093,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_icon, "name", sp_icon_name_value = /*item*/ ctx[6].icon);
     			set_custom_element_data(sp_icon, "size", /*size*/ ctx[2]);
     			set_custom_element_data(sp_icon, "slot", "icon");
-    			add_location(sp_icon, file$4, 16, 12, 531);
+    			add_location(sp_icon, file$9, 16, 12, 565);
     			set_custom_element_data(sp_action_button, "selected", sp_action_button_selected_value = /*item*/ ctx[6].value === /*value*/ ctx[0]);
     			set_custom_element_data(sp_action_button, "title", sp_action_button_title_value = /*item*/ ctx[6].title);
     			set_custom_element_data(sp_action_button, "size", /*size*/ ctx[2]);
-    			add_location(sp_action_button, file$4, 15, 8, 396);
+    			set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value = /*item*/ ctx[6].disabled === true);
+    			add_location(sp_action_button, file$9, 15, 8, 396);
     			this.first = sp_action_button;
     		},
     		m: function mount(target, anchor) {
@@ -40339,6 +42133,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (dirty & /*size*/ 4) {
     				set_custom_element_data(sp_action_button, "size", /*size*/ ctx[2]);
     			}
+
+    			if (dirty & /*items*/ 2 && sp_action_button_disabled_value !== (sp_action_button_disabled_value = /*item*/ ctx[6].disabled === true)) {
+    				set_custom_element_data(sp_action_button, "disabled", sp_action_button_disabled_value);
+    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(sp_action_button);
@@ -40349,7 +42147,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_each_block.name,
+    		id: create_each_block$1.name,
     		type: "each",
     		source: "(15:4) {#each items as item (item.value)}",
     		ctx
@@ -40358,19 +42156,19 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$7(ctx) {
+    function create_fragment$b(ctx) {
     	let sp_action_group;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let each_value = /*items*/ ctx[1];
     	validate_each_argument(each_value);
     	const get_key = ctx => /*item*/ ctx[6].value;
-    	validate_each_keys(ctx, each_value, get_each_context, get_key);
+    	validate_each_keys(ctx, each_value, get_each_context$1, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let child_ctx = get_each_context$1(ctx, each_value, i);
     		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
     	}
 
     	const block = {
@@ -40384,7 +42182,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_custom_element_data(sp_action_group, "compact", "");
     			set_custom_element_data(sp_action_group, "emphasized", "");
     			set_custom_element_data(sp_action_group, "size", /*size*/ ctx[2]);
-    			add_location(sp_action_group, file$4, 13, 0, 298);
+    			add_location(sp_action_group, file$9, 13, 0, 298);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -40400,8 +42198,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (dirty & /*items, value, size, onClick*/ 15) {
     				each_value = /*items*/ ctx[1];
     				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block, null, get_each_context);
+    				validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, sp_action_group, destroy_block, create_each_block$1, null, get_each_context$1);
     			}
 
     			if (dirty & /*size*/ 4) {
@@ -40421,7 +42219,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$7.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -40430,7 +42228,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$7($$self, $$props, $$invalidate) {
+    function instance$b($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("IconSwitch", slots, []);
     	let { items } = $$props;
@@ -40486,13 +42284,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class IconSwitch extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { items: 1, value: 0, size: 2 });
+    		init(this, options, instance$b, create_fragment$b, safe_not_equal, { items: 1, value: 0, size: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "IconSwitch",
     			options,
-    			id: create_fragment$7.name
+    			id: create_fragment$b.name
     		});
 
     		const { ctx } = this.$$;
@@ -40533,9 +42331,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/Brush/index.svelte generated by Svelte v3.38.3 */
-    const file$3 = "src/Components/Properties/Brush/index.svelte";
+    const file$8 = "src/Components/Properties/Brush/index.svelte";
 
-    function create_fragment$6(ctx) {
+    function create_fragment$a(ctx) {
     	let div0;
     	let iconswitch;
     	let t;
@@ -40590,9 +42388,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			div1 = element("div");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			attr_dev(div0, "class", "brush-control svelte-ph2hre");
-    			add_location(div0, file$3, 78, 0, 2305);
+    			add_location(div0, file$8, 83, 0, 2425);
     			attr_dev(div1, "class", "brush-control-value svelte-ph2hre");
-    			add_location(div1, file$3, 81, 0, 2438);
+    			add_location(div1, file$8, 86, 0, 2558);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -40673,7 +42471,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$6.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -40682,7 +42480,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$6($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Brush", slots, []);
     	const dispatch = createEventDispatcher();
@@ -40704,27 +42502,32 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		{
     			value: canvasEngine.BrushType.LinearGradient,
     			title: "Linear gradient",
-    			icon: "expr:fill-linear-gradient"
+    			icon: "expr:fill-linear-gradient",
+    			disabled: true
     		},
     		{
     			value: canvasEngine.BrushType.RadialGradient,
     			title: "Radial gradient",
-    			icon: "expr:fill-radial-gradient"
+    			icon: "expr:fill-radial-gradient",
+    			disabled: true
     		},
     		{
     			value: canvasEngine.BrushType.TwoPointGradient,
     			title: "Radial gradient with focal point",
-    			icon: "expr:fill-radial-focal-gradient"
+    			icon: "expr:fill-radial-focal-gradient",
+    			disabled: true
     		},
     		{
     			value: canvasEngine.BrushType.ConicalGradient,
     			title: "Sweep gradient",
-    			icon: "expr:fill-conical-gradient"
+    			icon: "expr:fill-conical-gradient",
+    			disabled: true
     		},
     		{
     			value: canvasEngine.BrushType.Pattern,
     			title: "Pattern",
-    			icon: "expr:fill-pattern"
+    			icon: "expr:fill-pattern",
+    			disabled: true
     		}
     	];
 
@@ -40839,13 +42642,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Brush_1 extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { value: 1, colorMode: 0 });
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { value: 1, colorMode: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Brush_1",
     			options,
-    			id: create_fragment$6.name
+    			id: create_fragment$a.name
     		});
 
     		const { ctx } = this.$$;
@@ -40930,7 +42733,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (24:0) <PropertyGroup title="Fill">
-    function create_default_slot$2(ctx) {
+    function create_default_slot$3(ctx) {
     	let propertyitem;
     	let current;
 
@@ -40976,7 +42779,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$2.name,
+    		id: create_default_slot$3.name,
     		type: "slot",
     		source: "(24:0) <PropertyGroup title=\\\"Fill\\\">",
     		ctx
@@ -40985,14 +42788,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$5(ctx) {
+    function create_fragment$9(ctx) {
     	let propertygroup;
     	let current;
 
     	propertygroup = new PropertyGroup({
     			props: {
     				title: "Fill",
-    				$$slots: { default: [create_default_slot$2] },
+    				$$slots: { default: [create_default_slot$3] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41034,7 +42837,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$5.name,
+    		id: create_fragment$9.name,
     		type: "component",
     		source: "",
     		ctx
@@ -41043,7 +42846,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$9($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Fill", slots, []);
     	const dispatch = createEventDispatcher();
@@ -41105,13 +42908,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Fill extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { value: 0 });
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { value: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Fill",
     			options,
-    			id: create_fragment$5.name
+    			id: create_fragment$9.name
     		});
 
     		const { ctx } = this.$$;
@@ -41132,9 +42935,10 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     /* src/Components/Properties/FillAndStroke/Stroke.svelte generated by Svelte v3.38.3 */
+    const file$7 = "src/Components/Properties/FillAndStroke/Stroke.svelte";
 
     // (67:4) <PropertyItem title="Line cap">
-    function create_default_slot_5(ctx) {
+    function create_default_slot_6(ctx) {
     	let iconswitch;
     	let current;
 
@@ -41178,7 +42982,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_5.name,
+    		id: create_default_slot_6.name,
     		type: "slot",
     		source: "(67:4) <PropertyItem title=\\\"Line cap\\\">",
     		ctx
@@ -41188,7 +42992,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (70:4) <PropertyItem title="Line join">
-    function create_default_slot_4(ctx) {
+    function create_default_slot_5(ctx) {
     	let iconswitch;
     	let current;
 
@@ -41232,7 +43036,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_4.name,
+    		id: create_default_slot_5.name,
     		type: "slot",
     		source: "(70:4) <PropertyItem title=\\\"Line join\\\">",
     		ctx
@@ -41242,7 +43046,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (73:4) <PropertyItem title="Miter limit">
-    function create_default_slot_3(ctx) {
+    function create_default_slot_4(ctx) {
     	let sptextfield;
     	let current;
 
@@ -41295,7 +43099,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3.name,
+    		id: create_default_slot_4.name,
     		type: "slot",
     		source: "(73:4) <PropertyItem title=\\\"Miter limit\\\">",
     		ctx
@@ -41305,7 +43109,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (81:4) <PropertyItem title="Dash array">
-    function create_default_slot_2(ctx) {
+    function create_default_slot_3(ctx) {
     	let sptextfield;
     	let current;
 
@@ -41351,7 +43155,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2.name,
+    		id: create_default_slot_3.name,
     		type: "slot",
     		source: "(81:4) <PropertyItem title=\\\"Dash array\\\">",
     		ctx
@@ -41361,7 +43165,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     }
 
     // (88:4) <PropertyItem title="Dash offset">
-    function create_default_slot_1(ctx) {
+    function create_default_slot_2(ctx) {
     	let sptextfield;
     	let current;
 
@@ -41413,7 +43217,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1.name,
+    		id: create_default_slot_2.name,
     		type: "slot",
     		source: "(88:4) <PropertyItem title=\\\"Dash offset\\\">",
     		ctx
@@ -41422,8 +43226,100 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
+    // (100:4) {#if 'pathLength' in value}
+    function create_if_block$2(ctx) {
+    	let propertyitem;
+    	let current;
+
+    	propertyitem = new PropertyItem({
+    			props: {
+    				title: "Path length",
+    				$$slots: { default: [create_default_slot_1] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(propertyitem.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(propertyitem, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const propertyitem_changes = {};
+
+    			if (dirty & /*$$scope, value*/ 65537) {
+    				propertyitem_changes.$$scope = { dirty, ctx };
+    			}
+
+    			propertyitem.$set(propertyitem_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(propertyitem.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(propertyitem.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(propertyitem, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(100:4) {#if 'pathLength' in value}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (101:8) <PropertyItem title="Path length">
+    function create_default_slot_1(ctx) {
+    	let small;
+    	let t_value = (/*value*/ ctx[0].pathLength || 0).toFixed(2) + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			small = element("small");
+    			t = text(t_value);
+    			set_style(small, "user-select", "all");
+    			add_location(small, file$7, 101, 12, 4128);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, small, anchor);
+    			append_dev(small, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*value*/ 1 && t_value !== (t_value = (/*value*/ ctx[0].pathLength || 0).toFixed(2) + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(small);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(101:8) <PropertyItem title=\\\"Path length\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     // (61:0) <PropertyGroup title="Stroke">
-    function create_default_slot$1(ctx) {
+    function create_default_slot$2(ctx) {
     	let spslider;
     	let t0;
     	let propertyitem0;
@@ -41435,6 +43331,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let propertyitem3;
     	let t4;
     	let propertyitem4;
+    	let t5;
+    	let if_block_anchor;
     	let current;
 
     	spslider = new SpSlider({
@@ -41458,7 +43356,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	propertyitem0 = new PropertyItem({
     			props: {
     				title: "Line cap",
-    				$$slots: { default: [create_default_slot_5] },
+    				$$slots: { default: [create_default_slot_6] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41467,7 +43365,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	propertyitem1 = new PropertyItem({
     			props: {
     				title: "Line join",
-    				$$slots: { default: [create_default_slot_4] },
+    				$$slots: { default: [create_default_slot_5] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41476,7 +43374,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	propertyitem2 = new PropertyItem({
     			props: {
     				title: "Miter limit",
-    				$$slots: { default: [create_default_slot_3] },
+    				$$slots: { default: [create_default_slot_4] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41485,7 +43383,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	propertyitem3 = new PropertyItem({
     			props: {
     				title: "Dash array",
-    				$$slots: { default: [create_default_slot_2] },
+    				$$slots: { default: [create_default_slot_3] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41494,11 +43392,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	propertyitem4 = new PropertyItem({
     			props: {
     				title: "Dash offset",
-    				$$slots: { default: [create_default_slot_1] },
+    				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
+
+    	let if_block = "pathLength" in /*value*/ ctx[0] && create_if_block$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -41513,6 +43413,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			create_component(propertyitem3.$$.fragment);
     			t4 = space();
     			create_component(propertyitem4.$$.fragment);
+    			t5 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
     		},
     		m: function mount(target, anchor) {
     			mount_component(spslider, target, anchor);
@@ -41526,6 +43429,9 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			mount_component(propertyitem3, target, anchor);
     			insert_dev(target, t4, anchor);
     			mount_component(propertyitem4, target, anchor);
+    			insert_dev(target, t5, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -41567,6 +43473,29 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			propertyitem4.$set(propertyitem4_changes);
+
+    			if ("pathLength" in /*value*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*value*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$2(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -41576,6 +43505,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			transition_in(propertyitem2.$$.fragment, local);
     			transition_in(propertyitem3.$$.fragment, local);
     			transition_in(propertyitem4.$$.fragment, local);
+    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
@@ -41585,6 +43515,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			transition_out(propertyitem2.$$.fragment, local);
     			transition_out(propertyitem3.$$.fragment, local);
     			transition_out(propertyitem4.$$.fragment, local);
+    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -41599,12 +43530,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			destroy_component(propertyitem3, detaching);
     			if (detaching) detach_dev(t4);
     			destroy_component(propertyitem4, detaching);
+    			if (detaching) detach_dev(t5);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$1.name,
+    		id: create_default_slot$2.name,
     		type: "slot",
     		source: "(61:0) <PropertyGroup title=\\\"Stroke\\\">",
     		ctx
@@ -41613,14 +43547,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$4(ctx) {
+    function create_fragment$8(ctx) {
     	let propertygroup;
     	let current;
 
     	propertygroup = new PropertyGroup({
     			props: {
     				title: "Stroke",
-    				$$slots: { default: [create_default_slot$1] },
+    				$$slots: { default: [create_default_slot$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -41662,7 +43596,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$8.name,
     		type: "component",
     		source: "",
     		ctx
@@ -41671,7 +43605,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$8($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Stroke", slots, []);
     	const dispatch = createEventDispatcher();
@@ -41839,13 +43773,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Stroke extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { value: 0 });
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { value: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Stroke",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$8.name
     		});
 
     		const { ctx } = this.$$;
@@ -41868,7 +43802,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Properties/FillAndStroke/index.svelte generated by Svelte v3.38.3 */
 
     // (44:0) {:else}
-    function create_else_block(ctx) {
+    function create_else_block$1(ctx) {
     	let stroke;
     	let current;
 
@@ -41911,7 +43845,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(44:0) {:else}",
     		ctx
@@ -41973,7 +43907,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function create_fragment$3(ctx) {
+    function create_fragment$7(ctx) {
     	let brushswitch;
     	let updating_showFill;
     	let t0;
@@ -42027,7 +43961,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	brushcontrol.$on("done", /*done_handler_1*/ ctx[13]);
     	brushcontrol.$on("update", /*onUpdate*/ ctx[5]);
     	brushcontrol.$on("action", /*onAction*/ ctx[6]);
-    	const if_block_creators = [create_if_block$1, create_else_block];
+    	const if_block_creators = [create_if_block$1, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -42134,7 +44068,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$3.name,
+    		id: create_fragment$7.name,
     		type: "component",
     		source: "",
     		ctx
@@ -42143,7 +44077,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$7($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("FillAndStroke", slots, []);
     	
@@ -42339,13 +44273,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class FillAndStroke extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { showFill: 0, colorMode: 1, value: 2 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { showFill: 0, colorMode: 1, value: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "FillAndStroke",
     			options,
-    			id: create_fragment$3.name
+    			id: create_fragment$7.name
     		});
 
     		const { ctx } = this.$$;
@@ -42384,48 +44318,48 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     /* src/Components/Properties/index.svelte generated by Svelte v3.38.3 */
 
     const { console: console_1 } = globals;
-    const file$2 = "src/Components/Properties/index.svelte";
+    const file$6 = "src/Components/Properties/index.svelte";
 
-    // (87:4) {#if $CurrentSelectedElement != null}
-    function create_if_block(ctx) {
+    // (140:4) {:else}
+    function create_else_block(ctx) {
     	let t0;
     	let transform;
     	let updating_proportionalScale;
     	let t1;
     	let compositing;
     	let current;
-    	let if_block = /*$CurrentSelectedElement*/ ctx[0] instanceof canvasEngine.VectorElement && create_if_block_1(ctx);
+    	let if_block = /*$CurrentSelectedElement*/ ctx[4] instanceof canvasEngine.VectorElement && create_if_block_3(ctx);
 
     	function transform_proportionalScale_binding(value) {
-    		/*transform_proportionalScale_binding*/ ctx[10](value);
+    		/*transform_proportionalScale_binding*/ ctx[19](value);
     	}
 
     	let transform_props = {
-    		element: /*$CurrentSelectedElement*/ ctx[0]
+    		element: /*$CurrentSelectedElement*/ ctx[4]
     	};
 
-    	if (/*$ProportionalScale*/ ctx[3] !== void 0) {
-    		transform_props.proportionalScale = /*$ProportionalScale*/ ctx[3];
+    	if (/*$ProportionalScale*/ ctx[5] !== void 0) {
+    		transform_props.proportionalScale = /*$ProportionalScale*/ ctx[5];
     	}
 
     	transform = new Transform({ props: transform_props, $$inline: true });
     	binding_callbacks.push(() => bind(transform, "proportionalScale", transform_proportionalScale_binding));
-    	transform.$on("action", /*onAction*/ ctx[7]);
-    	transform.$on("start", /*onStart*/ ctx[5]);
-    	transform.$on("update", /*onUpdate*/ ctx[6]);
-    	transform.$on("done", /*onDone*/ ctx[4]);
+    	transform.$on("action", /*onAction*/ ctx[9]);
+    	transform.$on("start", /*onStart*/ ctx[7]);
+    	transform.$on("update", /*onUpdate*/ ctx[8]);
+    	transform.$on("done", /*onDone*/ ctx[6]);
 
     	compositing = new Compositing({
     			props: {
-    				element: /*$CurrentSelectedElement*/ ctx[0]
+    				element: /*$CurrentSelectedElement*/ ctx[4]
     			},
     			$$inline: true
     		});
 
-    	compositing.$on("action", /*onAction*/ ctx[7]);
-    	compositing.$on("start", /*onStart*/ ctx[5]);
-    	compositing.$on("update", /*onUpdate*/ ctx[6]);
-    	compositing.$on("done", /*onDone*/ ctx[4]);
+    	compositing.$on("action", /*onAction*/ ctx[9]);
+    	compositing.$on("start", /*onStart*/ ctx[7]);
+    	compositing.$on("update", /*onUpdate*/ ctx[8]);
+    	compositing.$on("done", /*onDone*/ ctx[6]);
 
     	const block = {
     		c: function create() {
@@ -42444,15 +44378,15 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (/*$CurrentSelectedElement*/ ctx[0] instanceof canvasEngine.VectorElement) {
+    			if (/*$CurrentSelectedElement*/ ctx[4] instanceof canvasEngine.VectorElement) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*$CurrentSelectedElement*/ 1) {
+    					if (dirty & /*$CurrentSelectedElement*/ 16) {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_3(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(t0.parentNode, t0);
@@ -42468,17 +44402,17 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			}
 
     			const transform_changes = {};
-    			if (dirty & /*$CurrentSelectedElement*/ 1) transform_changes.element = /*$CurrentSelectedElement*/ ctx[0];
+    			if (dirty & /*$CurrentSelectedElement*/ 16) transform_changes.element = /*$CurrentSelectedElement*/ ctx[4];
 
-    			if (!updating_proportionalScale && dirty & /*$ProportionalScale*/ 8) {
+    			if (!updating_proportionalScale && dirty & /*$ProportionalScale*/ 32) {
     				updating_proportionalScale = true;
-    				transform_changes.proportionalScale = /*$ProportionalScale*/ ctx[3];
+    				transform_changes.proportionalScale = /*$ProportionalScale*/ ctx[5];
     				add_flush_callback(() => updating_proportionalScale = false);
     			}
 
     			transform.$set(transform_changes);
     			const compositing_changes = {};
-    			if (dirty & /*$CurrentSelectedElement*/ 1) compositing_changes.element = /*$CurrentSelectedElement*/ ctx[0];
+    			if (dirty & /*$CurrentSelectedElement*/ 16) compositing_changes.element = /*$CurrentSelectedElement*/ ctx[4];
     			compositing.$set(compositing_changes);
     		},
     		i: function intro(local) {
@@ -42505,40 +44439,138 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
-    		type: "if",
-    		source: "(87:4) {#if $CurrentSelectedElement != null}",
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(140:4) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:8) {#if $CurrentSelectedElement instanceof VectorElement}
-    function create_if_block_1(ctx) {
+    // (138:46) 
+    function create_if_block_2(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Show document props";
+    			add_location(div, file$6, 138, 8, 5058);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(138:46) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (130:4) {#if isShapeTool}
+    function create_if_block(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*globalProperties*/ ctx[0] != null && create_if_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*globalProperties*/ ctx[0] != null) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*globalProperties*/ 1) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block_1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(130:4) {#if isShapeTool}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (141:8) {#if $CurrentSelectedElement instanceof VectorElement}
+    function create_if_block_3(ctx) {
     	let fillandstroke;
     	let updating_showFill;
     	let updating_colorMode;
     	let current;
 
-    	function fillandstroke_showFill_binding(value) {
-    		/*fillandstroke_showFill_binding*/ ctx[8](value);
+    	function fillandstroke_showFill_binding_1(value) {
+    		/*fillandstroke_showFill_binding_1*/ ctx[17](value);
     	}
 
-    	function fillandstroke_colorMode_binding(value) {
-    		/*fillandstroke_colorMode_binding*/ ctx[9](value);
+    	function fillandstroke_colorMode_binding_1(value) {
+    		/*fillandstroke_colorMode_binding_1*/ ctx[18](value);
     	}
 
     	let fillandstroke_props = {
-    		value: /*$CurrentSelectedElement*/ ctx[0]
+    		value: /*$CurrentSelectedElement*/ ctx[4]
     	};
 
-    	if (/*$IsFillSelected*/ ctx[1] !== void 0) {
-    		fillandstroke_props.showFill = /*$IsFillSelected*/ ctx[1];
+    	if (/*$IsFillSelected*/ ctx[2] !== void 0) {
+    		fillandstroke_props.showFill = /*$IsFillSelected*/ ctx[2];
     	}
 
-    	if (/*$CurrentColorMode*/ ctx[2] !== void 0) {
-    		fillandstroke_props.colorMode = /*$CurrentColorMode*/ ctx[2];
+    	if (/*$CurrentColorMode*/ ctx[3] !== void 0) {
+    		fillandstroke_props.colorMode = /*$CurrentColorMode*/ ctx[3];
     	}
 
     	fillandstroke = new FillAndStroke({
@@ -42546,12 +44578,12 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			$$inline: true
     		});
 
-    	binding_callbacks.push(() => bind(fillandstroke, "showFill", fillandstroke_showFill_binding));
-    	binding_callbacks.push(() => bind(fillandstroke, "colorMode", fillandstroke_colorMode_binding));
-    	fillandstroke.$on("action", /*onAction*/ ctx[7]);
-    	fillandstroke.$on("start", /*onStart*/ ctx[5]);
-    	fillandstroke.$on("update", /*onUpdate*/ ctx[6]);
-    	fillandstroke.$on("done", /*onDone*/ ctx[4]);
+    	binding_callbacks.push(() => bind(fillandstroke, "showFill", fillandstroke_showFill_binding_1));
+    	binding_callbacks.push(() => bind(fillandstroke, "colorMode", fillandstroke_colorMode_binding_1));
+    	fillandstroke.$on("action", /*onAction*/ ctx[9]);
+    	fillandstroke.$on("start", /*onStart*/ ctx[7]);
+    	fillandstroke.$on("update", /*onUpdate*/ ctx[8]);
+    	fillandstroke.$on("done", /*onDone*/ ctx[6]);
 
     	const block = {
     		c: function create() {
@@ -42563,17 +44595,103 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const fillandstroke_changes = {};
-    			if (dirty & /*$CurrentSelectedElement*/ 1) fillandstroke_changes.value = /*$CurrentSelectedElement*/ ctx[0];
+    			if (dirty & /*$CurrentSelectedElement*/ 16) fillandstroke_changes.value = /*$CurrentSelectedElement*/ ctx[4];
 
-    			if (!updating_showFill && dirty & /*$IsFillSelected*/ 2) {
+    			if (!updating_showFill && dirty & /*$IsFillSelected*/ 4) {
     				updating_showFill = true;
-    				fillandstroke_changes.showFill = /*$IsFillSelected*/ ctx[1];
+    				fillandstroke_changes.showFill = /*$IsFillSelected*/ ctx[2];
     				add_flush_callback(() => updating_showFill = false);
     			}
 
-    			if (!updating_colorMode && dirty & /*$CurrentColorMode*/ 4) {
+    			if (!updating_colorMode && dirty & /*$CurrentColorMode*/ 8) {
     				updating_colorMode = true;
-    				fillandstroke_changes.colorMode = /*$CurrentColorMode*/ ctx[2];
+    				fillandstroke_changes.colorMode = /*$CurrentColorMode*/ ctx[3];
+    				add_flush_callback(() => updating_colorMode = false);
+    			}
+
+    			fillandstroke.$set(fillandstroke_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(fillandstroke.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(fillandstroke.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(fillandstroke, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(141:8) {#if $CurrentSelectedElement instanceof VectorElement}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (131:8) {#if globalProperties != null}
+    function create_if_block_1(ctx) {
+    	let fillandstroke;
+    	let updating_showFill;
+    	let updating_colorMode;
+    	let current;
+
+    	function fillandstroke_showFill_binding(value) {
+    		/*fillandstroke_showFill_binding*/ ctx[15](value);
+    	}
+
+    	function fillandstroke_colorMode_binding(value) {
+    		/*fillandstroke_colorMode_binding*/ ctx[16](value);
+    	}
+
+    	let fillandstroke_props = { value: /*globalProperties*/ ctx[0] };
+
+    	if (/*$IsFillSelected*/ ctx[2] !== void 0) {
+    		fillandstroke_props.showFill = /*$IsFillSelected*/ ctx[2];
+    	}
+
+    	if (/*$CurrentColorMode*/ ctx[3] !== void 0) {
+    		fillandstroke_props.colorMode = /*$CurrentColorMode*/ ctx[3];
+    	}
+
+    	fillandstroke = new FillAndStroke({
+    			props: fillandstroke_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(fillandstroke, "showFill", fillandstroke_showFill_binding));
+    	binding_callbacks.push(() => bind(fillandstroke, "colorMode", fillandstroke_colorMode_binding));
+    	fillandstroke.$on("action", /*onGlobalPropertiesAction*/ ctx[11]);
+    	fillandstroke.$on("update", /*onGlobalPropertiesUpdate*/ ctx[10]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(fillandstroke.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(fillandstroke, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const fillandstroke_changes = {};
+    			if (dirty & /*globalProperties*/ 1) fillandstroke_changes.value = /*globalProperties*/ ctx[0];
+
+    			if (!updating_showFill && dirty & /*$IsFillSelected*/ 4) {
+    				updating_showFill = true;
+    				fillandstroke_changes.showFill = /*$IsFillSelected*/ ctx[2];
+    				add_flush_callback(() => updating_showFill = false);
+    			}
+
+    			if (!updating_colorMode && dirty & /*$CurrentColorMode*/ 8) {
+    				updating_colorMode = true;
+    				fillandstroke_changes.colorMode = /*$CurrentColorMode*/ ctx[3];
     				add_flush_callback(() => updating_colorMode = false);
     			}
 
@@ -42597,56 +44715,71 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(88:8) {#if $CurrentSelectedElement instanceof VectorElement}",
+    		source: "(131:8) {#if globalProperties != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$2(ctx) {
+    function create_fragment$6(ctx) {
     	let div;
+    	let current_block_type_index;
+    	let if_block;
     	let current;
-    	let if_block = /*$CurrentSelectedElement*/ ctx[0] != null && create_if_block(ctx);
+    	const if_block_creators = [create_if_block, create_if_block_2, create_else_block];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*isShapeTool*/ ctx[1]) return 0;
+    		if (/*$CurrentSelectedElement*/ ctx[4] == null) return 1;
+    		return 2;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			if (if_block) if_block.c();
+    			if_block.c();
     			attr_dev(div, "class", "scroll");
     			attr_dev(div, "hidden-x", "");
-    			add_location(div, file$2, 85, 0, 2944);
+    			add_location(div, file$6, 128, 0, 4622);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			if (if_block) if_block.m(div, null);
+    			if_blocks[current_block_type_index].m(div, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*$CurrentSelectedElement*/ ctx[0] != null) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
 
-    					if (dirty & /*$CurrentSelectedElement*/ 1) {
-    						transition_in(if_block, 1);
-    					}
-    				} else {
-    					if_block = create_if_block(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(div, null);
-    				}
-    			} else if (if_block) {
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
     				group_outros();
 
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
     				});
 
     				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div, null);
     			}
     		},
     		i: function intro(local) {
@@ -42660,13 +44793,13 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			if (if_block) if_block.d();
+    			if_blocks[current_block_type_index].d();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$2.name,
+    		id: create_fragment$6.name,
     		type: "component",
     		source: "",
     		ctx
@@ -42677,25 +44810,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     const debug = false;
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$6($$self, $$props, $$invalidate) {
     	let $CurrentProject;
-    	let $CurrentSelectedElement;
+    	let $CurrentTool;
     	let $IsFillSelected;
     	let $CurrentColorMode;
+    	let $CurrentSelectedElement;
     	let $ProportionalScale;
     	validate_store(CurrentProject, "CurrentProject");
-    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(15, $CurrentProject = $$value));
-    	validate_store(CurrentSelectedElement, "CurrentSelectedElement");
-    	component_subscribe($$self, CurrentSelectedElement, $$value => $$invalidate(0, $CurrentSelectedElement = $$value));
+    	component_subscribe($$self, CurrentProject, $$value => $$invalidate(13, $CurrentProject = $$value));
+    	validate_store(CurrentTool, "CurrentTool");
+    	component_subscribe($$self, CurrentTool, $$value => $$invalidate(14, $CurrentTool = $$value));
     	validate_store(IsFillSelected, "IsFillSelected");
-    	component_subscribe($$self, IsFillSelected, $$value => $$invalidate(1, $IsFillSelected = $$value));
+    	component_subscribe($$self, IsFillSelected, $$value => $$invalidate(2, $IsFillSelected = $$value));
     	validate_store(CurrentColorMode, "CurrentColorMode");
-    	component_subscribe($$self, CurrentColorMode, $$value => $$invalidate(2, $CurrentColorMode = $$value));
+    	component_subscribe($$self, CurrentColorMode, $$value => $$invalidate(3, $CurrentColorMode = $$value));
+    	validate_store(CurrentSelectedElement, "CurrentSelectedElement");
+    	component_subscribe($$self, CurrentSelectedElement, $$value => $$invalidate(4, $CurrentSelectedElement = $$value));
     	validate_store(ProportionalScale, "ProportionalScale");
-    	component_subscribe($$self, ProportionalScale, $$value => $$invalidate(3, $ProportionalScale = $$value));
+    	component_subscribe($$self, ProportionalScale, $$value => $$invalidate(5, $ProportionalScale = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Properties", slots, []);
+    	var _a;
     	
+    	let globalProperties;
     	const keyframeCounter = new KeyframeCounter();
     	let started = false;
     	let currentPropertyName = undefined;
@@ -42710,6 +44848,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const engine = $CurrentProject.engine;
 
     		if (currentPropertyValue !== undefined && !canvasEngine.equals(initialPropertyValue, currentPropertyValue) || keyframeCounter.hasChanged(engine)) {
+    			globalProperties.updateFromElement(engine.project.selection.activeElement);
     			engine.project.state.snapshot();
     		}
     		started = false;
@@ -42739,10 +44878,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		const project = $CurrentProject;
 
     		if (project.middleware.setElementsProperty(project.selection, property, value)) {
-    			notifyPropertiesChanged();
-
     			if (snapshot) {
+    				globalProperties.updateFromElement(project.selection.activeElement);
     				project.state.snapshot();
+    			} else {
+    				notifyPropertiesChanged();
     			}
 
     			project.engine.invalidate();
@@ -42786,6 +44926,45 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		}
     	}
 
+    	function onGlobalPropertiesUpdate(e) {
+    		globalProperties.updateProperty(e.detail.property, e.detail.value);
+
+    		// force update
+    		(($$invalidate(0, globalProperties), $$invalidate(13, $CurrentProject)), $$invalidate(12, _a));
+    	}
+
+    	function onGlobalPropertiesAction(e) {
+    		if (!e.detail.type) {
+    			return;
+    		}
+
+    		switch (e.detail.type) {
+    			case "copyFill":
+    				$$invalidate(0, globalProperties.strokeBrush = globalProperties.fill, globalProperties);
+    				if (!e.detail.value) {
+    					$$invalidate(0, globalProperties.strokeOpacity = globalProperties.fillOpacity, globalProperties);
+    				}
+    				return;
+    			case "copyStroke":
+    				$$invalidate(0, globalProperties.fill = globalProperties.strokeBrush, globalProperties);
+    				if (!e.detail.value) {
+    					$$invalidate(0, globalProperties.fillOpacity = globalProperties.strokeOpacity, globalProperties);
+    				}
+    				return;
+    			case "swapFillStroke":
+    				const fill = globalProperties.fill;
+    				$$invalidate(0, globalProperties.fill = globalProperties.strokeBrush, globalProperties);
+    				$$invalidate(0, globalProperties.strokeBrush = fill, globalProperties);
+    				if (e.detail.value) {
+    					const op = globalProperties.fillOpacity;
+    					$$invalidate(0, globalProperties.fillOpacity = globalProperties.strokeOpacity, globalProperties);
+    					$$invalidate(0, globalProperties.strokeOpacity = op, globalProperties);
+    				}
+    				return;
+    		}
+    	}
+
+    	let isShapeTool;
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -42802,18 +44981,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		CurrentColorMode.set($CurrentColorMode);
     	}
 
+    	function fillandstroke_showFill_binding_1(value) {
+    		$IsFillSelected = value;
+    		IsFillSelected.set($IsFillSelected);
+    	}
+
+    	function fillandstroke_colorMode_binding_1(value) {
+    		$CurrentColorMode = value;
+    		CurrentColorMode.set($CurrentColorMode);
+    	}
+
     	function transform_proportionalScale_binding(value) {
     		$ProportionalScale = value;
     		ProportionalScale.set($ProportionalScale);
     	}
 
     	$$self.$capture_state = () => ({
+    		_a,
     		Transform,
     		CurrentProject,
     		CurrentSelectedElement,
     		IsFillSelected,
     		CurrentColorMode,
     		ProportionalScale,
+    		CurrentTool,
     		notifyPropertiesChanged,
     		Compositing,
     		FillAndStroke,
@@ -42821,6 +45012,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		KeyframeCounter,
     		equals: canvasEngine.equals,
     		VectorElement: canvasEngine.VectorElement,
+    		ShapeBuilderTool: canvasEngine.ShapeBuilderTool,
+    		globalProperties,
     		keyframeCounter,
     		started,
     		currentPropertyName,
@@ -42832,35 +45025,63 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		updateProperty,
     		onUpdate,
     		onAction,
+    		onGlobalPropertiesUpdate,
+    		onGlobalPropertiesAction,
+    		isShapeTool,
     		$CurrentProject,
-    		$CurrentSelectedElement,
+    		$CurrentTool,
     		$IsFillSelected,
     		$CurrentColorMode,
+    		$CurrentSelectedElement,
     		$ProportionalScale
     	});
 
     	$$self.$inject_state = $$props => {
+    		if ("_a" in $$props) $$invalidate(12, _a = $$props._a);
+    		if ("globalProperties" in $$props) $$invalidate(0, globalProperties = $$props.globalProperties);
     		if ("started" in $$props) started = $$props.started;
     		if ("currentPropertyName" in $$props) currentPropertyName = $$props.currentPropertyName;
     		if ("currentPropertyValue" in $$props) currentPropertyValue = $$props.currentPropertyValue;
     		if ("initialPropertyValue" in $$props) initialPropertyValue = $$props.initialPropertyValue;
+    		if ("isShapeTool" in $$props) $$invalidate(1, isShapeTool = $$props.isShapeTool);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*$CurrentProject, _a*/ 12288) {
+    			$$invalidate(0, globalProperties = $$invalidate(12, _a = $CurrentProject.engine) === null || _a === void 0
+    			? void 0
+    			: _a.globalElementProperties);
+    		}
+
+    		if ($$self.$$.dirty & /*$CurrentTool*/ 16384) {
+    			$$invalidate(1, isShapeTool = $CurrentTool instanceof canvasEngine.ShapeBuilderTool);
+    		}
+    	};
+
     	return [
-    		$CurrentSelectedElement,
+    		globalProperties,
+    		isShapeTool,
     		$IsFillSelected,
     		$CurrentColorMode,
+    		$CurrentSelectedElement,
     		$ProportionalScale,
     		onDone,
     		onStart,
     		onUpdate,
     		onAction,
+    		onGlobalPropertiesUpdate,
+    		onGlobalPropertiesAction,
+    		_a,
+    		$CurrentProject,
+    		$CurrentTool,
     		fillandstroke_showFill_binding,
     		fillandstroke_colorMode_binding,
+    		fillandstroke_showFill_binding_1,
+    		fillandstroke_colorMode_binding_1,
     		transform_proportionalScale_binding
     	];
     }
@@ -42868,25 +45089,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class Properties extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Properties",
     			options,
-    			id: create_fragment$2.name
+    			id: create_fragment$6.name
     		});
     	}
     }
 
     /* src/Controls/SpSplitView.svelte generated by Svelte v3.38.3 */
-    const file$1 = "src/Controls/SpSplitView.svelte";
+    const file$5 = "src/Controls/SpSplitView.svelte";
     const get_secondary_slot_changes = dirty => ({ collapsed: dirty & /*collapsedEnd*/ 1 });
     const get_secondary_slot_context = ctx => ({ collapsed: /*collapsedEnd*/ ctx[0] });
     const get_primary_slot_changes = dirty => ({ collapsed: dirty & /*collapsedStart*/ 2 });
     const get_primary_slot_context = ctx => ({ collapsed: /*collapsedStart*/ ctx[1] });
 
-    function create_fragment$1(ctx) {
+    function create_fragment$5(ctx) {
     	let sp_split_view;
     	let t;
     	let current;
@@ -42912,7 +45133,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			set_attributes(sp_split_view, sp_split_view_data);
     			toggle_class(sp_split_view, "is-collapsed", /*collapsedEnd*/ ctx[0] || /*collapsedStart*/ ctx[1]);
     			toggle_class(sp_split_view, "svelte-1fg6mkr", true);
-    			add_location(sp_split_view, file$1, 26, 0, 1339);
+    			add_location(sp_split_view, file$5, 26, 0, 1339);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -42976,7 +45197,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$1.name,
+    		id: create_fragment$5.name,
     		type: "component",
     		source: "",
     		ctx
@@ -42985,7 +45206,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	const omit_props_names = [];
     	let $$restProps = compute_rest_props($$props, omit_props_names);
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -43080,21 +45301,1071 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     class SpSplitView extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "SpSplitView",
     			options,
+    			id: create_fragment$5.name
+    		});
+    	}
+    }
+
+    /* src/Components/Dialog.svelte generated by Svelte v3.38.3 */
+    const file$4 = "src/Components/Dialog.svelte";
+
+    const get_default_slot_changes = dirty => ({
+    	isWorking: dirty & /*isWorking*/ 2,
+    	value: dirty & /*data*/ 1
+    });
+
+    const get_default_slot_context = ctx => ({
+    	isWorking: /*isWorking*/ ctx[1],
+    	closeDialog: /*close*/ ctx[7],
+    	value: /*data*/ ctx[0].value
+    });
+
+    function create_fragment$4(ctx) {
+    	let sp_dialog_wrapper;
+    	let sp_dialog_wrapper_error_value;
+    	let sp_dialog_wrapper_headline_value;
+    	let sp_dialog_wrapper_footer_value;
+    	let sp_dialog_wrapper_mode_value;
+    	let sp_dialog_wrapper_size_value;
+    	let sp_dialog_wrapper_no_divider_value;
+    	let sp_dialog_wrapper_responsive_value;
+    	let sp_dialog_wrapper_dismissable_value;
+    	let sp_dialog_wrapper_underlay_value;
+    	let sp_dialog_wrapper_confirm_label_value;
+    	let sp_dialog_wrapper_secondary_label_value;
+    	let sp_dialog_wrapper_cancel_label_value;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[9].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[8], get_default_slot_context);
+
+    	const block = {
+    		c: function create() {
+    			sp_dialog_wrapper = element("sp-dialog-wrapper");
+    			if (default_slot) default_slot.c();
+    			set_custom_element_data(sp_dialog_wrapper, "error", sp_dialog_wrapper_error_value = /*error*/ ctx[2] != null);
+    			set_custom_element_data(sp_dialog_wrapper, "headline", sp_dialog_wrapper_headline_value = /*data*/ ctx[0].title);
+
+    			set_custom_element_data(sp_dialog_wrapper, "footer", sp_dialog_wrapper_footer_value = /*error*/ ctx[2]
+    			? /*error*/ ctx[2]
+    			: /*data*/ ctx[0].footer);
+
+    			set_custom_element_data(sp_dialog_wrapper, "mode", sp_dialog_wrapper_mode_value = /*data*/ ctx[0].mode);
+    			set_custom_element_data(sp_dialog_wrapper, "size", sp_dialog_wrapper_size_value = /*data*/ ctx[0].size);
+    			set_custom_element_data(sp_dialog_wrapper, "no-divider", sp_dialog_wrapper_no_divider_value = /*data*/ ctx[0].divider ? undefined : "");
+    			set_custom_element_data(sp_dialog_wrapper, "responsive", sp_dialog_wrapper_responsive_value = !!/*data*/ ctx[0].responsive);
+    			set_custom_element_data(sp_dialog_wrapper, "dismissable", sp_dialog_wrapper_dismissable_value = !/*isWorking*/ ctx[1] && /*data*/ ctx[0].dismissable !== false);
+    			set_custom_element_data(sp_dialog_wrapper, "underlay", sp_dialog_wrapper_underlay_value = /*data*/ ctx[0].underlay !== false);
+    			set_custom_element_data(sp_dialog_wrapper, "confirm-label", sp_dialog_wrapper_confirm_label_value = /*data*/ ctx[0].confirm?.label || undefined);
+    			set_custom_element_data(sp_dialog_wrapper, "secondary-label", sp_dialog_wrapper_secondary_label_value = /*data*/ ctx[0].secondary?.label || undefined);
+    			set_custom_element_data(sp_dialog_wrapper, "cancel-label", sp_dialog_wrapper_cancel_label_value = /*data*/ ctx[0].cancel?.label || undefined);
+    			set_custom_element_data(sp_dialog_wrapper, "class", "svelte-1nu7t8i");
+    			add_location(sp_dialog_wrapper, file$4, 85, 0, 2622);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_dialog_wrapper, anchor);
+
+    			if (default_slot) {
+    				default_slot.m(sp_dialog_wrapper, null);
+    			}
+
+    			/*sp_dialog_wrapper_binding*/ ctx[10](sp_dialog_wrapper);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(sp_dialog_wrapper, "close", /*close*/ ctx[7], false, false, false),
+    					listen_dev(sp_dialog_wrapper, "cancel", /*onCancel*/ ctx[4], false, false, false),
+    					listen_dev(sp_dialog_wrapper, "confirm", /*onConfirm*/ ctx[5], false, false, false),
+    					listen_dev(sp_dialog_wrapper, "secondary", /*onSecondary*/ ctx[6], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope, isWorking, data*/ 259)) {
+    					update_slot(default_slot, default_slot_template, ctx, /*$$scope*/ ctx[8], !current ? -1 : dirty, get_default_slot_changes, get_default_slot_context);
+    				}
+    			}
+
+    			if (!current || dirty & /*error*/ 4 && sp_dialog_wrapper_error_value !== (sp_dialog_wrapper_error_value = /*error*/ ctx[2] != null)) {
+    				set_custom_element_data(sp_dialog_wrapper, "error", sp_dialog_wrapper_error_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_headline_value !== (sp_dialog_wrapper_headline_value = /*data*/ ctx[0].title)) {
+    				set_custom_element_data(sp_dialog_wrapper, "headline", sp_dialog_wrapper_headline_value);
+    			}
+
+    			if (!current || dirty & /*error, data*/ 5 && sp_dialog_wrapper_footer_value !== (sp_dialog_wrapper_footer_value = /*error*/ ctx[2]
+    			? /*error*/ ctx[2]
+    			: /*data*/ ctx[0].footer)) {
+    				set_custom_element_data(sp_dialog_wrapper, "footer", sp_dialog_wrapper_footer_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_mode_value !== (sp_dialog_wrapper_mode_value = /*data*/ ctx[0].mode)) {
+    				set_custom_element_data(sp_dialog_wrapper, "mode", sp_dialog_wrapper_mode_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_size_value !== (sp_dialog_wrapper_size_value = /*data*/ ctx[0].size)) {
+    				set_custom_element_data(sp_dialog_wrapper, "size", sp_dialog_wrapper_size_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_no_divider_value !== (sp_dialog_wrapper_no_divider_value = /*data*/ ctx[0].divider ? undefined : "")) {
+    				set_custom_element_data(sp_dialog_wrapper, "no-divider", sp_dialog_wrapper_no_divider_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_responsive_value !== (sp_dialog_wrapper_responsive_value = !!/*data*/ ctx[0].responsive)) {
+    				set_custom_element_data(sp_dialog_wrapper, "responsive", sp_dialog_wrapper_responsive_value);
+    			}
+
+    			if (!current || dirty & /*isWorking, data*/ 3 && sp_dialog_wrapper_dismissable_value !== (sp_dialog_wrapper_dismissable_value = !/*isWorking*/ ctx[1] && /*data*/ ctx[0].dismissable !== false)) {
+    				set_custom_element_data(sp_dialog_wrapper, "dismissable", sp_dialog_wrapper_dismissable_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_underlay_value !== (sp_dialog_wrapper_underlay_value = /*data*/ ctx[0].underlay !== false)) {
+    				set_custom_element_data(sp_dialog_wrapper, "underlay", sp_dialog_wrapper_underlay_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_confirm_label_value !== (sp_dialog_wrapper_confirm_label_value = /*data*/ ctx[0].confirm?.label || undefined)) {
+    				set_custom_element_data(sp_dialog_wrapper, "confirm-label", sp_dialog_wrapper_confirm_label_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_secondary_label_value !== (sp_dialog_wrapper_secondary_label_value = /*data*/ ctx[0].secondary?.label || undefined)) {
+    				set_custom_element_data(sp_dialog_wrapper, "secondary-label", sp_dialog_wrapper_secondary_label_value);
+    			}
+
+    			if (!current || dirty & /*data*/ 1 && sp_dialog_wrapper_cancel_label_value !== (sp_dialog_wrapper_cancel_label_value = /*data*/ ctx[0].cancel?.label || undefined)) {
+    				set_custom_element_data(sp_dialog_wrapper, "cancel-label", sp_dialog_wrapper_cancel_label_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_dialog_wrapper);
+    			if (default_slot) default_slot.d(detaching);
+    			/*sp_dialog_wrapper_binding*/ ctx[10](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Dialog", slots, ['default']);
+
+    	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+    		function adopt(value) {
+    			return value instanceof P
+    			? value
+    			: new P(function (resolve) {
+    						resolve(value);
+    					});
+    		}
+
+    		return new (P || (P = Promise))(function (resolve, reject) {
+    				function fulfilled(value) {
+    					try {
+    						step(generator.next(value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function rejected(value) {
+    					try {
+    						step(generator["throw"](value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function step(result) {
+    					result.done
+    					? resolve(result.value)
+    					: adopt(result.value).then(fulfilled, rejected);
+    				}
+
+    				step((generator = generator.apply(thisArg, _arguments || [])).next());
+    			});
+    	};
+
+    	
+    	let { data } = $$props;
+    	const dispatch = createEventDispatcher();
+    	let isWorking = false;
+    	let error = null;
+
+    	function onAction(action) {
+    		return __awaiter(this, void 0, void 0, function* () {
+    			if (isWorking) {
+    				return;
+    			}
+
+    			$$invalidate(2, error = null);
+
+    			if (action) {
+    				$$invalidate(1, isWorking = true);
+
+    				try {
+    					if ((yield action(data.value)) === false) {
+    						return;
+    					}
+    				} catch(e) {
+    					$$invalidate(2, error = e.message);
+    					return;
+    				} finally {
+    					$$invalidate(1, isWorking = false);
+    				}
+    			}
+
+    			close();
+    		});
+    	}
+
+    	function onCancel() {
+    		var _a;
+
+    		return __awaiter(this, void 0, void 0, function* () {
+    			yield onAction((_a = data.cancel) === null || _a === void 0
+    			? void 0
+    			: _a.action);
+    		});
+    	}
+
+    	function onConfirm() {
+    		var _a;
+
+    		return __awaiter(this, void 0, void 0, function* () {
+    			yield onAction((_a = data.confirm) === null || _a === void 0
+    			? void 0
+    			: _a.action);
+    		});
+    	}
+
+    	function onSecondary() {
+    		var _a;
+
+    		return __awaiter(this, void 0, void 0, function* () {
+    			yield onAction((_a = data.secondary) === null || _a === void 0
+    			? void 0
+    			: _a.action);
+    		});
+    	}
+
+    	let content = undefined;
+    	let closeOverlayPromise;
+
+    	function open() {
+    		if (content.open) {
+    			return;
+    		}
+
+    		$$invalidate(3, content.open = true, content);
+    		closeOverlayPromise = Overlay.open(content.parentElement, "modal", content, { placement: "none", receivesFocus: "auto" });
+    	}
+
+    	function close() {
+    		if (!content || !content.open) {
+    			return;
+    		}
+
+    		closeOverlayPromise.then(close => {
+    			close();
+    			closeOverlayPromise = null;
+    			$$invalidate(3, content.open = false, content);
+    		});
+    	}
+
+    	onMount(() => {
+    		open();
+    		return close;
+    	});
+
+    	const writable_props = ["data"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Dialog> was created with unknown prop '${key}'`);
+    	});
+
+    	function sp_dialog_wrapper_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			content = $$value;
+    			$$invalidate(3, content);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ("data" in $$props) $$invalidate(0, data = $$props.data);
+    		if ("$$scope" in $$props) $$invalidate(8, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		__awaiter,
+    		Overlay,
+    		createEventDispatcher,
+    		onMount,
+    		data,
+    		dispatch,
+    		isWorking,
+    		error,
+    		onAction,
+    		onCancel,
+    		onConfirm,
+    		onSecondary,
+    		content,
+    		closeOverlayPromise,
+    		open,
+    		close
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    		if ("data" in $$props) $$invalidate(0, data = $$props.data);
+    		if ("isWorking" in $$props) $$invalidate(1, isWorking = $$props.isWorking);
+    		if ("error" in $$props) $$invalidate(2, error = $$props.error);
+    		if ("content" in $$props) $$invalidate(3, content = $$props.content);
+    		if ("closeOverlayPromise" in $$props) closeOverlayPromise = $$props.closeOverlayPromise;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		data,
+    		isWorking,
+    		error,
+    		content,
+    		onCancel,
+    		onConfirm,
+    		onSecondary,
+    		close,
+    		$$scope,
+    		slots,
+    		sp_dialog_wrapper_binding
+    	];
+    }
+
+    class Dialog extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { data: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Dialog",
+    			options,
+    			id: create_fragment$4.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*data*/ ctx[0] === undefined && !("data" in props)) {
+    			console.warn("<Dialog> was created without expected prop 'data'");
+    		}
+    	}
+
+    	get data() {
+    		throw new Error("<Dialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<Dialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/DialogManager.svelte generated by Svelte v3.38.3 */
+    const file$3 = "src/Components/DialogManager.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[6] = list[i];
+    	child_ctx[7] = list;
+    	child_ctx[8] = i;
+    	return child_ctx;
+    }
+
+    // (25:12) <svelte:fragment let:isWorking let:closeDialog let:value>
+    function create_default_slot$1(ctx) {
+    	let switch_instance;
+    	let updating_value;
+    	let t;
+    	let current;
+
+    	const switch_instance_spread_levels = [
+    		/*item*/ ctx[6].props,
+    		{ isWorking: /*isWorking*/ ctx[9] },
+    		{ closeDialog: /*closeDialog*/ ctx[10] }
+    	];
+
+    	function switch_instance_value_binding(value) {
+    		/*switch_instance_value_binding*/ ctx[4](value, /*item*/ ctx[6]);
+    	}
+
+    	var switch_value = /*item*/ ctx[6].component;
+
+    	function switch_props(ctx) {
+    		let switch_instance_props = {};
+
+    		for (let i = 0; i < switch_instance_spread_levels.length; i += 1) {
+    			switch_instance_props = assign(switch_instance_props, switch_instance_spread_levels[i]);
+    		}
+
+    		if (/*item*/ ctx[6].dialog.value !== void 0) {
+    			switch_instance_props.value = /*item*/ ctx[6].dialog.value;
+    		}
+
+    		return {
+    			props: switch_instance_props,
+    			$$inline: true
+    		};
+    	}
+
+    	if (switch_value) {
+    		switch_instance = new switch_value(switch_props(ctx));
+    		binding_callbacks.push(() => bind(switch_instance, "value", switch_instance_value_binding));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			t = space();
+    		},
+    		m: function mount(target, anchor) {
+    			if (switch_instance) {
+    				mount_component(switch_instance, target, anchor);
+    			}
+
+    			insert_dev(target, t, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			const switch_instance_changes = (dirty & /*items, isWorking, closeDialog*/ 1537)
+    			? get_spread_update(switch_instance_spread_levels, [
+    					dirty & /*items*/ 1 && get_spread_object(/*item*/ ctx[6].props),
+    					dirty & /*isWorking*/ 512 && { isWorking: /*isWorking*/ ctx[9] },
+    					dirty & /*closeDialog*/ 1024 && { closeDialog: /*closeDialog*/ ctx[10] }
+    				])
+    			: {};
+
+    			if (!updating_value && dirty & /*items*/ 1) {
+    				updating_value = true;
+    				switch_instance_changes.value = /*item*/ ctx[6].dialog.value;
+    				add_flush_callback(() => updating_value = false);
+    			}
+
+    			if (switch_value !== (switch_value = /*item*/ ctx[6].component)) {
+    				if (switch_instance) {
+    					group_outros();
+    					const old_component = switch_instance;
+
+    					transition_out(old_component.$$.fragment, 1, 0, () => {
+    						destroy_component(old_component, 1);
+    					});
+
+    					check_outros();
+    				}
+
+    				if (switch_value) {
+    					switch_instance = new switch_value(switch_props(ctx));
+    					binding_callbacks.push(() => bind(switch_instance, "value", switch_instance_value_binding));
+    					create_component(switch_instance.$$.fragment);
+    					transition_in(switch_instance.$$.fragment, 1);
+    					mount_component(switch_instance, t.parentNode, t);
+    				} else {
+    					switch_instance = null;
+    				}
+    			} else if (switch_value) {
+    				switch_instance.$set(switch_instance_changes);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (switch_instance) destroy_component(switch_instance, detaching);
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot$1.name,
+    		type: "slot",
+    		source: "(25:12) <svelte:fragment let:isWorking let:closeDialog let:value>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (23:4) {#each items as item}
+    function create_each_block(ctx) {
+    	let dialog;
+    	let current;
+
+    	function close_handler() {
+    		return /*close_handler*/ ctx[5](/*item*/ ctx[6]);
+    	}
+
+    	dialog = new Dialog({
+    			props: {
+    				data: /*item*/ ctx[6].dialog,
+    				$$slots: {
+    					default: [
+    						create_default_slot$1,
+    						({ isWorking, closeDialog, value }) => ({ 9: isWorking, 10: closeDialog, 11: value }),
+    						({ isWorking, closeDialog, value }) => (isWorking ? 512 : 0) | (closeDialog ? 1024 : 0) | (value ? 2048 : 0)
+    					]
+    				},
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	dialog.$on("close", close_handler);
+
+    	const block = {
+    		c: function create() {
+    			create_component(dialog.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(dialog, target, anchor);
+    			current = true;
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			const dialog_changes = {};
+    			if (dirty & /*items*/ 1) dialog_changes.data = /*item*/ ctx[6].dialog;
+
+    			if (dirty & /*$$scope, items, isWorking, closeDialog*/ 5633) {
+    				dialog_changes.$$scope = { dirty, ctx };
+    			}
+
+    			dialog.$set(dialog_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(dialog.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(dialog.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(dialog, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(23:4) {#each items as item}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$3(ctx) {
+    	let div;
+    	let current;
+    	let each_value = /*items*/ ctx[0];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			set_style(div, "z-index", "1000");
+    			set_style(div, "position", "absolute");
+    			add_location(div, file$3, 21, 0, 490);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div, null);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*items, onClose, isWorking, closeDialog*/ 1539) {
+    				each_value = /*items*/ ctx[0];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(div, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("DialogManager", slots, []);
+    	
+    	
+    	let { isOpen = false } = $$props;
+    	let items = [];
+
+    	const openDialog = (dialog, component, props) => {
+    		// update
+    		$$invalidate(0, items = items.slice());
+
+    		items.push({ dialog, component, props });
+    		$$invalidate(2, isOpen = true);
+    	};
+
+    	function onClose(item) {
+    		const index = items.indexOf(item);
+
+    		if (index > -1) {
+    			items.splice(index, 1);
+
+    			// update
+    			$$invalidate(0, items = items.slice());
+
+    			$$invalidate(2, isOpen = items.length > 0);
+    		}
+    	}
+
+    	const writable_props = ["isOpen"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<DialogManager> was created with unknown prop '${key}'`);
+    	});
+
+    	function switch_instance_value_binding(value, item) {
+    		if ($$self.$$.not_equal(item.dialog.value, value)) {
+    			item.dialog.value = value;
+    			$$invalidate(0, items);
+    		}
+    	}
+
+    	const close_handler = item => onClose(item);
+
+    	$$self.$$set = $$props => {
+    		if ("isOpen" in $$props) $$invalidate(2, isOpen = $$props.isOpen);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Dialog,
+    		isOpen,
+    		items,
+    		openDialog,
+    		onClose
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("isOpen" in $$props) $$invalidate(2, isOpen = $$props.isOpen);
+    		if ("items" in $$props) $$invalidate(0, items = $$props.items);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		items,
+    		onClose,
+    		isOpen,
+    		openDialog,
+    		switch_instance_value_binding,
+    		close_handler
+    	];
+    }
+
+    class DialogManager extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { isOpen: 2, openDialog: 3 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "DialogManager",
+    			options,
+    			id: create_fragment$3.name
+    		});
+    	}
+
+    	get isOpen() {
+    		throw new Error("<DialogManager>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isOpen(value) {
+    		throw new Error("<DialogManager>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get openDialog() {
+    		return this.$$.ctx[3];
+    	}
+
+    	set openDialog(value) {
+    		throw new Error("<DialogManager>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/Dialogs/SettingsDialog.svelte generated by Svelte v3.38.3 */
+
+    const file$2 = "src/Components/Dialogs/SettingsDialog.svelte";
+
+    function create_fragment$2(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "App settings here";
+    			set_style(div, "height", "400px");
+    			add_location(div, file$2, 3, 0, 74);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("SettingsDialog", slots, []);
+    	let { isWorking } = $$props;
+    	let { closeDialog } = $$props;
+    	const writable_props = ["isWorking", "closeDialog"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SettingsDialog> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("isWorking" in $$props) $$invalidate(0, isWorking = $$props.isWorking);
+    		if ("closeDialog" in $$props) $$invalidate(1, closeDialog = $$props.closeDialog);
+    	};
+
+    	$$self.$capture_state = () => ({ isWorking, closeDialog });
+
+    	$$self.$inject_state = $$props => {
+    		if ("isWorking" in $$props) $$invalidate(0, isWorking = $$props.isWorking);
+    		if ("closeDialog" in $$props) $$invalidate(1, closeDialog = $$props.closeDialog);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [isWorking, closeDialog];
+    }
+
+    class SettingsDialog extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { isWorking: 0, closeDialog: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SettingsDialog",
+    			options,
+    			id: create_fragment$2.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*isWorking*/ ctx[0] === undefined && !("isWorking" in props)) {
+    			console.warn("<SettingsDialog> was created without expected prop 'isWorking'");
+    		}
+
+    		if (/*closeDialog*/ ctx[1] === undefined && !("closeDialog" in props)) {
+    			console.warn("<SettingsDialog> was created without expected prop 'closeDialog'");
+    		}
+    	}
+
+    	get isWorking() {
+    		throw new Error("<SettingsDialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set isWorking(value) {
+    		throw new Error("<SettingsDialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get closeDialog() {
+    		throw new Error("<SettingsDialog>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set closeDialog(value) {
+    		throw new Error("<SettingsDialog>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Components/SettingsBar.svelte generated by Svelte v3.38.3 */
+    const file$1 = "src/Components/SettingsBar.svelte";
+
+    function create_fragment$1(ctx) {
+    	let sp_action_group;
+    	let sp_action_button;
+    	let sp_icon;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			sp_action_group = element("sp-action-group");
+    			sp_action_button = element("sp-action-button");
+    			sp_icon = element("sp-icon");
+    			set_custom_element_data(sp_icon, "size", "s");
+    			set_custom_element_data(sp_icon, "name", "workflow:Settings");
+    			set_custom_element_data(sp_icon, "slot", "icon");
+    			add_location(sp_icon, file$1, 15, 8, 492);
+    			set_custom_element_data(sp_action_button, "title", "Settings");
+    			set_custom_element_data(sp_action_button, "disabled", /*disabled*/ ctx[0]);
+    			add_location(sp_action_button, file$1, 14, 4, 396);
+    			set_custom_element_data(sp_action_group, "vertical", "");
+    			set_custom_element_data(sp_action_group, "quiet", "");
+    			set_custom_element_data(sp_action_group, "emphasized", "");
+    			add_location(sp_action_group, file$1, 13, 0, 348);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, sp_action_group, anchor);
+    			append_dev(sp_action_group, sp_action_button);
+    			append_dev(sp_action_button, sp_icon);
+
+    			if (!mounted) {
+    				dispose = listen_dev(sp_action_button, "click", /*click_handler*/ ctx[2], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*disabled*/ 1) {
+    				set_custom_element_data(sp_action_button, "disabled", /*disabled*/ ctx[0]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(sp_action_group);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("SettingsBar", slots, []);
+    	
+    	const openDialog = getContext("openDialog");
+    	let { disabled = false } = $$props;
+
+    	function showSettings() {
+    		openDialog(
+    			{
+    				title: "Settings",
+    				dismissable: true,
+    				size: "large"
+    			},
+    			SettingsDialog
+    		);
+    	}
+
+    	const writable_props = ["disabled"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<SettingsBar> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = () => showSettings();
+
+    	$$self.$$set = $$props => {
+    		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		getContext,
+    		SettingsDialog,
+    		openDialog,
+    		disabled,
+    		showSettings
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ("disabled" in $$props) $$invalidate(0, disabled = $$props.disabled);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [disabled, showSettings, click_handler];
+    }
+
+    class SettingsBar extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { disabled: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SettingsBar",
+    			options,
     			id: create_fragment$1.name
     		});
+    	}
+
+    	get disabled() {
+    		throw new Error("<SettingsBar>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<SettingsBar>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     /* src/App.svelte generated by Svelte v3.38.3 */
     const file = "src/App.svelte";
 
-    // (33:8) <svelte:fragment slot="primary">
+    // (43:8) <svelte:fragment slot="primary">
     function create_primary_slot_1(ctx) {
     	let propertiescomponent;
     	let current;
@@ -43126,22 +46397,24 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_primary_slot_1.name,
     		type: "slot",
-    		source: "(33:8) <svelte:fragment slot=\\\"primary\\\">",
+    		source: "(43:8) <svelte:fragment slot=\\\"primary\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (36:8) <svelte:fragment slot="secondary" let:collapsed>
+    // (46:8) <svelte:fragment slot="secondary" let:collapsed>
     function create_secondary_slot_1(ctx) {
     	let treecomponent;
     	let current;
 
     	treecomponent = new Tree({
-    			props: { collapsed: /*collapsed*/ ctx[4] },
+    			props: { collapsed: /*collapsed*/ ctx[5] },
     			$$inline: true
     		});
+
+    	treecomponent.$on("contextmenu", noCtxMenu);
 
     	const block = {
     		c: function create() {
@@ -43153,7 +46426,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const treecomponent_changes = {};
-    			if (dirty & /*collapsed*/ 16) treecomponent_changes.collapsed = /*collapsed*/ ctx[4];
+    			if (dirty & /*collapsed*/ 32) treecomponent_changes.collapsed = /*collapsed*/ ctx[5];
     			treecomponent.$set(treecomponent_changes);
     		},
     		i: function intro(local) {
@@ -43174,14 +46447,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_secondary_slot_1.name,
     		type: "slot",
-    		source: "(36:8) <svelte:fragment slot=\\\"secondary\\\" let:collapsed>",
+    		source: "(46:8) <svelte:fragment slot=\\\"secondary\\\" let:collapsed>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:12) <CanvasComponent hidden={hidden}>
+    // (55:12) <CanvasComponent hidden={hidden}>
     function create_default_slot(ctx) {
     	let t;
 
@@ -43201,21 +46474,21 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(45:12) <CanvasComponent hidden={hidden}>",
+    		source: "(55:12) <CanvasComponent hidden={hidden}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (44:8) <svelte:fragment slot="primary">
+    // (54:8) <svelte:fragment slot="primary">
     function create_primary_slot(ctx) {
     	let canvascomponent;
     	let current;
 
     	canvascomponent = new Canvas({
     			props: {
-    				hidden: /*hidden*/ ctx[0],
+    				hidden: /*hidden*/ ctx[3],
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -43232,9 +46505,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const canvascomponent_changes = {};
-    			if (dirty & /*hidden*/ 1) canvascomponent_changes.hidden = /*hidden*/ ctx[0];
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				canvascomponent_changes.$$scope = { dirty, ctx };
     			}
 
@@ -43258,20 +46530,20 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_primary_slot.name,
     		type: "slot",
-    		source: "(44:8) <svelte:fragment slot=\\\"primary\\\">",
+    		source: "(54:8) <svelte:fragment slot=\\\"primary\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:8) <svelte:fragment slot="secondary" let:collapsed>
+    // (57:8) <svelte:fragment slot="secondary" let:collapsed>
     function create_secondary_slot(ctx) {
     	let timelinecomponent;
     	let current;
 
     	timelinecomponent = new Timeline_1({
-    			props: { collapsed: /*collapsed*/ ctx[4] },
+    			props: { collapsed: /*collapsed*/ ctx[5] },
     			$$inline: true
     		});
 
@@ -43285,7 +46557,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		p: function update(ctx, dirty) {
     			const timelinecomponent_changes = {};
-    			if (dirty & /*collapsed*/ 16) timelinecomponent_changes.collapsed = /*collapsed*/ ctx[4];
+    			if (dirty & /*collapsed*/ 32) timelinecomponent_changes.collapsed = /*collapsed*/ ctx[5];
     			timelinecomponent.$set(timelinecomponent_changes);
     		},
     		i: function intro(local) {
@@ -43306,7 +46578,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		block,
     		id: create_secondary_slot.name,
     		type: "slot",
-    		source: "(47:8) <svelte:fragment slot=\\\"secondary\\\" let:collapsed>",
+    		source: "(57:8) <svelte:fragment slot=\\\"secondary\\\" let:collapsed>",
     		ctx
     	});
 
@@ -43322,30 +46594,30 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	let t2;
     	let sp_theme;
     	let div0;
-    	let menucomponent;
+    	let logocomponent;
     	let t3;
     	let div2;
     	let projectstatecomponent;
     	let t4;
     	let div1;
-    	let sp_button0;
-    	let t6;
-    	let sp_button1;
-    	let t8;
+    	let t5;
     	let alignselectioncomponent;
-    	let t9;
-    	let div4;
-    	let toolscomponent;
-    	let t10;
+    	let t6;
     	let div3;
-    	let t12;
+    	let toolscomponent;
+    	let t7;
+    	let settingsbar;
+    	let t8;
     	let spsplitview0;
-    	let t13;
+    	let t9;
     	let spsplitview1;
+    	let t10;
+    	let dialogmanager;
+    	let updating_openDialog;
     	let current;
     	let mounted;
     	let dispose;
-    	menucomponent = new Menu({ $$inline: true });
+    	logocomponent = new Logo({ $$inline: true });
     	projectstatecomponent = new ProjectState({ $$inline: true });
     	alignselectioncomponent = new AlignSelection({ $$inline: true });
 
@@ -43353,6 +46625,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			props: {
     				disabled: /*$CurrentProject*/ ctx[2] == null
     			},
+    			$$inline: true
+    		});
+
+    	settingsbar = new SettingsBar({
+    			props: { disabled: true },
     			$$inline: true
     		});
 
@@ -43366,8 +46643,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				$$slots: {
     					secondary: [
     						create_secondary_slot_1,
-    						({ collapsed }) => ({ 4: collapsed }),
-    						({ collapsed }) => collapsed ? 16 : 0
+    						({ collapsed }) => ({ 5: collapsed }),
+    						({ collapsed }) => collapsed ? 32 : 0
     					],
     					primary: [create_primary_slot_1]
     				},
@@ -43387,8 +46664,8 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     				$$slots: {
     					secondary: [
     						create_secondary_slot,
-    						({ collapsed }) => ({ 4: collapsed }),
-    						({ collapsed }) => collapsed ? 16 : 0
+    						({ collapsed }) => ({ 5: collapsed }),
+    						({ collapsed }) => collapsed ? 32 : 0
     					],
     					primary: [create_primary_slot]
     				},
@@ -43396,6 +46673,23 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			},
     			$$inline: true
     		});
+
+    	function dialogmanager_openDialog_binding(value) {
+    		/*dialogmanager_openDialog_binding*/ ctx[4](value);
+    	}
+
+    	let dialogmanager_props = {};
+
+    	if (/*openDialog*/ ctx[0] !== void 0) {
+    		dialogmanager_props.openDialog = /*openDialog*/ ctx[0];
+    	}
+
+    	dialogmanager = new DialogManager({
+    			props: dialogmanager_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(dialogmanager, "openDialog", dialogmanager_openDialog_binding));
 
     	const block = {
     		c: function create() {
@@ -43407,48 +46701,39 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			t2 = space();
     			sp_theme = element("sp-theme");
     			div0 = element("div");
-    			create_component(menucomponent.$$.fragment);
+    			create_component(logocomponent.$$.fragment);
     			t3 = space();
     			div2 = element("div");
     			create_component(projectstatecomponent.$$.fragment);
     			t4 = space();
     			div1 = element("div");
-    			sp_button0 = element("sp-button");
-    			sp_button0.textContent = "Change theme";
-    			t6 = space();
-    			sp_button1 = element("sp-button");
-    			sp_button1.textContent = "Toggle visibility";
-    			t8 = space();
+    			t5 = space();
     			create_component(alignselectioncomponent.$$.fragment);
-    			t9 = space();
-    			div4 = element("div");
-    			create_component(toolscomponent.$$.fragment);
-    			t10 = space();
+    			t6 = space();
     			div3 = element("div");
-    			div3.textContent = "down";
-    			t12 = space();
+    			create_component(toolscomponent.$$.fragment);
+    			t7 = space();
+    			create_component(settingsbar.$$.fragment);
+    			t8 = space();
     			create_component(spsplitview0.$$.fragment);
-    			t13 = space();
+    			t9 = space();
     			create_component(spsplitview1.$$.fragment);
-    			add_location(sp_icons_medium, file, 12, 0, 651);
-    			add_location(sp_icons_workflow, file, 13, 0, 687);
-    			add_location(sp_icons_expr, file, 14, 0, 727);
+    			t10 = space();
+    			create_component(dialogmanager.$$.fragment);
+    			add_location(sp_icons_medium, file, 25, 0, 1036);
+    			add_location(sp_icons_workflow, file, 26, 0, 1072);
+    			add_location(sp_icons_expr, file, 27, 0, 1112);
     			attr_dev(div0, "class", "app-logo");
-    			add_location(div0, file, 16, 4, 823);
-    			set_custom_element_data(sp_button0, "size", "s");
-    			add_location(sp_button0, file, 22, 12, 973);
-    			set_custom_element_data(sp_button1, "size", "s");
-    			add_location(sp_button1, file, 23, 12, 1061);
-    			add_location(div1, file, 21, 8, 955);
+    			add_location(div0, file, 29, 4, 1208);
+    			add_location(div1, file, 34, 8, 1394);
     			attr_dev(div2, "class", "app-menubar");
-    			add_location(div2, file, 19, 4, 887);
-    			add_location(div3, file, 29, 8, 1307);
-    			attr_dev(div4, "class", "app-toolbar");
-    			add_location(div4, file, 27, 4, 1211);
+    			add_location(div2, file, 32, 4, 1299);
+    			attr_dev(div3, "class", "app-toolbar");
+    			add_location(div3, file, 37, 4, 1457);
     			set_custom_element_data(sp_theme, "scale", "medium");
     			set_custom_element_data(sp_theme, "color", /*$CurrentTheme*/ ctx[1]);
     			set_custom_element_data(sp_theme, "class", "app");
-    			add_location(sp_theme, file, 15, 0, 759);
+    			add_location(sp_theme, file, 28, 0, 1144);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -43462,32 +46747,32 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			insert_dev(target, t2, anchor);
     			insert_dev(target, sp_theme, anchor);
     			append_dev(sp_theme, div0);
-    			mount_component(menucomponent, div0, null);
+    			mount_component(logocomponent, div0, null);
     			append_dev(sp_theme, t3);
     			append_dev(sp_theme, div2);
     			mount_component(projectstatecomponent, div2, null);
     			append_dev(div2, t4);
     			append_dev(div2, div1);
-    			append_dev(div1, sp_button0);
-    			append_dev(div1, t6);
-    			append_dev(div1, sp_button1);
-    			append_dev(div2, t8);
+    			append_dev(div2, t5);
     			mount_component(alignselectioncomponent, div2, null);
-    			append_dev(sp_theme, t9);
-    			append_dev(sp_theme, div4);
-    			mount_component(toolscomponent, div4, null);
-    			append_dev(div4, t10);
-    			append_dev(div4, div3);
-    			append_dev(sp_theme, t12);
+    			append_dev(sp_theme, t6);
+    			append_dev(sp_theme, div3);
+    			mount_component(toolscomponent, div3, null);
+    			append_dev(div3, t7);
+    			mount_component(settingsbar, div3, null);
+    			append_dev(sp_theme, t8);
     			mount_component(spsplitview0, sp_theme, null);
-    			append_dev(sp_theme, t13);
+    			append_dev(sp_theme, t9);
     			mount_component(spsplitview1, sp_theme, null);
+    			append_dev(sp_theme, t10);
+    			mount_component(dialogmanager, sp_theme, null);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(sp_button0, "click", CurrentTheme.toggle, false, false, false),
-    					listen_dev(sp_button1, "click", /*click_handler*/ ctx[3], false, false, false)
+    					listen_dev(div0, "contextmenu", noCtxMenu, false, false, false),
+    					listen_dev(div2, "contextmenu", noCtxMenu, false, false, false),
+    					listen_dev(div3, "contextmenu", noCtxMenu, false, false, false)
     				];
 
     				mounted = true;
@@ -43499,18 +46784,27 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			toolscomponent.$set(toolscomponent_changes);
     			const spsplitview0_changes = {};
 
-    			if (dirty & /*$$scope, collapsed*/ 48) {
+    			if (dirty & /*$$scope, collapsed*/ 96) {
     				spsplitview0_changes.$$scope = { dirty, ctx };
     			}
 
     			spsplitview0.$set(spsplitview0_changes);
     			const spsplitview1_changes = {};
 
-    			if (dirty & /*$$scope, collapsed, hidden*/ 49) {
+    			if (dirty & /*$$scope, collapsed*/ 96) {
     				spsplitview1_changes.$$scope = { dirty, ctx };
     			}
 
     			spsplitview1.$set(spsplitview1_changes);
+    			const dialogmanager_changes = {};
+
+    			if (!updating_openDialog && dirty & /*openDialog*/ 1) {
+    				updating_openDialog = true;
+    				dialogmanager_changes.openDialog = /*openDialog*/ ctx[0];
+    				add_flush_callback(() => updating_openDialog = false);
+    			}
+
+    			dialogmanager.$set(dialogmanager_changes);
 
     			if (!current || dirty & /*$CurrentTheme*/ 2) {
     				set_custom_element_data(sp_theme, "color", /*$CurrentTheme*/ ctx[1]);
@@ -43518,21 +46812,25 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(menucomponent.$$.fragment, local);
+    			transition_in(logocomponent.$$.fragment, local);
     			transition_in(projectstatecomponent.$$.fragment, local);
     			transition_in(alignselectioncomponent.$$.fragment, local);
     			transition_in(toolscomponent.$$.fragment, local);
+    			transition_in(settingsbar.$$.fragment, local);
     			transition_in(spsplitview0.$$.fragment, local);
     			transition_in(spsplitview1.$$.fragment, local);
+    			transition_in(dialogmanager.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(menucomponent.$$.fragment, local);
+    			transition_out(logocomponent.$$.fragment, local);
     			transition_out(projectstatecomponent.$$.fragment, local);
     			transition_out(alignselectioncomponent.$$.fragment, local);
     			transition_out(toolscomponent.$$.fragment, local);
+    			transition_out(settingsbar.$$.fragment, local);
     			transition_out(spsplitview0.$$.fragment, local);
     			transition_out(spsplitview1.$$.fragment, local);
+    			transition_out(dialogmanager.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -43543,12 +46841,14 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     			if (detaching) detach_dev(sp_icons_expr);
     			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(sp_theme);
-    			destroy_component(menucomponent);
+    			destroy_component(logocomponent);
     			destroy_component(projectstatecomponent);
     			destroy_component(alignselectioncomponent);
     			destroy_component(toolscomponent);
+    			destroy_component(settingsbar);
     			destroy_component(spsplitview0);
     			destroy_component(spsplitview1);
+    			destroy_component(dialogmanager);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -43565,6 +46865,11 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	return block;
     }
 
+    function noCtxMenu(e) {
+    	e.preventDefault();
+    	return false;
+    }
+
     function instance($$self, $$props, $$invalidate) {
     	let $CurrentTheme;
     	let $CurrentProject;
@@ -43574,20 +46879,31 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     	component_subscribe($$self, CurrentProject, $$value => $$invalidate(2, $CurrentProject = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
+    	
     	let hidden = false;
+    	let openDialog;
+    	setContext("openDialog", (dialog, component, props) => openDialog(dialog, component, props));
+
+    	onMount(() => {
+    		
+    	}); // TODO: ...
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = () => $$invalidate(0, hidden = !hidden);
+    	function dialogmanager_openDialog_binding(value) {
+    		openDialog = value;
+    		$$invalidate(0, openDialog);
+    	}
 
     	$$self.$capture_state = () => ({
     		ToolsComponent: Tools,
     		CanvasComponent: Canvas,
     		TimelineComponent: Timeline_1,
-    		MenuComponent: Menu,
+    		LogoComponent: Logo,
     		ProjectStateComponent: ProjectState,
     		AlignSelectionComponent: AlignSelection,
     		TreeComponent: Tree,
@@ -43595,20 +46911,33 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
     		SpSplitView,
     		CurrentTheme,
     		CurrentProject,
+    		DialogManager,
+    		onMount,
+    		setContext,
+    		SettingsBar,
+    		noCtxMenu,
     		hidden,
+    		openDialog,
     		$CurrentTheme,
     		$CurrentProject
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("hidden" in $$props) $$invalidate(0, hidden = $$props.hidden);
+    		if ("hidden" in $$props) $$invalidate(3, hidden = $$props.hidden);
+    		if ("openDialog" in $$props) $$invalidate(0, openDialog = $$props.openDialog);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [hidden, $CurrentTheme, $CurrentProject, click_handler];
+    	return [
+    		openDialog,
+    		$CurrentTheme,
+    		$CurrentProject,
+    		hidden,
+    		dialogmanager_openDialog_binding
+    	];
     }
 
     class App extends SvelteComponentDev {
@@ -43627,7 +46956,7 @@ var(--spectrum-global-dimension-static-size-25)));content:"";display:block;posit
 
     var CustomIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n\n    <symbol id=\"fill-none\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM1 2c0.001-0.552 0.448-0.999 1-1h12c0.059 0.007 0.112 0.018 0.164 0.034l-0.007-0.002-13.125 13.125c-0.014-0.045-0.025-0.098-0.031-0.153l-0-0.004zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.061-0.007-0.116-0.018-0.169-0.035l0.007 0.002 13.129-13.129c0.014 0.046 0.026 0.101 0.032 0.158l0 0.004z\" />\n    </symbol>\n\n    <symbol id=\"fill-solid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.75 0h12.5c0.966 0 1.75 0.783 1.75 1.75v12.5c0 0.966-0.784 1.75-1.75 1.75h-12.5c-0.967 0-1.75-0.784-1.75-1.75v-12.5c0-0.967 0.783-1.75 1.75-1.75z\" />\n    </symbol>\n\n    <symbol id=\"fill-pattern\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14 0h-12c-1.105 0-2 0.895-2 2v0 12c0 1.105 0.895 2 2 2v0h12c1.105 0 2-0.895 2-2v0-12c0-1.105-0.895-2-2-2v0zM15 14c-0.001 0.552-0.448 0.999-1 1h-12c-0.552-0.001-0.999-0.448-1-1v-12c0.001-0.552 0.448-0.999 1-1h12c0.552 0.001 0.999 0.448 1 1v0z\" />\n        <path d=\"M1.146 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 3.431l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 7.991l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M1.146 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M5.724 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n        <path d=\"M10.295 12.569l2.28-2.28 2.28 2.28-2.28 2.28-2.28-2.28z\" />\n    </symbol>\n\n    <symbol id=\"menu-burger\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 1h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 13h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M0.267 7h15.466c0.147 0 0.267 0.12 0.267 0.267v1.466c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-1.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n    </symbol>\n\n    <symbol id=\"menu-dots\" viewBox=\"0 0 16 16\">\n        <path d=\"M4 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M10 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n        <path d=\"M16 8c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z\" />\n    </symbol>\n\n    <symbol id=\"swatch\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.25 0h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM6.5 6.5h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M8.75 0h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M15.75 8.5h-7c-0.138 0-0.25 0.112-0.25 0.25v0 7c0 0.138 0.112 0.25 0.25 0.25v0h7c0.138 0 0.25-0.112 0.25-0.25v0-7c0-0.138-0.112-0.25-0.25-0.25v0zM15 15h-5.5v-5.5h5.5z\" />\n        <path\n            d=\"M0.25 8.5h7c0.138 0 0.25 0.112 0.25 0.25v7c0 0.138-0.112 0.25-0.25 0.25h-7c-0.138 0-0.25-0.112-0.25-0.25v-7c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"tweak\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 8c-0.003 0.179-0.021 0.351-0.053 0.519l0.003-0.019h8.050v-1h-8.050c0.029 0.149 0.047 0.321 0.050 0.497l0 0.003z\" />\n        <path\n            d=\"M2 8c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-2.050v1h2.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M11 2c0.003-0.179 0.021-0.351 0.053-0.519l-0.003 0.019h-11.050v1h11.050c-0.029-0.149-0.047-0.321-0.050-0.497l-0-0.003z\" />\n        <path\n            d=\"M0 13.494v1h11.050c-0.029-0.147-0.047-0.317-0.050-0.491l-0-0.003c0.003-0.181 0.021-0.355 0.054-0.525l-0.003 0.019z\" />\n        <path\n            d=\"M14 4c1.105 0 2-0.895 2-2s-0.895-2-2-2c-1.105 0-2 0.895-2 2v0c0 1.105 0.895 2 2 2v0zM14 1c0.552 0 1 0.448 1 1s-0.448 1-1 1c-0.552 0-1-0.448-1-1v0c0-0.552 0.448-1 1-1v0z\" />\n        <path\n            d=\"M3 8c0 1.105 0.895 2 2 2s2-0.895 2-2c0-1.105-0.895-2-2-2v0c-1.105 0-2 0.895-2 2v0zM6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1v0c0.552 0 1 0.448 1 1v0z\" />\n        <path\n            d=\"M14 12c-1.105 0-2 0.895-2 2s0.895 2 2 2c1.105 0 2-0.895 2-2v0c0-1.105-0.895-2-2-2v0zM14 15c-0.552 0-1-0.448-1-1s0.448-1 1-1c0.552 0 1 0.448 1 1v0c0 0.552-0.448 1-1 1v0z\" />\n    </symbol>\n\n    <symbol id=\"player-start\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.25 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M14.954 1.123c-0.051-0.076-0.136-0.125-0.233-0.125-0.058 0-0.111 0.017-0.156 0.047l0.001-0.001-10.942 6.741c-0.075 0.044-0.124 0.124-0.124 0.215s0.049 0.171 0.123 0.214l0.001 0.001 10.942 6.741c0.043 0.029 0.097 0.047 0.155 0.047 0.148 0 0.269-0.115 0.279-0.26l0-0.001v-13.484c-0.004-0.051-0.020-0.097-0.047-0.136l0.001 0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-end\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.75 1h2c0.138 0 0.25 0.112 0.25 0.25v13.5c0 0.138-0.112 0.25-0.25 0.25h-2c-0.138 0-0.25-0.112-0.25-0.25v-13.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M12.376 7.785l-10.942-6.741c-0.044-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-prevkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.2 1h1.6c0.114 0.015 0.201 0.111 0.201 0.228 0 0.008-0 0.015-0.001 0.023l0-0.001v13.5c0.001 0.007 0.001 0.014 0.001 0.022 0 0.117-0.087 0.213-0.2 0.228l-0.001 0h-1.6c-0.114-0.015-0.201-0.111-0.201-0.228 0-0.008 0-0.015 0.001-0.023l-0 0.001v-13.5c-0.001-0.007-0.001-0.014-0.001-0.022 0-0.117 0.087-0.213 0.2-0.228l0.001-0z\" />\n        <path\n            d=\"M1.107 7.785l9.515-6.741c0.038-0.026 0.085-0.042 0.136-0.042 0.134 0 0.242 0.108 0.242 0.242 0 0.005-0 0.010-0 0.014l0-0.001v13.484c0 0.004 0 0.009 0 0.013 0 0.134-0.108 0.242-0.242 0.242-0.051 0-0.097-0.015-0.136-0.042l0.001 0.001-9.515-6.741c-0.066-0.049-0.108-0.127-0.108-0.215s0.042-0.166 0.107-0.215l0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-nextkey\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.8 1h-1.6c-0.114 0.015-0.201 0.111-0.201 0.228 0 0.008 0 0.015 0.001 0.023l-0-0.001v13.5c-0.001 0.007-0.001 0.014-0.001 0.022 0 0.117 0.087 0.213 0.2 0.228l0.001 0h1.6c0.114-0.015 0.201-0.111 0.201-0.228 0-0.008-0-0.015-0.001-0.023l0 0.001v-13.5c0.001-0.007 0.001-0.014 0.001-0.022 0-0.117-0.087-0.213-0.2-0.228l-0.001-0z\" />\n        <path\n            d=\"M14.893 7.785l-9.515-6.741c-0.038-0.026-0.085-0.041-0.135-0.041-0.134 0-0.242 0.108-0.242 0.242 0 0.005 0 0.009 0 0.014l-0-0.001v13.484c-0 0.004-0 0.009-0 0.013 0 0.134 0.108 0.242 0.242 0.242 0.051 0 0.097-0.015 0.136-0.042l-0.001 0.001 9.515-6.741c0.066-0.049 0.108-0.127 0.108-0.215s-0.042-0.166-0.107-0.215l-0.001-0z\" />\n    </symbol>\n\n    <symbol id=\"player-reverseplay\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.316 1.044c0.043-0.029 0.097-0.047 0.155-0.047 0.148 0 0.269 0.115 0.279 0.26l0 0.001v13.484c-0.010 0.146-0.132 0.261-0.279 0.261-0.058 0-0.111-0.017-0.156-0.047l0.001 0.001-10.942-6.741c-0.075-0.044-0.124-0.124-0.124-0.215s0.050-0.171 0.123-0.214l0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-play\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.684 1.044c-0.043-0.029-0.097-0.047-0.155-0.047-0.148 0-0.269 0.115-0.279 0.26l-0 0.001v13.484c0.010 0.146 0.132 0.261 0.279 0.261 0.058 0 0.111-0.017 0.156-0.047l-0.001 0.001 10.942-6.741c0.075-0.044 0.124-0.124 0.124-0.215s-0.050-0.171-0.123-0.214l-0.001-0.001z\" />\n    </symbol>\n\n    <symbol id=\"player-record\" viewBox=\"0 0 16 16\">\n        <path d=\"M15 8c0 3.866-3.134 7-7 7s-7-3.134-7-7c0-3.866 3.134-7 7-7s7 3.134 7 7z\" />\n    </symbol>\n\n    <symbol id=\"player-stop\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n        <path\n            d=\"M14.4 1h-4.8c-0.331 0-0.6 0.112-0.6 0.25v13.5c0 0.138 0.269 0.25 0.6 0.25h4.8c0.331 0 0.6-0.112 0.6-0.25v-13.5c0-0.138-0.269-0.25-0.6-0.25z\" />\n    </symbol>\n\n    <symbol id=\"path\" viewBox=\"0 0 16 16\">\n        <path d=\"M13,11a1.994,1.994,0,0,0-1.925,1.488c-1.586-.047-2.6-.354-3-.923-.528-.749-.056-2.1.4-3.4.54-1.543,1.1-3.139.266-4.312-.611-.86-1.832-1.287-3.8-1.342a2,2,0,1,0-.007,1c1.582.046,2.594.354,3,.925.533.748.061,2.1-.4,3.4-.54,1.543-1.1,3.139-.266,4.311.611.861,1.833,1.288,3.805,1.343A2,2,0,1,0,13,11ZM3,4A1,1,0,1,1,4,3,1,1,0,0,1,3,4ZM13,14a1,1,0,1,1,1-1A1,1,0,0,1,13,14Z\" />\n    </symbol>\n\n    <symbol id=\"text-uppercase\" viewBox=\"0 0 16 16\">\n        <path d=\"M4.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n        <path d=\"M13.325 12.64h-1.64v-7.979h-2.673v-1.3h6.976v1.3h-2.663z\" />\n    </symbol>\n\n    <symbol id=\"text-lowercase\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.866 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.005v-0.693l1.079-0.573 0.533-1.558h0.966v1.643h2.1v1.185h-2.1v3.942c-0.003 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.050-0.001l-0.002 0zM12.591 11.303c0.409-0.001 0.803-0.067 1.172-0.188l-0.027 0.008v1.179c-0.192 0.081-0.417 0.147-0.65 0.187l-0.019 0.003c-0.252 0.049-0.543 0.077-0.839 0.077-0.003 0-0.007 0-0.010-0h0.001q-2.224 0-2.224-2.344v-3.97h-1.006v-0.693l1.079-0.573 0.533-1.557h0.966v1.642h2.1v1.185h-2.1v3.942c-0.002 0.028-0.004 0.060-0.004 0.093 0 0.286 0.109 0.548 0.288 0.744l-0.001-0.001c0.182 0.166 0.426 0.267 0.693 0.267 0.017 0 0.034-0 0.051-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-capitalize\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5.656 12.515h-1.5v-7.871h-2.69v-1.284h6.882v1.284h-2.692zM13.457 11.454c0.385-0.001 0.755-0.063 1.102-0.176l-0.025 0.007v1.105c-0.181 0.076-0.392 0.138-0.611 0.175l-0.018 0.003c-0.237 0.046-0.509 0.072-0.787 0.072-0.005 0-0.009 0-0.014-0h0.001q-2.092 0-2.092-2.2v-3.736h-0.944v-0.65l0.946-0.463 0.57-1.54h0.908v1.54h1.972v1.113h-1.973v3.707c-0.002 0.026-0.004 0.057-0.004 0.087 0 0.269 0.102 0.515 0.27 0.7l-0.001-0.001c0.172 0.16 0.404 0.258 0.659 0.258 0.014 0 0.028-0 0.042-0.001l-0.002 0z\" />\n    </symbol>\n\n    <symbol id=\"text-subscript\" viewBox=\"0 0 16 16\">\n        <path d=\"M6.949 11.769h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n        <path\n            d=\"M13.617 14.224h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.761-0.162 0.012 0 0.024 0 0.035 0l-0.002-0c0.033-0.002 0.070-0.004 0.109-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n    </symbol>\n\n    <symbol id=\"text-superscript\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.117 6.226h-1.191v-2.551c0.002-0.025 0.003-0.055 0.003-0.085 0-0.23-0.064-0.446-0.174-0.63l0.003 0.006c-0.113-0.148-0.289-0.242-0.487-0.242-0.017 0-0.034 0.001-0.050 0.002l0.002-0c-0.021-0.002-0.046-0.003-0.071-0.003-0.268 0-0.506 0.132-0.651 0.335l-0.002 0.002c-0.144 0.275-0.229 0.601-0.229 0.946 0 0.058 0.002 0.116 0.007 0.173l-0.001-0.007v2.055h-1.188v-4.367h0.91l0.16 0.559h0.066c0.133-0.209 0.32-0.374 0.541-0.476l0.008-0.003c0.224-0.103 0.486-0.162 0.762-0.162 0.012 0 0.023 0 0.035 0l-0.002-0c0.032-0.002 0.070-0.004 0.108-0.004 0.406 0 0.775 0.158 1.048 0.417l-0.001-0.001c0.248 0.288 0.399 0.665 0.399 1.077 0 0.039-0.001 0.078-0.004 0.117l0-0.005z\" />\n        <path d=\"M5.449 14.226h-1.634v-8.593h-2.94v-1.4h7.515v1.4h-2.941z\" />\n    </symbol>\n\n    <symbol id=\"text-bold\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.921 2.505h3.423c0.142-0.011 0.308-0.017 0.476-0.017 1.065 0 2.071 0.252 2.962 0.7l-0.038-0.017c0.642 0.419 1.060 1.134 1.060 1.947 0 0.060-0.002 0.12-0.007 0.179l0-0.008c0.002 0.033 0.002 0.073 0.002 0.112 0 0.563-0.174 1.085-0.471 1.515l0.006-0.009c-0.286 0.401-0.719 0.68-1.22 0.759l-0.010 0.001v0.075c0.612 0.099 1.137 0.416 1.503 0.867l0.004 0.004c0.292 0.439 0.466 0.979 0.466 1.559 0 0.049-0.001 0.099-0.004 0.148l0-0.007c0.002 0.040 0.003 0.086 0.003 0.132 0 0.899-0.424 1.7-1.083 2.212l-0.006 0.005c-0.751 0.532-1.687 0.85-2.696 0.85-0.090 0-0.18-0.003-0.269-0.008l0.012 0.001h-4.115zM6.253 6.861h1.359c0.057 0.005 0.124 0.007 0.191 0.007 0.433 0 0.841-0.111 1.195-0.307l-0.013 0.006c0.262-0.203 0.429-0.518 0.429-0.872 0-0.035-0.002-0.069-0.005-0.103l0 0.004c0.002-0.023 0.003-0.050 0.003-0.078 0-0.35-0.185-0.656-0.462-0.827l-0.004-0.002c-0.371-0.179-0.807-0.284-1.268-0.284-0.071 0-0.14 0.002-0.21 0.007l0.009-0.001h-1.226zM6.253 8.712v2.867h1.52c0.054 0.005 0.116 0.007 0.18 0.007 0.463 0 0.893-0.139 1.251-0.378l-0.008 0.005c0.285-0.251 0.463-0.616 0.463-1.023 0-0.037-0.002-0.074-0.004-0.111l0 0.005q0-1.371-1.956-1.371z\" />\n    </symbol>\n\n    <symbol id=\"text-italic\" viewBox=\"0 0 16 16\">\n        <path d=\"M6 13.354l2.278-10.708h1.722l-2.279 10.708z\" />\n    </symbol>\n\n    <symbol id=\"text-underline\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.959 1.5v6.464c0.001 0.026 0.001 0.057 0.001 0.087 0 0.679-0.176 1.316-0.486 1.869l0.010-0.019c-0.323 0.556-0.792 0.995-1.356 1.271l-0.019 0.008c-0.593 0.283-1.288 0.449-2.022 0.449-0.045 0-0.090-0.001-0.135-0.002l0.007 0c-0.074 0.005-0.16 0.008-0.248 0.008-1.015 0-1.942-0.376-2.65-0.996l0.005 0.004c-0.642-0.644-1.038-1.532-1.038-2.513 0-0.068 0.002-0.135 0.006-0.202l-0 0.009v-6.437h1.642v6.321c-0.006 0.063-0.009 0.137-0.009 0.211 0 0.615 0.22 1.179 0.586 1.617l-0.003-0.004c0.416 0.37 0.967 0.596 1.571 0.596 0.069 0 0.136-0.003 0.204-0.009l-0.009 0.001q2.311 0 2.311-2.426v-6.307z\" />\n        <path d=\"M1 13.5h14v1h-14v-1z\" />\n    </symbol>\n\n    <symbol id=\"text-strikethrough\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.833 6.995c-0.283-0.126-0.519-0.252-0.745-0.391l0.027 0.015c-0.235-0.143-0.429-0.332-0.575-0.554l-0.004-0.007c-0.111-0.194-0.177-0.427-0.177-0.675 0-0.014 0-0.028 0.001-0.042l-0 0.002c-0-0.012-0.001-0.027-0.001-0.042 0-0.376 0.171-0.711 0.439-0.934l0.002-0.002c0.319-0.235 0.719-0.377 1.153-0.377 0.048 0 0.095 0.002 0.143 0.005l-0.006-0c0.93 0.033 1.802 0.251 2.59 0.617l-0.041-0.017 0.556-1.428c-0.899-0.418-1.95-0.665-3.059-0.672l-0.002-0c-0.062-0.003-0.135-0.006-0.208-0.006-0.884 0-1.7 0.291-2.358 0.782l0.010-0.007c-0.584 0.474-0.955 1.192-0.955 1.996 0 0.040 0.001 0.079 0.003 0.119l-0-0.006c-0 0.015-0 0.032-0 0.049 0 0.584 0.173 1.128 0.47 1.584l-0.007-0.011z\" />\n        <path\n            d=\"M15 7.995h-14v1h7.289c0.337 0.18 0.624 0.363 0.895 0.566l-0.018-0.013c0.278 0.245 0.453 0.603 0.453 1.001 0 0.006-0 0.012-0 0.018l0-0.001c0.001 0.014 0.001 0.031 0.001 0.048 0 0.411-0.192 0.776-0.492 1.012l-0.003 0.002c-0.379 0.255-0.846 0.407-1.348 0.407-0.065 0-0.13-0.003-0.194-0.008l0.008 0.001c-0.548-0.007-1.075-0.079-1.58-0.21l0.046 0.010c-0.596-0.144-1.114-0.33-1.606-0.564l0.049 0.021v1.654c0.801 0.359 1.735 0.569 2.719 0.569 0.090 0 0.179-0.002 0.268-0.005l-0.013 0c0.078 0.005 0.169 0.008 0.261 0.008 0.969 0 1.867-0.307 2.601-0.829l-0.014 0.009c0.633-0.497 1.036-1.263 1.036-2.123 0-0.042-0.001-0.084-0.003-0.125l0 0.006c0.001-0.021 0.001-0.045 0.001-0.069 0-0.431-0.094-0.841-0.263-1.209l0.007 0.018c-0.035-0.070-0.087-0.128-0.128-0.194h4.028z\" />\n    </symbol>\n\n    <symbol id=\"character-spacing\" viewBox=\"0 0 16 16\">\n        <path d=\"M14.5 11.225l-1.5-1v1.5h-10v-1.5l-3 2 3 2v-1.5h10v1.5l3-2-1.5-1z\" />\n        <path\n            d=\"M5.349 8.226l2.25-6.425h-1.090l-1.341 3.974c-0.049 0.141-0.114 0.358-0.193 0.651s-0.138 0.551-0.176 0.773q-0.034-0.219-0.153-0.67c-0.080-0.3-0.154-0.546-0.225-0.736l-1.34-4h-1.081l2.241 6.425z\" />\n        <path\n            d=\"M9.335 6.441h2.456l0.642 1.784h1.116l-2.4-6.451h-1.149l-2.4 6.451h1.106zM10.222 3.861c0.12-0.316 0.24-0.711 0.334-1.116l0.013-0.066q0.045 0.175 0.16 0.554c0.079 0.252 0.139 0.437 0.183 0.554l0.6 1.749h-1.87z\" />\n    </symbol>\n\n    <symbol id=\"line-spacing\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.093 3.513h8.814c0.328 0 0.593 0.265 0.593 0.593v0.314c0 0.327-0.265 0.593-0.593 0.593h-8.814c-0.327 0-0.593-0.266-0.593-0.593v-0.314c0-0.328 0.266-0.593 0.593-0.593z\" />\n        <path\n            d=\"M6.088 7.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path\n            d=\"M6.088 11.513h8.824c0.325 0 0.588 0.263 0.588 0.588v0.311c0 0.325-0.263 0.588-0.588 0.588h-8.824c-0.325 0-0.588-0.263-0.588-0.588v-0.311c0-0.325 0.263-0.588 0.588-0.588z\" />\n        <path d=\"M4.5 4l-2-3-2 3h1.5v8h-1.5l2 3 2-3h-1.5v-8h1.5z\" />\n    </symbol>\n\n    <symbol id=\"text-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3.75 1.25h8.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-8.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M3.744 9.25h8.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-8.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M6.75 2.75h8.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0h-8.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0z\" />\n        <path\n            d=\"M15.256 5.25h-14.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h14.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.256 9.25h-8.512c-0.411 0-0.744 0.333-0.744 0.744s0.333 0.744 0.744 0.744v0h8.512c0.411 0 0.744-0.333 0.744-0.744s-0.333-0.744-0.744-0.744v0z\" />\n        <path\n            d=\"M15.25 13.25h-14.5c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h14.5c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"text-justify\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.75 1.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n        <path\n            d=\"M0.744 5.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.744-0.744 0.744-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.744 0.744-0.744 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.744 9.25h14.512c0 0 0 0 0 0 0.411 0 0.744 0.333 0.744 0.743v0c-0 0.411-0.333 0.743-0.744 0.743-0 0-0 0-0 0h-14.512c-0 0-0 0-0 0-0.411 0-0.744-0.333-0.744-0.743v-0c0-0.411 0.333-0.743 0.744-0.743 0 0 0 0 0 0h-0z\" />\n        <path\n            d=\"M0.75 13.25h14.5c0.414 0 0.75 0.336 0.75 0.75v0 0c0 0.414-0.336 0.75-0.75 0.75v0h-14.5c-0.414 0-0.75-0.336-0.75-0.75v0 0c0-0.414 0.336-0.75 0.75-0.75v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-same\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M10 0h-4c-3.314 0-6 2.686-6 6v0 4c0 3.314 2.686 6 6 6v0h4c3.314 0 6-2.686 6-6v0-4c0-3.314-2.686-6-6-6v0zM15 10c0 2.761-2.239 5-5 5v0h-4c-2.761 0-5-2.239-5-5v0-4c0-2.761 2.239-5 5-5v0h4c2.761 0 5 2.239 5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"radius-separate\" viewBox=\"0 0 16 16\">\n        <path d=\"M0 6h1c0-2.761 2.239-5 5-5v0-1c-3.314 0-6 2.686-6 6v0z\" />\n        <path d=\"M15 6h1c0-3.314-2.686-6-6-6v0 1c2.761 0 5 2.239 5 5v0z\" />\n        <path d=\"M1 10h-1c0 3.314 2.686 6 6 6v0-1c-2.761 0-5-2.239-5-5v0z\" />\n        <path d=\"M10 15v1c3.314 0 6-2.686 6-6v0h-1c0 2.761-2.239 5-5 5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-checked\" viewBox=\"0 0 16 16\">\n        <path d=\"M2 8c0 1.657 1.343 3 3 3v0h6c1.657 0 3-1.343 3-3s-1.343-3-3-3v0h-6c-1.657 0-3 1.343-3 3v0z\" />\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"maintain-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1 8c0-2.209 1.791-4 4-4v0h1v-1h-1c-2.761 0-5 2.239-5 5s2.239 5 5 5v0h1v-1h-1c-2.209 0-4-1.791-4-4v0z\" />\n        <path\n            d=\"M11 3h-1v1h1c0 0 0.001 0 0.001 0 2.209 0 4 1.791 4 4s-1.79 3.999-3.999 4h-1.002v1h1c2.761 0 5-2.239 5-5s-2.239-5-5-5v0z\" />\n    </symbol>\n\n    <symbol id=\"rotate\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8.002 15c-0.009 0-0.020 0-0.030 0-3.866 0-7-3.134-7-7s3.134-7 7-7c2.596 0 4.862 1.413 6.071 3.513l0.018 0.034-1.883-0.269-0.141 0.99 3.466 0.495 0.494-3.465-0.99-0.142-0.231 1.618c-1.435-2.263-3.928-3.744-6.765-3.744-4.41 0-7.985 3.575-7.985 7.985s3.575 7.985 7.985 7.985c3.799 0 6.979-2.653 7.786-6.208l0.010-0.053h-1.032c-0.802 3.045-3.528 5.255-6.772 5.261h-0.001z\" />\n        <path d=\"M9.002 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z\" />\n    </symbol>\n\n    <symbol id=\"add-color\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.318 11.203v-2.5h2.414v-0.809h-2.414l-0.003-2.508h-0.814v2.508h-2.4v0.809h2.403v2.5h0.814z\" />\n        <path d=\"M0 10h1v2h-1v-2z\" />\n        <path d=\"M0 7h1v2h-1v-2z\" />\n        <path d=\"M0 4h1v2h-1v-2z\" />\n        <path d=\"M10 0h2v1h-2v-1z\" />\n        <path d=\"M7 0h2v1h-2v-1z\" />\n        <path d=\"M4 0h2v1h-2v-1z\" />\n        <path d=\"M10 15h2v1h-2v-1z\" />\n        <path d=\"M7 15h2v1h-2v-1z\" />\n        <path d=\"M4 15h2v1h-2v-1z\" />\n        <path d=\"M1 0h-1v3h1v-2h2v-1h-2z\" />\n        <path d=\"M1 15v-2h-1v3h3v-1h-2z\" />\n        <path d=\"M15 0h-2v1h2v2h1v-3h-1z\" />\n        <path d=\"M15 10h1v2h-1v-2z\" />\n        <path d=\"M15 7h1v2h-1v-2z\" />\n        <path d=\"M15 4h1v2h-1v-2z\" />\n        <path d=\"M15 14v1h-2v1h3v-3h-1v1z\" />\n    </symbol>\n\n    <symbol id=\"align-to-selection\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 16v-1h-3.5v1h-3v-1h-3.5v1h-3v-3h0.974v-3.5h-0.974v-3h0.974v-3.5h-0.974v-3h3v1h3.5v-1h3v1h3.5v-1h3v3h-0.974v3.5h0.974v3h-0.974v3.5h0.974v3zM9.5 13v1h3.5v-1h1v-3.5h-1v-3h1v-3.5h-1v-1h-3.5v1h-3v-1h-3.5v1h-1v3.5h1v3h-1v3.5h1v1h3.5v-1zM7 8c0-0.552 0.448-1 1-1s1 0.448 1 1c0 0.552-0.448 1-1 1v0c-0.552 0-1-0.448-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"artboard-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M16 4v-1h-1.5v-1.5h-1v1.5h-11v-1.5h-1v1.5h-1.5v1h1.5v8h-1.5v1h1.5v1.5h1v-1.5h11v1.5h1v-1.5h1.5v-1h-1.5v-8zM13.5 12h-11v-8h11z\" />\n    </symbol>\n\n    <symbol id=\"assets\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 1h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 6h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M1.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M6.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n        <path\n            d=\"M11.133 11h3.734c0.073 0 0.133 0.060 0.133 0.133v3.734c0 0.073-0.060 0.133-0.133 0.133h-3.734c-0.073 0-0.133-0.060-0.133-0.133v-3.734c0-0.073 0.060-0.133 0.133-0.133z\" />\n    </symbol>\n\n    <symbol id=\"boolean-add\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-divide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 0.73c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h2.778v-8h8z\" />\n        <path d=\"M4.5 4.5h7v7h-7v-7z\" />\n        <path\n            d=\"M15.278 4.5h-2.778v8h-8v2.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-intersect\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.271 4.5h-3.771v-3.771c-0.001-0.126-0.103-0.228-0.229-0.229h-10.542c-0.126 0.001-0.228 0.103-0.229 0.229v10.542c0.001 0.126 0.103 0.228 0.229 0.229h3.771v3.771c0.001 0.126 0.103 0.228 0.229 0.229h10.542c0.126-0.001 0.228-0.103 0.229-0.229v-10.542c-0.001-0.126-0.103-0.228-0.229-0.229h-0zM1.5 10.5v-9h9v3h-5.771c-0.126 0.001-0.228 0.103-0.229 0.229v5.771zM14.5 14.5h-9v-3h5.771c0.126-0.001 0.228-0.103 0.229-0.229v-5.771h3z\" />\n    </symbol>\n\n    <symbol id=\"boolean-overlap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.278 4.5h-3.778v6.77c0 0.001 0 0.003 0 0.004 0 0.123-0.099 0.224-0.222 0.226h-6.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0z\" />\n        <path\n            d=\"M4.722 4.5h6.778v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v-6.77c-0-0.001-0-0.003-0-0.004 0-0.123 0.099-0.224 0.222-0.226h0z\" />\n    </symbol>\n\n    <symbol id=\"boolean-substract\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.27 4.5h-3.77v-3.77c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-10.548c-0.001-0-0.003-0-0.004-0-0.123 0-0.224 0.099-0.226 0.222v10.548c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h3.778v3.77c-0 0.001-0 0.003-0 0.004 0 0.123 0.099 0.224 0.222 0.226h10.548c0.001 0 0.003 0 0.004 0 0.123 0 0.224-0.099 0.226-0.222v-10.548c0-0.001 0-0.003 0-0.004 0-0.123-0.099-0.224-0.222-0.226h-0zM14.5 14.5h-9v-9h9z\" />\n    </symbol>\n\n    <symbol id=\"bring-forward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 9h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263 0.118-0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145 0.118 0.263 0.263 0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263-0.118 0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145-0.118-0.263-0.263-0.264h-0zM8 15h-7v-5h7z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n    </symbol>\n\n    <symbol id=\"send-backward\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path\n            d=\"M8.735 7h-8.47c-0 0-0.001 0-0.001 0-0.145 0-0.263-0.118-0.264-0.263v-6.472c0-0 0-0.001 0-0.001 0-0.145 0.118-0.263 0.263-0.264h8.472c0 0 0.001 0 0.001 0 0.145 0 0.263 0.118 0.264 0.263v6.472c0 0 0 0.001 0 0.001 0 0.145-0.118 0.263-0.263 0.264h-0zM8 1h-7v5h7z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n    </symbol>\n\n    <symbol id=\"bring-front\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 0h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 4l-3 4h2v4h2v-4h2z\" />\n        <path d=\"M0 9h1v1h-1v-1z\" />\n        <path d=\"M2 9h1v1h-1v-1z\" />\n        <path d=\"M4 9h1v1h-1v-1z\" />\n        <path d=\"M6 9h1v1h-1v-1z\" />\n        <path d=\"M2 15h1v1h-1v-1z\" />\n        <path d=\"M4 15h1v1h-1v-1z\" />\n        <path d=\"M6 15h1v1h-1v-1z\" />\n        <path d=\"M0 11h1v1h-1v-1z\" />\n        <path d=\"M0 13h1v1h-1v-1z\" />\n        <path d=\"M8 11h1v1h-1v-1z\" />\n        <path d=\"M8 13h1v1h-1v-1z\" />\n        <path d=\"M8 9h1v1h-1v-1z\" />\n        <path d=\"M0 15h1v1h-1v-1z\" />\n        <path d=\"M8 15h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"send-back\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.265 9h8.47c0.146 0 0.265 0.119 0.265 0.265v6.47c0 0.146-0.119 0.265-0.265 0.265h-8.47c-0.146 0-0.265-0.119-0.265-0.265v-6.47c0-0.146 0.119-0.265 0.265-0.265z\" />\n        <path d=\"M13 12l-3-4h2v-4h2v4h2z\" />\n        <path d=\"M0 6h1v1h-1v-1z\" />\n        <path d=\"M2 6h1v1h-1v-1z\" />\n        <path d=\"M4 6h1v1h-1v-1z\" />\n        <path d=\"M6 6h1v1h-1v-1z\" />\n        <path d=\"M2 0h1v1h-1v-1z\" />\n        <path d=\"M4 0h1v1h-1v-1z\" />\n        <path d=\"M6 0h1v1h-1v-1z\" />\n        <path d=\"M0 4h1v1h-1v-1z\" />\n        <path d=\"M0 2h1v1h-1v-1z\" />\n        <path d=\"M8 4h1v1h-1v-1z\" />\n        <path d=\"M8 2h1v1h-1v-1z\" />\n        <path d=\"M8 6h1v1h-1v-1z\" />\n        <path d=\"M0 0h1v1h-1v-1z\" />\n        <path d=\"M8 0h1v1h-1v-1z\" />\n    </symbol>\n\n    <symbol id=\"cap-butt\" viewBox=\"0 0 16 16\">\n        <path d=\"M1.503 10.5v3.5h14.5v-4.5h-12.507c-0.46 0.608-1.181 0.998-1.993 1h-0z\" />\n        <path d=\"M1.503 2v3.5c0.812 0.002 1.533 0.392 1.988 0.994l0.005 0.006h12.507v-4.5z\" />\n        <path\n            d=\"M1.503 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h13.092v-1h-13.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM1.503 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-square\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 2v12h16v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"cap-round\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 8v0c0 3.314 2.686 6 6 6v0h10v-4.5h-7.507c-0.461 0.61-1.185 1-2 1-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5c0.815 0 1.539 0.39 1.995 0.994l0.005 0.006h7.507v-4.5h-10c-3.314 0-6 2.686-6 6v0z\" />\n        <path\n            d=\"M6.5 6.5c-0.002-0-0.004-0-0.006-0-0.828 0-1.5 0.672-1.5 1.5s0.672 1.5 1.5 1.5c0.649 0 1.202-0.412 1.411-0.99l0.003-0.010h8.092v-1h-8.092c-0.211-0.586-0.761-0.997-1.408-1h-0zM6.5 8.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"colorpicker-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.118 1.033l-0.151-0.151c-0.493-0.492-1.173-0.797-1.925-0.797s-1.432 0.304-1.925 0.797l-2.524 2.524-0.033-0.033c-0.119-0.12-0.285-0.194-0.467-0.194s-0.347 0.074-0.466 0.193l-0.001 0.001-0.17 0.169c-0.119 0.12-0.193 0.285-0.193 0.467s0.074 0.348 0.193 0.468l0.283 0.283-3.52 3.52c-1.143 1.143-2.975 3.381-2.975 3.381s-0.373 1.922-0.59 2.684l-0.363 0.363c-0.128 0.128-0.207 0.305-0.207 0.5s0.079 0.372 0.207 0.5v0c0.128 0.128 0.305 0.207 0.5 0.207s0.372-0.079 0.5-0.207l0.363-0.363c0.762-0.217 2.684-0.59 2.684-0.59s2.238-1.832 3.381-2.975l3.52-3.52 0.283 0.282c0.119 0.12 0.285 0.194 0.467 0.194s0.347-0.074 0.466-0.193l0.001-0.001 0.17-0.169c0.12-0.119 0.194-0.285 0.194-0.467s-0.074-0.347-0.193-0.466l-0.034-0.034 2.524-2.524c0.493-0.492 0.798-1.173 0.798-1.925s-0.305-1.432-0.798-1.925l-0-0zM7.013 11.073c-0.9 0.9-2.555 2.285-3.115 2.749-0.446 0.089-1.383 0.279-2.067 0.445-0.013-0.023-0.026-0.042-0.040-0.060l0.001 0.001c-0.017-0.013-0.036-0.026-0.057-0.038l-0.002-0.001c0.165-0.684 0.356-1.621 0.445-2.067 0.464-0.56 1.846-2.212 2.749-3.115l3.52-3.52 2.086 2.086z\" />\n    </symbol>\n\n    <symbol id=\"delete\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.7 1.5h-2.729c-0.068-0.563-0.542-0.996-1.117-1h-1.208c-0.575 0.004-1.049 0.437-1.116 0.995l-0.001 0.005h-3.229c-0.994 0-1.8 0.806-1.8 1.8v0 0.2h13v-0.2c0-0.994-0.806-1.8-1.8-1.8v0z\" />\n        <path\n            d=\"M2 14.5c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-10h-12zM11 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM7.5 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0zM4 6.5c0-0.276 0.224-0.5 0.5-0.5s0.5 0.224 0.5 0.5v0 7.5c0 0.276-0.224 0.5-0.5 0.5s-0.5-0.224-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"direct-selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.919 10.726l-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0zM7.060 10.537c-0.311 0.018-0.588 0.146-0.796 0.347l0-0-3.264 3.111v-12.033l8.948 8.297z\" />\n    </symbol>\n\n    <symbol id=\"drop-arrow\" viewBox=\"0 0 16 16\">\n        <path d=\"M8.102 10.207l-3.45-3.348 0.696-0.718 2.732 2.652 2.561-2.641 0.718 0.696-3.257 3.359z\" />\n    </symbol>\n\n    <symbol id=\"duplicate-layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.891 5h-8.391v9.891c0.001 0.612 0.497 1.108 1.109 1.109h7.282c0.612-0.001 1.108-0.497 1.109-1.109v-8.782c-0.001-0.612-0.497-1.108-1.109-1.109h-0z\" />\n        <path\n            d=\"M10.5 1.109c0-0 0-0.001 0-0.001 0-0.612-0.495-1.107-1.107-1.108h-7.284c-0 0-0.001 0-0.001 0-0.612 0-1.107 0.495-1.108 1.107v8.784c0 0 0 0.001 0 0.001 0 0.612 0.496 1.107 1.107 1.108h2.402v-7h5.991z\" />\n    </symbol>\n\n    <symbol id=\"ellipse-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 15.5c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5c4.142 0 7.5 3.358 7.5 7.5v0c-0.005 4.14-3.36 7.495-7.5 7.5h-0zM8 1.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c3.59 0 6.5-2.91 6.5-6.5v0c-0.004-3.588-2.912-6.496-6.5-6.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-evenodd\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.25 15h-10.5c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 4c-2.209 0-4 1.791-4 4s1.791 4 4 4c2.209 0 4-1.791 4-4v0c0-2.209-1.791-4-4-4v0z\" />\n    </symbol>\n\n    <symbol id=\"fill-nonzero\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0.001-0.966 0.784-1.749 1.75-1.75h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.002 0.966-0.784 1.748-1.75 1.75h-0zM4 8c0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.209-1.791-4-4-4v0c-2.209 0-4 1.791-4 4v0zM5 8c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3v0c-1.657 0-3-1.343-3-3v0z\" />\n    </symbol>\n\n    <symbol id=\"flip-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.759 0h0.484c0.142 0 0.258 0.116 0.258 0.258v15.484c0 0.142-0.116 0.258-0.258 0.258h-0.484c-0.142 0-0.258-0.116-0.258-0.258v-15.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M5.245 1.5c-0.082 0-0.154 0.039-0.2 0.099l-0 0.001-4.993 6.28c-0.034 0.042-0.054 0.095-0.054 0.153s0.020 0.112 0.054 0.154l-0-0 4.994 6.222c0.046 0.058 0.116 0.095 0.195 0.095 0.002 0 0.004-0 0.006-0h-0c0.002 0 0.004 0 0.006 0 0.136 0 0.247-0.109 0.25-0.244v-12.505c0-0.002 0-0.003 0-0.005 0-0.136-0.109-0.247-0.245-0.25h-0zM4.501 12.124l-3.289-4.1 3.289-4.133z\" />\n        <path\n            d=\"M15.947 7.876l-4.993-6.276c-0.047-0.059-0.119-0.096-0.199-0.096-0.139 0-0.251 0.111-0.254 0.249v12.5c0.003 0.138 0.115 0.249 0.254 0.249 0.080 0 0.151-0.037 0.198-0.094l0-0 4.994-6.222c0.034-0.042 0.055-0.096 0.055-0.155s-0.021-0.113-0.055-0.155l0 0z\" />\n    </symbol>\n\n    <symbol id=\"flip-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.258 7.5h15.484c0.142 0 0.258 0.116 0.258 0.258v0.484c0 0.142-0.116 0.258-0.258 0.258h-15.484c-0.142 0-0.258-0.116-0.258-0.258v-0.484c0-0.142 0.116-0.258 0.258-0.258z\" />\n        <path\n            d=\"M14.5 5.244c0-0.082-0.039-0.154-0.099-0.2l-0.001-0-6.276-4.99c-0.042-0.034-0.095-0.054-0.154-0.054s-0.112 0.020-0.154 0.054l0-0-6.222 4.994c-0.058 0.046-0.095 0.116-0.095 0.195 0 0.002 0 0.004 0 0.006v-0c-0 0.002-0 0.004-0 0.006 0 0.136 0.109 0.247 0.244 0.25h12.507c0.138-0.001 0.249-0.112 0.249-0.25 0-0 0-0 0-0.001v0zM3.876 4.5l4.1-3.289 4.133 3.289z\" />\n        <path\n            d=\"M8.124 15.946l6.276-4.993c0.059-0.047 0.096-0.119 0.096-0.199 0-0.137-0.109-0.249-0.245-0.254l-0-0h-12.5c-0.138 0.003-0.249 0.115-0.249 0.254 0 0.080 0.037 0.151 0.094 0.198l0 0 6.22 4.994c0.042 0.034 0.095 0.054 0.154 0.054s0.112-0.020 0.154-0.054l-0 0z\" />\n    </symbol>\n\n    <symbol id=\"group\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8 2.5c0-0.552-0.448-1-1-1v0h-6c-0.552 0-1 0.448-1 1v0 0.5h8.153c-0.092-0.142-0.148-0.314-0.153-0.499l-0-0.001z\" />\n        <path\n            d=\"M0 4v9.5c0 0.552 0.448 1 1 1v0h14c0.552 0 1-0.448 1-1v0-9c-0.005-0.186-0.061-0.358-0.155-0.504l0.002 0.004z\" />\n    </symbol>\n\n    <symbol id=\"guidelines-toggle\" viewBox=\"0 0 16 16\">\n        <path d=\"M16 4h-11v-4h-1.026v4h-3.974v1h3.974v11h1.026v-11h11z\" />\n    </symbol>\n\n    <symbol id=\"hide\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.59 5.056c-0.214-0.206-0.442-0.403-0.681-0.586l-0.019-0.014 2.641-2.642c0.136-0.136 0.22-0.323 0.22-0.53 0-0.414-0.336-0.75-0.75-0.75-0.207 0-0.395 0.084-0.53 0.22l-13.436 13.442c-0.13 0.135-0.21 0.318-0.21 0.521 0 0.414 0.336 0.75 0.75 0.75 0.203 0 0.387-0.080 0.522-0.211l3.466-3.465c0.727 0.253 1.565 0.401 2.436 0.406l0.003 0c0.001 0 0.003 0 0.005 0 2.181 0 4.155-0.883 5.585-2.31l-0 0 2.41-2.42zM12.88 9.177c-1.235 1.248-2.948 2.020-4.841 2.020-0.014 0-0.027-0-0.041-0l0.002 0c-0 0-0 0-0 0-0.585 0-1.153-0.073-1.695-0.21l0.048 0.010 0.5-0.5c0.342 0.141 0.739 0.225 1.154 0.229l0.002 0c1.795 0 3.25-1.455 3.25-3.25v0c-0.001-0.381-0.071-0.745-0.197-1.081l0.007 0.021c-0.012 0.775-0.643 1.4-1.42 1.4h-0c-0.035 0-0.066-0.013-0.1-0.016l2.632-2.628c0.259 0.19 0.488 0.382 0.702 0.587l-0.002-0.002 1.71 1.71z\" />\n        <path\n            d=\"M2.85 10.267l0.7-0.71c-0.153-0.123-0.29-0.248-0.419-0.379l-0.001-0.001-1.71-1.71 1.71-1.71c1.24-1.248 2.958-2.020 4.856-2.020 0.005 0 0.010 0 0.015 0h-0.001c0.446 0.001 0.882 0.041 1.305 0.117l-0.045-0.007 0.82-0.82c-0.613-0.184-1.317-0.29-2.046-0.29-0.012 0-0.024 0-0.036 0h0.002c-0.004-0-0.009-0-0.014-0-2.176 0-4.145 0.887-5.565 2.319l-0.001 0.001-2.42 2.41 2.42 2.42c0.131 0.135 0.272 0.26 0.421 0.373l0.009 0.007z\" />\n        <path\n            d=\"M4.76 7.476c-0 0.008-0 0.018-0 0.028 0 0.268 0.037 0.526 0.105 0.772l-0.005-0.020 3.93-3.93c-0.225-0.064-0.484-0.1-0.752-0.1-0.010 0-0.020 0-0.030 0l0.002-0c-1.794 0.003-3.247 1.456-3.25 3.25v0z\" />\n    </symbol>\n\n    <symbol id=\"image\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.038 15c-0.573-0.001-1.037-0.465-1.038-1.038v-11.924c0.001-0.573 0.465-1.037 1.038-1.038h11.924c0.573 0.001 1.037 0.465 1.038 1.038v11.924c-0.001 0.573-0.465 1.037-1.038 1.038h-0zM2 2.038v11.924l0.005 0.005 3.995-4.745 2 2.11 4-6.332 2 2.956v-5.918c0-0 0-0.001 0-0.001 0-0.020-0.016-0.036-0.036-0.037h-11.926c-0.021 0-0.038 0.017-0.038 0.038v0zM3.5 5.5c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2v0c-1.105 0-2-0.895-2-2v0z\" />\n    </symbol>\n\n    <symbol id=\"join-bevel\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10l5.989 6h10.011v-6z\" />\n    </symbol>\n\n\n    <symbol id=\"join-miter\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v16h16v-6z\" />\n    </symbol>\n\n    <symbol id=\"join-round\" viewBox=\"0 0 16 16\">\n        <path d=\"M5.989 10v-10h-5.989v10.011c0 3.308 2.681 5.989 5.989 5.989h10.011v-6z\" />\n    </symbol>\n\n    <symbol id=\"layer\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.75 15c-0.966-0.001-1.749-0.784-1.75-1.75v-10.5c0-0.966 0.784-1.75 1.75-1.75v0h10.5c0.966 0.001 1.749 0.784 1.75 1.75v10.5c-0.001 0.966-0.784 1.749-1.75 1.75h-0zM8 11.062v2.938h3.062v-2.937h-3.062v-3.063h3.063v3.062h2.937v-3.062h-2.938v-3.063h2.938v-2.187c0-0.414-0.336-0.75-0.75-0.75v0h-2.188v2.937h-3.062v-2.937h-3.063v2.937h-2.937v3.063h2.937v3.062h-2.937v2.188c0 0.414 0.336 0.75 0.75 0.75v0h2.187v-2.938zM4.938 8v-3.062h3.062v3.062z\" />\n    </symbol>\n\n    <symbol id=\"layers\" viewBox=\"0 0 16 16\">\n        <path d=\"M8 0.827l-8 5.175 8 5.172 8-5.172z\" />\n        <path d=\"M8 14.172l-7.227-4.671-0.773 0.5 8 5.172 8-5.172-0.773-0.5z\" />\n    </symbol>\n\n    <symbol id=\"lock\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13 6h-1v-1c0-2.209-1.791-4-4-4s-4 1.791-4 4v0 1h-1c-0.552 0-1 0.448-1 1v0 7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-7c0-0.552-0.448-1-1-1v0zM9 11.5h-2c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h2c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM11 6h-6v-1c0-1.657 1.343-3 3-3s3 1.343 3 3v0z\" />\n    </symbol>\n\n    <symbol id=\"new-layer\" viewBox=\"0 0 16 16\">\n        <path d=\"M7 1l-5 5h5v-5z\" />\n        <path d=\"M13 1h-5v6h-6v7c0 0.552 0.448 1 1 1v0h10c0.552 0 1-0.448 1-1v0-12c0-0.552-0.448-1-1-1v0z\" />\n    </symbol>\n\n    <symbol id=\"pen-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.828 4.576l-4.206-4.206c-0.045-0.045-0.108-0.073-0.177-0.073s-0.131 0.028-0.177 0.073v0l-2.734 2.734-6.346 2.8c-0.073 0.033-0.126 0.098-0.143 0.176l-0 0.002-1.939 9.321c-0.003 0.015-0.005 0.032-0.005 0.050 0 0.138 0.111 0.249 0.249 0.25h0c0.018-0 0.035-0.002 0.052-0.006l-0.002 0 9.331-1.94c0.075-0.017 0.136-0.064 0.17-0.129l0.001-0.001 3.010-5.788 2.913-2.913c0.045-0.045 0.072-0.107 0.072-0.176 0-0.068-0.027-0.129-0.071-0.174l0 0zM9.182 12.853l-6.97 1.449 2.574-2.574c0.072 0.026 0.155 0.044 0.241 0.050l0.003 0c0.552 0 1-0.448 1-1s-0.448-1-1-1c-0.552 0-1 0.448-1 1v0c0.006 0.089 0.024 0.172 0.051 0.25l-0.002-0.007-2.578 2.576 1.441-6.931 5.7-2.517 3.329 3.329z\" />\n    </symbol>\n\n    <symbol id=\"line-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M1.5 15c-0.276-0-0.5-0.224-0.5-0.5 0-0.138 0.056-0.263 0.146-0.354l13-13c0.091-0.094 0.219-0.153 0.36-0.153 0.276 0 0.5 0.224 0.5 0.5 0 0.141-0.058 0.269-0.152 0.36l-13 13c-0.090 0.091-0.215 0.146-0.353 0.146-0 0-0 0-0.001 0h0z\" />\n    </symbol>\n\n    <symbol id=\"polygon-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.961 15.14l-7.721-14.515c-0.043-0.079-0.126-0.132-0.22-0.132s-0.178 0.053-0.22 0.131l-0.001 0.001-7.76 14.514c-0.019 0.034-0.030 0.075-0.030 0.118 0 0.138 0.112 0.25 0.25 0.25h15.482c0.138-0.001 0.249-0.112 0.249-0.25 0-0.043-0.011-0.083-0.030-0.118l0.001 0.001zM1.51 14.507l6.507-12.17 6.473 12.17z\" />\n    </symbol>\n\n    <symbol id=\"rectangle-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13.8 14.5h-11.6c-0.4 0-0.7-0.3-0.8-0.8v-11.5c0-0.4 0.3-0.7 0.8-0.8h11.5c0.4 0 0.7 0.3 0.8 0.8v11.5c0.003 0.026 0.005 0.056 0.005 0.087 0 0.391-0.315 0.709-0.705 0.713h-0zM2.5 13.5h11v-11h-11z\" />\n    </symbol>\n\n    <symbol id=\"star-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.751 6.427c0.035-0.043 0.057-0.098 0.057-0.159 0-0.116-0.079-0.214-0.186-0.242l-0.002-0-4.688-1.203c-0.064-0.017-0.117-0.057-0.15-0.11l-0.001-0.001-2.568-4.164c-0.045-0.072-0.124-0.118-0.213-0.118s-0.168 0.047-0.212 0.117l-0.001 0.001-2.568 4.164c-0.034 0.054-0.087 0.094-0.149 0.111l-0.002 0-4.688 1.203c-0.109 0.029-0.188 0.126-0.188 0.242 0 0.061 0.021 0.116 0.057 0.159l-0-0 3.103 3.785c0.035 0.043 0.057 0.099 0.057 0.159 0 0.006-0 0.011-0.001 0.017l0-0.001-0.326 4.917c-0 0.005-0.001 0.011-0.001 0.017 0 0.138 0.112 0.25 0.25 0.25 0.034 0 0.067-0.007 0.096-0.019l-0.002 0.001 4.479-1.831c0.028-0.012 0.061-0.019 0.095-0.019s0.067 0.007 0.097 0.019l-0.002-0.001 4.479 1.831c0.028 0.012 0.060 0.019 0.095 0.019 0.138 0 0.25-0.112 0.25-0.25 0-0.006-0-0.012-0.001-0.017l0 0.001-0.326-4.917c-0-0.005-0.001-0.010-0.001-0.016 0-0.061 0.021-0.116 0.057-0.16l-0 0zM11.875 9.578c-0.176 0.214-0.283 0.491-0.283 0.792 0 0.028 0.001 0.056 0.003 0.084l-0-0.004 0.247 3.722-3.367-1.377c-0.14-0.059-0.303-0.093-0.474-0.093s-0.334 0.034-0.482 0.096l0.008-0.003-3.367 1.377 0.247-3.719c0.002-0.025 0.003-0.053 0.003-0.083 0-0.301-0.106-0.577-0.284-0.793l0.002 0.002-2.359-2.878 3.549-0.911c0.32-0.083 0.584-0.282 0.75-0.549l0.003-0.005 1.93-3.13 1.93 3.129c0.169 0.273 0.435 0.472 0.747 0.553l0.009 0.002 3.546 0.91z\" />\n    </symbol>\n\n    <symbol id=\"ruler-toggle\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.866 0h-15.733c-0 0-0 0-0 0-0.073 0-0.133 0.059-0.133 0.133 0 0 0 0 0 0v0 15.734c0 0 0 0 0 0 0 0.073 0.059 0.133 0.133 0.133 0 0 0 0 0 0h3.733c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-11.867h11.866c0 0 0 0 0 0 0.074 0 0.133-0.059 0.134-0.133v-3.734c-0.001-0.074-0.060-0.133-0.134-0.133 0 0 0 0 0 0v0zM3 4v2h-2v-2zM3 9h-2v-2h2zM1 10h2v2h-2zM3 15h-2v-2h2zM4 1h2v2h-2zM7 1h2v2h-2zM10 1h2v2h-2zM15 3h-2v-2h2z\" />\n    </symbol>\n\n    <symbol id=\"rulergrid\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.473-0.010l-1.992 1.992 1.017 1.017-0.707 0.707-1.017-1.016-1.414 1.413 2.017 2.017-0.707 0.707-2.017-2.017-1.414 1.414 1.017 1.017-0.707 0.707-1.018-1.017-1.414 1.414 1.767 1.767-0.707 0.707-1.767-1.767-1.419 1.414 1.017 1.017-0.707 0.707-1.010-1.016-1.3 1.3 3.536 3.536 12.482-12.485z\" />\n        <path d=\"M2.006 1.99h6.5v-1h-7.5v7.5h1z\" />\n        <path d=\"M14.006 13.99h-6.5v1h7.5v-7.5h-1z\" />\n    </symbol>\n\n    <symbol id=\"selection-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2 0.246v15.5c0 0 0 0.001 0 0.001 0 0.139 0.112 0.251 0.251 0.251 0.068 0 0.129-0.027 0.174-0.070l-0 0 4.533-4.32c0.041-0.040 0.097-0.066 0.158-0.069l0.001-0 6.646-0.378c0.132-0.008 0.237-0.117 0.237-0.251 0-0.073-0.031-0.139-0.081-0.184l-0-0-11.5-10.66c-0.044-0.040-0.103-0.065-0.168-0.065-0.136 0-0.247 0.109-0.251 0.244v0z\" />\n    </symbol>\n\n    <symbol id=\"settings\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.886 9.3c0.070-0.389 0.111-0.839 0.114-1.297l0-0.003c-0.003-0.461-0.044-0.911-0.121-1.348l0.007 0.048-1.567-0.73c-0.128-0.393-0.27-0.727-0.437-1.045l0.018 0.037 0.59-1.623c-0.515-0.712-1.12-1.317-1.809-1.816l-0.023-0.016-1.623 0.59c-0.282-0.148-0.617-0.289-0.963-0.403l-0.048-0.013-0.724-1.567c-0.389-0.070-0.839-0.111-1.297-0.114l-0.003-0c-0.461 0.003-0.911 0.044-1.348 0.121l0.048-0.007-0.73 1.567c-0.393 0.128-0.727 0.27-1.045 0.437l0.037-0.018-1.623-0.59c-0.711 0.514-1.317 1.119-1.816 1.806l-0.016 0.023 0.593 1.623c-0.148 0.282-0.289 0.617-0.403 0.963l-0.013 0.048-1.57 0.727c-0.070 0.389-0.111 0.839-0.114 1.297l-0 0.003c0.003 0.461 0.044 0.911 0.121 1.348l-0.007-0.048 1.567 0.73c0.128 0.393 0.27 0.727 0.437 1.045l-0.018-0.037-0.59 1.623c0.515 0.712 1.12 1.317 1.809 1.816l0.023 0.016 1.62-0.593c0.283 0.149 0.617 0.29 0.964 0.404l0.047 0.013 0.73 1.567c0.388 0.070 0.836 0.112 1.294 0.116l0.003 0c0.461-0.003 0.911-0.044 1.348-0.121l-0.048 0.007 0.73-1.567c0.394-0.127 0.728-0.268 1.048-0.434l-0.037 0.017 1.623 0.591c0.711-0.515 1.317-1.12 1.816-1.809l0.016-0.023-0.59-1.623c0.148-0.282 0.289-0.617 0.403-0.963l0.013-0.048zM8 12.667c-2.578 0-4.667-2.089-4.667-4.667s2.089-4.667 4.667-4.667c2.578 0 4.667 2.089 4.667 4.667v0 0c-0.001 2.577-2.090 4.666-4.667 4.667h-0z\" />\n    </symbol>\n\n    <symbol id=\"shaper-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.73 5.56c-0.805-1.085-1.911-1.906-3.193-2.346l-0.047-0.014v-2.95c0-0.001 0-0.001 0-0.002 0-0.136-0.11-0.247-0.246-0.248h-10.994c-0.001 0-0.001-0-0.002-0-0.136 0-0.247 0.11-0.248 0.246v10.994c0 0.001-0 0.001-0 0.002 0 0.136 0.11 0.247 0.246 0.248h2.954c0.701 2.074 2.353 3.657 4.424 4.249l0.046 0.011v-1.040c-1.559-0.534-2.78-1.699-3.377-3.183l-0.013-0.037h0.52v-1h-3.8v-9.49h9.49v2.93l0.68 0.22c2.243 0.752 3.83 2.834 3.83 5.287 0 0.62-0.101 1.216-0.288 1.773l0.011-0.039-0.003 0.009v0.010l0.79 0.72c0.31-0.726 0.49-1.57 0.49-2.456 0-0.005 0-0.010-0-0.015v0.001c0-0.007 0-0.016 0-0.025 0-1.452-0.477-2.792-1.282-3.873l0.012 0.017z\" />\n        <path\n            d=\"M9.436 2.872c-0 0-0.001 0-0.001 0-0.703 0-1.38 0.11-2.016 0.313l0.047-0.013 0.3 0.954c0.497-0.161 1.069-0.254 1.662-0.254 0.003 0 0.005 0 0.008 0h-0z\" />\n        <path\n            d=\"M4.237 5.428l0.792 0.611c0.349-0.45 0.753-0.835 1.205-1.155l0.018-0.012-0.573-0.82c-0.554 0.392-1.030 0.846-1.431 1.361l-0.011 0.015z\" />\n        <path\n            d=\"M2.879 9.124l1 0.047c0.029-0.602 0.149-1.166 0.347-1.693l-0.013 0.038-0.939-0.345c-0.148 0.388-0.266 0.844-0.334 1.316l-0.004 0.035q-0.043 0.3-0.057 0.602z\" />\n        <path d=\"M8.67 16l2.66-2.535 0.391-0.069 3.688-0.21-6.739-6.247z\" />\n    </symbol>\n\n    <symbol id=\"snap\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.75 0.5h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 6.75c0 2.21-0.79 4-3 4h-0.151c-1.597-0.113-2.85-1.436-2.85-3.052 0-0.021 0-0.042 0.001-0.063l-0 0.003v-7.638c0-0.138-0.112-0.25-0.25-0.25v0h-3.5c-0.138 0-0.25 0.112-0.25 0.25v0 7.75c0 3.866 3.134 7 7 7v0h0.207c3.797-0.216 6.794-3.348 6.794-7.18 0-0.038-0-0.077-0.001-0.115l0 0.006v-7.461c0-0.138-0.112-0.25-0.25-0.25v0zM8.178 14.5h-0.178c-3.312-0.004-5.996-2.688-6-6v-4h2v3.888c-0 0.014-0 0.031-0 0.047 0 2.158 1.679 3.924 3.802 4.064l0.012 0.001h0.186c2.505 0 4-1.869 4-5v-3h2v3.711c0.001 0.030 0.001 0.065 0.001 0.1 0 3.292-2.565 5.984-5.805 6.188l-0.018 0.001z\" />\n    </symbol>\n\n    <symbol id=\"stroke-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M3 15.5c-1.381 0-2.5-1.119-2.5-2.5 0-0.815 0.39-1.539 0.994-1.995l0.006-0.005v-11h-1.5v16h16v-1.5h-11c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path d=\"M6 10.013v-10.013h-1.5v11.005c0.189 0.143 0.352 0.306 0.49 0.489l0.005 0.006h11.005v-1.487z\" />\n        <path\n            d=\"M3.5 11.591v-11.591h-1v11.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h11.59v-1h-11.591c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM3 13.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-inside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M5 13.5c-1.381 0-2.5-1.119-2.5-2.5v0c0.001-0.286 0.047-0.561 0.131-0.819l-0.005 0.019 0.009-0.029 0.011-0.029c0.179-0.463 0.473-0.848 0.848-1.132l0.006-0.005v-9.005h-3.5v16h16v-3.5h-9c-0.461 0.61-1.185 1-2 1v0z\" />\n        <path\n            d=\"M6.5 10.5h-0.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003v-9.591h-1v9.59c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h9.59v-1zM5 11.5c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"stroke-outside\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M2.003 13.088v-13.091h-1v13.090c-0.591 0.21-1.006 0.765-1.006 1.416 0 0.828 0.672 1.5 1.5 1.5 0.652 0 1.206-0.415 1.413-0.996l0.003-0.010h13.090v-1h-13.091c-0.154-0.426-0.483-0.755-0.899-0.906l-0.010-0.003zM1.503 14.997c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5c0.276 0 0.5 0.224 0.5 0.5v0c0 0.276-0.224 0.5-0.5 0.5v0z\" />\n        <path d=\"M7.003 8.997v-9h-4v13h13v-4h-9z\" />\n    </symbol>\n\n    <symbol id=\"switch-horizontal\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.267 4.5h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233v0h6.534c0.129 0 0.233-0.104 0.233-0.233v0 0-6.534c0-0.129-0.104-0.233-0.233-0.233v0zM14.5 10.5h-5v-5h5z\" />\n        <path\n            d=\"M0.733 4.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M2.492 2.5h8.5v1.5l3-2-3-2v1.5h-8.5c-0.276 0-0.5 0.224-0.5 0.5s0.224 0.5 0.5 0.5v0z\" />\n        <path d=\"M13.492 13.5h-8.5v-1.5l-3 2 3 2v-1.5h8.5c0.276 0 0.5-0.224 0.5-0.5s-0.224-0.5-0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"switch-vertical\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.5 15.267v-6.534c0-0.129-0.104-0.233-0.233-0.233v0h-6.534c-0.129 0-0.233 0.104-0.233 0.233v0 6.534c0 0.129 0.104 0.233 0.233 0.233h6.534c0.129 0 0.233-0.104 0.233-0.233v0zM5.5 14.5v-5h5v5z\" />\n        <path\n            d=\"M4.733 0.5h6.534c0.129 0 0.233 0.104 0.233 0.233v6.534c0 0.129-0.104 0.233-0.233 0.233h-6.534c-0.129 0-0.233-0.104-0.233-0.233v-6.534c0-0.129 0.104-0.233 0.233-0.233z\" />\n        <path d=\"M13.5 2.492v8.5h-1.5l2 3 2-3h-1.5v-8.5c0-0.276-0.224-0.5-0.5-0.5s-0.5 0.224-0.5 0.5v0z\" />\n        <path d=\"M2.5 13.492v-8.5h1.5l-2-3-2 3h1.5v8.5c0 0.276 0.224 0.5 0.5 0.5s0.5-0.224 0.5-0.5v0z\" />\n    </symbol>\n\n    <symbol id=\"text-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.609 15.168l-1.777-4.541h-5.723l-1.757 4.541h-1.68l5.644-14.336h1.4l5.612 14.336zM10.314 9.133l-1.66-4.424q-0.322-0.841-0.664-2.061c-0.197 0.831-0.408 1.519-0.657 2.189l0.042-0.128-1.675 4.424z\" />\n    </symbol>\n\n    <symbol id=\"distribute-horizontally\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.75 0h0.5c0.138 0 0.25 0.112 0.25 0.25v15.5c0 0.138-0.112 0.25-0.25 0.25h-0.5c-0.138 0-0.25-0.112-0.25-0.25v-15.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.75 1.392h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M10.75 1.245h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"distribute-vertically\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.25 7.5h15.5c0.138 0 0.25 0.112 0.25 0.25v0.5c0 0.138-0.112 0.25-0.25 0.25h-15.5c-0.138 0-0.25-0.112-0.25-0.25v-0.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 10.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M1.75 0.5h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-left\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M3.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M3.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"h-align-center\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.768 16c-0 0-0.001 0-0.001 0-0.147 0-0.266-0.119-0.267-0.266v-1.734h-5.75c-0.138-0.001-0.249-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25v0h5.75v-2h-2.749c-0 0-0.001 0-0.001 0-0.138 0-0.249-0.111-0.25-0.249v-4.501c0-0.138 0.112-0.25 0.25-0.25v0h2.75v-1.733c0-0 0-0 0-0 0-0.147 0.12-0.267 0.267-0.267 0 0 0 0 0 0h0.488c0 0 0 0 0 0 0.147 0 0.267 0.119 0.267 0.267 0 0 0 0 0 0v0 1.733h2.729c0.138 0.001 0.249 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25v0h-2.729v2h5.728c0.138 0 0.25 0.112 0.25 0.25v0 4.5c0 0.138-0.112 0.25-0.25 0.25v0h-5.728v1.733c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0v0z\" />\n    </symbol>\n\n    <symbol id=\"h-align-right\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.245 0h0.488c0.147 0 0.267 0.12 0.267 0.267v15.466c0 0.147-0.12 0.267-0.267 0.267h-0.488c-0.147 0-0.267-0.12-0.267-0.267v-15.466c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M6.25 2h6.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-6.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M0.25 9h12.5c0.138 0 0.25 0.112 0.25 0.25v4.5c0 0.138-0.112 0.25-0.25 0.25h-12.5c-0.138 0-0.25-0.112-0.25-0.25v-4.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-bottom\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 14.978h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.003 6h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.003 0h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"v-align-center-01\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0 7.768c0-0 0-0.001 0-0.001 0-0.147 0.119-0.266 0.266-0.267h1.734v-5.75c0.001-0.138 0.112-0.249 0.25-0.25h4.5c0.138 0 0.25 0.112 0.25 0.25v0 5.75h2v-2.749c0-0 0-0.001 0-0.001 0-0.138 0.111-0.249 0.249-0.25h4.501c0.138 0 0.25 0.112 0.25 0.25v0 2.75h1.733c0 0 0 0 0 0 0.147 0 0.267 0.12 0.267 0.267 0 0 0 0 0 0v0 0.488c0 0 0 0 0 0 0 0.147-0.12 0.267-0.267 0.267-0 0-0 0-0 0h-1.733v2.729c-0.001 0.138-0.112 0.249-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-2.729h-2v5.728c0 0.138-0.112 0.25-0.25 0.25v0h-4.5c-0.138 0-0.25-0.112-0.25-0.25v0-5.728h-1.733c-0 0-0 0-0 0-0.147 0-0.267-0.12-0.267-0.267 0-0 0-0 0-0v0z\" />\n    </symbol>\n\n    <symbol id=\"v-align-top\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M0.267 0h15.466c0.147 0 0.267 0.12 0.267 0.267v0.488c0 0.147-0.12 0.267-0.267 0.267h-15.466c-0.147 0-0.267-0.12-0.267-0.267v-0.488c0-0.147 0.12-0.267 0.267-0.267z\" />\n        <path\n            d=\"M9.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v6.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-6.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n        <path\n            d=\"M2.502 3h4.5c0.138 0 0.25 0.112 0.25 0.25v12.5c0 0.138-0.112 0.25-0.25 0.25h-4.5c-0.138 0-0.25-0.112-0.25-0.25v-12.5c0-0.138 0.112-0.25 0.25-0.25z\" />\n    </symbol>\n\n    <symbol id=\"zoom-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.853 15.146l-3.5-3.5 0.146-0.146-0.933-0.933c0.893-1.105 1.433-2.526 1.433-4.074 0-3.594-2.913-6.507-6.507-6.507s-6.507 2.913-6.507 6.507c0 3.594 2.913 6.507 6.507 6.507 1.548 0 2.969-0.54 4.086-1.443l-0.012 0.010 0.933 0.933 0.146-0.146 3.5 3.5c0.091 0.090 0.215 0.146 0.353 0.146 0.276 0 0.501-0.224 0.501-0.501 0-0.137-0.055-0.262-0.145-0.352l0 0zM6.5 12c-3.038 0-5.5-2.462-5.5-5.5s2.462-5.5 5.5-5.5c3.038 0 5.5 2.462 5.5 5.5v0c-0.003 3.036-2.464 5.497-5.5 5.5h-0z\" />\n    </symbol>\n\n    <symbol id=\"fill-linear-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5,15.47a1.74,1.74,0,0,1-1.25.53H1.75a1.8,1.8,0,0,1-1.24-.51,1.7783,1.7783,0,0,1-.5-1.15A.2763.2763,0,0,1,0,14.25V1.75a.2763.2763,0,0,1,.01-.09A1.6468,1.6468,0,0,1,.53.5,1.725,1.725,0,0,1,1.75,0h12.5a1.8,1.8,0,0,1,1.24.51A1.7389,1.7389,0,0,1,16,1.75v12.5A1.725,1.725,0,0,1,15.5,15.47ZM15,1.75A.751.751,0,0,0,14.25,1H1.75a.7108.7108,0,0,0-.51.21A.734.734,0,0,0,1,1.75v12.5a.751.751,0,0,0,.75.75h12.5a.734.734,0,0,0,.54-.24.7108.7108,0,0,0,.21-.51Z\" />\n        <rect x=\"1.0004\" y=\"13\" width=\"14\" height=\"2\" fill-opacity=\"0\" />\n        <rect x=\"1.0004\" y=\"11\" width=\"14\" height=\"2\" opacity=\"0.124\" />\n        <rect x=\"1.0004\" y=\"9\" width=\"14\" height=\"2\" opacity=\"0.242\" />\n        <rect x=\"1.0004\" y=\"7\" width=\"14\" height=\"2\" opacity=\"0.319\" />\n        <rect x=\"1.0004\" y=\"5\" width=\"14\" height=\"2\" opacity=\"0.476\" />\n        <rect x=\"1.0004\" y=\"3\" width=\"14\" height=\"2\" opacity=\"0.597\" />\n        <rect x=\"1.0004\" y=\"1\" width=\"14\" height=\"2\" opacity=\"0.725\" />\n    </symbol>\n\n    <symbol id=\"fill-radial-gradient\" viewBox=\"0 0 16 16\">\n        <rect x=\"0.5097\" y=\"0.5098\" width=\"14.98\" height=\"14.98\" fill-opacity=\"0\" />\n        <path\n            d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75A1.8,1.8,0,0,0,.51.51a1.7778,1.7778,0,0,0-.5,1.15A.2736.2736,0,0,0,0,1.75v12.5a.2736.2736,0,0,0,.01.09A1.6468,1.6468,0,0,0,.53,15.5a1.7248,1.7248,0,0,0,1.22.5h12.5a1.8,1.8,0,0,0,1.24-.51A1.7389,1.7389,0,0,0,16,14.25V1.75A1.7254,1.7254,0,0,0,15.5.53ZM15,14.25a.751.751,0,0,1-.75.75H1.75a.7106.7106,0,0,1-.51-.21A.7336.7336,0,0,1,1,14.25V1.75A.751.751,0,0,1,1.75,1h12.5a.7343.7343,0,0,1,.54.24.7116.7116,0,0,1,.21.51Z\" />\n        <path d=\"M8,1.5H8A6.5,6.5,0,0,1,14.5,8h0A6.5,6.5,0,0,1,8,14.5H8A6.5,6.5,0,0,1,1.5,8h0A6.5,6.5,0,0,1,8,1.5Z\"\n            opacity=\"0.117\" />\n        <path\n            d=\"M8,2.583H8A5.4166,5.4166,0,0,1,13.416,8h0A5.4165,5.4165,0,0,1,8,13.416H8A5.4164,5.4164,0,0,1,2.583,8h0A5.4165,5.4165,0,0,1,8,2.583Z\"\n            opacity=\"0.242\" />\n        <rect x=\"3.667\" y=\"3.667\" width=\"8.667\" height=\"8.667\" rx=\"4.333\" opacity=\"0.321\" />\n        <path\n            d=\"M8,4.75H8A3.25,3.25,0,0,1,11.25,8h0A3.25,3.25,0,0,1,8,11.25H8A3.25,3.25,0,0,1,4.75,8h0A3.25,3.25,0,0,1,8,4.75Z\"\n            opacity=\"0.477\" />\n        <path\n            d=\"M8,5.833H8A2.1665,2.1665,0,0,1,10.166,8h0A2.1665,2.1665,0,0,1,8,10.166H8A2.1665,2.1665,0,0,1,5.833,8h0A2.1665,2.1665,0,0,1,8,5.833Z\"\n            opacity=\"0.6\" />\n        <rect x=\"6.917\" y=\"6.917\" width=\"2.167\" height=\"2.167\" rx=\"1.083\" />\n    </symbol>\n\n    <symbol id=\"fill-conical-gradient\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.5.53A1.7119,1.7119,0,0,0,14.25,0H1.75A1.789,1.789,0,0,0,.51.51a1.7618,1.7618,0,0,0-.5,1.15A.2739.2739,0,0,0,0,1.75v12.5a.2733.2733,0,0,0,.01.09A1.6737,1.6737,0,0,0,.53,15.5a1.7146,1.7146,0,0,0,1.22.5h12.5a1.789,1.789,0,0,0,1.24-.51A1.7293,1.7293,0,0,0,16,14.25V1.75A1.7156,1.7156,0,0,0,15.5.53ZM15,14.25a.774.774,0,0,1-.22.53.7493.7493,0,0,1-.53.22H1.75a.7178.7178,0,0,1-.51-.21A.718.718,0,0,1,1,14.25V1.75a.7738.7738,0,0,1,.22-.53A.7489.7489,0,0,1,1.75,1h12.5a.718.718,0,0,1,.54.24.718.718,0,0,1,.21.51Z\" />\n        <path d=\"M8.01,0V8H8L1.22,1.22.51.51A1.789,1.789,0,0,1,1.75,0Z\" fill-opacity=\"0\" />\n        <path d=\"M15.5.53l-.71.71L8.03,8H8.01V0h6.24A1.7119,1.7119,0,0,1,15.5.53Z\" />\n        <path d=\"M8.01,8H8l.01.01Z\" />\n        <path d=\"M8.01,8.014,8.0282,8H8.01v.014Z\" />\n        <path d=\"M8,8H.01V1.66A1.7618,1.7618,0,0,1,.51.51l.71.71Z\" opacity=\"0.122\" />\n        <path d=\"M8.01,8.01v.01L1.24,14.79l-.71.71a1.6737,1.6737,0,0,1-.52-1.16V8H8Z\" opacity=\"0.238\" />\n        <path d=\"M16,1.75V8H8.03l6.76-6.76L15.5.53A1.7156,1.7156,0,0,1,16,1.75Z\" opacity=\"0.718\" />\n        <path d=\"M16,8v6.25a1.7293,1.7293,0,0,1-.51,1.24l-.71-.71L8.01,8.02V8.01L8.03,8Z\" opacity=\"0.6\" />\n        <path d=\"M8.01,8.02V16H1.75a1.7146,1.7146,0,0,1-1.22-.5l.71-.71Z\" opacity=\"0.358\" />\n        <path d=\"M15.49,15.49a1.789,1.789,0,0,1-1.24.51H8.01V8.02l6.77,6.76Z\" opacity=\"0.477\" />\n    </symbol>\n\n    <symbol id=\"checkbox-unchecked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"checkbox-checked\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M13,1H3A2,2,0,0,0,1,3V13a2,2,0,0,0,2,2H13a2,2,0,0,0,2-2V3A2,2,0,0,0,13,1Zm1,12a1.0011,1.0011,0,0,1-1,1H3a1.0011,1.0011,0,0,1-1-1V3A1.0011,1.0011,0,0,1,3,2H13a1.0011,1.0011,0,0,1,1,1Z\" />\n        <rect x=\"3\" y=\"3\" width=\"10\" height=\"10\" rx=\"1\" />\n    </symbol>\n\n    <symbol id=\"radio-unchecked\" viewBox=\"0 0 16 16\">\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"radio-checked\" viewBox=\"0 0 16 16\">\n        <circle cx=\"8\" cy=\"8\" r=\"5\" />\n        <path d=\"M8,1a7,7,0,1,0,7,7A7,7,0,0,0,8,1ZM8,14a6,6,0,1,1,6-6A6.0068,6.0068,0,0,1,8,14Z\" />\n    </symbol>\n\n    <symbol id=\"gradient-tool\" viewBox=\"0 0 16 16\">\n        <rect x=\"1\" y=\"12.2857\" width=\"14\" height=\"1.7143\" fill-opacity=\"0\" />\n        <rect x=\"1\" y=\"10.5714\" width=\"14\" height=\"1.7143\" opacity=\"0.124\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"8.8571\" width=\"14\" height=\"1.7143\" opacity=\"0.242\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"7.1429\" width=\"14\" height=\"1.7143\" opacity=\"0.319\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"5.4286\" width=\"14\" height=\"1.7143\" opacity=\"0.476\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"3.7143\" width=\"14\" height=\"1.7143\" opacity=\"0.597\" style=\"isolation: isolate\" />\n        <rect x=\"1\" y=\"2\" width=\"14\" height=\"1.7143\" opacity=\"0.725\" style=\"isolation: isolate\" />\n        <path\n            d=\"M9.5,0h-3V1H1.25A1.25,1.25,0,0,0,0,2.25v11.5A1.25,1.25,0,0,0,1.25,15H6.5v1h3V15h5.25A1.25,1.25,0,0,0,16,13.75V2.25A1.25,1.25,0,0,0,14.75,1H9.5V0Zm-2,2V1h1V2Zm1,11V3h1V2h5.25a.2476.2476,0,0,1,.25.25v11.5a.2476.2476,0,0,1-.25.25H9.5V13ZM1.25,14A.2476.2476,0,0,1,1,13.75V2.25A.2476.2476,0,0,1,1.25,2H6.5V3h1V13h-1v1ZM7.5,15V14h1v1Z\" />\n    </symbol>\n\n    <symbol id=\"pan-tool\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M14.98,3.3964a1.3888,1.3888,0,0,0-1.6743.8634c-.2947.8084-.7193,2.6764-.8987,3.0735a.1493.1493,0,0,1-.2826-.09c.13-.6662.5038-3.4.7259-4.6216a1.4517,1.4517,0,0,0-2.856-.5229C9.7674,3.3263,9.59,6.0757,9.4448,6.8A.1726.1726,0,0,1,9.1036,6.78c-.0767-.9206-.3653-3.9641-.4773-5.2634a1.45,1.45,0,0,0-2.89.25c.1218,1.4171.5155,4.2864.5992,5.2906a.0822.0822,0,0,1-.1592.0349c-.2284-.6281-.948-2.853-1.3206-3.8737a1.4626,1.4626,0,0,0-2.7551.9827C2.6663,5.8258,3.71,8.7908,4.03,9.7537a.1946.1946,0,0,1-.3384.1806c-.1087-.1378-.58-.9778-.8877-1.3739A1.5659,1.5659,0,1,0,.3767,10.5381a45.7485,45.7485,0,0,0,4.5594,4.7955,2.5231,2.5231,0,0,0,1.7915.4737h4.5813a1.6327,1.6327,0,0,0,1.5193-1.14l3.1-9.4937A1.3892,1.3892,0,0,0,14.98,3.3964Z\" />\n    </symbol>\n\n    <symbol id=\"save\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.707,4.707,11.293.293A1,1,0,0,0,10.586,0H2A2,2,0,0,0,0,2V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V5.414A1,1,0,0,0,15.707,4.707ZM8,12a2.5,2.5,0,1,1,2.5-2.5A2.5,2.5,0,0,1,8,12Zm3-9a1,1,0,0,1-1,1H2A1,1,0,0,1,1,3V2A1,1,0,0,1,2,1h8a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"fit-view\" viewBox=\"0 0 16 16\">\n        <polygon points=\"0 4 4 0 0 0 0 4\" />\n        <polygon points=\"0 16 4 16 0 12 0 16\" />\n        <polygon points=\"12 0 16 4 16 0 12 0\" />\n        <polygon points=\"16 16 16 12 12 16 16 16\" />\n    </symbol>\n\n    <symbol id=\"anchor-straight\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.874,14.16,11,8.97V3.5H5V8.97L.14,14.16a.5.5,0,0,0,.017.707l0,0a.5.5,0,0,0,.7-.03L5.872,9.5h4.261l5,5.34a.5.5,0,0,0,.37.16.486.486,0,0,0,.34-.13A.514.514,0,0,0,15.874,14.16ZM6,8.5v-4h4v4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-mirrored\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M12.261,7H14.1a1,1,0,1,0,.88-1.448A.981.981,0,0,0,14.166,6H10.983V3.5H4.992V6H1.809A.979.979,0,0,0,1,5.552,1,1,0,1,0,1.879,7H3.744A6.194,6.194,0,0,0,2.137,8.24,9.207,9.207,0,0,0,.01,14.53.516.516,0,0,0,.539,15a.509.509,0,0,0,.469-.53A8.255,8.255,0,0,1,2.876,8.92,5.623,5.623,0,0,1,4.992,7.51V9.5h5.991v-2A5.575,5.575,0,0,1,13.1,8.89a8.33,8.33,0,0,1,1.867,5.58.51.51,0,0,0,.47.53h.029a.49.49,0,0,0,.5-.47,9.243,9.243,0,0,0-2.137-6.32A6.133,6.133,0,0,0,12.261,7ZM9.985,8.5H5.991v-4H9.985Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-asymmetric\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15.933,14.249A34.26,34.26,0,0,0,11.5,8.079V7h1.168a.985.985,0,0,0,.833.478A1,1,0,1,0,12.64,6H11.5V3.5h-6V6H1.859A.991.991,0,0,0,1,5.477a1,1,0,0,0,0,2A.982.982,0,0,0,1.83,7h1.9A6.318,6.318,0,0,0,2.15,8.229a9.186,9.186,0,0,0-2.141,6.3.508.508,0,0,0,.53.47.508.508,0,0,0,.47-.53A8.3,8.3,0,0,1,2.878,8.9,5.636,5.636,0,0,1,5.5,7.339V9.5h5.942a36.392,36.392,0,0,1,3.622,5.25.5.5,0,0,0,.43.25.533.533,0,0,0,.25-.06A.507.507,0,0,0,15.933,14.249ZM10.5,8.5h-4v-4h4Z\" />\n    </symbol>\n\n    <symbol id=\"anchor-disconnected\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M15,12.5a.984.984,0,0,0-.233.047l-.017-.017L11,8.79V3.5H5V6H1.862A.989.989,0,0,0,1,5.478a1,1,0,0,0,0,2A.985.985,0,0,0,1.832,7H3.75A6.231,6.231,0,0,0,2.14,8.24,9.2,9.2,0,0,0,.01,14.53a.489.489,0,0,0,.5.47H.54a.51.51,0,0,0,.47-.53A8.241,8.241,0,0,1,2.88,8.92,5.63,5.63,0,0,1,5,7.51V9.5h5.31l3.729,3.74.01.01a.99.99,0,1,0,1.2-.721A1.008,1.008,0,0,0,15,12.5Zm-9-4v-4h4v4Z\" />\n        <path d=\"M8.32,7.01A1.087,1.087,0,0,1,8.5,7H8.31Z\" />\n    </symbol>\n\n    <symbol id=\"unknown\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M7.868,11.114a.6.6,0,0,0-.477.181.641.641,0,0,0-.162.446.631.631,0,0,0,.162.442.621.621,0,0,0,.477.173.639.639,0,0,0,.481-.173.626.626,0,0,0,.164-.442.638.638,0,0,0-.164-.446A.621.621,0,0,0,7.868,11.114Z\" />\n        <path\n            d=\"M8.032,3.644A2.522,2.522,0,0,0,6.3,4.227a1.973,1.973,0,0,0-.677,1.532H6.708a1.071,1.071,0,0,1,.363-.85,1.409,1.409,0,0,1,.961-.316,1.221,1.221,0,0,1,.938.347,1.365,1.365,0,0,1,.322.962A1.773,1.773,0,0,1,8.8,7.1l-.768.79a2.806,2.806,0,0,0-.6.895,3.5,3.5,0,0,0-.159,1.1H8.36a1.971,1.971,0,0,1,.428-1.363l.639-.632a2.941,2.941,0,0,0,.949-2.018,2.156,2.156,0,0,0-.618-1.63A2.388,2.388,0,0,0,8.032,3.644Z\" />\n        <path\n            d=\"M13.5.5H2.5a2,2,0,0,0-2,2v11a2,2,0,0,0,2,2h11a2,2,0,0,0,2-2V2.5A2,2,0,0,0,13.5.5Zm1,13a1,1,0,0,1-1,1H2.5a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h11a1,1,0,0,1,1,1Z\" />\n    </symbol>\n\n    <symbol id=\"polygon\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M11.173,2.505,14.345,8,11.173,13.5H4.827L1.655,8,4.827,2.505h6.346m.577-1H4.25L.5,8,4.25,14.5h7.5L15.5,8,11.75,1.505Z\" />\n    </symbol>\n\n    <symbol id=\"ellipse\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M8,2.5c3.584,0,6.5,2.467,6.5,5.5S11.584,13.5,8,13.5,1.5,11.033,1.5,8,4.416,2.5,8,2.5m0-1C3.858,1.5.5,4.41.5,8S3.858,14.5,8,14.5s7.5-2.91,7.5-6.5S12.142,1.5,8,1.5Z\" />\n    </symbol>\n\n    <symbol id=\"clip-path\" viewBox=\"0 0 16 16\">\n        <path d=\"M11.01,11V.5H.5V11H11.01Zm-9.5-1H1.5V1.5H10v3A5.478,5.478,0,0,0,4.51,10Z\" />\n        <path d=\"M10.2,14.5l.04,1a5.62,5.62,0,0,0,1.09-.16l-.24-.97A5.305,5.305,0,0,1,10.2,14.5Z\" />\n        <path d=\"M8.09,15.15a4.875,4.875,0,0,0,1.06.28l.15-.98a5.2,5.2,0,0,1-.86-.23Z\" />\n        <path d=\"M11.94,14.07l.43.9a5.683,5.683,0,0,0,.94-.56l-.6-.8A4.61,4.61,0,0,1,11.94,14.07Z\" />\n        <path d=\"M6.23,14a6.29,6.29,0,0,0,.87.67l.53-.85a4.654,4.654,0,0,1-.71-.55Z\" />\n        <path d=\"M13.37,13l.75.66a5.156,5.156,0,0,0,.64-.89l-.86-.5A4.253,4.253,0,0,1,13.37,13Z\" />\n        <path d=\"M5.89,11.81l-.91.4a4.908,4.908,0,0,0,.53.95l.82-.57A5.018,5.018,0,0,1,5.89,11.81Z\" />\n        <path d=\"M14.27,11.46l.95.32a5.727,5.727,0,0,0,.25-1.07l-1-.13A4.482,4.482,0,0,1,14.27,11.46Z\" />\n        <path d=\"M14.5,9.68l1-.07a5.549,5.549,0,0,0-.19-1.08l-.96.26A4.475,4.475,0,0,1,14.5,9.68Z\" />\n        <path d=\"M14.02,7.96l.89-.46a5.314,5.314,0,0,0-.59-.92l-.78.62A4.244,4.244,0,0,1,14.02,7.96Z\" />\n        <path d=\"M13.56,5.79a6.343,6.343,0,0,0-.91-.62l-.48.88a4.065,4.065,0,0,1,.74.51Z\" />\n    </symbol>\n\n    <symbol id=\"symbol\" viewBox=\"0 0 16 16\">\n        <path\n            d=\"M4.25,1h0A3.25,3.25,0,0,1,7.5,4.25V7.5a0,0,0,0,1,0,0H4.25A3.25,3.25,0,0,1,1,4.25v0A3.25,3.25,0,0,1,4.25,1Z\" />\n        <path\n            d=\"M11.75,1H15a0,0,0,0,1,0,0V4.25A3.25,3.25,0,0,1,11.75,7.5h0A3.25,3.25,0,0,1,8.5,4.25v0A3.25,3.25,0,0,1,11.75,1Z\"\n            transform=\"translate(23.5 8.5) rotate(180)\" />\n        <path\n            d=\"M4.25,8.5H7.5a0,0,0,0,1,0,0v3.25A3.25,3.25,0,0,1,4.25,15h0A3.25,3.25,0,0,1,1,11.75v0A3.25,3.25,0,0,1,4.25,8.5Z\" />\n        <path\n            d=\"M11.75,8.5h0A3.25,3.25,0,0,1,15,11.75V15a0,0,0,0,1,0,0H11.75A3.25,3.25,0,0,1,8.5,11.75v0A3.25,3.25,0,0,1,11.75,8.5Z\"\n            transform=\"translate(23.5 23.5) rotate(180)\" />\n    </symbol>\n\n    <symbol id=\"center-origin-object\" viewBox=\"0 0 16 16\">\n        <polygon points=\"1 1 4 1 4 0 0 0 0 4 1 4 1 1\" />\n        <polygon points=\"1 12 0 12 0 16 4 16 4 15 1 15 1 12\" />\n        <polygon points=\"15 0 12 0 12 1 15 1 15 4 16 4 16 0 15 0\" />\n        <polygon points=\"15 15 12 15 12 16 16 16 16 12 15 12 15 15\" />\n        <circle cx=\"8.015\" cy=\"8\" r=\"1\" />\n        <path\n            d=\"M10.949,8.5H12.5v-1H10.949A2.99,2.99,0,0,0,8.5,5.05V3.5h-1V5.05A2.992,2.992,0,0,0,5.05,7.5H3.5v1H5.05A2.992,2.992,0,0,0,7.5,10.95V12.5h1V10.95A2.99,2.99,0,0,0,10.949,8.5ZM8,10a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z\" />\n    </symbol>\n\n    <symbol id=\"center-object-origin\" viewBox=\"0 0 16 16\">\n        <path d=\"M3,3H0V4H4V0H3Z\" />\n        <path d=\"M3,16H4V12H0v1H3Z\" />\n        <path d=\"M13,4h3V3H13V0H12V4Z\" />\n        <path d=\"M13,13h3V12H12v4h1Z\" />\n        <circle cx=\"8.014\" cy=\"8\" r=\"1\" />\n        <path d=\"M8,11a3,3,0,1,1,3-3A3,3,0,0,1,8,11ZM8,6a2,2,0,1,0,2,2A2,2,0,0,0,8,6Z\" />\n    </symbol>\n\n    <symbol id=\"transform-tool\" viewBox=\"0 0 16 16\">\n        <circle cx=\"10.75\" cy=\"10.763\" r=\"0.655\" />\n        <polygon\n                points=\"16 7.491 16 5.526 14.03 5.526 14.03 6.185 11.73 6.185 11.73 5.526 9.77 5.526 9.77 6.185 7.86 6.185 8.54 6.833 9.77 6.833 9.77 7.491 11.73 7.491 11.73 6.833 14.03 6.833 14.03 7.491 14.69 7.491 14.69 9.786 14.03 9.786 14.03 11.741 14.69 11.741 14.69 14.035 14.03 14.035 14.03 14.693 11.73 14.693 11.73 14.035 9.77 14.035 9.77 14.693 7.47 14.693 7.47 14.035 6.81 14.035 6.81 11.741 7.47 11.741 7.47 9.786 5.5 9.786 5.5 11.741 6.14 11.741 6.14 14.035 5.5 14.035 5.5 16 7.47 16 7.47 15.342 9.77 15.342 9.77 16 11.73 16 11.73 15.342 14.03 15.342 14.03 16 16 16 16 14.035 15.36 14.035 15.36 11.741 16 11.741 16 9.786 15.36 9.786 15.36 7.491 16 7.491\" />\n        <path\n                d=\"M6.81,9.047l2.34-.139a.2.2,0,0,0,.12-.349L7.47,6.843,6.08,5.526.33.06A.194.194,0,0,0,.2,0,.2.2,0,0,0,0,.2V12.569a.2.2,0,0,0,.2.2.211.211,0,0,0,.13-.05L3.86,9.267a.273.273,0,0,1,.12-.06l2.16-.13Z\" />\n    </symbol>\n\n    <symbol id=\"polyline-tool\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M1.465,15.035a.5.5,0,0,1-.5-.5V2.782l13,5.467L14,1.5a.5.5,0,0,1,.5-.5h0a.5.5,0,0,1,.5.5l-.039,8.249-13-5.464V14.535A.5.5,0,0,1,1.465,15.035Z\" />\n    </symbol>\n\n    <symbol id=\"swap-arrow-up-left\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M3.487,6.328H1.451a.2.2,0,0,1-.177-.3L3.935,1.152a.2.2,0,0,1,.354,0L6.949,6.03a.2.2,0,0,1-.176.3H4.737A7.383,7.383,0,0,0,12.112,13.7h2.014a.625.625,0,1,1,0,1.25H12.112A8.635,8.635,0,0,1,3.487,6.328Z\"/>\n    </symbol>\n    <symbol id=\"swap-arrow-down-right\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M9.672,12.513v2.036a.2.2,0,0,0,.3.177l4.878-2.661a.2.2,0,0,0,0-.354L9.97,9.051a.2.2,0,0,0-.3.176v2.036A7.383,7.383,0,0,1,2.3,3.888V1.874a.625.625,0,0,0-1.25,0V3.888A8.635,8.635,0,0,0,9.672,12.513Z\" />\n    </symbol>\n    <symbol id=\"swap-arrows\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M14.8,9.718H12.762V7.863A4.631,4.631,0,0,0,8.137,3.238H6.282V1.2a.2.2,0,0,0-.295-.175L1.1,3.688a.2.2,0,0,0,0,.351L5.987,6.7a.2.2,0,0,0,.295-.176V4.488H8.137a3.379,3.379,0,0,1,3.375,3.375V9.718H9.474a.2.2,0,0,0-.176.295L11.961,14.9a.2.2,0,0,0,.351,0l2.663-4.883A.2.2,0,0,0,14.8,9.718Z\" />\n    </symbol>\n    <symbol id=\"fill-radial-focal-gradient\" viewBox=\"0 0 16 16\">\n        <path\n                d=\"M15.5.53A1.74,1.74,0,0,0,14.25,0H1.75a2.452,2.452,0,0,0-.27.02A1.8,1.8,0,0,0,.51.51a1.858,1.858,0,0,0-.46.82v.01c-.02.11-.03.21-.04.32A.277.277,0,0,0,0,1.75v12.5a.277.277,0,0,0,.01.09,1.648,1.648,0,0,0,.04.32v.01a1.66,1.66,0,0,0,.48.83,1.731,1.731,0,0,0,.95.48,2.452,2.452,0,0,0,.27.02h12.5a1.8,1.8,0,0,0,1.24-.51A1.756,1.756,0,0,0,16,14.25V1.75A1.725,1.725,0,0,0,15.5.53ZM15,14.25a.755.755,0,0,1-.75.75H1.75a.711.711,0,0,1-.51-.21A.734.734,0,0,1,1,14.25V1.75A.755.755,0,0,1,1.75,1h12.5a.734.734,0,0,1,.54.24.694.694,0,0,1,.21.51Z\" />\n        <path\n                d=\"M16,2.74V13.26a10.088,10.088,0,0,1-1.43,1.81,9.474,9.474,0,0,1-1.08.93H1.75a2.452,2.452,0,0,1-.27-.02,10.07,10.07,0,0,1-1.05-.91c-.13-.13-.25-.26-.38-.4v-.01a1.648,1.648,0,0,1-.04-.32A.277.277,0,0,1,0,14.25V1.75a.277.277,0,0,1,.01-.09c.01-.11.02-.21.04-.32V1.33c.13-.14.25-.27.38-.4A10.07,10.07,0,0,1,1.48.02,2.452,2.452,0,0,1,1.75,0H13.49A9.807,9.807,0,0,1,16,2.74Z\"\n                opacity=\"0.04\"/>\n        <path\n                d=\"M16,5.22v5.56a7.871,7.871,0,0,1-1,1.88,7.294,7.294,0,0,1-.84,1A7.672,7.672,0,0,1,12.36,15a7.95,7.95,0,0,1-7.72,0,7.672,7.672,0,0,1-1.8-1.34A8.072,8.072,0,0,1,1,10.78,7.978,7.978,0,0,1,1,5.22,8.072,8.072,0,0,1,2.84,2.34,7.672,7.672,0,0,1,4.64,1a7.95,7.95,0,0,1,7.72,0A7.98,7.98,0,0,1,16,5.22Z\"\n                opacity=\"0.08\"/>\n        <path\n                d=\"M9.065,1.83h0A5.835,5.835,0,0,1,14.9,7.665h0A5.835,5.835,0,0,1,9.065,13.5h0A5.834,5.834,0,0,1,3.23,7.665h0A5.834,5.834,0,0,1,9.065,1.83Z\"\n                opacity=\"0.15\"/>\n        <path\n                d=\"M10.114,3.494h0A4.506,4.506,0,0,1,14.621,8h0a4.506,4.506,0,0,1-4.507,4.506h0A4.505,4.505,0,0,1,5.608,8h0A4.505,4.505,0,0,1,10.114,3.494Z\"\n                opacity=\"0.2\"/>\n        <path\n                d=\"M11.226,4.822h0A3.178,3.178,0,0,1,14.4,8h0a3.178,3.178,0,0,1-3.178,3.178h0A3.178,3.178,0,0,1,8.048,8h0A3.178,3.178,0,0,1,11.226,4.822Z\"\n                opacity=\"0.4\"/>\n        <path\n                d=\"M12.35,6.026h0A1.973,1.973,0,0,1,14.323,8h0A1.973,1.973,0,0,1,12.35,9.974h0A1.974,1.974,0,0,1,10.376,8h0A1.974,1.974,0,0,1,12.35,6.026Z\"\n                opacity=\"0.5\"/>\n        <path d=\"M13.523,7.2h0a.8.8,0,0,1,.8.8h0a.8.8,0,0,1-.8.8h0a.8.8,0,0,1-.8-.8h0A.8.8,0,0,1,13.523,7.2Z\"/>\n    </symbol>\n</svg>";
 
-    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n    <symbol id=\"LockClosed\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H14V7A5,5,0,0,0,4,7V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM6,7a3,3,0,0,1,6,0V8H6Zm4,6.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"LockOpen\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H5.95V5.1765A3.1065,3.1065,0,0,1,8.9852,2.0003L9,2a3.0715,3.0715,0,0,1,2.754,1.7095c.155.3195.133.573.3885.573a.2541.2541,0,0,0,.093-.018L13.576,3.73a.25649.25649,0,0,0,.161-.2355A4.96,4.96,0,0,0,9,.05,5.16306,5.16306,0,0,0,4,5.146V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM10,13.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"Visibility\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.3065,4.29A7.48591,7.48591,0,0,0,9,3.4685c-4.332,0-7.875,4.3125-7.875,5.7115,0,1.5,3.729,5.35,7.843,5.35,4.15,0,7.907-3.853,7.907-5.35C16.875,8,14.768,5.5095,12.3065,4.29ZM9,13.6125A4.6125,4.6125,0,1,1,13.6125,9,4.6125,4.6125,0,0,1,9,13.6125Z\" />\n        <path class=\"a\" d=\"M10.3335,9.0415A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.46964,2.46964,0,0,0,9,6.469a2.5315,2.5315,0,1,0,2.5315,2.5315V9a2.35682,2.35682,0,0,0-.0875-.6A1.3125,1.3125,0,0,1,10.3335,9.0415Z\" />\n    </symbol>\n\n    <symbol id=\"VisibilityOff\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M7.2865,4.72A4.6075,4.6075,0,0,1,13.28,10.7135l1.4725,1.4725C16.05,11.0915,16.875,9.88,16.875,9.18c0-1.182-2.107-3.6705-4.5685-4.89A7.48591,7.48591,0,0,0,9,3.4685a7.18,7.18,0,0,0-2.4945.4705Z\" />\n        <path class=\"a\" d=\"M16.897,16.029l-5.733-5.733A2.511,2.511,0,0,0,11.531,9a2.35608,2.35608,0,0,0-.087-.6,1.31249,1.31249,0,0,1-1.1105.639A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.47276,2.47276,0,0,0,9,6.469a2.511,2.511,0,0,0-1.296.367L1.971,1.103a.40949.40949,0,0,0-.5785,0l-.289.2895a.4085.4085,0,0,0-.00079.57771L1.1035,1.971l3.173,3.173c-1.908,1.37-3.15,3.209-3.15,4.036,0,1.5,3.729,5.35,7.843,5.35a8.2275,8.2275,0,0,0,3.722-.974l3.3395,3.3395a.40851.40851,0,0,0,.57771.0008l.00079-.0008.289-.289A.409.409,0,0,0,16.897,16.029ZM9,13.6125A4.6,4.6,0,0,1,5.3395,6.207l1.497,1.497A2.50409,2.50409,0,0,0,6.469,9a2.531,2.531,0,0,0,2.5305,2.5315H9a2.50447,2.50447,0,0,0,1.296-.368l1.497,1.497A4.572,4.572,0,0,1,9,13.6125Z\" />\n    </symbol>\n\n    <symbol id=\"AddToSelection\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.08,2.7215l.514-.8885a7.97354,7.97354,0,0,0-2.7-.803V2.063A6.94168,6.94168,0,0,1,12.08,2.7215Z\" />\n        <path class=\"a\" d=\"M14.765,5.033l.9-.5175a8.06649,8.06649,0,0,0-1.926-1.985l-.519.894A7.03319,7.03319,0,0,1,14.765,5.033Z\" />\n        <path class=\"a\" d=\"M15.9665,8.3315H17a7.95519,7.95519,0,0,0-.6895-2.6455L15.415,6.2A6.95,6.95,0,0,1,15.9665,8.3315Z\" />\n        <path class=\"a\" d=\"M15.9665,9.6685a6.95,6.95,0,0,1-.55,2.129l.8955.516A7.95513,7.95513,0,0,0,17,9.6685Z\" />\n        <path class=\"a\" d=\"M13.22,14.5755l.5165.894a8.06544,8.06544,0,0,0,1.926-1.985l-.9-.5175A7.033,7.033,0,0,1,13.22,14.5755Z\" />\n        <path class=\"a\" d=\"M9.8925,15.937V16.97a7.97354,7.97354,0,0,0,2.7-.803l-.5125-.8885A6.94146,6.94146,0,0,1,9.8925,15.937Z\" />\n        <path class=\"a\" d=\"M6.269,15.447l-.514.8885A7.99637,7.99637,0,0,0,8.5535,17V15.9775A6.96845,6.96845,0,0,1,6.269,15.447Z\" />\n        <path class=\"a\" d=\"M3.3695,13.1465l-.9.5175a8.06609,8.06609,0,0,0,2.107,2.031l.513-.8875A7.03548,7.03548,0,0,1,3.3695,13.1465Z\" />\n        <path class=\"a\" d=\"M2.0335,9.6685H1a7.94984,7.94984,0,0,0,.787,2.847L2.6825,12A6.94449,6.94449,0,0,1,2.0335,9.6685Z\" />\n        <path class=\"a\" d=\"M2.6825,6,1.787,5.4845A7.94984,7.94984,0,0,0,1,8.3315H2.0335A6.94449,6.94449,0,0,1,2.6825,6Z\" />\n        <path class=\"a\" d=\"M5.092,3.192l-.513-.8875a8.06609,8.06609,0,0,0-2.107,2.031l.9.5175A7.03639,7.03639,0,0,1,5.092,3.192Z\" />\n        <path class=\"a\" d=\"M8.5535,2.0225V1a7.99514,7.99514,0,0,0-2.8.6645l.5135.8885A6.96854,6.96854,0,0,1,8.5535,2.0225Z\" />\n        <path class=\"a\" d=\"M14,9.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"AddCircle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M9,1a8,8,0,1,0,8,8A8,8,0,0,0,9,1Zm5,8.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"Filter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M15.473,1H1.527a.5.5,0,0,0-.3935.8085L7,9.2945V16.95a.496.496,0,0,0,.84.412l1.9905-2.0765A.60949.60949,0,0,0,10,14.864V9.2945l5.8665-7.486A.5.5,0,0,0,15.473,1Z\" />\n    </symbol>\n\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
+    var AdobeWorkflowIcons = "<svg xmlns=\"http://www.w3.org/2000/svg\" style=\"height: 0; width: 0; position: absolute; visibility: hidden;\">\n    <symbol id=\"FolderOpen\" viewBox=\"0 0 18 18\">\n        <path d=\"M15,7V4.5a.5.5,0,0,0-.5-.5l-6.166.004-1.65-1.7A1,1,0,0,0,5.9645,2H2A1,1,0,0,0,1,3V14.5a.5.5,0,0,0,.5.5H14.6535a.5.5,0,0,0,.468-.3245l2.625-7A.5.5,0,0,0,17.2785,7ZM2,3H5.9645L7.617,4.7l.295.3035h.4225L14,5V7H4.3465a.5.5,0,0,0-.468.3245L2,12.3335Z\"/>\n    </symbol>\n    <symbol id=\"SaveFloppy\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.854,4.1465s-2.0075-2-2.073-2.057A.48449.48449,0,0,0,13.5,2H13V6H7V2H2.5a.5.5,0,0,0-.5.5v13a.5.5,0,0,0,.5.5h13a.5.5,0,0,0,.5-.5V4.5A.5.5,0,0,0,15.854,4.1465ZM13,15H5V8h8Z\"/>\n    </symbol>\n    <symbol id=\"Undo\" viewBox=\"0 0 18 18\">\n        <path d=\"M15.3315,6.271A5.19551,5.19551,0,0,0,11.8355,5H5.5V2.4A.4.4,0,0,0,5.1,2a.39352.39352,0,0,0-.2635.1L1.072,5.8245a.25.25,0,0,0,0,.35L4.834,9.9a.39352.39352,0,0,0,.2635.1.4.4,0,0,0,.4-.4V7h6.441A3.06949,3.06949,0,0,1,15.05,9.9a2.9445,2.9445,0,0,1-2.78274,3.09783Q12.13375,13.005,12,13H8.5a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h3.263a5.16751,5.16751,0,0,0,5.213-4.5065A4.97351,4.97351,0,0,0,15.3315,6.271Z\"/>\n    </symbol>\n    <symbol id=\"Redo\" viewBox=\"0 0 18 18\">\n        <path d=\"M2.6685,6.271A5.19551,5.19551,0,0,1,6.1645,5H12.5V2.4a.4.4,0,0,1,.4-.4.39352.39352,0,0,1,.2635.1l3.762,3.7225a.25.25,0,0,1,0,.35L13.166,9.9a.39352.39352,0,0,1-.2635.1.4.4,0,0,1-.4-.4V7H6.0615A3.06949,3.06949,0,0,0,2.95,9.9a2.9445,2.9445,0,0,0,2.78274,3.09783Q5.86626,13.005,6,13H9.5a.5.5,0,0,1,.5.5v1a.5.5,0,0,1-.5.5H6.237a5.16751,5.16751,0,0,1-5.213-4.5065A4.97349,4.97349,0,0,1,2.6685,6.271Z\"/>\n    </symbol>\n    <symbol id=\"AlignLeft\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"1\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"3\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"3\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignCenter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,10H9V8h3.5a.5.5,0,0,0,.5-.5v-4a.5.5,0,0,0-.5-.5H9V.25A.25.25,0,0,0,8.75,0h-.5A.25.25,0,0,0,8,.25V3H4.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2H2.5a.5.5,0,0,0-.5.5v4a.5.5,0,0,0,.5.5H8v2.75a.25.25,0,0,0,.25.25h.5A.25.25,0,0,0,9,17.75V15h5.5a.5.5,0,0,0,.5-.5v-4A.5.5,0,0,0,14.5,10Z\" />\n    </symbol>\n    <symbol id=\"AlignRight\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"16\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"13\" x=\"2\" y=\"10\" />\n        <rect class=\"a\" height=\"5\" rx=\"0.5\" width=\"8\" x=\"7\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignTop\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"1\" />\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"3\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"3\" />\n    </symbol>\n    <symbol id=\"AlignMiddle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M17.75,8H15V4.5a.5.5,0,0,0-.5-.5h-4a.5.5,0,0,0-.5.5V8H8V2.5A.5.5,0,0,0,7.5,2h-4a.5.5,0,0,0-.5.5V8H.25A.25.25,0,0,0,0,8.25v.5A.25.25,0,0,0,.25,9H3v5.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2v3.5a.5.5,0,0,0,.5.5h4a.5.5,0,0,0,.5-.5V9h2.75A.25.25,0,0,0,18,8.75v-.5A.25.25,0,0,0,17.75,8Z\" />\n    </symbol>\n    <symbol id=\"AlignBottom\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"13\" rx=\"0.5\" width=\"5\" x=\"3\" y=\"2\" />\n        <rect class=\"a\" height=\"8\" rx=\"0.5\" width=\"5\" x=\"10\" y=\"7\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"16\" />\n    </symbol>\n    <symbol id=\"DistributeHorizontally\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"12\" rx=\"0.5\" width=\"6\" x=\"6\" y=\"3\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"2\" />\n        <rect class=\"a\" height=\"18\" rx=\"0.25\" width=\"1\" x=\"15\" />\n    </symbol>\n    <symbol id=\"DistributeVertically\" viewBox=\"0 0 18 18\">\n        <rect class=\"a\" height=\"6\" rx=\"0.5\" width=\"12\" x=\"3\" y=\"6\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"15\" />\n        <rect class=\"a\" height=\"1\" rx=\"0.25\" width=\"18\" y=\"2\" />\n    </symbol>\n    <symbol id=\"ChevronRight\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12,9a.994.994,0,0,1-.2925.7045l-3.9915,3.99a1,1,0,1,1-1.4355-1.386l.0245-.0245L9.5905,9,6.3045,5.715A1,1,0,0,1,7.691,4.28l.0245.0245,3.9915,3.99A.994.994,0,0,1,12,9Z\" />\n    </symbol>\n    <symbol id=\"Refresh\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.337,10H15.39a.6075.6075,0,0,0-.581.469A5.7235,5.7235,0,0,1,5.25,13.006l-.346-.3465L6.8815,10.682A.392.392,0,0,0,7,10.4a.4.4,0,0,0-.377-.4H1.25a.25.25,0,0,0-.25.25v5.375A.4.4,0,0,0,1.4,16a.3905.3905,0,0,0,.28-.118l1.8085-1.8085.178.1785a8.09048,8.09048,0,0,0,3.642,2.1655,7.715,7.715,0,0,0,9.4379-5.47434q.04733-.178.0861-.35816A.5.5,0,0,0,16.337,10Z\" />\n        <path class=\"a\" d=\"M16.6,2a.3905.3905,0,0,0-.28.118L14.5095,3.9265l-.178-.1765a8.09048,8.09048,0,0,0-3.642-2.1655A7.715,7.715,0,0,0,1.25269,7.06072q-.04677.17612-.08519.35428A.5.5,0,0,0,1.663,8H2.61a.6075.6075,0,0,0,.581-.469A5.7235,5.7235,0,0,1,12.75,4.994l.346.3465L11.1185,7.318A.392.392,0,0,0,11,7.6a.4.4,0,0,0,.377.4H16.75A.25.25,0,0,0,17,7.75V2.377A.4.4,0,0,0,16.6,2Z\" />\n    </symbol>\n\n    <symbol id=\"LockClosed\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H14V7A5,5,0,0,0,4,7V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM6,7a3,3,0,0,1,6,0V8H6Zm4,6.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"LockOpen\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M14.5,8H5.95V5.1765A3.1065,3.1065,0,0,1,8.9852,2.0003L9,2a3.0715,3.0715,0,0,1,2.754,1.7095c.155.3195.133.573.3885.573a.2541.2541,0,0,0,.093-.018L13.576,3.73a.25649.25649,0,0,0,.161-.2355A4.96,4.96,0,0,0,9,.05,5.16306,5.16306,0,0,0,4,5.146V8H3.5a.5.5,0,0,0-.5.5v8a.5.5,0,0,0,.5.5h11a.5.5,0,0,0,.5-.5v-8A.5.5,0,0,0,14.5,8ZM10,13.111V14.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V13.111a1.5,1.5,0,1,1,2,0Z\" />\n    </symbol>\n\n    <symbol id=\"Visibility\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.3065,4.29A7.48591,7.48591,0,0,0,9,3.4685c-4.332,0-7.875,4.3125-7.875,5.7115,0,1.5,3.729,5.35,7.843,5.35,4.15,0,7.907-3.853,7.907-5.35C16.875,8,14.768,5.5095,12.3065,4.29ZM9,13.6125A4.6125,4.6125,0,1,1,13.6125,9,4.6125,4.6125,0,0,1,9,13.6125Z\" />\n        <path class=\"a\" d=\"M10.3335,9.0415A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.46964,2.46964,0,0,0,9,6.469a2.5315,2.5315,0,1,0,2.5315,2.5315V9a2.35682,2.35682,0,0,0-.0875-.6A1.3125,1.3125,0,0,1,10.3335,9.0415Z\" />\n    </symbol>\n\n    <symbol id=\"VisibilityOff\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M7.2865,4.72A4.6075,4.6075,0,0,1,13.28,10.7135l1.4725,1.4725C16.05,11.0915,16.875,9.88,16.875,9.18c0-1.182-2.107-3.6705-4.5685-4.89A7.48591,7.48591,0,0,0,9,3.4685a7.18,7.18,0,0,0-2.4945.4705Z\" />\n        <path class=\"a\" d=\"M16.897,16.029l-5.733-5.733A2.511,2.511,0,0,0,11.531,9a2.35608,2.35608,0,0,0-.087-.6,1.31249,1.31249,0,0,1-1.1105.639A1.3335,1.3335,0,0,1,9,7.7085a1.316,1.316,0,0,1,.675-1.135A2.47276,2.47276,0,0,0,9,6.469a2.511,2.511,0,0,0-1.296.367L1.971,1.103a.40949.40949,0,0,0-.5785,0l-.289.2895a.4085.4085,0,0,0-.00079.57771L1.1035,1.971l3.173,3.173c-1.908,1.37-3.15,3.209-3.15,4.036,0,1.5,3.729,5.35,7.843,5.35a8.2275,8.2275,0,0,0,3.722-.974l3.3395,3.3395a.40851.40851,0,0,0,.57771.0008l.00079-.0008.289-.289A.409.409,0,0,0,16.897,16.029ZM9,13.6125A4.6,4.6,0,0,1,5.3395,6.207l1.497,1.497A2.50409,2.50409,0,0,0,6.469,9a2.531,2.531,0,0,0,2.5305,2.5315H9a2.50447,2.50447,0,0,0,1.296-.368l1.497,1.497A4.572,4.572,0,0,1,9,13.6125Z\" />\n    </symbol>\n\n    <symbol id=\"AddToSelection\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M12.08,2.7215l.514-.8885a7.97354,7.97354,0,0,0-2.7-.803V2.063A6.94168,6.94168,0,0,1,12.08,2.7215Z\" />\n        <path class=\"a\" d=\"M14.765,5.033l.9-.5175a8.06649,8.06649,0,0,0-1.926-1.985l-.519.894A7.03319,7.03319,0,0,1,14.765,5.033Z\" />\n        <path class=\"a\" d=\"M15.9665,8.3315H17a7.95519,7.95519,0,0,0-.6895-2.6455L15.415,6.2A6.95,6.95,0,0,1,15.9665,8.3315Z\" />\n        <path class=\"a\" d=\"M15.9665,9.6685a6.95,6.95,0,0,1-.55,2.129l.8955.516A7.95513,7.95513,0,0,0,17,9.6685Z\" />\n        <path class=\"a\" d=\"M13.22,14.5755l.5165.894a8.06544,8.06544,0,0,0,1.926-1.985l-.9-.5175A7.033,7.033,0,0,1,13.22,14.5755Z\" />\n        <path class=\"a\" d=\"M9.8925,15.937V16.97a7.97354,7.97354,0,0,0,2.7-.803l-.5125-.8885A6.94146,6.94146,0,0,1,9.8925,15.937Z\" />\n        <path class=\"a\" d=\"M6.269,15.447l-.514.8885A7.99637,7.99637,0,0,0,8.5535,17V15.9775A6.96845,6.96845,0,0,1,6.269,15.447Z\" />\n        <path class=\"a\" d=\"M3.3695,13.1465l-.9.5175a8.06609,8.06609,0,0,0,2.107,2.031l.513-.8875A7.03548,7.03548,0,0,1,3.3695,13.1465Z\" />\n        <path class=\"a\" d=\"M2.0335,9.6685H1a7.94984,7.94984,0,0,0,.787,2.847L2.6825,12A6.94449,6.94449,0,0,1,2.0335,9.6685Z\" />\n        <path class=\"a\" d=\"M2.6825,6,1.787,5.4845A7.94984,7.94984,0,0,0,1,8.3315H2.0335A6.94449,6.94449,0,0,1,2.6825,6Z\" />\n        <path class=\"a\" d=\"M5.092,3.192l-.513-.8875a8.06609,8.06609,0,0,0-2.107,2.031l.9.5175A7.03639,7.03639,0,0,1,5.092,3.192Z\" />\n        <path class=\"a\" d=\"M8.5535,2.0225V1a7.99514,7.99514,0,0,0-2.8.6645l.5135.8885A6.96854,6.96854,0,0,1,8.5535,2.0225Z\" />\n        <path class=\"a\" d=\"M14,9.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"AddCircle\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M9,1a8,8,0,1,0,8,8A8,8,0,0,0,9,1Zm5,8.5a.5.5,0,0,1-.5.5H10v3.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5V10H4.5A.5.5,0,0,1,4,9.5v-1A.5.5,0,0,1,4.5,8H8V4.5A.5.5,0,0,1,8.5,4h1a.5.5,0,0,1,.5.5V8h3.5a.5.5,0,0,1,.5.5Z\" />\n    </symbol>\n    <symbol id=\"Filter\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M15.473,1H1.527a.5.5,0,0,0-.3935.8085L7,9.2945V16.95a.496.496,0,0,0,.84.412l1.9905-2.0765A.60949.60949,0,0,0,10,14.864V9.2945l5.8665-7.486A.5.5,0,0,0,15.473,1Z\" />\n    </symbol>\n    <symbol id=\"More\" viewBox=\"0 0 18 18\">\n        <circle class=\"a\" cx=\"8.9\" cy=\"9.1\" r=\"1.7\" />\n        <circle class=\"a\" cx=\"14.75\" cy=\"9.1\" r=\"1.7\" />\n        <circle class=\"a\" cx=\"3.05\" cy=\"9.1\" r=\"1.7\" />\n    </symbol>\n    <symbol id=\"Settings\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M16.45,7.8965H14.8945a5.97644,5.97644,0,0,0-.921-2.2535L15.076,4.54a.55.55,0,0,0,.00219-.77781L15.076,3.76l-.8365-.836a.55.55,0,0,0-.77781-.00219L13.4595,2.924,12.357,4.0265a5.96235,5.96235,0,0,0-2.2535-.9205V1.55a.55.55,0,0,0-.55-.55H8.45a.55.55,0,0,0-.55.55V3.106a5.96235,5.96235,0,0,0-2.2535.9205l-1.1-1.1025a.55.55,0,0,0-.77781-.00219L3.7665,2.924,2.924,3.76a.55.55,0,0,0-.00219.77781L2.924,4.54,4.0265,5.643a5.97644,5.97644,0,0,0-.921,2.2535H1.55a.55.55,0,0,0-.55.55V9.55a.55.55,0,0,0,.55.55H3.1055a5.967,5.967,0,0,0,.921,2.2535L2.924,13.4595a.55.55,0,0,0-.00219.77782l.00219.00218.8365.8365a.55.55,0,0,0,.77781.00219L4.5405,15.076,5.643,13.9735a5.96235,5.96235,0,0,0,2.2535.9205V16.45a.55.55,0,0,0,.55.55H9.55a.55.55,0,0,0,.55-.55V14.894a5.96235,5.96235,0,0,0,2.2535-.9205L13.456,15.076a.55.55,0,0,0,.77782.00219L14.236,15.076l.8365-.8365a.55.55,0,0,0,.00219-.77781l-.00219-.00219L13.97,12.357a5.967,5.967,0,0,0,.921-2.2535H16.45a.55.55,0,0,0,.55-.55V8.45a.55.55,0,0,0-.54649-.55349ZM11.207,9A2.207,2.207,0,1,1,9,6.793H9A2.207,2.207,0,0,1,11.207,9Z\" />\n    </symbol>\n    <symbol id=\"Delete\" viewBox=\"0 0 18 18\">\n        <path class=\"a\" d=\"M15.75,3H12V2a1,1,0,0,0-1-1H6A1,1,0,0,0,5,2V3H1.25A.25.25,0,0,0,1,3.25v.5A.25.25,0,0,0,1.25,4h1L3.4565,16.55a.5.5,0,0,0,.5.45H13.046a.5.5,0,0,0,.5-.45L14.75,4h1A.25.25,0,0,0,16,3.75v-.5A.25.25,0,0,0,15.75,3ZM5.5325,14.5a.5.5,0,0,1-.53245-.46529L5,14.034l-.5355-8a.50112.50112,0,0,1,1-.067l.5355,8a.5.5,0,0,1-.46486.53283ZM9,14a.5.5,0,0,1-1,0V6A.5.5,0,0,1,9,6ZM11,3H6V2h5Zm1,11.034a.50112.50112,0,0,1-1-.067l.5355-8a.50112.50112,0,1,1,1,.067Z\" />\n    </symbol>\n<!--\n    <symbol id=\"\" viewBox=\"0 0 18 18\">\n    </symbol>\n-->\n</svg>";
 
     /**
      *  Copyright 2018 Adobe. All rights reserved.

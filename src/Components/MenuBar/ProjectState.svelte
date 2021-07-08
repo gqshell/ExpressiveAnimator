@@ -1,10 +1,12 @@
 <script lang="ts">
     import {ProjectFileHandle, CurrentProject, CurrentProjectState, IsProjectSaved} from "../../Stores";
     import {NativeAnimationExporter, NativeAnimationImporter} from "../../Core";
+    import GlobalMenu from "./GlobalMenu.svelte";
 
     declare global {
         interface Window {
             showOpenFilePicker(): FileSystemFileHandle[];
+
             showSaveFilePicker(options?: any): FileSystemFileHandle;
         }
     }
@@ -28,7 +30,7 @@
             // Ask user if they want to save the current project
         }
 
-        let fileHandle:FileSystemFileHandle;
+        let fileHandle: FileSystemFileHandle;
 
         try {
             [fileHandle] = await window.showOpenFilePicker();
@@ -75,6 +77,7 @@
     }
 </script>
 <sp-action-group compact quiet>
+<!--    <GlobalMenu />-->
     <sp-action-button title="Open"
                       on:click={open}>
         <sp-icon size="s" name="workflow:FolderOpen" slot="icon"></sp-icon>

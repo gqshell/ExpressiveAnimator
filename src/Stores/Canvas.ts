@@ -26,7 +26,7 @@ export const CanvasEngineState = {
     highQuality: writable<boolean>(true),
     snapping: writable({
         // Global flag
-        enabled: true,
+        enabled: false,
         // Individual flags
         grid: true,
         guides: true,

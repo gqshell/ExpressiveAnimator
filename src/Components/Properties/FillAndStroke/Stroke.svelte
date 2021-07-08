@@ -17,6 +17,7 @@
         strokeMiterLimit: number,
         strokeDashArray: number[],
         strokeDashOffset: number,
+        readonly pathLength?: number,
     };
 
     function formatDashArray(value: number[]) {
@@ -113,4 +114,9 @@
                      round={0.01}
         />
     </PropertyItem>
+    {#if 'pathLength' in value}
+        <PropertyItem title="Path length">
+            <small style="user-select: all">{(value.pathLength || 0).toFixed(2)}</small>
+        </PropertyItem>
+    {/if}
 </PropertyGroup>

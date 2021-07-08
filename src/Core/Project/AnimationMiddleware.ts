@@ -37,6 +37,17 @@ export class AnimationMiddleware extends Middleware<AnimationProject> {
     }
 
     /**
+     * @inheritDoc
+     */
+    deleteElements(elements: Iterable<Element>, dispose?: ((el: Element) => void) | boolean): boolean {
+        if (super.deleteElements(elements, dispose)) {
+            this.project.document.animation?.cleanupAnimatedProperties();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Updates the document animated properties
      */
     updateAnimatedProperties(document: AnimationDocument, time?: number): boolean {

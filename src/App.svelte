@@ -2,7 +2,7 @@
     import ToolsComponent from "./Components/Tools";
     import CanvasComponent from "./Components/Canvas.svelte";
     import TimelineComponent from "./Components/Timeline";
-    import MenuComponent from "./Components/Menu.svelte";
+    import LogoComponent from "./Components/Logo.svelte";
     import ProjectStateComponent from "./Components/MenuBar/ProjectState.svelte";
     import AlignSelectionComponent from "./Components/MenuBar/AlignSelection.svelte";
     import TreeComponent from "./Components/Tree.svelte";
@@ -10,35 +10,46 @@
     import SpSplitView from "./Controls/SpSplitView.svelte";
 
     import {CurrentTheme, CurrentProject} from "./Stores";
+    import DialogManager from "./Components/DialogManager.svelte";
+    import type {OpenDialogFunction} from "./Components/DialogType";
+    import {onMount, setContext} from "svelte";
+    import SettingsBar from "./Components/SettingsBar.svelte";
+
+    function noCtxMenu(e: Event) {
+        e.preventDefault();
+        return false;
+    }
 
     let hidden = false;
+    let openDialog: OpenDialogFunction;
+    setContext<OpenDialogFunction>('openDialog', (dialog, component, props?) => openDialog(dialog, component, props));
 
+    onMount(() => {
+        // TODO: ...
+    });
 </script>
 <sp-icons-medium></sp-icons-medium>
 <sp-icons-workflow></sp-icons-workflow>
 <sp-icons-expr></sp-icons-expr>
 <sp-theme scale="medium" color={$CurrentTheme} class="app">
-    <div class="app-logo">
-        <MenuComponent />
+    <div class="app-logo" on:contextmenu={noCtxMenu}>
+        <LogoComponent />
     </div>
-    <div class="app-menubar">
+    <div class="app-menubar" on:contextmenu={noCtxMenu}>
         <ProjectStateComponent />
-        <div>
-            <sp-button size="s" on:click={CurrentTheme.toggle}>Change theme</sp-button>
-            <sp-button size="s" on:click={() => hidden = !hidden}>Toggle visibility</sp-button>
-        </div>
+        <div></div>
         <AlignSelectionComponent />
     </div>
-    <div class="app-toolbar">
+    <div class="app-toolbar" on:contextmenu={noCtxMenu}>
         <ToolsComponent disabled={$CurrentProject == null} />
-        <div>down</div>
+        <SettingsBar disabled={true} />
     </div>
     <SpSplitView class="app-sidebar" resizable vertical primary-min="160" primary-size="75%">
         <svelte:fragment slot="primary">
             <PropertiesComponent />
         </svelte:fragment>
         <svelte:fragment slot="secondary" let:collapsed>
-            <TreeComponent collapsed={collapsed} />
+            <TreeComponent on:contextmenu={noCtxMenu} collapsed={collapsed} />
         </svelte:fragment>
     </SpSplitView>
     <SpSplitView class="app-content" resizable vertical
@@ -52,6 +63,7 @@
             <TimelineComponent collapsed={collapsed} />
         </svelte:fragment>
     </SpSplitView>
+    <DialogManager bind:openDialog />
 </sp-theme>
 <style global>
     .app {
@@ -86,6 +98,10 @@
 
         --spectrum-dragbar-handle-background-color: var(--separator-color);
         --spectrum-dragbar-handle-background-color-hover: var(--separator-color);
+    }
+
+    .app kbd {
+        font-family: var(--spectrum-global-font-family-code);
     }
 
     .app[color="dark"] {

@@ -4,7 +4,8 @@
     export let items: {
         value: any,
         title: string,
-        icon: string
+        icon: string,
+        disabled?: boolean
     }[];
     export let value;
     export let size: string = 'm';
@@ -21,7 +22,7 @@
 </script>
 <sp-action-group compact emphasized size="{size}">
     {#each items as item (item.value)}
-        <sp-action-button on:click={() => onClick(item.value)} selected={item.value === value} title="{item.title}" size="{size}">
+        <sp-action-button on:click={() => onClick(item.value)} selected={item.value === value} title="{item.title}" size="{size}" disabled={item.disabled === true}>
             <sp-icon name="{item.icon}" size="{size}" slot="icon"></sp-icon>
         </sp-action-button>
     {/each}

@@ -41,6 +41,7 @@
         <SpDropIndicator />
     {/if}
     <li class="spectrum-TreeView-item"
+        on:dblclick
         on:pointerdown
         on:dragend
         on:dragover
@@ -76,11 +77,12 @@
         <SpDropIndicator />
     {/if}
 {/if}
-{#if open && element.supportsChildren && element.hasChildren}
+{#if open && element.supportsChildren && element.hasChildren && !(dragging && isSelected)}
     {#each Array.from(element.children(reverse)) as child (child.id)}
         <svelte:self
                 on:hide
                 on:lock
+                on:dblclick
                 on:pointerdown
                 on:dragend
                 on:dragover
@@ -105,6 +107,11 @@
         pointer-events: none;
     }
 
+    .spectrum-TreeView-itemIndicator,
+    .spectrum-TreeView-itemIcon {
+        flex-shrink: 0;
+    }
+
     .spectrum-TreeView-itemLink {
         padding-right: 0 !important;
     }
@@ -125,6 +132,7 @@
     }
 
     .spectrum-TreeView-itemActions {
+        flex-shrink: 0;
         margin-left: auto;
 
         /*--spectrum-alias-workflow-icon-size-s: var(--spectrum-global-dimension-size-175);*/

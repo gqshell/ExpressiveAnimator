@@ -31,8 +31,8 @@
     $: if (canvas) canvas.project = $CurrentProject;
     $: {
         if (canvas && $CurrentProject && $CurrentProject.middleware.setTime($CurrentTime)) {
-            notifyPropertiesChanged();
             canvas.invalidate();
+            notifyPropertiesChanged();
         }
     }
 
@@ -53,9 +53,10 @@
 
         canvas.project = $CurrentProject;
 
-        CurrentProject.subscribe(p => {
-            canvas.project = p;
-        });
+        CurrentProject.forceUpdate();
+        // CurrentProject.subscribe(p => {
+        //     canvas.project = p;
+        // });
     });
 
     onDestroy(() => {

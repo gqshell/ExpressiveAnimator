@@ -3,6 +3,11 @@
     import type {Element, Document, MoveElementMode, Selection} from "@zindex/canvas-engine";
     import SpTreeView from "../Controls/SpTreeView";
     import {ElementInfoMap} from "./Mapping";
+    import EditElementNameDialog from "./Dialogs/EditElementNameDialog.svelte";
+    import {getContext} from "svelte";
+    import type {OpenDialogFunction} from "./DialogType";
+
+    const openDialog = getContext<OpenDialogFunction>('openDialog');
 
     export let collapsed: boolean = false;
 
@@ -30,8 +35,33 @@
         snapshot();
     }
 
-    function onContextMenu(e: CustomEvent<Selection<Document>>) {
-        // TODO: implement context-menu
+    function onEditTitle(e: CustomEvent<Element>) {
+        openDialog({
+            title: 'Rename element',
+            value: e.detail.title || '',
+            dismissable: false,
+            size: 'small',
+            confirm: {
+                label: 'Rename',
+                action: async (value: string) => {
+                    value = value.trim();
+                    if (e.detail.title === value) {
+                        return;
+                    }
+                    e.detail.title = value;
+                    $CurrentProject.state.snapshot();
+                }
+            },
+            cancel: {
+                label: 'Cancel'
+            }
+        }, EditElementNameDialog);
+    }
+
+    function onDelete() {
+        if ($CurrentProject.middleware.deleteSelectedElements()) {
+            snapshot();
+        }
     }
 
     function snapshot() {
@@ -40,21 +70,27 @@
         project.engine?.invalidate();
     }
 </script>
-<div class="tree-wrapper">
+<div on:contextmenu class="tree-wrapper">
     {#if !collapsed}
-        <div class="scroll scroll-no-hide">
+        <div class="scroll scroll-no-hide" on:click|self={() => $CurrentSelection.clear() && notifySelectionChanged()}>
             <SpTreeView
                     reverse={$ShowTreeReverse}
                     document={$CurrentDocument}
                     selection={$CurrentSelection}
                     infoMap={ElementInfoMap}
+                    on:title={onEditTitle}
                     on:drop={onDrop}
                     on:lock={onLock}
                     on:hide={onHide}
-                    on:contextMenu={onContextMenu}
                     on:selection={onSelection} />
         </div>
         <div class="tree-tools">
+            <sp-action-button
+                    class="very-small"
+                    disabled={noSelection}
+                    on:click={onDelete} size="s" quiet>
+                <sp-icon slot="icon" size="s" name="workflow:Delete"></sp-icon>
+            </sp-action-button>
 <!--            <sp-action-group compact quiet class="very-small">-->
 <!--                <sp-action-button disabled={noSelection} title="Bring forward" size="s">-->
 <!--                    <sp-icon name="expr:bring-forward" size="s"></sp-icon>-->
@@ -97,8 +133,17 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: space-between;
         box-sizing: content-box;
-        border-top: 1px solid var(--separator-color);
+        border-top: 2px solid var(--separator-color);
         height: var(--spectrum-alias-item-height-m);
     }
+
+    .tree-tools > :first-child {
+        margin-left: var(--spectrum-global-dimension-size-100);
+    }
+    .tree-tools > :last-child {
+        margin-right: var(--spectrum-global-dimension-size-100);
+    }
+
 </style>

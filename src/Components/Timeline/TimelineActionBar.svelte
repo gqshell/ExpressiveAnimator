@@ -23,7 +23,7 @@
     .timeline-action-bar {
         display: flex;
         box-sizing: content-box !important;
-        border-top: 1px solid var(--separator-color);
+        border-top: 2px solid var(--separator-color);
         width: 100%;
         height: var(--spectrum-alias-item-height-m);
         align-items: center;

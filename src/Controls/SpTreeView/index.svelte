@@ -21,12 +21,26 @@
         }
     } = null;
 
+    function onTitle(e: MouseEvent) {
+        const id = (e.target as HTMLElement).getAttribute('data-element-id');
+        if (!id) {
+            return;
+        }
+
+        const element = document?.getElementById(id);
+        if (!element) {
+            return;
+        }
+
+        dispatch('title', element);
+    }
+
     let dragging: boolean = false;
     let moveMode: MoveElementMode = null;
     let moveTarget: string = null;
 
     function onPointerDown(e: PointerEvent) {
-        if (e.button !== MouseButton.Left && e.button !== MouseButton.Right) {
+        if (e.button !== MouseButton.Left) {
             return;
         }
 
@@ -42,10 +56,6 @@
 
         if (selection.toggle(element, e.shiftKey)) {
             dispatch('selection');
-        }
-
-        if (e.button === MouseButton.Right && !selection.isEmpty) {
-            dispatch('contextMenu', selection);
         }
     }
 
@@ -153,6 +163,7 @@
             <SpTreeViewItem
                     on:hide
                     on:lock
+                    on:dblclick={onTitle}
                     on:pointerdown={onPointerDown}
                     on:dragend={onDragEnd}
                     on:dragleave={onDragLeave}

@@ -21,6 +21,7 @@
     export let name: string | undefined = undefined;
     export let autocomplete: string | undefined = undefined;
     export let spellcheck: string | undefined = undefined;
+    export let readonly: boolean = false;
 
     export let centerText: boolean = true;
     export let pattern: string | undefined = undefined;
@@ -170,14 +171,14 @@
                value={value} tabindex="{tabindex}"
                class="{computedInputClass}"
                placeholder="{placeholder}" name="{name}" spellcheck="{spellcheck}"
-               disabled="{disabled}" {...attributes}></textarea>
+               disabled="{disabled}" readonly={readonly} {...attributes}></textarea>
     {:else}
         <input on:focus={onFocus} on:blur={onBlur} on:input={onInput} on:change={onChange}
                on:keyup={onKeyUp}
                value={isNumberInput ? formatNumber(value, digits) : value} tabindex="{tabindex}"
                class="{computedInputClass}"
                type="{type}" placeholder="{placeholder}" autocomplete="{autocomplete}" spellcheck="{spellcheck}"
-               name="{name}" disabled="{disabled}" {...attributes}>
+               name="{name}" disabled="{disabled}" readonly={readonly} {...attributes}>
     {/if}
     {#if clearable && !focused}
         <SpClearButton on:click={onClear} disabled={disabled} class={clearClass} />

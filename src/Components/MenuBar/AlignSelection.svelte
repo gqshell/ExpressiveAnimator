@@ -1,11 +1,13 @@
 <script lang="ts">
     import {CurrentProject, CurrentSelection} from "../../Stores";
     import type {AnimationMiddleware} from "../../Core";
+    import {Position} from "@zindex/canvas-engine";
 
     let disabledAlign: boolean = false, disableDistribute: boolean = false;
 
     $: disabledAlign = !$CurrentSelection || $CurrentSelection.isEmpty;
-    $: disableDistribute = !$CurrentSelection || $CurrentSelection.length < 3;
+    // TODO: finish distribute
+    $: disableDistribute = true || !$CurrentSelection || $CurrentSelection.length < 3;
 
     function align(e: PointerEvent) {
         const middleware: AnimationMiddleware = $CurrentProject?.middleware;
@@ -13,29 +15,47 @@
             return;
         }
 
-        //console.log(middleware.alignElementToRectangle());
+        let x = Position.None,
+            y = Position.None;
 
         switch ((e.target as HTMLElement).getAttribute('data-position')) {
             case 'left':
-
+                x = Position.Start;
                 break;
             case 'center':
+                x = Position.Middle;
                 break;
             case 'right':
+                x = Position.End;
                 break;
             case 'top':
+                y = Position.Start;
                 break;
             case 'middle':
+                y = Position.Middle;
                 break;
             case 'bottom':
+                y = Position.End;
                 break;
             default:
                 return;
         }
+
+        if (middleware.alignSelectionToRectangle(x, y, e.altKey)) {
+            middleware.project.state.snapshot();
+        }
     }
 
     function distribute(e: PointerEvent) {
+        const middleware: AnimationMiddleware = $CurrentProject?.middleware;
+        if (!middleware) {
+            return;
+        }
 
+        const vertically = (e.target as HTMLElement).getAttribute('data-position') === 'vertically';
+        if (middleware.distributeSelection(vertically, e.altKey)) {
+            middleware.project.state.snapshot();
+        }
     }
 </script>
 <sp-action-group style="width: 260px;" compact quiet>

@@ -31,6 +31,7 @@
     .timeline-element-item > span {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
         flex: 1;
     }
 </style>

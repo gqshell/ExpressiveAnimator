@@ -18,7 +18,12 @@
         background: var(--spectrum-global-color-gray-800);
     }
 
-    .timeline-keyframe:hover,
+    .timeline-keyframe:hover:not(.is-selected) {
+        z-index: 7;
+        border-color: var(--spectrum-semantic-cta-color-background-default);
+        box-shadow: 0 0 4px var(--spectrum-semantic-cta-color-background-default);
+    }
+
     .timeline-keyframe.is-selected {
         z-index: 7;
         background: var(--spectrum-semantic-cta-color-background-default);
